@@ -2,142 +2,309 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+[ExecuteAlways]
+public abstract class Unit : MonoBehaviour
 {
+    private enum UnitState
+    {
+        Standing,
+        Crawling
+    }
+    
     [Header("Components")]
     [SerializeField] private Animator animator;
-    [SerializeField] private SpriteRenderer renderer;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     [Header("Stats")]
-    [SerializeField] private float walkSpeed;
-    [SerializeField] private float runSpeed;
-    [SerializeField] private float airAuthority = 2.0f;
-    [SerializeField] private float climbHeight = 0.5f;
+    [SerializeField] private UnitStats standingStats;
+    [SerializeField] private UnitStats crawlingStats;
 
     [Header("Physics")]
-    [SerializeField] private Vector2 size = new Vector2(0.5f, 1.7f);
-    [SerializeField] private float airDrag = 1.0f;
-    [SerializeField] private float jumpForce = 6.0f;
+    [SerializeField] protected LayerMask collisionMask;
+    [SerializeField] protected LayerMask interactionMask;
 
+    private UnitStats activeStats;
+    private UnitState activeState;
     private Vector2 velocity;
     private int moveDirection = 0;
     private bool grounded = false;
     private bool running = false;
+    private bool jumping = false;
+    private bool crawlingInput = false;
     private bool canJump = false;
-    private bool jumpFrame = false;
+    private bool leftCollision = false;
+    private bool rightCollision = false;
     private bool climbFrame = false;
 
-    private void Update()
+    // Interaction
+    private List<Interactable> interactables = new List<Interactable>();
+    protected const float interactionDistance = 1.0f;
+
+    // Constants
+    private const float roofCheckDistance = 0.1f;
+
+    private void Awake() {
+        SetState(UnitState.Standing);
+    }
+    
+    private void SetState(UnitState state)
     {
-        // Bounds
-        Vector3 topLeft = transform.position + new Vector3(-size.x * 0.5f, size.y * 0.5f);
-        Vector3 topRight = transform.position + new Vector3(size.x * 0.5f, size.y * 0.5f);
-        Vector3 bottomRight = transform.position + new Vector3(size.x * 0.5f, -size.y * 0.5f);
-        Vector3 bottomLeft = transform.position + new Vector3(-size.x * 0.5f, -size.y * 0.5f);
-
-        Debug.DrawLine(topLeft, topRight);
-        Debug.DrawLine(topRight, bottomRight);
-        Debug.DrawLine(bottomRight, bottomLeft);
-        Debug.DrawLine(bottomLeft, topLeft);
-
-        if(climbFrame) // We climbed an object last frame, cancel out vertical momentum
+        activeState = state;
+        // Activate relevant stats for the selected state
+        switch (state)
         {
-            velocity.y = 0;
-            Debug.Log("CLIMB");
-            climbFrame = false;
+            case UnitState.Standing:
+                activeStats = standingStats.GetInstance();
+                break;
+            case UnitState.Crawling:
+                activeStats = crawlingStats.GetInstance();
+                break;
         }
-        if (!jumpFrame) // Dont ground check if jumping
+        // Initialise stats
+        activeStats.climbHeight = activeStats.climbHeight + 0.01f; // Climb over objects of the initially defined climbHeight
+    }
+    
+    protected virtual void Update()
+    {
+        // Re-usable vars
+        RaycastHit2D leftHit, rightHit;
+        float leftVelocity = 0.0f, rightVelocity = 0.0f;
+        
+        #region Stand Check
+        // Unit no longer wants to crawl, attempt to stand up
+        if(activeState == UnitState.Crawling && !crawlingInput)
         {
-            // Raycast Left
-            float leftVelocity = 0.0f;
-            RaycastHit2D leftHit = Physics2D.Raycast(topLeft, Vector2.down, size.y);
+            // Check we have room to stand
+            leftHit = Physics2D.Raycast(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
             if (leftHit)
             {
-                Debug.DrawLine(topLeft, leftHit.point, Color.red);
-                float incline = size.y - leftHit.distance;
-                if (incline <= climbHeight)
-                {
-                    leftVelocity = incline / Time.deltaTime;
-                }
-                grounded = true;
-                canJump = true;
+                Debug.DrawRay(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * leftHit.distance, Color.red);
             }
-            // Raycast Right
-            float rightVelocity = 0.0f;
-            RaycastHit2D rightHit = Physics2D.Raycast(topRight, Vector2.down, size.y);
+            rightHit = Physics2D.Raycast(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
             if (rightHit)
             {
-                Debug.DrawLine(topRight, rightHit.point, Color.red);
-                float incline = size.y - rightHit.distance;
-                if (incline <= climbHeight)
-                {
-                    rightVelocity = incline / Time.deltaTime;
-                }
-                grounded = true;
-                canJump = true;
+                Debug.DrawRay(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * rightHit.distance, Color.red);
             }
+            // Unit has room, set to standing
             if (!leftHit && !rightHit)
             {
-                grounded = false;
+                SetState(UnitState.Standing);
+                animator.SetBool("Crawling", false);
             }
-            else
+        }
+        #endregion
+        
+        // Climbed an object last frame, cancel out vertical momentum
+        if(climbFrame)
+        {
+            velocity.y = 0;
+            climbFrame = false;
+        }
+        // Wall collision last frame, cancel out horizontal momentum
+        if (leftCollision || rightCollision)
+        {
+            velocity.x = 0;
+            leftCollision = false;
+            rightCollision = false;
+        }
+        
+        #region Ground Check
+        // Downwards raycast, left side
+        leftHit = Physics2D.Raycast(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down, activeStats.climbHeight, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * activeStats.climbHeight, Color.red);
+        if (leftHit)
+        {
+            Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * leftHit.distance, Color.green);
+            float incline = activeStats.climbHeight - leftHit.distance;
+            leftVelocity = incline / Time.deltaTime;
+            grounded = true;
+            if (!jumping)
             {
-                float climbVelocity = Mathf.Max(leftVelocity, rightVelocity);
-                velocity.y = climbVelocity;
-                if (climbVelocity > 0.1f)
-                {
-                    climbFrame = true;
-                }
+                canJump = true;
             }
+        }
+        // Downwards raycast, right side
+        rightHit = Physics2D.Raycast(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down, activeStats.climbHeight, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * activeStats.climbHeight, Color.red);
+        if (rightHit)
+        {
+            Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * rightHit.distance, Color.green);
+            float incline = activeStats.climbHeight - rightHit.distance;
+            rightVelocity = incline / Time.deltaTime;
+            grounded = true;
+            if (!jumping)
+            {
+                canJump = true;
+            }
+        }
+        if (!leftHit && !rightHit)
+        {
+            grounded = false;
+            jumping = false;
         }
         else
         {
-            // Reset jumpFrame
-            jumpFrame = false;
+            // Contact with ground, determine how much we need to push the player up
+            float climbVelocity = Mathf.Max(leftVelocity, rightVelocity) * activeStats.climbRate;
+            if (!jumping)
+            {
+                velocity.y = climbVelocity;
+                climbFrame = true;
+            }
+            else
+            {
+                velocity.y = activeStats.jumpForce;
+            }
         }
+        #endregion
 
+        #region Roof Check
+        // Upwards raycast, left side
+        leftHit = Physics2D.Raycast(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, activeStats.size.y * 0.5f), Vector2.up, roofCheckDistance, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, activeStats.size.y * 0.5f), Vector2.up * roofCheckDistance, Color.red);
+        if (leftHit)
+        {
+            Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, activeStats.size.y * 0.5f), Vector2.up * leftHit.distance, Color.green);
+            if(velocity.y * Time.deltaTime >= leftHit.distance)
+            {
+                velocity.y = leftHit.distance * Time.deltaTime;
+            }
+        }
+        // Upwards raycast, right side
+        rightHit = Physics2D.Raycast(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, activeStats.size.y * 0.5f), Vector2.up, roofCheckDistance, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, activeStats.size.y * 0.5f), Vector2.up * roofCheckDistance, Color.red);
+        if (rightHit)
+        {
+            Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, activeStats.size.y * 0.5f), Vector2.up * rightHit.distance, Color.green);
+            if (velocity.y * Time.deltaTime >= rightHit.distance)
+            {
+                velocity.y = rightHit.distance * Time.deltaTime;
+            }
+        }
+        #endregion
+
+        #region Wall Collision
+        // Left side low
+        leftHit = Physics2D.Raycast(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.left, activeStats.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.left * activeStats.size.x * 0.5f, Color.red);
+        if (leftHit)
+        {
+            Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.left * leftHit.distance, Color.green);
+            // Move out of collision
+            transform.Translate(new Vector3(((activeStats.size.x * 0.5f) - leftHit.distance), 0));
+            leftCollision = true;
+        }
+        // Left side high
+        leftHit = Physics2D.Raycast(transform.position + new Vector3(0, activeStats.size.y * 0.5f), Vector2.left, activeStats.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, activeStats.size.y * 0.5f), Vector2.left * activeStats.size.x * 0.5f, Color.red);
+        if (leftHit)
+        {
+            Debug.DrawRay(transform.position + new Vector3(0, activeStats.size.y * 0.5f), Vector2.left * leftHit.distance, Color.green);
+            // Move out of collision
+            transform.Translate(new Vector3(((activeStats.size.x * 0.5f) - leftHit.distance), 0));
+            leftCollision = true;
+        }
+        
+        // Right side low
+        rightHit = Physics2D.Raycast(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.right, activeStats.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.right * activeStats.size.x * 0.5f, Color.red);
+        if (rightHit)
+        {
+            Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.right * rightHit.distance, Color.green);
+            // Move out of collision
+            transform.Translate(new Vector3(-((activeStats.size.x * 0.5f) - rightHit.distance), 0));
+            rightCollision = true;
+        }
+        // Right side high
+        rightHit = Physics2D.Raycast(transform.position + new Vector3(0, activeStats.size.y * 0.5f), Vector2.right, activeStats.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, activeStats.size.y * 0.5f), Vector2.right * activeStats.size.x * 0.5f, Color.red);
+        if (rightHit)
+        {
+            Debug.DrawRay(transform.position + new Vector3(0, activeStats.size.y * 0.5f), Vector2.right * rightHit.distance, Color.green);
+            // Move out of collision
+            transform.Translate(new Vector3(-((activeStats.size.x * 0.5f) - rightHit.distance), 0));
+            rightCollision = true;
+        }
+        #endregion
+
+        #region Input Movement
         if (grounded)
         {
             // Ground movement
-            velocity.x = (running ? runSpeed : walkSpeed) * moveDirection;
+            velocity.x = (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection;
         }
         else
         {
             // Air movement
-            if (Mathf.Abs(velocity.x) < walkSpeed)
+            if (Mathf.Abs(velocity.x) < activeStats.walkSpeed)
             {
-                // Allow player to push towards walking speed while in the air
-                velocity.x += (running ? runSpeed : walkSpeed) * moveDirection * Time.deltaTime * airAuthority;
+                // Allow player to push towards movement speed while in the air
+                velocity.x += (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection * Time.deltaTime * activeStats.airAuthority;
             }
             else
             {
                 // Apply drag
-                velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * airDrag);
+                velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * activeStats.airDrag);
             }
             // Apply gravity
             velocity.y -= 9.81f * Time.deltaTime;
         }
+        #endregion
+        
+        #region Apply Collisions
+        // Collisions may exceed terminal velocity
+        if (!leftCollision && !rightCollision)
+        {
+            // Terminal velocity
+            velocity = Vector2.ClampMagnitude(velocity, activeStats.terminalVeloicty);
+        }
+        // Collisions clamp velocity
+        velocity.x = leftCollision ? Mathf.Max(0, velocity.x) : velocity.x;
+        velocity.x = rightCollision ? Mathf.Min(0, velocity.x) : velocity.x;
+        #endregion
+        
         // Move
-        velocity.y = Mathf.Clamp(velocity.y, -10.0f, 10.0f);
-        transform.Translate(velocity * Time.deltaTime);
-    }
-    
-    protected void Jump()
-    {
-        if (!canJump) { return; }
-        canJump = false;
-        jumpFrame = true;
-        grounded = false;
-        velocity.y += jumpForce;
+        if (Application.isPlaying)
+        {
+            transform.Translate(velocity * Time.deltaTime);
+        }
+        // Animate
+        animator.SetFloat("VelocityX", velocity.x);
     }
     
     protected void SetMovement(int direction)
     {
+        if (direction == -1)
+        {
+            spriteRenderer.flipX = true;
+        }
+        if (direction == 1)
+        {
+            spriteRenderer.flipX = false;
+        }
         moveDirection = direction;
     }
     
     protected void SetRunning(bool isRunning)
     {
         running = isRunning;
+    }
+
+    protected void Jump()
+    {
+        if (!canJump) { return; }
+        canJump = false;
+        grounded = false;
+        jumping = true;
+    }
+
+    protected void Crawl(bool isCrawling)
+    {
+        crawlingInput = isCrawling;
+        if(isCrawling)
+        {
+            SetState(UnitState.Crawling);
+            animator.SetBool("Crawling", true);
+        }
     }
 }
