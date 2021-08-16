@@ -136,10 +136,10 @@ TextureImporter:
       name: Stealth Master Test Idle_0
       rect:
         serializedVersion: 2
-        x: 21
+        x: 0
         y: 256
-        width: 21
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,10 +157,10 @@ TextureImporter:
       name: Stealth Master Test Idle_1
       rect:
         serializedVersion: 2
-        x: 86
+        x: 64
         y: 256
-        width: 20
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,10 +178,10 @@ TextureImporter:
       name: Stealth Master Test Idle_2
       rect:
         serializedVersion: 2
-        x: 22
+        x: 0
         y: 192
-        width: 21
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -199,10 +199,10 @@ TextureImporter:
       name: Stealth Master Test Idle_3
       rect:
         serializedVersion: 2
-        x: 86
+        x: 64
         y: 192
-        width: 21
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -220,10 +220,10 @@ TextureImporter:
       name: Stealth Master Test Idle_4
       rect:
         serializedVersion: 2
-        x: 22
+        x: 0
         y: 128
-        width: 20
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,10 +241,10 @@ TextureImporter:
       name: Stealth Master Test Idle_5
       rect:
         serializedVersion: 2
-        x: 85
+        x: 64
         y: 128
-        width: 21
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -262,10 +262,10 @@ TextureImporter:
       name: Stealth Master Test Idle_6
       rect:
         serializedVersion: 2
-        x: 20
+        x: 0
         y: 64
-        width: 22
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -283,10 +283,10 @@ TextureImporter:
       name: Stealth Master Test Idle_7
       rect:
         serializedVersion: 2
-        x: 83
+        x: 64
         y: 64
-        width: 23
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -304,10 +304,10 @@ TextureImporter:
       name: Stealth Master Test Idle_8
       rect:
         serializedVersion: 2
-        x: 19
+        x: 0
         y: 0
-        width: 23
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -325,10 +325,10 @@ TextureImporter:
       name: Stealth Master Test Idle_9
       rect:
         serializedVersion: 2
-        x: 84
+        x: 64
         y: 0
-        width: 22
-        height: 54
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
