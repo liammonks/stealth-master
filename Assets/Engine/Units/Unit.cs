@@ -13,7 +13,6 @@ public abstract class Unit : MonoBehaviour
     
     [Header("Components")]
     [SerializeField] private Animator animator;
-    [SerializeField] private SpriteRenderer spriteRenderer;
 
     [Header("Stats")]
     [SerializeField] private UnitStats standingStats;
@@ -274,14 +273,6 @@ public abstract class Unit : MonoBehaviour
     
     protected void SetMovement(int direction)
     {
-        if (direction == -1)
-        {
-            spriteRenderer.flipX = true;
-        }
-        if (direction == 1)
-        {
-            spriteRenderer.flipX = false;
-        }
         moveDirection = direction;
     }
     

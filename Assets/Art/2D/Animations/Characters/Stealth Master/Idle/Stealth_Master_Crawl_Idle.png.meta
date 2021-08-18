@@ -52,18 +52,18 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 0
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -80,24 +80,36 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 1
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
@@ -106,106 +118,211 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth_Master_Crawl_Idle_0
+      name: Stealth Master Test Idle_0
       rect:
         serializedVersion: 2
-        x: 4
+        x: 0
         y: 256
-        width: 49
-        height: 19
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2042eaab4cb5902d0800000000000000
-      internalID: -3312015150450596862
+      spriteID: 2039c34d4986f2940800000000000000
+      internalID: 5273548677099328258
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Crawl_Idle_1
+      name: Stealth Master Test Idle_1
       rect:
         serializedVersion: 2
-        x: 5
+        x: 64
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3710666ae4211c00800000000000000
+      internalID: 869516792217737023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_2
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 192
-        width: 48
-        height: 19
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3820d60217bf27d50800000000000000
-      internalID: 6733720856166204035
+      spriteID: 1972d9257aa41d300800000000000000
+      internalID: 275083134752335761
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Crawl_Idle_2
+      name: Stealth Master Test Idle_3
       rect:
         serializedVersion: 2
-        x: 6
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fbd08d8e56ec4980800000000000000
+      internalID: -8553208298508067851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_4
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 128
-        width: 47
-        height: 19
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2281dbc10fe27d900800000000000000
-      internalID: 709087075143325730
+      spriteID: faa985904f988d720800000000000000
+      internalID: 2871196443670518447
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Crawl_Idle_3
+      name: Stealth Master Test Idle_5
       rect:
         serializedVersion: 2
-        x: 6
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7080a00f8109f020800000000000000
+      internalID: 2375931992117117051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_6
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 64
-        width: 47
-        height: 19
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a779712e6d3e25b70800000000000000
-      internalID: 8886415526811113338
+      spriteID: ba4f225025fab7010800000000000000
+      internalID: 1187735693550613675
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Crawl_Idle_4
+      name: Stealth Master Test Idle_7
       rect:
         serializedVersion: 2
-        x: 5
-        y: 0
-        width: 48
-        height: 19
+        x: 64
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7f5c80edc3a2d5480800000000000000
-      internalID: -8908918046957451785
+      spriteID: 598864e1aa98e9c50800000000000000
+      internalID: 6673923061555038357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c697212639c992a20800000000000000
+      internalID: 3038131580457613676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_9
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 802c1c9d1d2e86c10800000000000000
+      internalID: 2047135421569286664
       vertices: []
       indices: 
       edges: []
