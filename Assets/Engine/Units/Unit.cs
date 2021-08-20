@@ -10,8 +10,9 @@ public abstract class Unit : MonoBehaviour
         Standing,
         Crawling
     }
-    
+
     [Header("Components")]
+    [SerializeField] private Transform spriteTransform;
     [SerializeField] private Animator animator;
 
     [Header("Stats")]
@@ -61,6 +62,8 @@ public abstract class Unit : MonoBehaviour
         }
         // Initialise stats
         activeStats.climbHeight = activeStats.climbHeight + 0.01f; // Climb over objects of the initially defined climbHeight
+        // Set sprite to ground position
+        spriteTransform.localPosition = new Vector3(0, -activeStats.size.y * 0.5f, 0);
     }
     
     protected virtual void Update()
@@ -106,7 +109,7 @@ public abstract class Unit : MonoBehaviour
             leftCollision = false;
             rightCollision = false;
         }
-        
+
         #region Ground Check
         // Downwards raycast, left side
         leftHit = Physics2D.Raycast(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down, activeStats.climbHeight, collisionMask);
@@ -283,14 +286,16 @@ public abstract class Unit : MonoBehaviour
 
     protected void Jump()
     {
-        if (!canJump) { return; }
+        if (!canJump || activeState == UnitState.Crawling) { return; }
         canJump = false;
         grounded = false;
         jumping = true;
+        animator.SetTrigger("Jump");
     }
 
     protected void Crawl(bool isCrawling)
     {
+        if (!grounded) { return; }
         crawlingInput = isCrawling;
         if(isCrawling)
         {

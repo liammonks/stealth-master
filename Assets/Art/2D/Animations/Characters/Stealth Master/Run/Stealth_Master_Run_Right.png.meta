@@ -38,6 +38,42 @@ TextureImporter:
   - first:
       213: 4300125585421827703
     second: Stealth Master Test Run_11
+  - first:
+      213: 4106143892653398019
+    second: Stealth_Master_Run_Right_0
+  - first:
+      213: 6388376705408411243
+    second: Stealth_Master_Run_Right_1
+  - first:
+      213: -8948928494101584688
+    second: Stealth_Master_Run_Right_2
+  - first:
+      213: -3962865825598981329
+    second: Stealth_Master_Run_Right_3
+  - first:
+      213: -4644620326639774615
+    second: Stealth_Master_Run_Right_4
+  - first:
+      213: 4887819508421315774
+    second: Stealth_Master_Run_Right_5
+  - first:
+      213: -1228935736804059613
+    second: Stealth_Master_Run_Right_6
+  - first:
+      213: 7562790065491136490
+    second: Stealth_Master_Run_Right_7
+  - first:
+      213: -1584215618612183302
+    second: Stealth_Master_Run_Right_8
+  - first:
+      213: -7113389779300054518
+    second: Stealth_Master_Run_Right_9
+  - first:
+      213: -6992583222881969222
+    second: Stealth_Master_Run_Right_10
+  - first:
+      213: -3880381379452573523
+    second: Stealth_Master_Run_Right_11
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -101,7 +137,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -113,7 +149,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -125,10 +161,10 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -139,253 +175,253 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth Master Test Run_0
+      name: Stealth_Master_Run_Right_0
       rect:
         serializedVersion: 2
         x: 0
         y: 320
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: efb6983c3d5990870800000000000000
-      internalID: 8649609296092949502
+      spriteID: 308de367d14fbf830800000000000000
+      internalID: 4106143892653398019
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_1
+      name: Stealth_Master_Run_Right_1
       rect:
         serializedVersion: 2
         x: 64
         y: 320
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb32c27e984337a50800000000000000
-      internalID: 6517610852628833214
+      spriteID: b66af3934c218a850800000000000000
+      internalID: 6388376705408411243
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_2
+      name: Stealth_Master_Run_Right_2
       rect:
         serializedVersion: 2
         x: 0
         y: 256
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 82dd61b5c206ed6e0800000000000000
-      internalID: -1810904256533308120
+      spriteID: 0d424b4b2f40fc380800000000000000
+      internalID: -8948928494101584688
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_3
+      name: Stealth_Master_Run_Right_3
       rect:
         serializedVersion: 2
         x: 64
         y: 256
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d826512a7e196900800000000000000
-      internalID: 678106728790108373
+      spriteID: f2b33ac17821109c0800000000000000
+      internalID: -3962865825598981329
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_4
+      name: Stealth_Master_Run_Right_4
       rect:
         serializedVersion: 2
         x: 0
         y: 192
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3266f6ba276eba8a0800000000000000
-      internalID: -6292682674143271389
+      spriteID: 964d312db6efa8fb0800000000000000
+      internalID: -4644620326639774615
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_5
+      name: Stealth_Master_Run_Right_5
       rect:
         serializedVersion: 2
         x: 64
         y: 192
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f599da2358d024f90800000000000000
-      internalID: -6970994407484057249
+      spriteID: ebc4da532f505d340800000000000000
+      internalID: 4887819508421315774
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_6
+      name: Stealth_Master_Run_Right_6
       rect:
         serializedVersion: 2
         x: 0
         y: 128
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: afe9c5a4aadfeacb0800000000000000
-      internalID: -4850660840797593862
+      spriteID: 326d2046571f1fee0800000000000000
+      internalID: -1228935736804059613
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_7
+      name: Stealth_Master_Run_Right_7
       rect:
         serializedVersion: 2
         x: 64
         y: 128
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 38fd8a254df7c6b80800000000000000
-      internalID: -8400198655056224381
+      spriteID: aefc374ce7d64f860800000000000000
+      internalID: 7562790065491136490
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_8
+      name: Stealth_Master_Run_Right_8
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 582272dcc6efa3a20800000000000000
-      internalID: 3043024241494008453
+      spriteID: afebef4d94cb30ae0800000000000000
+      internalID: -1584215618612183302
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_9
+      name: Stealth_Master_Run_Right_9
       rect:
         serializedVersion: 2
         x: 64
         y: 64
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40a8a1ef7a90ced10800000000000000
-      internalID: 2156108938730965508
+      spriteID: a0a0def1fa9284d90800000000000000
+      internalID: -7113389779300054518
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_10
+      name: Stealth_Master_Run_Right_10
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d86b8f267ff327cf0800000000000000
-      internalID: -256071897056758131
+      spriteID: abb93c96b9a55fe90800000000000000
+      internalID: -6992583222881969222
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Run_11
+      name: Stealth_Master_Run_Right_11
       rect:
         serializedVersion: 2
         x: 64
         y: 0
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 77ef2a8df6d1dab30800000000000000
-      internalID: 4300125585421827703
+      spriteID: da860bcc1bd162ac0800000000000000
+      internalID: -3880381379452573523
       vertices: []
       indices: 
       edges: []

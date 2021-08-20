@@ -12935,38 +12935,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1741785888379557472, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3910147548249170261, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3910147548249170261, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_FlipY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3910147548249170261, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 5273548677099328258, guid: 79d9213208d637d4aa8a9826b4c68b08, type: 3}
-    - target: {fileID: 3910147548249170261, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_CastShadows
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3910147548249170261, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_ReceiveShadows
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3910147548249170261, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_DynamicOccludee
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5167399991698593940, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5167399993263710043, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
       propertyPath: m_Name
       value: Player
@@ -13014,38 +12982,6 @@ PrefabInstance:
     - target: {fileID: 5167399993263710046, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5756960585175130550, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5852369607417598646, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5852369607417598646, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_FlipY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5852369607417598646, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 5273548677099328258, guid: 79d9213208d637d4aa8a9826b4c68b08, type: 3}
-    - target: {fileID: 5852369607417598646, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_CastShadows
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5852369607417598646, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_ReceiveShadows
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5852369607417598646, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_DynamicOccludee
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5852369607417598646, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e4db8a317aacfb40bc4e28157955f52, type: 3}

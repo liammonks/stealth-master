@@ -1,22 +1,43 @@
 fileFormatVersion: 2
-guid: 9d6fda84c1f24cd4bb2ccb8955939a9e
+guid: 3be03bea776441b40aaa1ed1e6c48ece
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3312015150450596862
-    second: Stealth_Master_Crawl_Idle_0
+      213: -8713670090831114514
+    second: Stealth_Master_Run_Left_0
   - first:
-      213: 6733720856166204035
-    second: Stealth_Master_Crawl_Idle_1
+      213: 3334515787343290357
+    second: Stealth_Master_Run_Left_1
   - first:
-      213: 709087075143325730
-    second: Stealth_Master_Crawl_Idle_2
+      213: 6179921749896738271
+    second: Stealth_Master_Run_Left_2
   - first:
-      213: 8886415526811113338
-    second: Stealth_Master_Crawl_Idle_3
+      213: -11788260493661854
+    second: Stealth_Master_Run_Left_3
   - first:
-      213: -8908918046957451785
-    second: Stealth_Master_Crawl_Idle_4
+      213: -6063344017541101452
+    second: Stealth_Master_Run_Left_4
+  - first:
+      213: 4323884072874319176
+    second: Stealth_Master_Run_Left_5
+  - first:
+      213: 8434471835278172321
+    second: Stealth_Master_Run_Left_6
+  - first:
+      213: -4190032118999408878
+    second: Stealth_Master_Run_Left_7
+  - first:
+      213: -4668499872781637870
+    second: Stealth_Master_Run_Left_8
+  - first:
+      213: 2901714793401893228
+    second: Stealth_Master_Run_Left_9
+  - first:
+      213: -425081485285919399
+    second: Stealth_Master_Run_Left_10
+  - first:
+      213: 3450946209558120619
+    second: Stealth_Master_Run_Left_11
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -118,211 +139,253 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth Master Test Idle_0
+      name: Stealth_Master_Run_Left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eeec01a2833d21780800000000000000
+      internalID: -8713670090831114514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Run_Left_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 320
+        width: 64
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ff578a0174964e20800000000000000
+      internalID: 3334515787343290357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Run_Left_2
       rect:
         serializedVersion: 2
         x: 0
         y: 256
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2039c34d4986f2940800000000000000
-      internalID: 5273548677099328258
+      spriteID: fd53e42c61e73c550800000000000000
+      internalID: 6179921749896738271
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_1
+      name: Stealth_Master_Run_Left_3
       rect:
         serializedVersion: 2
         x: 64
         y: 256
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f3710666ae4211c00800000000000000
-      internalID: 869516792217737023
+      spriteID: 26961c8b3ae16dff0800000000000000
+      internalID: -11788260493661854
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_2
+      name: Stealth_Master_Run_Left_4
       rect:
         serializedVersion: 2
         x: 0
         y: 192
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1972d9257aa41d300800000000000000
-      internalID: 275083134752335761
+      spriteID: 4780973bdbcaadba0800000000000000
+      internalID: -6063344017541101452
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_3
+      name: Stealth_Master_Run_Left_5
       rect:
         serializedVersion: 2
         x: 64
         y: 192
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5fbd08d8e56ec4980800000000000000
-      internalID: -8553208298508067851
+      spriteID: 84d94a5c7a5810c30800000000000000
+      internalID: 4323884072874319176
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_4
+      name: Stealth_Master_Run_Left_6
       rect:
         serializedVersion: 2
         x: 0
         y: 128
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: faa985904f988d720800000000000000
-      internalID: 2871196443670518447
+      spriteID: 1a0eac942734d0570800000000000000
+      internalID: 8434471835278172321
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_5
+      name: Stealth_Master_Run_Left_7
       rect:
         serializedVersion: 2
         x: 64
         y: 128
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b7080a00f8109f020800000000000000
-      internalID: 2375931992117117051
+      spriteID: 21f109dccf30ad5c0800000000000000
+      internalID: -4190032118999408878
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_6
+      name: Stealth_Master_Run_Left_8
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba4f225025fab7010800000000000000
-      internalID: 1187735693550613675
+      spriteID: 217e4e8b918263fb0800000000000000
+      internalID: -4668499872781637870
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_7
+      name: Stealth_Master_Run_Left_9
       rect:
         serializedVersion: 2
         x: 64
         y: 64
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 598864e1aa98e9c50800000000000000
-      internalID: 6673923061555038357
+      spriteID: c61473c0b36f44820800000000000000
+      internalID: 2901714793401893228
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_8
+      name: Stealth_Master_Run_Left_10
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c697212639c992a20800000000000000
-      internalID: 3038131580457613676
+      spriteID: 955ffec24aec91af0800000000000000
+      internalID: -425081485285919399
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_9
+      name: Stealth_Master_Run_Left_11
       rect:
         serializedVersion: 2
         x: 64
         y: 0
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 802c1c9d1d2e86c10800000000000000
-      internalID: 2047135421569286664
+      spriteID: ba841bf2b4934ef20800000000000000
+      internalID: 3450946209558120619
       vertices: []
       indices: 
       edges: []
