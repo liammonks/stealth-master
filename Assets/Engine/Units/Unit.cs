@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteAlways]
 public abstract class Unit : MonoBehaviour
 {
     private enum UnitState
