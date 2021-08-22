@@ -156,7 +156,7 @@ MonoBehaviour:
     value: 1
   preset:
     overrideState: 1
-    value: 3
+    value: 6
   maximumIterationCount:
     overrideState: 0
     value: 16
@@ -167,8 +167,8 @@ MonoBehaviour:
     overrideState: 0
     value: 8
   maximumMarchDistance:
-    overrideState: 0
-    value: 100
+    overrideState: 1
+    value: 50
   distanceFade:
     overrideState: 0
     value: 0.5
@@ -246,7 +246,7 @@ MonoBehaviour:
     value: 0
   postExposure:
     overrideState: 0
-    value: 0
+    value: 1
   contrast:
     overrideState: 0
     value: 0

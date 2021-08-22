@@ -41,6 +41,7 @@ public abstract class Unit : MonoBehaviour
 
     // Constants
     private const float roofCheckDistance = 0.1f;
+    private const float slideFriction = 2.0f;
 
     private void Awake() {
         SetState(UnitState.Standing);
@@ -232,7 +233,23 @@ public abstract class Unit : MonoBehaviour
         if (grounded)
         {
             // Ground movement
-            velocity.x = (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection;
+            if (activeState == UnitState.Standing)
+            {
+                // Normal movement input
+                velocity.x = (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection;
+            }
+            if (activeState == UnitState.Crawling)
+            {
+                // Slide when travelling faster than max crawl speed
+                if(Mathf.Abs(velocity.x) > activeStats.runSpeed)
+                {
+                    velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * slideFriction);
+                }
+                else
+                {
+                    velocity.x = (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection;
+                }
+            }
         }
         else
         {
@@ -265,10 +282,7 @@ public abstract class Unit : MonoBehaviour
         #endregion
         
         // Move
-        if (Application.isPlaying)
-        {
-            transform.Translate(velocity * Time.deltaTime);
-        }
+        transform.Translate(velocity * Time.deltaTime);
         // Animate
         animator.SetFloat("VelocityX", velocity.x);
     }
@@ -294,12 +308,22 @@ public abstract class Unit : MonoBehaviour
 
     protected void Crawl(bool isCrawling)
     {
-        if (!grounded) { return; }
         crawlingInput = isCrawling;
-        if(isCrawling)
+        
+        if(crawlingInput)
         {
-            SetState(UnitState.Crawling);
-            animator.SetBool("Crawling", true);
+            if (grounded)
+            {
+                // Crawl
+                SetState(UnitState.Crawling);
+                animator.SetBool("Crawling", true);
+            }
+            else
+            {
+                // Dive
+            }
         }
+        
     }
+    
 }
