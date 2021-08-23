@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 534727617}
   - component: {fileID: 534727619}
   - component: {fileID: 534727618}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 1350894398373948746}
   - component: {fileID: 4596856506589422337}
   - component: {fileID: 6834660675339972480}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Light Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5904972159916078713}
-  m_Layer: 0
+  - component: {fileID: 2548595841511651147}
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,6 +246,19 @@ Transform:
   m_Father: {fileID: 1739266311158511272}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2548595841511651147
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1363036869644580623}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.5, y: 7.75, z: 4}
+  m_Center: {x: 0, y: -0.125, z: 2}
 --- !u!1 &1398593986877746194
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +302,7 @@ GameObject:
   - component: {fileID: 1019787600979758465}
   - component: {fileID: 5265640504639791534}
   - component: {fileID: 5151230256481371851}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Office_Main_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +383,7 @@ GameObject:
   - component: {fileID: 3265660321804616644}
   - component: {fileID: 4269177706493984310}
   - component: {fileID: 7260407065740756029}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -450,7 +464,7 @@ GameObject:
   - component: {fileID: 772208757300828884}
   - component: {fileID: 1835684122381156739}
   - component: {fileID: 624360341003551314}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Office_Main_Front_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
