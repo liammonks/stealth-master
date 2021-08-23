@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StealthMaster_Jump_Loop_Left
+  m_Name: StealthMaster_Slide_Exit_Left
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,9 +20,11 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 9079164093838762868, guid: cfb126b70be5d074287ea69af17c4141, type: 3}
+      value: {fileID: 7748722790254674254, guid: bdea3c2c03be89d4db6e6c11dd7b2a54, type: 3}
     - time: 0.083333336
-      value: {fileID: -8297428226049700092, guid: cfb126b70be5d074287ea69af17c4141, type: 3}
+      value: {fileID: 43826371436318856, guid: bdea3c2c03be89d4db6e6c11dd7b2a54, type: 3}
+    - time: 0.16666667
+      value: {fileID: 3463588939213814611, guid: bdea3c2c03be89d4db6e6c11dd7b2a54, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -42,14 +44,15 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 9079164093838762868, guid: cfb126b70be5d074287ea69af17c4141, type: 3}
-    - {fileID: -8297428226049700092, guid: cfb126b70be5d074287ea69af17c4141, type: 3}
+    - {fileID: 7748722790254674254, guid: bdea3c2c03be89d4db6e6c11dd7b2a54, type: 3}
+    - {fileID: 43826371436318856, guid: bdea3c2c03be89d4db6e6c11dd7b2a54, type: 3}
+    - {fileID: 3463588939213814611, guid: bdea3c2c03be89d4db6e6c11dd7b2a54, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.16666667
+    m_StopTime: 0.25
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

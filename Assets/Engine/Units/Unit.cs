@@ -29,6 +29,7 @@ public abstract class Unit : MonoBehaviour
     private bool grounded = false;
     private bool running = false;
     private bool jumping = false;
+    private bool sliding = false;
     private bool crawlingInput = false;
     private bool canJump = false;
     private bool leftCollision = false;
@@ -40,6 +41,7 @@ public abstract class Unit : MonoBehaviour
     protected const float interactionDistance = 1.0f;
 
     // Constants
+    private const float spriteVerticalOffset = 0.1f;
     private const float roofCheckDistance = 0.1f;
     private const float slideFriction = 2.0f;
 
@@ -63,7 +65,7 @@ public abstract class Unit : MonoBehaviour
         // Initialise stats
         activeStats.climbHeight = activeStats.climbHeight + 0.01f; // Climb over objects of the initially defined climbHeight
         // Set sprite to ground position
-        spriteTransform.localPosition = new Vector3(0, -activeStats.size.y * 0.5f, 0);
+        spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
     }
     
     protected virtual void Update()
@@ -233,17 +235,22 @@ public abstract class Unit : MonoBehaviour
             {
                 // Normal movement input
                 velocity.x = (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection;
+                sliding = false;
             }
             if (activeState == UnitState.Crawling)
             {
                 // Slide when travelling faster than max crawl speed
                 if(Mathf.Abs(velocity.x) > activeStats.runSpeed)
                 {
+                    // Sliding
                     velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * slideFriction);
+                    sliding = true;
                 }
                 else
                 {
+                    // Crawling
                     velocity.x = (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection;
+                    sliding = false;
                 }
             }
         }
@@ -283,6 +290,7 @@ public abstract class Unit : MonoBehaviour
         // Animate
         animator.SetFloat("VelocityX", velocity.x);
         animator.SetBool("Grounded", grounded);
+        animator.SetBool("Sliding", sliding);
     }
     
     protected void SetMovement(int direction)
