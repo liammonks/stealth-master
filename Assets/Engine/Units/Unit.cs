@@ -119,11 +119,6 @@ public abstract class Unit : MonoBehaviour
             Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * leftHit.distance, Color.green);
             float incline = activeStats.climbHeight - leftHit.distance;
             leftVelocity = incline / Time.deltaTime;
-            grounded = true;
-            if (!jumping)
-            {
-                canJump = true;
-            }
         }
         // Downwards raycast, right side
         rightHit = Physics2D.Raycast(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down, activeStats.climbHeight, collisionMask);
@@ -133,28 +128,29 @@ public abstract class Unit : MonoBehaviour
             Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * rightHit.distance, Color.green);
             float incline = activeStats.climbHeight - rightHit.distance;
             rightVelocity = incline / Time.deltaTime;
-            grounded = true;
-            if (!jumping)
-            {
-                canJump = true;
-            }
         }
         if (!leftHit && !rightHit)
         {
+            // Neither ground ray hit
             grounded = false;
+            // If the player was jumping, they have now left the ground so we disable jumping
             jumping = false;
         }
         else
         {
-            // Contact with ground, determine how much we need to push the player up
+            // Contact with ground
+            grounded = true;
+            // Determine how much we need to push the player up
             float climbVelocity = Mathf.Max(leftVelocity, rightVelocity) * activeStats.climbRate;
             if (!jumping)
             {
                 velocity.y = climbVelocity;
                 climbFrame = true;
+                canJump = true;
             }
             else
             {
+                // Jump
                 velocity.y = activeStats.jumpForce;
             }
         }
@@ -283,8 +279,10 @@ public abstract class Unit : MonoBehaviour
         
         // Move
         transform.Translate(velocity * Time.deltaTime);
+        
         // Animate
         animator.SetFloat("VelocityX", velocity.x);
+        animator.SetBool("Grounded", grounded);
     }
     
     protected void SetMovement(int direction)
