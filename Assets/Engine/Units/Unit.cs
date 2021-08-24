@@ -35,6 +35,7 @@ public abstract class Unit : MonoBehaviour
     private bool leftCollision = false;
     private bool rightCollision = false;
     private bool climbFrame = false;
+    private bool canStand = false;
 
     // Interaction
     private List<Interactable> interactables = new List<Interactable>();
@@ -44,6 +45,7 @@ public abstract class Unit : MonoBehaviour
     private const float spriteVerticalOffset = 0.1f;
     private const float roofCheckDistance = 0.1f;
     private const float slideFriction = 2.0f;
+    private const float crawlLockDuration = 0.75f;
 
     private void Awake() {
         SetState(UnitState.Standing);
@@ -76,7 +78,7 @@ public abstract class Unit : MonoBehaviour
         
         #region Stand Check
         // Unit no longer wants to crawl, attempt to stand up
-        if(activeState == UnitState.Crawling && !crawlingInput)
+        if(activeState == UnitState.Crawling && !crawlingInput && canStand)
         {
             // Check we have room to stand
             leftHit = Physics2D.Raycast(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
@@ -316,13 +318,15 @@ public abstract class Unit : MonoBehaviour
     {
         crawlingInput = isCrawling;
         
-        if(crawlingInput)
+        if(crawlingInput && activeState == UnitState.Standing)
         {
             if (grounded)
             {
                 // Crawl
                 SetState(UnitState.Crawling);
                 animator.SetBool("Crawling", true);
+                // Disable the unit from standing for crawlLockDuration
+                StartCoroutine(CrawlLockDelay());
             }
             else
             {
@@ -332,4 +336,10 @@ public abstract class Unit : MonoBehaviour
         
     }
     
+    private IEnumerator CrawlLockDelay()
+    {
+        canStand = false;
+        yield return new WaitForSeconds(crawlLockDuration);
+        canStand = true;
+    }
 }
