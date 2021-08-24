@@ -21,14 +21,14 @@ public abstract class Unit : MonoBehaviour
     [Header("Physics")]
     [SerializeField] protected LayerMask collisionMask;
     [SerializeField] protected LayerMask interactionMask;
-
+    
     private UnitStats activeStats;
     private UnitState activeState;
     private Vector2 velocity;
     private int moveDirection = 0;
     private bool grounded = false;
     private bool running = false;
-    private bool jumping = false;
+    private bool jumping = false; // True from when user hits input to the unit leaving the ground
     private bool sliding = false;
     private bool crawlingInput = false;
     private bool canJump = false;
@@ -46,6 +46,7 @@ public abstract class Unit : MonoBehaviour
     private const float roofCheckDistance = 0.1f;
     private const float slideFriction = 2.0f;
     private const float crawlLockDuration = 0.75f;
+    private Vector2 diveVelocityMultiplier = new Vector2(0.75f, 0.75f);
 
     private void Awake() {
         SetState(UnitState.Standing);
@@ -67,7 +68,7 @@ public abstract class Unit : MonoBehaviour
         // Initialise stats
         activeStats.climbHeight = activeStats.climbHeight + 0.01f; // Climb over objects of the initially defined climbHeight
         // Set sprite to ground position
-        spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
+        //spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
     }
     
     protected virtual void Update()
@@ -285,8 +286,9 @@ public abstract class Unit : MonoBehaviour
         velocity.x = leftCollision ? Mathf.Max(0, velocity.x) : velocity.x;
         velocity.x = rightCollision ? Mathf.Min(0, velocity.x) : velocity.x;
         #endregion
-        
+
         // Move
+        Debug.DrawLine(transform.position, transform.position + (Vector3)(velocity * Time.deltaTime), Color.magenta, 2.0f);
         transform.Translate(velocity * Time.deltaTime);
         
         // Animate
@@ -325,13 +327,16 @@ public abstract class Unit : MonoBehaviour
                 // Crawl
                 SetState(UnitState.Crawling);
                 animator.SetBool("Crawling", true);
-                // Disable the unit from standing for crawlLockDuration
-                StartCoroutine(CrawlLockDelay());
             }
             else
             {
                 // Dive
+                SetState(UnitState.Crawling);
+                animator.SetBool("Crawling", true);
+                velocity += velocity * diveVelocityMultiplier;
             }
+            // Crawl lock after crawl or dive
+            StartCoroutine(CrawlLockDelay());
         }
         
     }
