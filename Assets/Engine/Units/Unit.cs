@@ -35,7 +35,6 @@ public abstract class Unit : MonoBehaviour
     private bool leftCollision = false;
     private bool rightCollision = false;
     private bool climbFrame = false;
-    private bool canStand = false;
 
     // Interaction
     private List<Interactable> interactables = new List<Interactable>();
@@ -46,7 +45,7 @@ public abstract class Unit : MonoBehaviour
     private const float roofCheckDistance = 0.1f;
     private const float slideFriction = 2.0f;
     private const float crawlLockDuration = 0.75f;
-    private Vector2 diveVelocityMultiplier = new Vector2(0.75f, 0.75f);
+    private Vector2 diveVelocityMultiplier = new Vector2(0.5f, 0.5f);
 
     private void Awake() {
         SetState(UnitState.Standing);
@@ -68,7 +67,7 @@ public abstract class Unit : MonoBehaviour
         // Initialise stats
         activeStats.climbHeight = activeStats.climbHeight + 0.01f; // Climb over objects of the initially defined climbHeight
         // Set sprite to ground position
-        //spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
+        spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
     }
     
     protected virtual void Update()
@@ -78,8 +77,8 @@ public abstract class Unit : MonoBehaviour
         float leftVelocity = 0.0f, rightVelocity = 0.0f;
         
         #region Stand Check
-        // Unit no longer wants to crawl, attempt to stand up
-        if(activeState == UnitState.Crawling && !crawlingInput && canStand)
+        // Unit no longer wants to crawl, attempt to stand up, only possible when grounded and travelling slower than run speed
+        if(activeState == UnitState.Crawling && !crawlingInput && grounded && Mathf.Abs(velocity.x) <= activeStats.runSpeed)
         {
             // Check we have room to stand
             leftHit = Physics2D.Raycast(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
@@ -145,6 +144,7 @@ public abstract class Unit : MonoBehaviour
         {
             // Contact with ground
             grounded = true;
+            animator.SetBool("Diving", false);
             // Determine how much we need to push the player up
             float climbVelocity = Mathf.Max(leftVelocity, rightVelocity) * activeStats.climbRate;
             if (!jumping)
@@ -288,7 +288,7 @@ public abstract class Unit : MonoBehaviour
         #endregion
 
         // Move
-        Debug.DrawLine(transform.position, transform.position + (Vector3)(velocity * Time.deltaTime), Color.magenta, 2.0f);
+        Debug.DrawLine(transform.position, transform.position + (Vector3)(velocity * Time.deltaTime), Color.Lerp(Color.black, Color.white, velocity.magnitude / (activeStats.runSpeed * 10.0f)), 2.0f);
         transform.Translate(velocity * Time.deltaTime);
         
         // Animate
@@ -322,29 +322,18 @@ public abstract class Unit : MonoBehaviour
         
         if(crawlingInput && activeState == UnitState.Standing)
         {
-            if (grounded)
-            {
-                // Crawl
-                SetState(UnitState.Crawling);
-                animator.SetBool("Crawling", true);
-            }
-            else
+            animator.SetBool("Crawling", true);
+            SetState(UnitState.Crawling);
+            // Must be going atleast walk speed to dive
+            if (!grounded && Mathf.Abs(velocity.x) >= activeStats.walkSpeed)
             {
                 // Dive
                 SetState(UnitState.Crawling);
-                animator.SetBool("Crawling", true);
+                animator.SetBool("Diving", true);
                 velocity += velocity * diveVelocityMultiplier;
             }
-            // Crawl lock after crawl or dive
-            StartCoroutine(CrawlLockDelay());
         }
         
     }
-    
-    private IEnumerator CrawlLockDelay()
-    {
-        canStand = false;
-        yield return new WaitForSeconds(crawlLockDuration);
-        canStand = true;
-    }
+
 }
