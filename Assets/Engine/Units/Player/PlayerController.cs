@@ -8,16 +8,55 @@ public class PlayerController : Unit
     private Vector2 interactDirection;
     private Vector3 mouseWorldPosition;
 
+
     protected override void Update()
     {
         base.Update();
     }
 
+    #region Venting
+    private Vent currentVent = null;
+
+    public void EnterVent(Vent enteredVent)
+    {
+        currentVent = enteredVent;
+        transform.position = new Vector3(currentVent.transform.position.x, currentVent.transform.position.y, transform.position.z);
+        SetVisible(false);
+        EnableMovement(false);
+    }
+
+    public void ExitVent()
+    {
+        currentVent = null;
+        SetVisible(true);
+        EnableMovement(true);
+    }
+    
+    public Vent GetCurrentVent()
+    {
+        return currentVent;
+    }
+    
+    #endregion
+
     #region Input
 
     private void OnMovement(InputValue value)
     {
-        SetMovement(Mathf.RoundToInt(value.Get<Vector2>().x));
+        if (currentVent == null)
+        {
+            // Normal Movement
+            SetMoveDirection(Mathf.RoundToInt(value.Get<Vector2>().x));
+        }
+        else
+        {
+            // Vent Movement
+            Vent nextVent = currentVent.GetConnectedVent(value.Get<Vector2>());
+            if (nextVent != null)
+            {
+                EnterVent(nextVent);
+            }
+        }
     }
     
     private void OnRun(InputValue value)

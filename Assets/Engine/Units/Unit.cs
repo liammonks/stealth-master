@@ -35,6 +35,7 @@ public abstract class Unit : MonoBehaviour
     private bool leftCollision = false;
     private bool rightCollision = false;
     private bool climbFrame = false;
+    private bool updateMovement = true;
 
     // Interaction
     private List<Interactable> interactables = new List<Interactable>();
@@ -72,13 +73,21 @@ public abstract class Unit : MonoBehaviour
     
     protected virtual void Update()
     {
+        if(updateMovement)
+        {
+            MoveUpdate();
+        }
+    }
+    
+    private void MoveUpdate()
+    {
         // Re-usable vars
         RaycastHit2D leftHit, rightHit;
         float leftVelocity = 0.0f, rightVelocity = 0.0f;
-        
+
         #region Stand Check
         // Unit no longer wants to crawl, attempt to stand up, only possible when grounded and travelling slower than run speed
-        if(activeState == UnitState.Crawling && !crawlingInput && grounded && Mathf.Abs(velocity.x) <= activeStats.runSpeed)
+        if (activeState == UnitState.Crawling && !crawlingInput && grounded && Mathf.Abs(velocity.x) <= activeStats.runSpeed)
         {
             // Check we have room to stand
             leftHit = Physics2D.Raycast(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
@@ -99,9 +108,9 @@ public abstract class Unit : MonoBehaviour
             }
         }
         #endregion
-        
+
         // Climbed an object last frame, cancel out vertical momentum
-        if(climbFrame)
+        if (climbFrame)
         {
             velocity.y = 0;
             climbFrame = false;
@@ -168,7 +177,7 @@ public abstract class Unit : MonoBehaviour
         if (leftHit)
         {
             Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, activeStats.size.y * 0.5f), Vector2.up * leftHit.distance, Color.green);
-            if(velocity.y * Time.deltaTime >= leftHit.distance)
+            if (velocity.y * Time.deltaTime >= leftHit.distance)
             {
                 velocity.y = leftHit.distance * Time.deltaTime;
             }
@@ -207,7 +216,7 @@ public abstract class Unit : MonoBehaviour
             transform.Translate(new Vector3(((activeStats.size.x * 0.5f) - leftHit.distance), 0));
             leftCollision = true;
         }
-        
+
         // Right side low
         rightHit = Physics2D.Raycast(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.right, activeStats.size.x * 0.5f, collisionMask);
         Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.right * activeStats.size.x * 0.5f, Color.red);
@@ -243,7 +252,7 @@ public abstract class Unit : MonoBehaviour
             if (activeState == UnitState.Crawling)
             {
                 // Slide when travelling faster than max crawl speed
-                if(Mathf.Abs(velocity.x) > activeStats.runSpeed)
+                if (Mathf.Abs(velocity.x) > activeStats.runSpeed)
                 {
                     // Sliding
                     velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * slideFriction);
@@ -274,7 +283,7 @@ public abstract class Unit : MonoBehaviour
             velocity.y -= 9.81f * Time.deltaTime;
         }
         #endregion
-        
+
         #region Apply Collisions
         // Collisions may exceed terminal velocity
         if (!leftCollision && !rightCollision)
@@ -290,14 +299,14 @@ public abstract class Unit : MonoBehaviour
         // Move
         Debug.DrawLine(transform.position, transform.position + (Vector3)(velocity * Time.deltaTime), Color.Lerp(Color.black, Color.white, velocity.magnitude / (activeStats.runSpeed * 10.0f)), 2.0f);
         transform.Translate(velocity * Time.deltaTime);
-        
+
         // Animate
         animator.SetFloat("VelocityX", velocity.x);
         animator.SetBool("Grounded", grounded);
         animator.SetBool("Sliding", sliding);
     }
     
-    protected void SetMovement(int direction)
+    protected void SetMoveDirection(int direction)
     {
         moveDirection = direction;
     }
@@ -336,4 +345,15 @@ public abstract class Unit : MonoBehaviour
         
     }
 
+    protected void SetVisible(bool visible)
+    {
+        spriteTransform.gameObject.SetActive(visible);
+    }
+
+    protected void EnableMovement(bool canMove)
+    {
+        // Reset velocity
+        velocity = Vector2.zero;
+        updateMovement = canMove;
+    }
 }
