@@ -24,12 +24,14 @@ public abstract class Unit : MonoBehaviour
     
     private UnitStats activeStats;
     private UnitState activeState;
+    private float statsInterp = 0.0f;
     private Vector2 velocity;
     private int moveDirection = 0;
     private bool grounded = false;
     private bool running = false;
     private bool jumping = false; // True from when user hits input to the unit leaving the ground
     private bool sliding = false;
+    private bool diving = false;
     private bool crawlingInput = false;
     private bool canJump = false;
     private bool leftCollision = false;
@@ -44,31 +46,22 @@ public abstract class Unit : MonoBehaviour
     // Constants
     private const float spriteVerticalOffset = 0.1f;
     private const float roofCheckDistance = 0.1f;
+    private const float groundFriction = 8.0f;
     private const float slideFriction = 2.0f;
     private const float crawlLockDuration = 0.75f;
     private Vector2 diveVelocityMultiplier = new Vector2(0.5f, 0.5f);
+    private const float stateTransitionRate = 5.0f;
 
     private void Awake() {
         SetState(UnitState.Standing);
+        activeStats = standingStats.GetInstance();
     }
     
     private void SetState(UnitState state)
     {
+        if (activeState == state) { return; }
         activeState = state;
-        // Activate relevant stats for the selected state
-        switch (state)
-        {
-            case UnitState.Standing:
-                activeStats = standingStats.GetInstance();
-                break;
-            case UnitState.Crawling:
-                activeStats = crawlingStats.GetInstance();
-                break;
-        }
-        // Initialise stats
-        activeStats.climbHeight = activeStats.climbHeight + 0.01f; // Climb over objects of the initially defined climbHeight
-        // Set sprite to ground position
-        spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
+        statsInterp = 0.0f;
     }
     
     protected virtual void Update()
@@ -76,6 +69,22 @@ public abstract class Unit : MonoBehaviour
         if(updateMovement)
         {
             MoveUpdate();
+        }
+        // Interpolate stats
+        if (statsInterp < 1.0f)
+        {
+            statsInterp += Time.deltaTime * stateTransitionRate;
+            switch (activeState)
+            {
+                case UnitState.Standing:
+                    activeStats = UnitStats.Interpolate(crawlingStats, standingStats, statsInterp);
+                    break;
+                case UnitState.Crawling:
+                    activeStats = UnitStats.Interpolate(standingStats, crawlingStats, statsInterp);
+                    break;
+            }
+            // Set sprite to ground position
+            spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
         }
     }
     
@@ -86,25 +95,32 @@ public abstract class Unit : MonoBehaviour
         float leftVelocity = 0.0f, rightVelocity = 0.0f;
 
         #region Stand Check
-        // Unit no longer wants to crawl, attempt to stand up, only possible when grounded and travelling slower than run speed
-        if (activeState == UnitState.Crawling && !crawlingInput && grounded && Mathf.Abs(velocity.x) <= activeStats.runSpeed)
+        // Unit no longer wants to crawl, attempt to stand up
+        if (activeState == UnitState.Crawling && !crawlingInput && grounded)
         {
-            // Check we have room to stand
-            leftHit = Physics2D.Raycast(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
-            if (leftHit)
+            if (!sliding || diving)
             {
-                Debug.DrawRay(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * leftHit.distance, Color.red);
-            }
-            rightHit = Physics2D.Raycast(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
-            if (rightHit)
-            {
-                Debug.DrawRay(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * rightHit.distance, Color.red);
-            }
-            // Unit has room, set to standing
-            if (!leftHit && !rightHit)
-            {
-                SetState(UnitState.Standing);
-                animator.SetBool("Crawling", false);
+                // Check we have room to stand
+                leftHit = Physics2D.Raycast(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
+                if (leftHit)
+                {
+                    Debug.DrawRay(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * leftHit.distance, Color.red);
+                }
+                rightHit = Physics2D.Raycast(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
+                if (rightHit)
+                {
+                    Debug.DrawRay(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * rightHit.distance, Color.red);
+                }
+                // Unit has room, set to standing
+                if (!leftHit && !rightHit)
+                {
+                    SetState(UnitState.Standing);
+                    animator.SetBool("Crawling", false);
+                    animator.SetBool("Diving", false);
+                    diving = false;
+                    animator.SetBool("Sliding", false);
+                    sliding = false;
+                }
             }
         }
         #endregion
@@ -153,7 +169,6 @@ public abstract class Unit : MonoBehaviour
         {
             // Contact with ground
             grounded = true;
-            animator.SetBool("Diving", false);
             // Determine how much we need to push the player up
             float climbVelocity = Mathf.Max(leftVelocity, rightVelocity) * activeStats.climbRate;
             if (!jumping)
@@ -245,23 +260,33 @@ public abstract class Unit : MonoBehaviour
             // Ground movement
             if (activeState == UnitState.Standing)
             {
-                // Normal movement input
-                velocity.x = (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection;
-                sliding = false;
+                // Apply drag
+                velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * activeStats.groundDrag);
+                // Apply movement input
+                if (Mathf.Abs(velocity.x) < activeStats.runSpeed)
+                {
+                    float speed = running ? activeStats.runSpeed : activeStats.walkSpeed;
+                    velocity.x += speed * moveDirection * Time.deltaTime * activeStats.groundAuthority;
+                    velocity.x = Mathf.Clamp(velocity.x, -speed, speed);
+                }
             }
-            if (activeState == UnitState.Crawling)
+            if (activeState == UnitState.Crawling && !diving)
             {
                 // Slide when travelling faster than max crawl speed
                 if (Mathf.Abs(velocity.x) > activeStats.runSpeed)
                 {
-                    // Sliding
+                    // Slide drag
                     velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * slideFriction);
                     sliding = true;
                 }
                 else
                 {
-                    // Crawling
-                    velocity.x = (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection;
+                    // Apply drag
+                    velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * activeStats.groundDrag);
+                    // Apply movement input
+                    float speed = running ? activeStats.runSpeed : activeStats.walkSpeed;
+                    velocity.x += speed * moveDirection * Time.deltaTime * activeStats.groundAuthority;
+                    velocity.x = Mathf.Clamp(velocity.x, -speed, speed);
                     sliding = false;
                 }
             }
@@ -269,7 +294,7 @@ public abstract class Unit : MonoBehaviour
         else
         {
             // Air movement
-            if (Mathf.Abs(velocity.x) < activeStats.walkSpeed)
+            if (Mathf.Abs(velocity.x) < activeStats.runSpeed)
             {
                 // Allow player to push towards movement speed while in the air
                 velocity.x += (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection * Time.deltaTime * activeStats.airAuthority;
@@ -333,10 +358,11 @@ public abstract class Unit : MonoBehaviour
         {
             animator.SetBool("Crawling", true);
             SetState(UnitState.Crawling);
-            // Must be going atleast walk speed to dive
-            if (!grounded && Mathf.Abs(velocity.x) >= activeStats.walkSpeed)
+            // Must be going over running speed to dive
+            if (!grounded && velocity.y >= 0)
             {
                 // Dive
+                diving = true;
                 SetState(UnitState.Crawling);
                 animator.SetBool("Diving", true);
                 velocity += velocity * diveVelocityMultiplier;

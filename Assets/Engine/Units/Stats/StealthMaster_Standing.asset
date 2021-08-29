@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 3
   runSpeed: 5
-  climbHeight: 0.5
+  climbHeight: 1
   climbRate: 0.1
   size: {x: 0.6, y: 1.7}
   feetSeperation: 0.4
+  groundAuthority: 12
   airAuthority: 2
   jumpForce: 4
+  groundDrag: 8
   airDrag: 1
   terminalVeloicty: 55.56

@@ -8,7 +8,6 @@ public class PlayerController : Unit
     private Vector2 interactDirection;
     private Vector3 mouseWorldPosition;
 
-
     protected override void Update()
     {
         base.Update();
