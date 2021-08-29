@@ -300,11 +300,10 @@ public abstract class Unit : MonoBehaviour
         {
             // Apply drag
             velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * activeStats.airDrag);
-            // Apply air movement
-            if (Mathf.Abs(velocity.x) < activeStats.runSpeed)
+            // Allow player to push towards movement speed while in the air
+            float speed = running ? activeStats.runSpeed : activeStats.walkSpeed;
+            if (Mathf.Abs(velocity.x) < speed)
             {
-                // Allow player to push towards movement speed while in the air
-                float speed = running ? activeStats.runSpeed : activeStats.walkSpeed;
                 velocity.x += speed * moveDirection * Time.deltaTime * activeStats.airAuthority;
                 velocity.x = Mathf.Clamp(velocity.x, -speed, speed);
             }
