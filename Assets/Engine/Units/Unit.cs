@@ -293,16 +293,15 @@ public abstract class Unit : MonoBehaviour
         }
         else
         {
-            // Air movement
+            // Apply drag
+            velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * activeStats.airDrag);
+            // Apply air movement
             if (Mathf.Abs(velocity.x) < activeStats.runSpeed)
             {
                 // Allow player to push towards movement speed while in the air
-                velocity.x += (running ? activeStats.runSpeed : activeStats.walkSpeed) * moveDirection * Time.deltaTime * activeStats.airAuthority;
-            }
-            else
-            {
-                // Apply drag
-                velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * activeStats.airDrag);
+                float speed = running ? activeStats.runSpeed : activeStats.walkSpeed;
+                velocity.x += speed * moveDirection * Time.deltaTime * activeStats.airAuthority;
+                velocity.x = Mathf.Clamp(velocity.x, -speed, speed);
             }
             // Apply gravity
             velocity.y -= 9.81f * Time.deltaTime;
@@ -356,17 +355,16 @@ public abstract class Unit : MonoBehaviour
         
         if(crawlingInput && activeState == UnitState.Standing)
         {
-            animator.SetBool("Crawling", true);
-            SetState(UnitState.Crawling);
-            // Must be going over running speed to dive
-            if (!grounded && velocity.y >= 0)
+            // Must be going over walking speed to dive
+            if (!grounded && velocity.y >= 0 && Mathf.Abs(velocity.x) > activeStats.walkSpeed)
             {
                 // Dive
                 diving = true;
-                SetState(UnitState.Crawling);
                 animator.SetBool("Diving", true);
                 velocity += velocity * diveVelocityMultiplier;
             }
+            animator.SetBool("Crawling", true);
+            SetState(UnitState.Crawling);
         }
         
     }
