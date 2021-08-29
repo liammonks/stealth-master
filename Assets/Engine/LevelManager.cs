@@ -7,7 +7,7 @@ public class LevelManager : MonoBehaviour
 {
     private void Awake()
     {
-        if (SceneManager.GetSceneByName("Player").isLoaded == false)
+        if (!SceneManager.GetSceneByName("Player").IsValid())
         {
             SceneManager.LoadScene("Player", LoadSceneMode.Additive);
         }

@@ -44,7 +44,7 @@ public abstract class Unit : MonoBehaviour
     protected const float interactionDistance = 1.0f;
 
     // Constants
-    private const float spriteVerticalOffset = 0.1f;
+    private const float spriteVerticalOffset = 0.0f;
     private const float roofCheckDistance = 0.1f;
     private const float groundFriction = 8.0f;
     private const float slideFriction = 2.0f;
@@ -84,7 +84,7 @@ public abstract class Unit : MonoBehaviour
                     break;
             }
             // Set sprite to ground position
-            spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
+            //spriteTransform.localPosition = new Vector3(0, (-activeStats.size.y * 0.5f) + spriteVerticalOffset, 0);
         }
     }
     
