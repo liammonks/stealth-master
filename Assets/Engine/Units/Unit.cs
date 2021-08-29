@@ -270,7 +270,7 @@ public abstract class Unit : MonoBehaviour
                     velocity.x = Mathf.Clamp(velocity.x, -speed, speed);
                 }
             }
-            if (activeState == UnitState.Crawling && !diving)
+            if (activeState == UnitState.Crawling)
             {
                 // Slide when travelling faster than max crawl speed
                 if (Mathf.Abs(velocity.x) > activeStats.runSpeed)
@@ -281,6 +281,11 @@ public abstract class Unit : MonoBehaviour
                 }
                 else
                 {
+                    if(diving)
+                    {
+                        diving = false;
+                        animator.SetBool("Diving", false);
+                    }
                     // Apply drag
                     velocity.x = Mathf.MoveTowards(velocity.x, 0.0f, Time.deltaTime * activeStats.groundDrag);
                     // Apply movement input
