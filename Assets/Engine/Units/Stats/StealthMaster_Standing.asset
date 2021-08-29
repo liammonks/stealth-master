@@ -15,7 +15,7 @@ MonoBehaviour:
   walkSpeed: 3
   runSpeed: 5
   climbHeight: 1
-  climbRate: 0.1
+  climbRate: 0.05
   size: {x: 0.6, y: 1.7}
   feetSeperation: 0.4
   groundAuthority: 12

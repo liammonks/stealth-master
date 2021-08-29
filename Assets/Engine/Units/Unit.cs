@@ -32,6 +32,7 @@ public abstract class Unit : MonoBehaviour
     private bool jumping = false; // True from when user hits input to the unit leaving the ground
     private bool sliding = false;
     private bool diving = false;
+    private bool vaulting = false;
     private bool crawlingInput = false;
     private bool canJump = false;
     private bool leftCollision = false;
@@ -92,7 +93,7 @@ public abstract class Unit : MonoBehaviour
     {
         // Re-usable vars
         RaycastHit2D leftHit, rightHit;
-        float leftVelocity = 0.0f, rightVelocity = 0.0f;
+        float leftHitDistance = 0.0f, rightHitDistance = 0.0f;
 
         #region Stand Check
         // Unit no longer wants to crawl, attempt to stand up
@@ -130,6 +131,7 @@ public abstract class Unit : MonoBehaviour
         {
             velocity.y = 0;
             climbFrame = false;
+            vaulting = false;
         }
         // Wall collision last frame, cancel out horizontal momentum
         if (leftCollision || rightCollision)
@@ -146,8 +148,7 @@ public abstract class Unit : MonoBehaviour
         if (leftHit)
         {
             Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * leftHit.distance, Color.green);
-            float incline = activeStats.climbHeight - leftHit.distance;
-            leftVelocity = incline / Time.deltaTime;
+            leftHitDistance = activeStats.climbHeight - leftHit.distance;
         }
         // Downwards raycast, right side
         rightHit = Physics2D.Raycast(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down, activeStats.climbHeight, collisionMask);
@@ -155,8 +156,7 @@ public abstract class Unit : MonoBehaviour
         if (rightHit)
         {
             Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * rightHit.distance, Color.green);
-            float incline = activeStats.climbHeight - rightHit.distance;
-            rightVelocity = incline / Time.deltaTime;
+            rightHitDistance = activeStats.climbHeight - rightHit.distance;
         }
         if (!leftHit && !rightHit)
         {
@@ -170,10 +170,12 @@ public abstract class Unit : MonoBehaviour
             // Contact with ground
             grounded = true;
             // Determine how much we need to push the player up
-            float climbVelocity = Mathf.Max(leftVelocity, rightVelocity) * activeStats.climbRate;
+            float climbDistance = Mathf.Max(leftHitDistance, rightHitDistance);
             if (!jumping)
             {
-                velocity.y = climbVelocity;
+                velocity.y = (climbDistance / Time.deltaTime) * activeStats.climbRate;
+                // Vault when climbing over half this units max climb height
+                vaulting = (climbDistance >= activeStats.climbHeight * 0.5f);
                 climbFrame = true;
                 canJump = true;
             }
@@ -332,6 +334,7 @@ public abstract class Unit : MonoBehaviour
         animator.SetFloat("VelocityX", velocity.x);
         animator.SetBool("Grounded", grounded);
         animator.SetBool("Sliding", sliding);
+        animator.SetBool("Vaulting", vaulting);
     }
     
     protected void SetMoveDirection(int direction)
