@@ -173,7 +173,7 @@ public abstract class Unit : MonoBehaviour
             float climbDistance = Mathf.Max(leftHitDistance, rightHitDistance);
             if (!jumping)
             {
-                velocity.y = (climbDistance / Time.deltaTime) * activeStats.climbRate;
+                velocity.y = (climbDistance / Time.unscaledDeltaTime) * activeStats.climbRate;
                 // Vault when climbing over half this units max climb height
                 vaulting = (climbDistance >= activeStats.climbHeight * 0.5f);
                 climbFrame = true;
