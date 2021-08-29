@@ -360,16 +360,22 @@ public abstract class Unit : MonoBehaviour
         
         if(crawlingInput && activeState == UnitState.Standing)
         {
-            // Must be going over walking speed to dive
+            // Crawl if grounded
+            if (grounded)
+            {
+                animator.SetBool("Crawling", true);
+                SetState(UnitState.Crawling);
+            }
+            // If in the air and faster than walk speed, dive
             if (!grounded && velocity.y >= 0 && Mathf.Abs(velocity.x) > activeStats.walkSpeed)
             {
                 // Dive
                 diving = true;
                 animator.SetBool("Diving", true);
                 velocity += velocity * diveVelocityMultiplier;
+                animator.SetBool("Crawling", true);
+                SetState(UnitState.Crawling);
             }
-            animator.SetBool("Crawling", true);
-            SetState(UnitState.Crawling);
         }
         
     }
