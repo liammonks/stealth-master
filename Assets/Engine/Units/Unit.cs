@@ -9,6 +9,9 @@ public abstract class Unit : MonoBehaviour
         Standing,
         Crawling
     }
+    
+    protected LayerMask collisionMask;
+    protected LayerMask interactionMask;
 
     [Header("Components")]
     [SerializeField] private Transform spriteTransform;
@@ -18,30 +21,25 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] private UnitStats standingStats;
     [SerializeField] private UnitStats crawlingStats;
 
-    [Header("Physics")]
-    [SerializeField] protected LayerMask collisionMask;
-    [SerializeField] protected LayerMask interactionMask;
-    
     private UnitStats activeStats;
     private UnitState activeState;
     private float statsInterp = 0.0f;
     private Vector2 velocity;
-    private int moveDirection = 0;
     private bool grounded = false;
     private bool running = false;
     private bool jumping = false; // True from when user hits input to the unit leaving the ground
     private bool sliding = false;
     private bool diving = false;
     private bool vaulting = false;
-    private bool crawlingInput = false;
     private bool canJump = false;
-    private bool leftCollision = false;
-    private bool rightCollision = false;
     private bool climbFrame = false;
     private bool updateMovement = true;
+    
+    // Input
+    private bool crawlingInput = false;
+    private int moveDirection = 0;
 
     // Interaction
-    private List<Interactable> interactables = new List<Interactable>();
     protected const float interactionDistance = 1.0f;
 
     // Constants
@@ -50,12 +48,16 @@ public abstract class Unit : MonoBehaviour
     private const float groundFriction = 8.0f;
     private const float slideFriction = 2.0f;
     private const float crawlLockDuration = 0.75f;
-    private Vector2 diveVelocityMultiplier = new Vector2(0.5f, 0.5f);
     private const float stateTransitionRate = 5.0f;
+    private const float maxVaultThickness = 0.51f;
+    private const float vaultDuration = 0.4f;
+    private const float climbDuration = 0.5f;
 
     private void Awake() {
         SetState(UnitState.Standing);
         activeStats = standingStats.GetInstance();
+        collisionMask = LayerMask.GetMask("UnitCollider");
+        interactionMask = LayerMask.GetMask("Interactable");
     }
     
     private void SetState(UnitState state)
@@ -91,9 +93,11 @@ public abstract class Unit : MonoBehaviour
     
     private void MoveUpdate()
     {
-        // Re-usable vars
+        if (vaulting) { return; }
+        // Vars
         RaycastHit2D leftHit, rightHit;
-        float leftHitDistance = 0.0f, rightHitDistance = 0.0f;
+        float leftHitElevation = 0.0f, rightHitElevation = 0.0f;
+        bool leftCollision = false, rightCollision = false;
 
         #region Stand Check
         // Unit no longer wants to crawl, attempt to stand up
@@ -131,7 +135,6 @@ public abstract class Unit : MonoBehaviour
         {
             velocity.y = 0;
             climbFrame = false;
-            vaulting = false;
         }
         // Wall collision last frame, cancel out horizontal momentum
         if (leftCollision || rightCollision)
@@ -143,20 +146,20 @@ public abstract class Unit : MonoBehaviour
 
         #region Ground Check
         // Downwards raycast, left side
-        leftHit = Physics2D.Raycast(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down, activeStats.climbHeight, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * activeStats.climbHeight, Color.red);
+        leftHit = Physics2D.Raycast(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.down, activeStats.vaultHeight, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.down * activeStats.vaultHeight, Color.red);
         if (leftHit)
         {
-            Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * leftHit.distance, Color.green);
-            leftHitDistance = activeStats.climbHeight - leftHit.distance;
+            Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.down * leftHit.distance, Color.green);
+            leftHitElevation = activeStats.vaultHeight - leftHit.distance;
         }
         // Downwards raycast, right side
-        rightHit = Physics2D.Raycast(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down, activeStats.climbHeight, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * activeStats.climbHeight, Color.red);
+        rightHit = Physics2D.Raycast(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.down, activeStats.vaultHeight, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.down * activeStats.vaultHeight, Color.red);
         if (rightHit)
         {
-            Debug.DrawRay(transform.position + new Vector3(-activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.down * rightHit.distance, Color.green);
-            rightHitDistance = activeStats.climbHeight - rightHit.distance;
+            Debug.DrawRay(transform.position + new Vector3(activeStats.feetSeperation * 0.5f, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.down * rightHit.distance, Color.green);
+            rightHitElevation = activeStats.vaultHeight - rightHit.distance;
         }
         if (!leftHit && !rightHit)
         {
@@ -170,14 +173,43 @@ public abstract class Unit : MonoBehaviour
             // Contact with ground
             grounded = true;
             // Determine how much we need to push the player up
-            float climbDistance = Mathf.Max(leftHitDistance, rightHitDistance);
+            float climbDistance = Mathf.Max(leftHitElevation, rightHitElevation);
             if (!jumping)
             {
-                velocity.y = (climbDistance / Time.unscaledDeltaTime) * activeStats.climbRate;
-                // Vault when climbing over half this units max climb height
-                vaulting = (climbDistance >= activeStats.climbHeight * 0.5f);
-                climbFrame = true;
-                canJump = true;
+                // Vault when climbing over an object taller than stepHeight
+                if(climbDistance > activeStats.stepHeight)
+                {
+                    bool vaultLeft = leftHitElevation > rightHitElevation;
+                    Vector2 vaultDirection = vaultLeft ? Vector2.left : Vector2.right;
+                    float groundClearance = activeStats.vaultHeight - 0.1f;
+                    // Get a point half way between the top of the vaultable object and the units feet
+                    Vector2 nearCheck = (vaultLeft ? leftHit : rightHit).point + (vaultDirection * maxVaultThickness);
+                    Vector2 farCheck = (vaultLeft ? leftHit : rightHit).point + (vaultDirection * (maxVaultThickness + activeStats.feetSeperation));
+                    RaycastHit2D nearHit = Physics2D.Raycast(nearCheck, Vector2.down, groundClearance, collisionMask);
+                    RaycastHit2D farHit = Physics2D.Raycast(farCheck, Vector2.down, groundClearance, collisionMask);
+                    Debug.DrawLine(nearCheck, nearCheck + (Vector2.down * groundClearance), nearHit ? Color.red : Color.green, 2.0f);
+                    Debug.DrawLine(farCheck, farCheck + (Vector2.down * groundClearance), farHit ? Color.red : Color.green, 2.0f);
+                    if(nearHit || farHit)
+                    {
+                        // Object is in landing zone
+                        // Climb over the object
+                        velocity = Vector2.zero;
+                        StartCoroutine(Climb((Vector2)transform.position + (Vector2.up * climbDistance) + (vaultDirection * activeStats.feetSeperation)));
+                    }
+                    else
+                    {
+                        // Landing zone is clear
+                        velocity = Vector2.zero;
+                        StartCoroutine(Vault((Vector2)transform.position + (vaultDirection * (maxVaultThickness + (activeStats.feetSeperation )))));
+                    }
+                }
+                else
+                {
+                    // Step over the object
+                    velocity.y = (climbDistance / Time.unscaledDeltaTime) * activeStats.stepRate;
+                    climbFrame = true;
+                    canJump = true;
+                }
             }
             else
             {
@@ -214,11 +246,11 @@ public abstract class Unit : MonoBehaviour
 
         #region Wall Collision
         // Left side low
-        leftHit = Physics2D.Raycast(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.left, activeStats.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.left * activeStats.size.x * 0.5f, Color.red);
+        leftHit = Physics2D.Raycast(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.left, activeStats.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.left * activeStats.size.x * 0.5f, Color.red);
         if (leftHit)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.left * leftHit.distance, Color.green);
+            Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.left * leftHit.distance, Color.green);
             // Move out of collision
             transform.Translate(new Vector3(((activeStats.size.x * 0.5f) - leftHit.distance), 0));
             leftCollision = true;
@@ -235,11 +267,11 @@ public abstract class Unit : MonoBehaviour
         }
 
         // Right side low
-        rightHit = Physics2D.Raycast(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.right, activeStats.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.right * activeStats.size.x * 0.5f, Color.red);
+        rightHit = Physics2D.Raycast(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.right, activeStats.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.right * activeStats.size.x * 0.5f, Color.red);
         if (rightHit)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.climbHeight), Vector2.right * rightHit.distance, Color.green);
+            Debug.DrawRay(transform.position + new Vector3(0, -(activeStats.size.y * 0.5f) + activeStats.vaultHeight), Vector2.right * rightHit.distance, Color.green);
             // Move out of collision
             transform.Translate(new Vector3(-((activeStats.size.x * 0.5f) - rightHit.distance), 0));
             rightCollision = true;
@@ -327,14 +359,13 @@ public abstract class Unit : MonoBehaviour
         #endregion
 
         // Move
-        Debug.DrawLine(transform.position, transform.position + (Vector3)(velocity * Time.deltaTime), Color.Lerp(Color.black, Color.white, velocity.magnitude / (activeStats.runSpeed * 10.0f)), 2.0f);
+        //Debug.DrawLine(transform.position, transform.position + (Vector3)(velocity * Time.deltaTime), Color.Lerp(Color.black, Color.white, velocity.magnitude / (activeStats.runSpeed * 10.0f)), 2.0f);
         transform.Translate(velocity * Time.deltaTime);
 
         // Animate
         animator.SetFloat("VelocityX", velocity.x);
         animator.SetBool("Grounded", grounded);
         animator.SetBool("Sliding", sliding);
-        animator.SetBool("Vaulting", vaulting);
     }
     
     protected void SetMoveDirection(int direction)
@@ -374,12 +405,56 @@ public abstract class Unit : MonoBehaviour
                 // Dive
                 diving = true;
                 animator.SetBool("Diving", true);
-                velocity += velocity * diveVelocityMultiplier;
+                velocity += velocity * activeStats.diveVelocityMultiplier;
                 animator.SetBool("Crawling", true);
                 SetState(UnitState.Crawling);
             }
         }
         
+    }
+    
+    private IEnumerator Vault(Vector2 target)
+    {
+        vaulting = true;
+        animator.SetBool("Vaulting", true);
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = target;
+        endPos.z = startPos.z;
+        Debug.DrawLine(startPos, endPos, Color.magenta, 2.0f);
+
+        float t = 0.0f;
+        while(t < 1.0f)
+        {
+            t += Time.deltaTime * (1.0f / climbDuration);
+            transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+
+        vaulting = false;
+        animator.SetBool("Vaulting", false);
+    }
+
+    private IEnumerator Climb(Vector2 target)
+    {
+        vaulting = true;
+        animator.SetBool("Vaulting", true);
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = target;
+        endPos.z = startPos.z;
+        Debug.DrawLine(startPos, endPos, Color.magenta, 2.0f);
+
+        float t = 0.0f;
+        while (t < 1.0f)
+        {
+            t += Time.deltaTime * (1.0f / vaultDuration);
+            transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+
+        vaulting = false;
+        animator.SetBool("Vaulting", false);
     }
 
     protected void SetVisible(bool visible)
@@ -391,6 +466,7 @@ public abstract class Unit : MonoBehaviour
     {
         // Reset velocity
         velocity = Vector2.zero;
+        moveDirection = 0;
         updateMovement = canMove;
     }
 }
