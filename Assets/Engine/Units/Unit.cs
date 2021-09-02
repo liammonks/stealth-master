@@ -50,7 +50,7 @@ public abstract class Unit : MonoBehaviour
     private const float crawlLockDuration = 0.75f;
     private const float stateTransitionRate = 5.0f;
     private const float maxVaultThickness = 0.51f;
-    private const float vaultDuration = 0.4f;
+    private const float vaultDuration = 0.25f;
     private const float climbDuration = 0.5f;
 
     private void Awake() {
@@ -103,29 +103,26 @@ public abstract class Unit : MonoBehaviour
         // Unit no longer wants to crawl, attempt to stand up
         if (activeState == UnitState.Crawling && !crawlingInput && grounded)
         {
-            if (!sliding || diving)
+            // Check we have room to stand
+            leftHit = Physics2D.Raycast(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
+            if (leftHit)
             {
-                // Check we have room to stand
-                leftHit = Physics2D.Raycast(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
-                if (leftHit)
-                {
-                    Debug.DrawRay(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * leftHit.distance, Color.red);
-                }
-                rightHit = Physics2D.Raycast(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
-                if (rightHit)
-                {
-                    Debug.DrawRay(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * rightHit.distance, Color.red);
-                }
-                // Unit has room, set to standing
-                if (!leftHit && !rightHit)
-                {
-                    SetState(UnitState.Standing);
-                    animator.SetBool("Crawling", false);
-                    animator.SetBool("Diving", false);
-                    diving = false;
-                    animator.SetBool("Sliding", false);
-                    sliding = false;
-                }
+                Debug.DrawRay(transform.position + new Vector3(-standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * leftHit.distance, Color.red);
+            }
+            rightHit = Physics2D.Raycast(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector3.up, standingStats.size.y - (crawlingStats.size.y * 0.5f), collisionMask);
+            if (rightHit)
+            {
+                Debug.DrawRay(transform.position + new Vector3(standingStats.feetSeperation * 0.5f, 0.0f), Vector2.up * rightHit.distance, Color.red);
+            }
+            // Unit has room, set to standing
+            if (!leftHit && !rightHit)
+            {
+                SetState(UnitState.Standing);
+                animator.SetBool("Crawling", false);
+                animator.SetBool("Diving", false);
+                diving = false;
+                animator.SetBool("Sliding", false);
+                sliding = false;
             }
         }
         #endregion
