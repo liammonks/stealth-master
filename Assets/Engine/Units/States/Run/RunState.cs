@@ -23,7 +23,7 @@ public class RunState : MoveState
         }
         
         // Execute Jump
-        if (data.input.jumpQueued)
+        if (data.ShouldJump())
         {
             return Jump;
         }

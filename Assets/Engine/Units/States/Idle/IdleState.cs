@@ -15,7 +15,7 @@ public class IdleState : MoveState
     public override MoveState Execute(UnitData data, Animator animator)
     {
         // Execute Jump
-        if (data.input.jumpQueued)
+        if (data.ShouldJump())
         {
             return Jump;
         }

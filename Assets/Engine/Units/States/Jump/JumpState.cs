@@ -21,10 +21,12 @@ public class JumpState : MoveState
             data.velocity.x = Mathf.Clamp(data.velocity.x, -speed, speed);
         }
         
+        // As long as the jump is queued, apply jump force
         if (data.input.jumpQueued)
         {
             data.velocity.y = data.stats.jumpForce;
         }
+        
         // As soon as the player leaves the ground, the jump is no longer queued
         if((data.collision & UnitCollision.Ground) == 0)
         {

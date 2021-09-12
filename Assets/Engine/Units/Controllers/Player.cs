@@ -16,18 +16,6 @@ public class Player : MonoBehaviour
     private void OnMovement(InputValue value)
     {
         unitInputData.movement = Mathf.CeilToInt(value.Get<Vector2>().x);
-        
-        // Jumping
-        if(value.Get<Vector2>().y > 0)
-        {
-            unitInputData.jumpQueued = true;
-        }
-
-        // Crawling
-        if (value.Get<Vector2>().y < 0)
-        {
-            unitInputData.crawlQueued = true;
-        }
     }
 
     private void OnRun(InputValue value)
@@ -39,13 +27,13 @@ public class Player : MonoBehaviour
     {
         if (value.Get<float>() == 1.0f)
         {
-            unitInputData.jumpQueued = true;
+            unitInputData.jumpRequestTime = Time.unscaledTime;
         }
     }
 
     private void OnCrawl(InputValue value)
     {
-
+        unitInputData.crawlQueued = value.Get<float>() == 1.0f;
     }
 
     private void OnMouseMove(InputValue value)

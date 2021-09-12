@@ -8,6 +8,7 @@ public class InputData
 {
     public int movement;
     public bool jumpQueued;
+    public float jumpRequestTime;
     public bool crawlQueued;
     public bool running;
 }
@@ -20,6 +21,14 @@ public class UnitData
     public UnitCollision collision;
     public Vector2 velocity;
     public Animator animator;
+    
+    public bool ShouldJump()
+    {
+        bool jumpRequested = Time.unscaledTime - input.jumpRequestTime < 0.1f;
+        bool grounded = (collision & UnitCollision.Ground) != 0;
+        input.jumpQueued = jumpRequested && grounded;
+        return input.jumpQueued;
+    }
 }
 
 [Flags]
@@ -70,11 +79,11 @@ public class Unit : MonoBehaviour
         
         // Move
         transform.Translate(data.velocity * Time.deltaTime);
-
+        
         // Apply Drag
         float drag = (data.collision & UnitCollision.Ground) != 0 ? data.stats.groundDrag : data.stats.airDrag;
         data.velocity.x = Mathf.MoveTowards(data.velocity.x, 0.0f, Time.deltaTime * drag);
-
+        
         UpdateCollisions();
         
         // Animate
