@@ -18,6 +18,7 @@ public class UnitData
 {
     public InputData input = new InputData();
     public UnitStats stats;
+    public UnitCollider collider;
     public UnitCollision collision;
     public Vector2 velocity;
     public Animator animator;
@@ -52,8 +53,8 @@ public class Unit : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [Header("Data")]
-    public UnitData data;
     [SerializeField] private MoveState moveState;
+    public UnitData data;
 
     private void Awake() {
         collisionMask = LayerMask.GetMask("UnitCollider");
@@ -64,11 +65,11 @@ public class Unit : MonoBehaviour
     private void Update()
     {
         // Clear velocity if approximatley zero
-        if(data.velocity.sqrMagnitude < 0.01f)
+        if(data.velocity.sqrMagnitude < 0.001f)
         {
             data.velocity = Vector2.zero;
         }
-        
+
         // Execute movement, recieve next state
         MoveState nextMoveState = moveState.Execute(data, animator);
         if(moveState != nextMoveState)
@@ -99,30 +100,35 @@ public class Unit : MonoBehaviour
         
         #region Ground Check
         // Downwards raycast, left side
-        leftFootGrounded = Physics2D.Raycast(transform.position + new Vector3(-data.stats.feetSeperation * 0.5f, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.down, data.stats.vaultHeight, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(-data.stats.feetSeperation * 0.5f, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.down * data.stats.vaultHeight, Color.red);
+        leftFootGrounded = Physics2D.Raycast(transform.position + new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down, data.collider.vaultHeight, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down * data.collider.vaultHeight, Color.red);
         if (leftFootGrounded)
         {
-            Debug.DrawRay(transform.position + new Vector3(-data.stats.feetSeperation * 0.5f, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.down * leftFootGrounded.distance, Color.green);
-            leftFootDepth = data.stats.vaultHeight - leftFootGrounded.distance;
+            Debug.DrawRay(transform.position + new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down * leftFootGrounded.distance, Color.green);
+            leftFootDepth = data.collider.vaultHeight - leftFootGrounded.distance;
         }
         // Downwards raycast, right side
-        rightFootGrounded = Physics2D.Raycast(transform.position + new Vector3(data.stats.feetSeperation * 0.5f, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.down, data.stats.vaultHeight, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(data.stats.feetSeperation * 0.5f, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.down * data.stats.vaultHeight, Color.red);
+        rightFootGrounded = Physics2D.Raycast(transform.position + new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down, data.collider.vaultHeight, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down * data.collider.vaultHeight, Color.red);
         if (rightFootGrounded)
         {
-            Debug.DrawRay(transform.position + new Vector3(data.stats.feetSeperation * 0.5f, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.down * rightFootGrounded.distance, Color.green);
-            rightFootDepth = data.stats.vaultHeight - rightFootGrounded.distance;
+            Debug.DrawRay(transform.position + new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down * rightFootGrounded.distance, Color.green);
+            rightFootDepth = data.collider.vaultHeight - rightFootGrounded.distance;
         }
         if (leftFootGrounded || rightFootGrounded)
         {
             // Player is grounded, move them out of the ground
             data.collision |= UnitCollision.Ground;
             float climbDistance = Mathf.Max(leftFootDepth, rightFootDepth);
-            data.velocity.y = (climbDistance / Time.unscaledDeltaTime) * data.stats.stepRate;
+            data.velocity.y = (climbDistance / Time.unscaledDeltaTime) * data.collider.stepRate;
         }
         else
         {
+            if((data.collision & UnitCollision.Ground) != 0)
+            {
+                // Just left the ground, clear vertical velocity
+                data.velocity.y = 0;
+            }
             // Player is not grounded, apply gravity
             data.collision &= ~UnitCollision.Ground;
             data.velocity.y -= 9.81f * Time.deltaTime;
@@ -131,36 +137,36 @@ public class Unit : MonoBehaviour
 
         #region Wall Collision
         // Left side low
-        lowWallLeft = Physics2D.Raycast(transform.position + new Vector3(0, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.left, data.stats.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.left * data.stats.size.x * 0.5f, Color.red);
+        lowWallLeft = Physics2D.Raycast(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.left, data.collider.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.left * data.collider.size.x * 0.5f, Color.red);
         if (lowWallLeft)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.left * lowWallLeft.distance, Color.green);
-            transform.Translate(new Vector3(((data.stats.size.x * 0.5f) - lowWallLeft.distance), 0));
+            Debug.DrawRay(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.left * lowWallLeft.distance, Color.green);
+            transform.Translate(new Vector3(((data.collider.size.x * 0.5f) - lowWallLeft.distance), 0));
         }
         // Left side high
-        highWallLeft = Physics2D.Raycast(transform.position + new Vector3(0, data.stats.size.y * 0.5f), Vector2.left, data.stats.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, data.stats.size.y * 0.5f), Vector2.left * data.stats.size.x * 0.5f, Color.red);
+        highWallLeft = Physics2D.Raycast(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.left, data.collider.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.left * data.collider.size.x * 0.5f, Color.red);
         if (highWallLeft)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, data.stats.size.y * 0.5f), Vector2.left * highWallLeft.distance, Color.green);
-            transform.Translate(new Vector3(((data.stats.size.x * 0.5f) - highWallLeft.distance), 0));
+            Debug.DrawRay(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.left * highWallLeft.distance, Color.green);
+            transform.Translate(new Vector3(((data.collider.size.x * 0.5f) - highWallLeft.distance), 0));
         }
         // Right side low
-        lowWallRight = Physics2D.Raycast(transform.position + new Vector3(0, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.right, data.stats.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.right * data.stats.size.x * 0.5f, Color.red);
+        lowWallRight = Physics2D.Raycast(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.right, data.collider.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.right * data.collider.size.x * 0.5f, Color.red);
         if (lowWallRight)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, -(data.stats.size.y * 0.5f) + data.stats.vaultHeight), Vector2.right * lowWallRight.distance, Color.green);
-            transform.Translate(new Vector3(-((data.stats.size.x * 0.5f) - lowWallRight.distance), 0));
+            Debug.DrawRay(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.right * lowWallRight.distance, Color.green);
+            transform.Translate(new Vector3(-((data.collider.size.x * 0.5f) - lowWallRight.distance), 0));
         }
         // Right side high
-        highWallRight = Physics2D.Raycast(transform.position + new Vector3(0, data.stats.size.y * 0.5f), Vector2.right, data.stats.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, data.stats.size.y * 0.5f), Vector2.right * data.stats.size.x * 0.5f, Color.red);
+        highWallRight = Physics2D.Raycast(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.right, data.collider.size.x * 0.5f, collisionMask);
+        Debug.DrawRay(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.right * data.collider.size.x * 0.5f, Color.red);
         if (highWallRight)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, data.stats.size.y * 0.5f), Vector2.right * highWallRight.distance, Color.green);
-            transform.Translate(new Vector3(-((data.stats.size.x * 0.5f) - highWallRight.distance), 0));
+            Debug.DrawRay(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.right * highWallRight.distance, Color.green);
+            transform.Translate(new Vector3(-((data.collider.size.x * 0.5f) - highWallRight.distance), 0));
         }
         #endregion
     }

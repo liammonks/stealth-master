@@ -10346,7 +10346,6 @@ GameObject:
   - component: {fileID: 1786776617}
   - component: {fileID: 1786776616}
   - component: {fileID: 1786776615}
-  - component: {fileID: 1786776614}
   m_Layer: 6
   m_Name: Vent (2)
   m_TagString: Untagged
@@ -10354,22 +10353,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1786776614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1786776613}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3577aff2ef12b26408d8c67b7dfdd3b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftVent: {fileID: 0}
-  rightVent: {fileID: 1956223861}
-  upVent: {fileID: 0}
-  downVent: {fileID: 0}
 --- !u!61 &1786776615
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10939,7 +10922,6 @@ GameObject:
   - component: {fileID: 1870697924}
   - component: {fileID: 1870697923}
   - component: {fileID: 1870697922}
-  - component: {fileID: 1870697921}
   m_Layer: 6
   m_Name: Vent (1)
   m_TagString: Untagged
@@ -10947,22 +10929,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1870697921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1870697920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3577aff2ef12b26408d8c67b7dfdd3b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftVent: {fileID: 1956223861}
-  rightVent: {fileID: 0}
-  upVent: {fileID: 0}
-  downVent: {fileID: 0}
 --- !u!61 &1870697922
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11507,17 +11473,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a27004b5c7ed194dbb2ac7d39bd3445, type: 3}
---- !u!114 &1956223861 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9172441988022678003, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
-  m_PrefabInstance: {fileID: 9172441986200873606}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3577aff2ef12b26408d8c67b7dfdd3b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1956223864 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9172441988022678014, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
@@ -12919,11 +12874,11 @@ PrefabInstance:
     - target: {fileID: 9172441988022678003, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
       propertyPath: leftVent
       value: 
-      objectReference: {fileID: 1786776614}
+      objectReference: {fileID: 0}
     - target: {fileID: 9172441988022678003, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
       propertyPath: rightVent
       value: 
-      objectReference: {fileID: 1870697921}
+      objectReference: {fileID: 0}
     - target: {fileID: 9172441988022678014, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -12968,5 +12923,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9172441988022678003, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
