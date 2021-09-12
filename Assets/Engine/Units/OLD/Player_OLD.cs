@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : Unit
+public class Player_OLD : Unit_OLD
 {
     private Vector2 interactDirection;
     private Vector3 mouseWorldPosition;

@@ -10,7 +10,7 @@ public class Room : MonoBehaviour
 
     private List<Collider2D> colliders = new List<Collider2D>();
     public List<MeshRenderer> exteriorRenderers = new List<MeshRenderer>();
-    private List<Unit> units = new List<Unit>();
+    private List<Unit_OLD> units = new List<Unit_OLD>();
 
     private void Awake() {
         // Initialise entrances,
@@ -74,16 +74,16 @@ public class Room : MonoBehaviour
         }
     }
 
-    public bool ContainsUnit(Unit unit)
+    public bool ContainsUnit(Unit_OLD unit)
     {
         return units.Contains(unit);
     }
 
-    public void OnUnitEnteredRoom(Unit enteringUnit)
+    public void OnUnitEnteredRoom(Unit_OLD enteringUnit)
     {
         units.Add(enteringUnit);
         // Disable the front of the room when player enters and enable colliders
-        if(enteringUnit is PlayerController)
+        if(enteringUnit is Player_OLD)
         {
             front.SetActive(false);
             EnableColliders(true);
@@ -91,11 +91,11 @@ public class Room : MonoBehaviour
         }
     }
 
-    public void OnUnitExitedRoom(Unit exitingUnit)
+    public void OnUnitExitedRoom(Unit_OLD exitingUnit)
     {
         units.Remove(exitingUnit);
         // Enable the front of the room when player exits and distable colliders
-        if (exitingUnit is PlayerController)
+        if (exitingUnit is Player_OLD)
         {
             front.SetActive(true);
             EnableColliders(false);

@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5167399991698593940}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.85, z: 0}
+  m_LocalPosition: {x: 0, y: 0.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5167399993263710046}
@@ -42,7 +42,7 @@ Animator:
   m_GameObject: {fileID: 5167399991698593940}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b9dc9fe2f7e840e44b1edf819ef115e5, type: 2}
+  m_Controller: {fileID: 9100000, guid: cfa6b95d7112c6841a2cc4b84744010f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -111,8 +111,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5167399993263710046}
+  - component: {fileID: 2630196992511048216}
+  - component: {fileID: 8977496215213257547}
   - component: {fileID: 5167399993263710032}
-  - component: {fileID: 5167399993263710044}
   m_Layer: 0
   m_Name: StealthMaster
   m_TagString: Untagged
@@ -135,6 +136,43 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2630196992511048216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5167399993263710043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c03b9d5d18616a46a1a2144636a1dfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8977496215213257547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5167399993263710043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 498a2f799dbeb2942a6c1cc0e554dd8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteTransform: {fileID: 5167399991698593941}
+  animator: {fileID: 5167399991698593942}
+  data:
+    input:
+      movement: 0
+      jumpQueued: 0
+      crawlQueued: 0
+      running: 0
+    stats: {fileID: 11400000, guid: 1eefa2d4a2182b1408ec35a899cb5d10, type: 2}
+    collision: 0
+    velocity: {x: 0, y: 0}
+    animator: {fileID: 5167399991698593942}
+  moveState: {fileID: 11400000, guid: 266191720ca2b834ba9f6caac38bfec6, type: 2}
 --- !u!114 &5167399993263710032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,25 +203,3 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &5167399993263710044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5167399993263710043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa59cdd3406590a4dbed7517a87a1776, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteTransform: {fileID: 5167399991698593941}
-  animator: {fileID: 5167399991698593942}
-  standingStats: {fileID: 11400000, guid: 1eefa2d4a2182b1408ec35a899cb5d10, type: 2}
-  crawlingStats: {fileID: 11400000, guid: ea848915e26ecd64c87ff6443d6974f7, type: 2}
-  collisionMask:
-    serializedVersion: 2
-    m_Bits: 8
-  interactionMask:
-    serializedVersion: 2
-    m_Bits: 64

@@ -16,8 +16,8 @@ MonoBehaviour:
   runSpeed: 5
   jumpForce: 4
   diveVelocityMultiplier: {x: 0.5, y: 0.5}
-  vaultHeight: 1
-  stepHeight: 0.5
+  vaultHeight: 0.75
+  stepHeight: 0.25
   vaultRate: 0.02
   stepRate: 0.1
   size: {x: 0.6, y: 1.7}

@@ -26,6 +26,7 @@ public class UnitStats : ScriptableObject {
     
     private void OnValidate() {
         vaultHeight = Mathf.Max(stepHeight, vaultHeight); // Vault height should always be larger or equal to step height
+        stepHeight = Mathf.Min(stepHeight, vaultHeight); // Step height should always be smaller or equal to vault height
     }
     
     public UnitStats GetInstance()

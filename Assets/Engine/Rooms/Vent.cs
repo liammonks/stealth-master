@@ -6,12 +6,12 @@ public class Vent : Interactable
 {
     [SerializeField] private Vent leftVent, rightVent, upVent, downVent;
 
-    public override void OnInteract(Unit interactingUnit)
+    public override void OnInteract(Unit_OLD interactingUnit)
     {
         // Only the player can enter a vent
-        if (interactingUnit is PlayerController)
+        if (interactingUnit is Player_OLD)
         {
-            PlayerController player = (interactingUnit as PlayerController);
+            Player_OLD player = (interactingUnit as Player_OLD);
             if(player.GetCurrentVent() == this)
             {
                 // Player already in this vent, exit instead
