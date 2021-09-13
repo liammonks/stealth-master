@@ -9,7 +9,7 @@ public class InputData
     public int movement;
     public bool jumpQueued;
     public float jumpRequestTime;
-    public bool crawlQueued;
+    public bool crawling;
     public bool running;
 }
 
@@ -22,7 +22,9 @@ public class UnitData
     public UnitCollision collision;
     public Vector2 velocity;
     public Animator animator;
-    
+    public bool isGrounded { get { return (collision & UnitCollision.Ground) != 0; } }
+    public float lockStateDelay = 0.0f;
+
     public bool ShouldJump()
     {
         bool jumpRequested = Time.unscaledTime - input.jumpRequestTime < 0.1f;
@@ -30,6 +32,7 @@ public class UnitData
         input.jumpQueued = jumpRequested && grounded;
         return input.jumpQueued;
     }
+    
 }
 
 [Flags]
@@ -56,6 +59,8 @@ public class Unit : MonoBehaviour
     [SerializeField] private MoveState moveState;
     public UnitData data;
 
+    private bool executeMoveState = true;
+
     private void Awake() {
         collisionMask = LayerMask.GetMask("UnitCollider");
         interactionMask = LayerMask.GetMask("Interactable");
@@ -71,19 +76,54 @@ public class Unit : MonoBehaviour
         }
 
         // Execute movement, recieve next state
-        MoveState nextMoveState = moveState.Execute(data, animator);
-        if(moveState != nextMoveState)
+        if (executeMoveState)
         {
+            MoveState nextMoveState = moveState.Execute(data, animator);
             // State Updated
-            moveState = nextMoveState.Initialise(data, animator);
+            if (moveState != nextMoveState)
+            {
+                if (data.lockStateDelay <= 0.0f)
+                {
+                    // Initialise new state
+                    moveState = nextMoveState.Initialise(data, animator);
+                }
+                else
+                {
+                    // Lock state execution
+                    executeMoveState = false;
+                    moveState = nextMoveState;
+                }
+            }
         }
-        
+        else
+        {
+            data.lockStateDelay -= Time.deltaTime;
+            if(data.lockStateDelay <= 0.0f)
+            {
+                moveState = moveState.Initialise(data, animator);
+                executeMoveState = true;
+            }
+        }
+
         // Move
         transform.Translate(data.velocity * Time.deltaTime);
         
         // Apply Drag
-        float drag = (data.collision & UnitCollision.Ground) != 0 ? data.stats.groundDrag : data.stats.airDrag;
-        data.velocity.x = Mathf.MoveTowards(data.velocity.x, 0.0f, Time.deltaTime * drag);
+        float drag = data.isGrounded ? data.stats.groundDrag : data.stats.airDrag;
+        // Lose traction when faster than run speed
+        if(data.isGrounded && data.velocity.magnitude > data.stats.walkSpeed)
+        {
+            if (data.input.crawling)
+            {
+                drag *= 0.1f;
+            }
+            else
+            {
+                drag *= 0.2f;
+            }
+        }
+        //data.velocity.x = Mathf.MoveTowards(data.velocity.x, 0.0f, Time.deltaTime * drag);
+        data.velocity = Vector2.Lerp(data.velocity, Vector2.zero, Time.deltaTime * drag);
         
         UpdateCollisions();
         
@@ -175,4 +215,5 @@ public class Unit : MonoBehaviour
     {
         return data.input;
     }
+    
 }

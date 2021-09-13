@@ -4,6 +4,7 @@ using UnityEngine;
 public class JumpState : MoveState
 {
     [SerializeField] private MoveState Idle;
+    [SerializeField] private MoveState Dive;
 
     public override MoveState Initialise(UnitData data, Animator animator)
     {
@@ -25,6 +26,13 @@ public class JumpState : MoveState
         if (data.input.jumpQueued)
         {
             data.velocity.y = data.stats.jumpForce;
+        }
+        
+        // Execute Dive
+        if(data.input.crawling)
+        {
+            data.collider.SetCrawling();
+            return Dive;
         }
         
         // As soon as the player leaves the ground, the jump is no longer queued

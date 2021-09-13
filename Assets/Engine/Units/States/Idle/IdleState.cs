@@ -22,8 +22,9 @@ public class IdleState : MoveState
         }
         
         // Execute Crawl
-        if(data.input.crawlQueued)
+        if(data.input.crawling)
         {
+            data.collider.SetCrawling();
             return Crawl;
         }
         

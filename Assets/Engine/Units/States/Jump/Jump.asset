@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Jump
   m_EditorClassIdentifier: 
   Idle: {fileID: 11400000, guid: 266191720ca2b834ba9f6caac38bfec6, type: 2}
+  Dive: {fileID: 11400000, guid: 351a8f077a00548459df559eb76835ab, type: 2}

@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
 
     private void OnCrawl(InputValue value)
     {
-        unitInputData.crawlQueued = value.Get<float>() == 1.0f;
+        unitInputData.crawling = value.Get<float>() == 1.0f;
     }
 
     private void OnMouseMove(InputValue value)

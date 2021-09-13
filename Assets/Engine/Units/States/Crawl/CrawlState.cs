@@ -7,7 +7,6 @@ public class CrawlState : MoveState
 
     public override MoveState Initialise(UnitData data, Animator animator)
     {
-        data.collider.SetCrawling();
         animator.Play("Crawl");
         return this;
     }
@@ -22,7 +21,7 @@ public class CrawlState : MoveState
         }
         
         // Return to Idle
-        if(!data.input.crawlQueued && (data.collision & UnitCollision.Ground) != 0)
+        if(!data.input.crawling && (data.collision & UnitCollision.Ground) != 0)
         {
             data.collider.SetStanding();
             return Idle;
