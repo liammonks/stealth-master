@@ -5,13 +5,13 @@ public class UnitColliderData
 {
     [Header("Physics")]
     public Vector2 size = new Vector2(0.5f, 1.7f);
-    public float feetSeperation = 0.8f;
+    public float feetSeperation = 0.4f;
 
     [Header("Climbing")]
     public float vaultHeight = 0.5f;
     public float stepHeight = 1.0f;
     [Range(0.0f, 1.0f)]
-    public float vaultRate = 0.1f, stepRate = 0.1f;
+    public float vaultRate = 0.1f, stepRate = 0.1f, collisionRate = 0.3f;
     
     public UnitColliderData CreateInstance()
     {
@@ -22,6 +22,7 @@ public class UnitColliderData
         instance.stepHeight = stepHeight;
         instance.vaultRate = vaultRate;
         instance.stepRate = stepRate;
+        instance.collisionRate = collisionRate;
         return instance;
     }
 }
@@ -40,6 +41,7 @@ public class UnitCollider : ScriptableObject
     public float stepHeight { get { return activeData.stepHeight; } }
     public float vaultRate { get { return activeData.vaultRate; } }
     public float stepRate { get { return activeData.stepRate; } }
+    public float collisionRate { get { return activeData.collisionRate; } }
 
     private float lerp = 0.0f;
 

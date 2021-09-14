@@ -14,15 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   standing:
     size: {x: 0.6, y: 1.7}
-    feetSeperation: 0.4
+    feetSeperation: 0.3
     vaultHeight: 0.7
     stepHeight: 0.4
-    vaultRate: 0.1
-    stepRate: 0.1
+    vaultRate: 1
+    stepRate: 0.2
+    collisionRate: 0.3
   crawling:
-    size: {x: 1.4, y: 0.5}
-    feetSeperation: 0.7
+    size: {x: 1.4, y: 0.7}
+    feetSeperation: 0.4
     vaultHeight: 0.2
-    stepHeight: 0.1
+    stepHeight: 0.2
     vaultRate: 0.1
-    stepRate: 0.1
+    stepRate: 0.2
+    collisionRate: 0.3

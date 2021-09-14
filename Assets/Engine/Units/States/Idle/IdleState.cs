@@ -27,9 +27,13 @@ public class IdleState : MoveState
             data.collider.SetCrawling();
             return Crawl;
         }
-        
-        // Execute Run
-        if (Mathf.Abs(data.input.movement) > 0)
+
+        // Execute Run if not moving towards collision
+        if (data.input.movement > 0.0f && (data.collision & UnitCollision.Right) == 0)
+        {
+            return Run;
+        }
+        if (data.input.movement < 0.0f && (data.collision & UnitCollision.Left) == 0)
         {
             return Run;
         }

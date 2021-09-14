@@ -69,8 +69,19 @@ public class Unit : MonoBehaviour
 
     private void Update()
     {
+
+    }
+
+    private void FixedUpdate() 
+    {
+        UpdateMovement();
+        UpdateCollisions();
+    }
+    
+    private void UpdateMovement()
+    {
         // Clear velocity if approximatley zero
-        if(data.velocity.sqrMagnitude < 0.001f)
+        if (data.velocity.sqrMagnitude < 0.01f)
         {
             data.velocity = Vector2.zero;
         }
@@ -97,21 +108,39 @@ public class Unit : MonoBehaviour
         }
         else
         {
-            data.lockStateDelay -= Time.deltaTime;
-            if(data.lockStateDelay <= 0.0f)
+            data.lockStateDelay -= Time.fixedDeltaTime;
+            if (data.lockStateDelay <= 0.0f)
             {
                 moveState = moveState.Initialise(data, animator);
                 executeMoveState = true;
             }
         }
-
-        // Move
-        transform.Translate(data.velocity * Time.deltaTime);
         
+        // Collisions clamp velocity
+        if((data.collision & UnitCollision.Left) != 0)
+        {
+            data.velocity.x = Mathf.Max(0, data.velocity.x);
+        }
+        if ((data.collision & UnitCollision.Right) != 0)
+        {
+            data.velocity.x = Mathf.Min(0, data.velocity.x);
+        }
+        if ((data.collision & UnitCollision.Ground) != 0)
+        {
+            data.velocity.y = Mathf.Max(0, data.velocity.y);
+        }
+        if ((data.collision & UnitCollision.Ceil) != 0)
+        {
+            data.velocity.y = Mathf.Min(0, data.velocity.y);
+        }
+        
+        // Move
+        transform.Translate(data.velocity * Time.fixedDeltaTime, Space.World);
+
         // Apply Drag
         float drag = data.isGrounded ? data.stats.groundDrag : data.stats.airDrag;
         // Lose traction when faster than run speed
-        if(data.isGrounded && data.velocity.magnitude > data.stats.walkSpeed)
+        if (data.isGrounded && data.velocity.magnitude > data.stats.walkSpeed)
         {
             if (data.input.crawling)
             {
@@ -123,10 +152,9 @@ public class Unit : MonoBehaviour
             }
         }
         //data.velocity.x = Mathf.MoveTowards(data.velocity.x, 0.0f, Time.deltaTime * drag);
-        data.velocity = Vector2.Lerp(data.velocity, Vector2.zero, Time.deltaTime * drag);
-        
-        UpdateCollisions();
-        
+        data.velocity = Vector2.Lerp(data.velocity, Vector2.zero, Time.fixedDeltaTime * drag);
+
+
         // Animate
         if (data.velocity.x > 0) { animator.SetBool("FacingRight", true); }
         if (data.velocity.x < 0) { animator.SetBool("FacingRight", false); }
@@ -136,31 +164,31 @@ public class Unit : MonoBehaviour
     private void UpdateCollisions()
     {
         RaycastHit2D leftFootGrounded, rightFootGrounded, highWallLeft, lowWallLeft, highWallRight, lowWallRight;
-        float leftFootDepth = 0.0f, rightFootDepth = 0.0f;
-        
+        float leftDepth = 0.0f, rightDepth = 0.0f, highDepth = 0.0f, lowDepth = 0.0f;
+        float ceilRayDist = Mathf.Min(data.collider.vaultHeight, (data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f));
+
         #region Ground Check
         // Downwards raycast, left side
-        leftFootGrounded = Physics2D.Raycast(transform.position + new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down, data.collider.vaultHeight, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down * data.collider.vaultHeight, Color.red);
+        leftFootGrounded = Physics2D.Raycast(transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)), -transform.up, data.collider.vaultHeight, collisionMask);
+        Debug.DrawRay(transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)), -transform.up * data.collider.vaultHeight, Color.red);
         if (leftFootGrounded)
         {
-            Debug.DrawRay(transform.position + new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down * leftFootGrounded.distance, Color.green);
-            leftFootDepth = data.collider.vaultHeight - leftFootGrounded.distance;
+            Debug.DrawRay(transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)), -transform.up * leftFootGrounded.distance, Color.green);
+            leftDepth = data.collider.vaultHeight - leftFootGrounded.distance;
         }
         // Downwards raycast, right side
-        rightFootGrounded = Physics2D.Raycast(transform.position + new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down, data.collider.vaultHeight, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down * data.collider.vaultHeight, Color.red);
+        rightFootGrounded = Physics2D.Raycast(transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)), -transform.up, data.collider.vaultHeight, collisionMask);
+        Debug.DrawRay(transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)), -transform.up * data.collider.vaultHeight, Color.red);
         if (rightFootGrounded)
         {
-            Debug.DrawRay(transform.position + new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.down * rightFootGrounded.distance, Color.green);
-            rightFootDepth = data.collider.vaultHeight - rightFootGrounded.distance;
+            Debug.DrawRay(transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)), -transform.up * rightFootGrounded.distance, Color.green);
+            rightDepth = data.collider.vaultHeight - rightFootGrounded.distance;
         }
         if (leftFootGrounded || rightFootGrounded)
         {
             // Player is grounded, move them out of the ground
             data.collision |= UnitCollision.Ground;
-            float climbDistance = Mathf.Max(leftFootDepth, rightFootDepth);
-            data.velocity.y = (climbDistance / Time.unscaledDeltaTime) * data.collider.stepRate;
+            data.velocity.y = (Mathf.Max(leftDepth, rightDepth) * data.collider.stepRate) / Time.fixedDeltaTime;
         }
         else
         {
@@ -171,44 +199,186 @@ public class Unit : MonoBehaviour
             }
             // Player is not grounded, apply gravity
             data.collision &= ~UnitCollision.Ground;
-            data.velocity.y -= 9.81f * Time.deltaTime;
+            data.velocity.y -= 9.81f * Time.fixedDeltaTime;
         }
         #endregion
 
         #region Wall Collision
         // Left side low
-        lowWallLeft = Physics2D.Raycast(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.left, data.collider.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.left * data.collider.size.x * 0.5f, Color.red);
+        lowWallLeft = Physics2D.Raycast(
+            transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)),
+            -transform.right,
+            (data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f),
+            collisionMask
+        );
+        Debug.DrawRay(
+            transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)),
+            -transform.right * ((data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f)),
+            Color.red
+        );
         if (lowWallLeft)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.left * lowWallLeft.distance, Color.green);
-            transform.Translate(new Vector3(((data.collider.size.x * 0.5f) - lowWallLeft.distance), 0));
+            Debug.DrawRay(
+                transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)),
+                -transform.right * lowWallLeft.distance,
+                Color.green
+            );
+            lowDepth = ((data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f)) - lowWallLeft.distance;
         }
         // Left side high
-        highWallLeft = Physics2D.Raycast(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.left, data.collider.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.left * data.collider.size.x * 0.5f, Color.red);
+        highWallLeft = Physics2D.Raycast(
+            transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist)),
+            -transform.right,
+            (data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f),
+            collisionMask
+        );
+        Debug.DrawRay(
+            transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist)),
+            -transform.right * ((data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f)),
+            Color.red
+        );
         if (highWallLeft)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.left * highWallLeft.distance, Color.green);
-            transform.Translate(new Vector3(((data.collider.size.x * 0.5f) - highWallLeft.distance), 0));
+            Debug.DrawRay(
+                transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist, 0)),
+                -transform.right * highWallLeft.distance,
+                Color.green
+            );
+            highDepth = ((data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f)) - highWallLeft.distance;
         }
+        if(lowWallLeft || highWallLeft)
+        {
+            data.collision |= UnitCollision.Left;
+            transform.Translate(new Vector3(Mathf.Max(lowDepth, highDepth), 0, 0));
+        }
+        else
+        {
+            data.collision &= ~UnitCollision.Left;
+        }
+
         // Right side low
-        lowWallRight = Physics2D.Raycast(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.right, data.collider.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.right * data.collider.size.x * 0.5f, Color.red);
+        lowWallRight = Physics2D.Raycast(
+            transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)),
+            transform.right,
+            (data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f),
+            collisionMask
+        );
+        Debug.DrawRay(
+            transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)),
+            transform.right * ((data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f)),
+            Color.red
+        );
         if (lowWallRight)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight), Vector2.right * lowWallRight.distance, Color.green);
-            transform.Translate(new Vector3(-((data.collider.size.x * 0.5f) - lowWallRight.distance), 0));
+            Debug.DrawRay(
+                transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, -(data.collider.size.y * 0.5f) + data.collider.vaultHeight)),
+                transform.right * lowWallRight.distance,
+                Color.green
+            );
+            lowDepth = ((data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f)) - lowWallRight.distance;
         }
         // Right side high
-        highWallRight = Physics2D.Raycast(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.right, data.collider.size.x * 0.5f, collisionMask);
-        Debug.DrawRay(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.right * data.collider.size.x * 0.5f, Color.red);
+        highWallRight = Physics2D.Raycast(
+            transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist, 0)),
+            transform.right,
+            (data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f),
+            collisionMask
+        );
+        Debug.DrawRay(
+            transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist)),
+            transform.right * ((data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f)),
+            Color.red
+        );
         if (highWallRight)
         {
-            Debug.DrawRay(transform.position + new Vector3(0, data.collider.size.y * 0.5f), Vector2.right * highWallRight.distance, Color.green);
-            transform.Translate(new Vector3(-((data.collider.size.x * 0.5f) - highWallRight.distance), 0));
+            Debug.DrawRay(
+                transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist)),
+                transform.right * highWallRight.distance,
+                Color.green
+            );
+            highDepth = ((data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f)) - highWallRight.distance;
+        }
+        if(lowWallRight || highWallRight)
+        {
+            data.collision |= UnitCollision.Right;
+            transform.Translate(new Vector3(-Mathf.Max(lowDepth, highDepth), 0, 0));
+        }
+        else
+        {
+            data.collision &= ~UnitCollision.Right;
         }
         #endregion
+
+        #region Ceiling
+        // Left side high
+        highWallLeft = Physics2D.Raycast(
+            transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist)),
+            transform.up,
+            data.collider.vaultHeight,
+            collisionMask
+        );
+        Debug.DrawRay(
+            transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist)),
+            transform.up * ceilRayDist,
+            Color.red
+        );
+        if (highWallLeft)
+        {
+            Debug.DrawRay(
+                transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist)),
+                transform.up * highWallLeft.distance,
+                Color.green
+            );
+            leftDepth = ceilRayDist - highWallLeft.distance;
+        }
+        
+        // Right side high
+        highWallRight = Physics2D.Raycast(
+            transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist, 0)),
+            transform.up,
+            ceilRayDist,
+            collisionMask
+        );
+        Debug.DrawRay(
+            transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist, 0)),
+            transform.up * ceilRayDist,
+            Color.red
+        );
+        if (highWallRight)
+        {
+            Debug.DrawRay(
+                transform.TransformPoint(new Vector3(data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist, 0)),
+                transform.up * highWallRight.distance,
+                Color.green
+            );
+            rightDepth = ceilRayDist - highWallLeft.distance;
+        }
+        
+        if(highWallLeft || highWallRight)
+        {
+            data.collision |= UnitCollision.Ceil;
+            transform.Translate(new Vector3(0, -Mathf.Max(leftDepth, rightDepth), 0));
+        }
+        else
+        {
+            data.collision &= ~UnitCollision.Ceil;
+        }
+        #endregion
+
+        RaycastHit2D centerHit = Physics2D.Linecast(
+            transform.position - (transform.up * ((data.collider.size.y * 0.5f) - data.collider.vaultHeight)),
+            transform.position + (transform.up * ((data.collider.size.y * 0.5f) - ceilRayDist)),
+            collisionMask
+        );
+        Debug.DrawLine(
+            transform.position - (transform.up * ((data.collider.size.y * 0.5f) - data.collider.vaultHeight)),
+            transform.position + (transform.up * ((data.collider.size.y * 0.5f) - ceilRayDist)),
+            centerHit ? Color.green : Color.red
+        );
+        if(centerHit)
+        {
+            // Kill Unit ?
+        }
     }
 
     public InputData GetInputData()

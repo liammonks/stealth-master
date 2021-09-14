@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Unit))]
 public class Player : MonoBehaviour
 {
+    [SerializeField] private Unit playerUnit;
+
     private InputData unitInputData;
 
     private void Awake()
     {
-        unitInputData = GetComponent<Unit>().GetInputData();
+        unitInputData = playerUnit.GetInputData();
     }
 
     private void OnMovement(InputValue value)

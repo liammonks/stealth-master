@@ -5576,7 +5576,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Slide_Loop_Left 0
+  m_Name: Run -> Slide_Loop_Left
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

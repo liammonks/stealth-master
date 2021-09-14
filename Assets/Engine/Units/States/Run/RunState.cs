@@ -42,6 +42,15 @@ public class RunState : MoveState
         {
             return Idle;
         }
+        // Return to Idle when moving towards collision
+        if(data.velocity.x > 0.0f && (data.collision & UnitCollision.Right) != 0)
+        {
+            return Idle;
+        }
+        if(data.velocity.x < 0.0f && (data.collision & UnitCollision.Left) != 0)
+        {
+            return Idle;
+        }
         
         return this;
     }
