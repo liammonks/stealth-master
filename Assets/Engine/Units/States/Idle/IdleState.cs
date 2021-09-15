@@ -10,6 +10,7 @@ public class IdleState : MoveState
     public override MoveState Initialise(UnitData data, Animator animator)
     {
         animator.Play("Idle");
+        data.t = 0.0f;
         return this;
     }
     
@@ -24,6 +25,7 @@ public class IdleState : MoveState
         // Execute Crawl
         if(data.input.crawling)
         {
+            animator.Play("StandToCrawl");
             data.collider.SetCrawling();
             return Crawl;
         }

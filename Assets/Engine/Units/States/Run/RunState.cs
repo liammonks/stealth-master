@@ -6,6 +6,7 @@ public class RunState : MoveState
     [SerializeField] private MoveState Idle;
     [SerializeField] private MoveState Jump;
     [SerializeField] private MoveState Slide;
+    [SerializeField] private MoveState Crawl;
 
     public override MoveState Initialise(UnitData data, Animator animator)
     {
@@ -29,12 +30,22 @@ public class RunState : MoveState
             return Jump;
         }
 
-        // Execute Slide
         if (data.input.crawling)
         {
-            animator.Play("Run -> Slide");
-            data.collider.SetCrawling();
-            return Slide;
+            if (Mathf.Abs(data.velocity.x) > data.stats.walkSpeed)
+            {
+                // Execute Slide
+                animator.Play("Slide");
+                data.collider.SetCrawling();
+                return Slide;
+            }
+            else
+            {
+                // Execute Crawl
+                animator.Play("StandToCrawl");
+                data.collider.SetCrawling();
+                return Crawl;
+            }
         }
         
         // Return to Idle when stopped

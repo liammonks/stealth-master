@@ -23,7 +23,8 @@ public class UnitData
     public Vector2 velocity;
     public Animator animator;
     public bool isGrounded { get { return (collision & UnitCollision.Ground) != 0; } }
-    public float lockStateDelay = 0.0f;
+    public float t = 0.0f;
+    public string lastStateName;
 
     public bool ShouldJump()
     {
@@ -59,17 +60,10 @@ public class Unit : MonoBehaviour
     [SerializeField] private MoveState moveState;
     public UnitData data;
 
-    private bool executeMoveState = true;
-
     private void Awake() {
         collisionMask = LayerMask.GetMask("UnitCollider");
         interactionMask = LayerMask.GetMask("Interactable");
         moveState = moveState.Initialise(data, animator);
-    }
-
-    private void Update()
-    {
-
     }
 
     private void FixedUpdate() 
@@ -87,35 +81,16 @@ public class Unit : MonoBehaviour
         }
 
         // Execute movement, recieve next state
-        if (executeMoveState)
+        MoveState nextMoveState = moveState.Execute(data, animator);
+        // State Updated
+        if (moveState != nextMoveState)
         {
-            MoveState nextMoveState = moveState.Execute(data, animator);
-            // State Updated
-            if (moveState != nextMoveState)
-            {
-                if (data.lockStateDelay <= 0.0f)
-                {
-                    // Initialise new state
-                    moveState = nextMoveState.Initialise(data, animator);
-                }
-                else
-                {
-                    // Lock state execution
-                    executeMoveState = false;
-                    moveState = nextMoveState;
-                }
-            }
+            // Initialise new state
+            data.lastStateName = moveState.name;
+            nextMoveState.Initialise(data, animator);
+            moveState = nextMoveState;
         }
-        else
-        {
-            data.lockStateDelay -= Time.fixedDeltaTime;
-            if (data.lockStateDelay <= 0.0f)
-            {
-                moveState = moveState.Initialise(data, animator);
-                executeMoveState = true;
-            }
-        }
-        
+
         // Collisions clamp velocity
         if((data.collision & UnitCollision.Left) != 0)
         {
@@ -133,27 +108,27 @@ public class Unit : MonoBehaviour
         {
             data.velocity.y = Mathf.Min(0, data.velocity.y);
         }
-        
+
         // Move
         transform.Translate(data.velocity * Time.fixedDeltaTime, Space.World);
 
         // Apply Drag
         float drag = data.isGrounded ? data.stats.groundDrag : data.stats.airDrag;
-        // Lose traction when faster than run speed
-        if (data.isGrounded && data.velocity.magnitude > data.stats.walkSpeed)
+        if (data.isGrounded)
         {
-            if (data.input.crawling)
+            if (moveState.name == "Slide")
             {
                 drag *= 0.1f;
+                UnitHelper.Instance.EmitGroundParticles(transform.position + (Vector3.down * data.collider.size.y * 0.5f), data.velocity);
             }
-            else
+            else if (data.velocity.magnitude > data.stats.runSpeed + 0.1f)
             {
-                drag *= 0.2f;
+                // Lose traction when moving too fast
+                drag *= 0.1f;
+                UnitHelper.Instance.EmitGroundParticles(transform.position + (Vector3.down * data.collider.size.y * 0.5f), data.velocity);
             }
         }
-        //data.velocity.x = Mathf.MoveTowards(data.velocity.x, 0.0f, Time.deltaTime * drag);
         data.velocity = Vector2.Lerp(data.velocity, Vector2.zero, Time.fixedDeltaTime * drag);
-
 
         // Animate
         if (data.velocity.x > 0) { animator.SetBool("FacingRight", true); }

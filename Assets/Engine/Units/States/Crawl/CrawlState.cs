@@ -7,7 +7,6 @@ public class CrawlState : MoveState
 
     public override MoveState Initialise(UnitData data, Animator animator)
     {
-        animator.Play("Crawl");
         return this;
     }
     

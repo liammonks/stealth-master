@@ -15,7 +15,8 @@ MonoBehaviour:
   walkSpeed: 3
   runSpeed: 5
   jumpForce: 4
-  diveVelocityMultiplier: {x: 0.5, y: 0.5}
+  diveVelocityMultiplier: 1.75
+  slideVelocityMultiplier: 1.25
   groundAuthority: 12
   airAuthority: 2
   groundDrag: 6

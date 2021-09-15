@@ -15,3 +15,4 @@ MonoBehaviour:
   Idle: {fileID: 11400000, guid: 266191720ca2b834ba9f6caac38bfec6, type: 2}
   Jump: {fileID: 11400000, guid: 6815bbcac8c3ef846bbf42d5bb32e043, type: 2}
   Slide: {fileID: 11400000, guid: 40be05c0c22c4f9439e7342fde0759c2, type: 2}
+  Crawl: {fileID: 11400000, guid: debace838e8a94843828871986b7db07, type: 2}

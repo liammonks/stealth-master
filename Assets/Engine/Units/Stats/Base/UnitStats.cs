@@ -7,7 +7,8 @@ public class UnitStats : ScriptableObject {
     public float walkSpeed = 3;
     public float runSpeed = 5;
     public float jumpForce = 6.0f;
-    public Vector2 diveVelocityMultiplier = new Vector2(0.5f, 0.5f);
+    public float diveVelocityMultiplier = 0.75f;
+    public float slideVelocityMultiplier = 0.25f;
 
     [Header("Physics")]
     public float groundAuthority = 12.0f;
@@ -41,7 +42,7 @@ public class UnitStats : ScriptableObject {
         instance.walkSpeed = Mathf.Lerp(from.walkSpeed, to.walkSpeed, t);
         instance.runSpeed = Mathf.Lerp(from.runSpeed, to.runSpeed, t);
         instance.jumpForce = Mathf.Lerp(from.jumpForce, to.jumpForce, t);
-        instance.diveVelocityMultiplier = Vector2.Lerp(from.diveVelocityMultiplier, to.diveVelocityMultiplier, t);
+        instance.diveVelocityMultiplier = Mathf.Lerp(from.diveVelocityMultiplier, to.diveVelocityMultiplier, t);
 
         // Physics
         instance.airAuthority = Mathf.Lerp(from.airAuthority, to.airAuthority, t);
