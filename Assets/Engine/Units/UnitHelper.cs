@@ -29,6 +29,7 @@ public class UnitHelper : MonoBehaviour
     
     public void EmitGroundParticles(Vector3 position, Vector3 direction) 
     {
+        if (groundParticles.Count == 0) { return; }
         ParticleSystem ps = groundParticles.Dequeue();
         ps.transform.position = position;
         ps.transform.rotation = Quaternion.LookRotation(direction, Vector3.forward * Vector3.Dot(direction, Vector3.right));

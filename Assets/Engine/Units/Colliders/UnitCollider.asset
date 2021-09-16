@@ -15,16 +15,16 @@ MonoBehaviour:
   standing:
     size: {x: 0.6, y: 1.7}
     feetSeperation: 0.3
-    vaultHeight: 0.7
+    vaultHeight: 0.8
     stepHeight: 0.4
-    vaultRate: 1
-    stepRate: 0.2
-    collisionRate: 0.3
+    vaultRate: 0.1
+    stepRate: 0.5
+    collisionRate: 0.5
   crawling:
-    size: {x: 1.4, y: 0.7}
-    feetSeperation: 0.4
+    size: {x: 1.6, y: 0.7}
+    feetSeperation: 0.5
     vaultHeight: 0.2
     stepHeight: 0.2
     vaultRate: 0.1
-    stepRate: 0.2
-    collisionRate: 0.3
+    stepRate: 0.5
+    collisionRate: 0.5

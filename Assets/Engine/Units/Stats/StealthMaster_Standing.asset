@@ -21,4 +21,4 @@ MonoBehaviour:
   airAuthority: 2
   groundDrag: 6
   airDrag: 0.1
-  terminalVeloicty: 55.56
+  terminalVeloicty: 20

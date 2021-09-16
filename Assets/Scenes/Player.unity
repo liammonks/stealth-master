@@ -5386,7 +5386,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteTransform: {fileID: 1950628591}
   animator: {fileID: 1950628593}
-  moveState: {fileID: 11400000, guid: 266191720ca2b834ba9f6caac38bfec6, type: 2}
+  possibleStates: -1
+  state: 1
   data:
     input:
       movement: 0
@@ -5400,6 +5401,8 @@ MonoBehaviour:
     velocity: {x: 0, y: 0}
     animator: {fileID: 1950628593}
     t: 0
+    previousState: 0
+    possibleStates: 0
 --- !u!1 &1521881362
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,16 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class InputData
-{
-    public int movement;
-    public bool jumpQueued;
-    public float jumpRequestTime;
-    public bool crawling;
-    public bool running;
-}
-
-[Serializable]
 public class UnitData
 {
     public InputData input = new InputData();
@@ -21,10 +11,13 @@ public class UnitData
     public UnitCollider collider;
     public UnitCollision collision;
     public Vector2 velocity;
+    public Vector2 position;
+    public Vector2 target;
     public Animator animator;
     public bool isGrounded { get { return (collision & UnitCollision.Ground) != 0; } }
     public float t = 0.0f;
-    public string lastStateName;
+    public UnitState previousState;
+    public UnitState possibleStates;
 
     public bool ShouldJump()
     {
@@ -34,6 +27,16 @@ public class UnitData
         return input.jumpQueued;
     }
     
+}
+
+[Serializable]
+public class InputData
+{
+    public int movement;
+    public bool jumpQueued;
+    public float jumpRequestTime;
+    public bool crawling;
+    public bool running;
 }
 
 [Flags]
@@ -46,6 +49,21 @@ public enum UnitCollision
     Ceil    = 8
 }
 
+[Flags]
+public enum UnitState
+{
+    Null            = 0,
+    Idle            = 1,
+    Run             = 2,
+    Crawl           = 4,
+    Slide           = 8,
+    Dive            = 16,
+    Jump            = 32,
+    VaultOverState  = 64,
+    VaultOnState  = 128
+}
+
+
 public class Unit : MonoBehaviour
 {
 
@@ -57,13 +75,16 @@ public class Unit : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [Header("Data")]
-    [SerializeField] private MoveState moveState;
+    [SerializeField] private UnitState possibleStates;
+    [SerializeField] private UnitState state;
     public UnitData data;
 
     private void Awake() {
         collisionMask = LayerMask.GetMask("UnitCollider");
         interactionMask = LayerMask.GetMask("Interactable");
-        moveState = moveState.Initialise(data, animator);
+        data.animator = animator;
+        data.possibleStates = possibleStates;
+        UnitStates.Initialise(data, state);
     }
 
     private void FixedUpdate() 
@@ -75,20 +96,20 @@ public class Unit : MonoBehaviour
     private void UpdateMovement()
     {
         // Clear velocity if approximatley zero
-        if (data.velocity.sqrMagnitude < 0.01f)
+        if (data.velocity.sqrMagnitude < 0.02f)
         {
             data.velocity = Vector2.zero;
         }
 
         // Execute movement, recieve next state
-        MoveState nextMoveState = moveState.Execute(data, animator);
+        UnitState nextState = UnitStates.Execute(data, state);
         // State Updated
-        if (moveState != nextMoveState)
+        if (state != nextState)
         {
             // Initialise new state
-            data.lastStateName = moveState.name;
-            nextMoveState.Initialise(data, animator);
-            moveState = nextMoveState;
+            data.previousState = state;
+            UnitStates.Initialise(data, nextState);
+            state = nextState;
         }
 
         // Collisions clamp velocity
@@ -111,12 +132,13 @@ public class Unit : MonoBehaviour
 
         // Move
         transform.Translate(data.velocity * Time.fixedDeltaTime, Space.World);
-
+        data.position = transform.position;
+        
         // Apply Drag
         float drag = data.isGrounded ? data.stats.groundDrag : data.stats.airDrag;
         if (data.isGrounded)
         {
-            if (moveState.name == "Slide")
+            if (state == UnitState.Slide)
             {
                 drag *= 0.1f;
                 UnitHelper.Instance.EmitGroundParticles(transform.position + (Vector3.down * data.collider.size.y * 0.5f), data.velocity);
@@ -130,6 +152,9 @@ public class Unit : MonoBehaviour
         }
         data.velocity = Vector2.Lerp(data.velocity, Vector2.zero, Time.fixedDeltaTime * drag);
 
+        // Terminal Velocity
+        data.velocity = Vector2.ClampMagnitude(data.velocity, data.stats.terminalVeloicty);
+
         // Animate
         if (data.velocity.x > 0) { animator.SetBool("FacingRight", true); }
         if (data.velocity.x < 0) { animator.SetBool("FacingRight", false); }
@@ -138,6 +163,8 @@ public class Unit : MonoBehaviour
 
     private void UpdateCollisions()
     {
+        data.collider.LerpToTarget();
+        
         RaycastHit2D leftFootGrounded, rightFootGrounded, highWallLeft, lowWallLeft, highWallRight, lowWallRight;
         float leftDepth = 0.0f, rightDepth = 0.0f, highDepth = 0.0f, lowDepth = 0.0f;
         float ceilRayDist = Mathf.Min(data.collider.vaultHeight, (data.collider.size.x * 0.5f) - (data.collider.feetSeperation * 0.5f));
@@ -163,7 +190,42 @@ public class Unit : MonoBehaviour
         {
             // Player is grounded, move them out of the ground
             data.collision |= UnitCollision.Ground;
-            data.velocity.y = (Mathf.Max(leftDepth, rightDepth) * data.collider.stepRate) / Time.fixedDeltaTime;
+            float climbDistance = Mathf.Max(leftDepth, rightDepth);
+            if((state == UnitState.Idle || state == UnitState.Run) && climbDistance > data.collider.stepHeight)
+            {
+                // Vault when climbing over an object taller than stepHeight
+                bool vaultLeft = leftDepth > rightDepth;
+                Vector2 vaultDirection = vaultLeft ? Vector2.left : Vector2.right;
+                float groundClearance = climbDistance - data.collider.stepHeight;
+                // Get a point half way between the top of the vaultable object and the units feet
+                Vector2 nearCheck = (vaultLeft ? leftFootGrounded : rightFootGrounded).point + (vaultDirection * data.collider.size.x);
+                Vector2 farCheck = (vaultLeft ? leftFootGrounded : rightFootGrounded).point + (vaultDirection * (data.collider.size.x + data.collider.feetSeperation));
+                RaycastHit2D nearHit = Physics2D.Raycast(nearCheck, Vector2.down, groundClearance, collisionMask);
+                RaycastHit2D farHit = Physics2D.Raycast(farCheck, Vector2.down, groundClearance, collisionMask);
+                Debug.DrawLine(nearCheck, nearCheck + (Vector2.down * groundClearance), nearHit ? Color.red : Color.green, 2.0f);
+                Debug.DrawLine(farCheck, farCheck + (Vector2.down * groundClearance), farHit ? Color.red : Color.green, 2.0f);
+                if (nearHit || farHit)
+                {
+                    // Object is in landing zone
+                    // Climb on to the object
+                    state = UnitState.VaultOnState;
+                    data.target = (Vector2)transform.position + (Vector2.up * climbDistance) + (vaultDirection * data.collider.feetSeperation);
+                    UnitStates.Initialise(data, state);
+                }
+                else
+                {
+                    // Landing zone is clear
+                    // Climb over the object
+                    state = UnitState.VaultOverState;
+                    data.target = (Vector2)transform.position + (vaultDirection * (data.collider.size.x + data.collider.feetSeperation));
+                    UnitStates.Initialise(data, state);
+                }
+            }
+            else
+            {
+                // Step over the object
+                data.velocity.y = (climbDistance * data.collider.stepRate) / Time.fixedDeltaTime;
+            }
         }
         else
         {
@@ -224,7 +286,8 @@ public class Unit : MonoBehaviour
         if(lowWallLeft || highWallLeft)
         {
             data.collision |= UnitCollision.Left;
-            transform.Translate(new Vector3(Mathf.Max(lowDepth, highDepth), 0, 0));
+            //transform.Translate(new Vector3(Mathf.Max(lowDepth, highDepth), 0, 0));
+            data.velocity.x = (Mathf.Max(lowDepth, highDepth) * data.collider.collisionRate) / Time.fixedDeltaTime;
         }
         else
         {
@@ -276,7 +339,8 @@ public class Unit : MonoBehaviour
         if(lowWallRight || highWallRight)
         {
             data.collision |= UnitCollision.Right;
-            transform.Translate(new Vector3(-Mathf.Max(lowDepth, highDepth), 0, 0));
+            //transform.Translate(new Vector3(-Mathf.Max(lowDepth, highDepth), 0, 0));
+            data.velocity.x = (-Mathf.Max(lowDepth, highDepth) * data.collider.collisionRate) / Time.fixedDeltaTime;
         }
         else
         {
