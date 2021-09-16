@@ -20,8 +20,9 @@ public class UnitCollider : ScriptableObject
 {
 
     [SerializeField] private UnitColliderData standing, crawling;
-    private UnitColliderData activeData, targetData;
-
+    private UnitColliderData activeData = new UnitColliderData();
+    private UnitColliderData targetData;
+    
     public Vector2 size { get { return activeData.size; } }
     public float feetSeperation { get { return activeData.feetSeperation; } }
 

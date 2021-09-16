@@ -84,6 +84,7 @@ public class Unit : MonoBehaviour
         interactionMask = LayerMask.GetMask("Interactable");
         data.animator = animator;
         data.possibleStates = possibleStates;
+        data.collider.SetStanding();
         UnitStates.Initialise(data, state);
     }
 
