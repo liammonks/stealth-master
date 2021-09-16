@@ -5386,7 +5386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteTransform: {fileID: 1950628591}
   animator: {fileID: 1950628593}
-  possibleStates: -1
+  possibleStates: 127
   state: 1
   data:
     input:
@@ -5399,6 +5399,8 @@ MonoBehaviour:
     collider: {fileID: 11400000, guid: 7cffe1b5a568e20439268724b3b845f4, type: 2}
     collision: 0
     velocity: {x: 0, y: 0}
+    position: {x: 0, y: 0}
+    target: {x: 0, y: 0}
     animator: {fileID: 1950628593}
     t: 0
     previousState: 0
