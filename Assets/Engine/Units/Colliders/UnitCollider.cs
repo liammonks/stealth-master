@@ -19,7 +19,7 @@ public class UnitColliderData
 public class UnitCollider : ScriptableObject
 {
 
-    [SerializeField] private UnitColliderData standing, crawling;
+    public UnitColliderData standing, crawling;
     private UnitColliderData activeData = new UnitColliderData();
     private UnitColliderData targetData;
     

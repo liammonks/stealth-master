@@ -6,6 +6,9 @@ using UnityEngine;
 [Serializable]
 public class UnitData
 {
+    [HideInInspector] public Animator animator;
+    public UnitState possibleStates;
+    
     public InputData input = new InputData();
     public UnitStats stats;
     public UnitCollider collider;
@@ -13,11 +16,10 @@ public class UnitData
     public Vector2 velocity;
     public Vector2 position;
     public Vector2 target;
-    public Animator animator;
     public bool isGrounded { get { return (collision & UnitCollision.Ground) != 0; } }
+    public bool canStand = true;
     public float t = 0.0f;
     public UnitState previousState;
-    public UnitState possibleStates;
 
     public bool ShouldJump()
     {
@@ -26,7 +28,7 @@ public class UnitData
         input.jumpQueued = jumpRequested && grounded;
         return input.jumpQueued;
     }
-    
+
 }
 
 [Serializable]
@@ -157,9 +159,11 @@ public class Unit : MonoBehaviour
         data.velocity = Vector2.ClampMagnitude(data.velocity, data.stats.terminalVeloicty);
 
         // Animate
-        if (data.velocity.x > 0) { animator.SetBool("FacingRight", true); }
-        if (data.velocity.x < 0) { animator.SetBool("FacingRight", false); }
         animator.SetFloat("VelocityX", data.velocity.x);
+        if (data.velocity.x > 1.0f) { animator.SetBool("FacingRight", true); }
+        else if (data.velocity.x < -1.0f) { animator.SetBool("FacingRight", false); }
+        else if (data.input.movement > 0.0f) { animator.SetBool("FacingRight", true); }
+        else if (data.input.movement < 0.0f) { animator.SetBool("FacingRight", false); }
     }
 
     private void UpdateCollisions()
@@ -189,37 +193,50 @@ public class Unit : MonoBehaviour
         }
         if (leftFootGrounded || rightFootGrounded)
         {
-            // Player is grounded, move them out of the ground
+            // Player is grounded, vault or move away from ground
             data.collision |= UnitCollision.Ground;
+            // Check how high the ground is
             float climbDistance = Mathf.Max(leftDepth, rightDepth);
-            if((state == UnitState.Idle || state == UnitState.Run) && climbDistance > data.collider.stepHeight)
+            if(climbDistance > data.collider.stepHeight && CanVault())
             {
-                // Vault when climbing over an object taller than stepHeight
-                bool vaultLeft = leftDepth > rightDepth;
-                Vector2 vaultDirection = vaultLeft ? Vector2.left : Vector2.right;
-                float groundClearance = climbDistance - data.collider.stepHeight;
-                // Get a point half way between the top of the vaultable object and the units feet
-                Vector2 nearCheck = (vaultLeft ? leftFootGrounded : rightFootGrounded).point + (vaultDirection * data.collider.size.x);
-                Vector2 farCheck = (vaultLeft ? leftFootGrounded : rightFootGrounded).point + (vaultDirection * (data.collider.size.x + data.collider.feetSeperation));
-                RaycastHit2D nearHit = Physics2D.Raycast(nearCheck, Vector2.down, groundClearance, collisionMask);
-                RaycastHit2D farHit = Physics2D.Raycast(farCheck, Vector2.down, groundClearance, collisionMask);
-                Debug.DrawLine(nearCheck, nearCheck + (Vector2.down * groundClearance), nearHit ? Color.red : Color.green, 2.0f);
-                Debug.DrawLine(farCheck, farCheck + (Vector2.down * groundClearance), farHit ? Color.red : Color.green, 2.0f);
-                if (nearHit || farHit)
+                bool frontFootHit = false;
+                if (data.velocity.x > 0 && climbDistance == rightDepth) { frontFootHit = true; }
+                if (data.velocity.x < 0 && climbDistance == leftDepth) { frontFootHit = true; }
+                Debug.Log(data.velocity.x);
+                if (frontFootHit)
                 {
-                    // Object is in landing zone
-                    // Climb on to the object
-                    state = UnitState.VaultOnState;
-                    data.target = (Vector2)transform.position + (Vector2.up * climbDistance) + (vaultDirection * data.collider.feetSeperation);
-                    UnitStates.Initialise(data, state);
+                    // Vault when climbing over an object taller than stepHeight
+                    bool vaultLeft = leftDepth > rightDepth;
+                    Vector2 vaultDirection = vaultLeft ? Vector2.left : Vector2.right;
+                    float groundClearance = climbDistance - data.collider.stepHeight;
+                    // Get a point half way between the top of the vaultable object and the units feet
+                    Vector2 nearCheck = (vaultLeft ? leftFootGrounded : rightFootGrounded).point + (vaultDirection * data.collider.size.x);
+                    Vector2 farCheck = (vaultLeft ? leftFootGrounded : rightFootGrounded).point + (vaultDirection * (data.collider.size.x + data.collider.feetSeperation));
+                    RaycastHit2D nearHit = Physics2D.Raycast(nearCheck, Vector2.down, groundClearance, collisionMask);
+                    RaycastHit2D farHit = Physics2D.Raycast(farCheck, Vector2.down, groundClearance, collisionMask);
+                    Debug.DrawLine(nearCheck, nearCheck + (Vector2.down * groundClearance), nearHit ? Color.red : Color.green, 2.0f);
+                    Debug.DrawLine(farCheck, farCheck + (Vector2.down * groundClearance), farHit ? Color.red : Color.green, 2.0f);
+                    if (nearHit || farHit)
+                    {
+                        // Object is in landing zone
+                        // Climb on to the object
+                        state = UnitState.VaultOnState;
+                        data.target = (Vector2)transform.position + (Vector2.up * climbDistance) + (vaultDirection * data.collider.feetSeperation);
+                        UnitStates.Initialise(data, state);
+                    }
+                    else
+                    {
+                        // Landing zone is clear
+                        // Climb over the object
+                        state = UnitState.VaultOverState;
+                        data.target = (Vector2)transform.position + (vaultDirection * (data.collider.size.x + data.collider.feetSeperation));
+                        UnitStates.Initialise(data, state);
+                    }
                 }
                 else
                 {
-                    // Landing zone is clear
-                    // Climb over the object
-                    state = UnitState.VaultOverState;
-                    data.target = (Vector2)transform.position + (vaultDirection * (data.collider.size.x + data.collider.feetSeperation));
-                    UnitStates.Initialise(data, state);
+                    // Back leg hit vault height, fall over ? 
+                    // TRIGGERS AT END OF VAULT
                 }
             }
             else
@@ -288,7 +305,7 @@ public class Unit : MonoBehaviour
         {
             data.collision |= UnitCollision.Left;
             //transform.Translate(new Vector3(Mathf.Max(lowDepth, highDepth), 0, 0));
-            data.velocity.x = (Mathf.Max(lowDepth, highDepth) * data.collider.collisionRate) / Time.fixedDeltaTime;
+            data.velocity.x = Mathf.Max(data.velocity.x, data.collider.collisionRate * Mathf.Max(lowDepth, highDepth) * 10);
         }
         else
         {
@@ -341,7 +358,7 @@ public class Unit : MonoBehaviour
         {
             data.collision |= UnitCollision.Right;
             //transform.Translate(new Vector3(-Mathf.Max(lowDepth, highDepth), 0, 0));
-            data.velocity.x = (-Mathf.Max(lowDepth, highDepth) * data.collider.collisionRate) / Time.fixedDeltaTime;
+            data.velocity.x = Mathf.Min(data.velocity.x, -data.collider.collisionRate * Mathf.Max(lowDepth, highDepth) * 10);
         }
         else
         {
@@ -354,7 +371,7 @@ public class Unit : MonoBehaviour
         highWallLeft = Physics2D.Raycast(
             transform.TransformPoint(new Vector3(-data.collider.feetSeperation * 0.5f, (data.collider.size.y * 0.5f) - ceilRayDist)),
             transform.up,
-            data.collider.vaultHeight,
+            ceilRayDist,
             collisionMask
         );
         Debug.DrawRay(
@@ -403,6 +420,40 @@ public class Unit : MonoBehaviour
         {
             data.collision &= ~UnitCollision.Ceil;
         }
+        
+        if(data.collider.size.y == data.collider.standing.size.y) // If crawl collider active
+        {
+            // Check if player can stand
+            // Left side high
+            highWallLeft = Physics2D.Raycast(
+                transform.TransformPoint(new Vector3(-data.collider.standing.feetSeperation * 0.5f, (data.collider.size.y * 0.5f))),
+                transform.up,
+                data.collider.size.y,
+                collisionMask
+            );
+            Debug.DrawRay(
+                transform.TransformPoint(new Vector3(-data.collider.standing.feetSeperation * 0.5f, (data.collider.size.y * 0.5f))),
+                transform.up * data.collider.size.y,
+                highWallLeft ? Color.red : Color.clear
+            );
+            // Right side high
+            highWallRight = Physics2D.Raycast(
+                transform.TransformPoint(new Vector3(data.collider.standing.feetSeperation * 0.5f, (data.collider.size.y * 0.5f))),
+                transform.up,
+                data.collider.size.y,
+                collisionMask
+            );
+            Debug.DrawRay(
+                transform.TransformPoint(new Vector3(data.collider.standing.feetSeperation * 0.5f, (data.collider.size.y * 0.5f))),
+                transform.up * data.collider.size.y,
+                highWallRight ? Color.red : Color.clear
+            );
+            data.canStand = !(highWallLeft || highWallRight);
+        }
+        else
+        {
+            data.canStand = true;
+        }
         #endregion
 
         RaycastHit2D centerHit = Physics2D.Linecast(
@@ -426,4 +477,16 @@ public class Unit : MonoBehaviour
         return data.input;
     }
     
+    private bool CanVault()
+    {
+        if(state == UnitState.Idle || state == UnitState.Run || state == UnitState.Jump)
+        {
+            // If Vault On or Over is possible
+            if((data.possibleStates & (UnitState.VaultOnState | UnitState.VaultOverState)) != 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

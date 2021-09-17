@@ -44,7 +44,6 @@ public static class UnitStates
         {
             data.animator.Play("Idle");
         }
-
         // Execute Jump
         if ((data.possibleStates & UnitState.Jump) != 0 && data.ShouldJump())
         {
@@ -143,7 +142,7 @@ public static class UnitStates
         }
 
         // Return to Idle
-        if ((data.possibleStates & UnitState.Idle) != 0 && !data.input.crawling && (data.collision & UnitCollision.Ground) != 0)
+        if (data.canStand && (data.possibleStates & UnitState.Idle) != 0 && !data.input.crawling && (data.collision & UnitCollision.Ground) != 0)
         {
             data.collider.SetStanding();
             return UnitState.Idle;
@@ -162,9 +161,8 @@ public static class UnitStates
             }
         }
         
-        if (data.input.crawling == false || data.t != 0.0f)
+        if (data.canStand && (data.input.crawling == false || data.t != 0.0f))
         {
-
             // Set unit timer to exit animation duration
             if (data.t == 0)
             {
@@ -213,7 +211,7 @@ public static class UnitStates
         
         if ((data.collision & UnitCollision.Ground) != 0)
         {
-            if (data.input.crawling == false || data.t != 0.0f)
+            if (data.canStand && (data.input.crawling == false || data.t != 0.0f))
             {
 
                 // Set unit timer to exit animation duration
@@ -314,13 +312,16 @@ public static class UnitStates
             data.animator.Play("VaultOver");
             data.animator.Update(0);
             data.animator.Update(0);
+            vaultDuration = data.animator.GetCurrentAnimatorStateInfo(0).length;
             data.t = vaultDuration;
-            data.target = data.target - data.position;
+            Debug.DrawLine(data.position, data.target, Color.magenta, vaultDuration);
         }
+        // Get direction of the target position
+        Vector2 targetDirection = (data.target - data.position).normalized;
         if (data.t > 0.0f)
         {
-            // Apply movement
-            data.velocity = data.target / (vaultDuration * 0.5f);
+            // Apply movement towards target
+            data.velocity = targetDirection / (vaultDuration * 0.5f);
             data.t = Mathf.Max(0.0f, data.t - (Time.fixedDeltaTime / vaultDuration));
         }
         if(data.t == 0.0f)
@@ -332,9 +333,27 @@ public static class UnitStates
     
     private static UnitState VaultOnState(UnitData data, bool initialise)
     {
+        float vaultDuration = 0.65f;
         if (initialise)
         {
             data.animator.Play("VaultOn");
+            data.animator.Update(0);
+            data.animator.Update(0);
+            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            vaultDuration = data.t;
+            Debug.DrawLine(data.position, data.target, Color.magenta, vaultDuration);
+        }
+        // Get direction of the target position
+        Vector2 targetDirection = data.target - data.position;
+        if (data.t > 0.0f)
+        {
+            // Apply movement towards target
+            data.velocity = targetDirection / (vaultDuration * 0.5f);
+            data.t = Mathf.Max(0.0f, data.t - (Time.fixedDeltaTime / vaultDuration));
+        }
+        if (data.t == 0.0f)
+        {
+            return UnitState.Idle;
         }
         return UnitState.VaultOnState;
     }

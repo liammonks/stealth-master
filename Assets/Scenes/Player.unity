@@ -5386,9 +5386,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteTransform: {fileID: 1950628591}
   animator: {fileID: 1950628593}
-  possibleStates: 127
+  possibleStates: -1
   state: 1
   data:
+    animator: {fileID: 1950628593}
+    possibleStates: 0
     input:
       movement: 0
       jumpQueued: 0
@@ -5401,10 +5403,9 @@ MonoBehaviour:
     velocity: {x: 0, y: 0}
     position: {x: 0, y: 0}
     target: {x: 0, y: 0}
-    animator: {fileID: 1950628593}
+    canStand: 1
     t: 0
     previousState: 0
-    possibleStates: 0
 --- !u!1 &1521881362
 GameObject:
   m_ObjectHideFlags: 0
@@ -10417,7 +10418,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1950628590}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.16, z: -0.1}
+  m_LocalPosition: {x: 0, y: 0.15999997, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1518594398}

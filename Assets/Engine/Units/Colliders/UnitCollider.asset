@@ -18,7 +18,7 @@ MonoBehaviour:
     vaultHeight: 0.8
     stepHeight: 0.5
     vaultRate: 0.1
-    stepRate: 0.2
+    stepRate: 0.5
     collisionRate: 0.5
   crawling:
     size: {x: 1.6, y: 0.7}
