@@ -14,11 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 3
   runSpeed: 5
-  jumpForce: 4
-  diveVelocityMultiplier: 1.75
-  slideVelocityMultiplier: 1.25
-  groundAuthority: 12
-  airAuthority: 2
-  groundDrag: 6
-  airDrag: 0.1
-  terminalVeloicty: 20
+  groundAcceleration: 0.2
+  airAcceleration: 0.2
+  groundDrag: 1
+  airDrag: 0.2
+  slideDrag: 0.5
+  jumpForce: 3
+  diveVelocityMultiplier: 2
+  slideVelocityMultiplier: 1.5
+  standingSpringDistance: 0.85
+  standingSpringWidth: 0.3
+  crawlingSpringDistance: 0.35
+  crawlingSpringWidth: 0.6
+  springForce: 100
+  springDamping: 20
+  groundRotationForce: 200
+  airRotationForce: 50
+  groundedMaxAngle: 45
+  vaultGrabDistance: 0.5
+  vaultMoveDistance: 0.5
+  maxVaultHeight: 1
+  minVaultHeight: 0.5
+  vaultDuration: 0.5

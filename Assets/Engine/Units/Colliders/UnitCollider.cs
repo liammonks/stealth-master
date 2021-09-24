@@ -5,7 +5,7 @@ public class UnitColliderData
 {
     [Header("Physics")]
     public Vector2 size = new Vector2(0.5f, 1.7f);
-    public float feetSeperation = 0.4f;
+    public float skinWidth = 0.4f;
 
     [Header("Climbing")]
     public float vaultHeight = 0.5f;
@@ -24,7 +24,7 @@ public class UnitCollider : ScriptableObject
     private UnitColliderData targetData;
     
     public Vector2 size { get { return activeData.size; } }
-    public float feetSeperation { get { return activeData.feetSeperation; } }
+    public float skinWidth { get { return activeData.skinWidth; } }
 
     public float vaultHeight { get { return activeData.vaultHeight; } }
     public float stepHeight { get { return activeData.stepHeight; } }
@@ -39,7 +39,7 @@ public class UnitCollider : ScriptableObject
     {
         targetData = standing;
         activeData.size = standing.size;
-        activeData.feetSeperation = standing.feetSeperation;
+        activeData.skinWidth = standing.skinWidth;
         activeData.vaultHeight = standing.vaultHeight;
         activeData.vaultRate = standing.vaultRate;
         activeData.stepHeight = standing.stepHeight;
@@ -74,7 +74,7 @@ public class UnitCollider : ScriptableObject
         lerp = Mathf.Min(lerp + (Time.deltaTime * lerpRate), 1.0f);
 
         activeData.size = Vector2.Lerp(standing.size, crawling.size, lerp);
-        activeData.feetSeperation = Mathf.Lerp(standing.feetSeperation, crawling.feetSeperation, lerp);
+        activeData.skinWidth = Mathf.Lerp(standing.skinWidth, crawling.skinWidth, lerp);
         activeData.vaultHeight = Mathf.Lerp(standing.vaultHeight, crawling.vaultHeight, lerp);
         activeData.vaultRate = Mathf.Lerp(standing.vaultRate, crawling.vaultRate, lerp);
         activeData.stepHeight = Mathf.Lerp(standing.stepHeight, crawling.stepHeight, lerp);
@@ -87,7 +87,7 @@ public class UnitCollider : ScriptableObject
         lerp = Mathf.Max(0.0f, lerp - (Time.deltaTime * lerpRate));
 
         activeData.size = Vector2.Lerp(standing.size, crawling.size, lerp);
-        activeData.feetSeperation = Mathf.Lerp(standing.feetSeperation, crawling.feetSeperation, lerp);
+        activeData.skinWidth = Mathf.Lerp(standing.skinWidth, crawling.skinWidth, lerp);
         activeData.vaultHeight = Mathf.Lerp(standing.vaultHeight, crawling.vaultHeight, lerp);
         activeData.vaultRate = Mathf.Lerp(standing.vaultRate, crawling.vaultRate, lerp);
         activeData.stepHeight = Mathf.Lerp(standing.stepHeight, crawling.stepHeight, lerp);
