@@ -87,7 +87,7 @@ public class Unit : MonoBehaviour
     [SerializeField] private Vector2[] crawlingPoints;
     private float colliderInterpValue = 1.0f;
     private const float colliderInterpRate = 5.0f;
-    private const float groundSpringDistanceBuffer = 0.2f;
+    private const float groundSpringDistanceBuffer = 0.3f;
 
     private void Awake() {
         // Init layer masks

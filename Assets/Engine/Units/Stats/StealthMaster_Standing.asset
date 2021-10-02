@@ -26,13 +26,15 @@ MonoBehaviour:
   standingSpringWidth: 0.3
   crawlingSpringDistance: 0.35
   crawlingSpringWidth: 0.6
-  springForce: 100
+  springForce: 200
   springDamping: 20
   groundRotationForce: 200
   airRotationForce: 50
-  groundedMaxAngle: 45
+  groundedMaxAngle: 30
   vaultGrabDistance: 0.5
   vaultMoveDistance: 0.5
   maxVaultHeight: 1
-  minVaultHeight: 0.5
+  minVaultHeight: 1
   vaultDuration: 0.5
+  standingCeilingCheckHeight: 0.85
+  crawlingCeilingCheckHeight: 1.35

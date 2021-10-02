@@ -458,6 +458,7 @@ public static class UnitStates
             data.target = data.target - data.rb.velocity;
             Debug.DrawRay(data.rb.position, data.target, Color.blue, 3);
         }
+        Debug.Break();
         if (data.t > 0.0f)
         {
             Vector2 velocity = data.rb.velocity;
@@ -511,8 +512,6 @@ public static class UnitStates
     
     private static UnitState TryVault(UnitData data)
     {
-        return UnitState.Null;
-
         RaycastHit2D vaultHit = Physics2D.Raycast(
             data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultGrabDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
             Vector2.down,
@@ -561,7 +560,7 @@ public static class UnitStates
                 else
                 {
                     // Landing zone clear
-                    data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
+                    data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance);// + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
                     return UnitState.VaultOverState;
                 }
             }
