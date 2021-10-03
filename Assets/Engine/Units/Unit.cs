@@ -114,7 +114,7 @@ public class Unit : MonoBehaviour
         if (colliderInterpValue != (data.isStanding ? 1.0f : 0.0f))
             UpdateCollider();
 
-        Debug.DrawRay(transform.position, data.rb.velocity, Color.grey);
+        //Debug.DrawRay(transform.position, data.rb.velocity, Color.grey);
     }
     
     private void UpdateMovement()
@@ -130,31 +130,41 @@ public class Unit : MonoBehaviour
             state = nextState;
         }
     }
-    
+
     private void UpdateGroundSpring()
     {
         float springDistance = Mathf.Lerp(data.stats.crawlingSpringDistance, data.stats.standingSpringDistance, colliderInterpValue);
         float springWidth = Mathf.Lerp(data.stats.crawlingSpringWidth, data.stats.standingSpringWidth, colliderInterpValue);
         Vector2 velocity = data.rb.velocity;
-
+        
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, new Vector2(springWidth, springWidth), transform.eulerAngles.z, -transform.up, springDistance - (springWidth * 0.5f) + groundSpringDistanceBuffer, collisionMask);
         if(hit && data.groundSpringActive)
         {
-            //Debug.DrawRay(transform.position, -transform.up * springDisplacement, Color.blue);
-            //Debug.DrawLine(transform.position, hit.point, Color.red);
-            //Debug.DrawRay(hit.point, hit.normal, Color.cyan);
+            ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springWidth, springWidth) * 0.5f, transform.rotation, -transform.up, hit.distance, Color.blue);
 
+            // Apply spring force
+            float springDisplacement = (springDistance - (springWidth * 0.5f)) - hit.distance;
+            float springForce = springDisplacement * data.stats.springForce;
+            float springDamp = Vector2.Dot(velocity, transform.up) * data.stats.springDamping;
+            velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
+            
             float groundAngle = Vector2.Angle(hit.normal, Vector2.up);
             if (groundAngle > data.stats.groundedMaxAngle)
             {
+                // Surface is not standable
                 Debug.DrawRay(hit.point, hit.normal, Color.red);
-                data.isGrounded = false;
                 
-                // Ground too steep, dive (not on corners)
-                if (groundAngle < 85.0f)
+                // Check for a corner
+                Vector2 cornerCheckOrigin = hit.point + (Vector2.up * 0.5f);
+                hit = Physics2D.Raycast(cornerCheckOrigin, Vector2.down, 0.6f, collisionMask);
+                //Debug.DrawRay(cornerCheckOrigin, Vector2.down * 0.6f, Color.red);
+                // Raycast does not hit if we are on a corner
+                if (hit)
                 {
+                    // On Surface
                     data.input.crawlLocked = true;
                 }
+                data.isGrounded = false;
 
                 // Apply gravity
                 velocity.x += Physics2D.gravity.x * Time.fixedDeltaTime;
@@ -162,15 +172,11 @@ public class Unit : MonoBehaviour
             }
             else
             {
+                // Grounded on standable surface
                 Debug.DrawRay(hit.point, hit.normal, Color.green);
-                data.isGrounded = true;
+                Debug.Log(springDisplacement);
+                data.isGrounded = springDisplacement > -0.05f;
                 data.input.crawlLocked = false;
-                
-                // Apply spring force
-                float springDisplacement = (springDistance - (springWidth * 0.5f)) - hit.distance;
-                float springForce = springDisplacement * data.stats.springForce;
-                float springDamp = Vector2.Dot(velocity, transform.up) * data.stats.springDamping;
-                velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
             }
         }
         else

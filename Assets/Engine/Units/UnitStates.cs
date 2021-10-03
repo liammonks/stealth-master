@@ -262,23 +262,17 @@ public static class UnitStates
             else
             {
                 data.ApplyDrag(data.stats.slideDrag);
+                // Return to crawl if speed drops too low
+                if (data.rb.velocity.magnitude < data.stats.walkSpeed)
+                {
+                    data.animator.Play("Crawl");
+                    return UnitState.Crawl;
+                }
             }
         }
         else
         {
                 data.ApplyDrag(data.stats.airDrag);
-        }
-
-        // Execute Crawl when speed drops below walking
-        //if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
-        //{
-        //    data.animator.Play("Crawl");
-        //    return UnitState.Crawl;
-        //}
-        if (data.rb.velocity.magnitude < data.stats.walkSpeed)
-        {
-            data.animator.Play("Crawl");
-            return UnitState.Crawl;
         }
         
         return UnitState.Slide;
@@ -296,6 +290,16 @@ public static class UnitStates
                 data.rb.velocity *= data.stats.diveVelocityMultiplier;
             }
         }
+
+        // Allow player to push towards movement speed while in the air
+        Vector2 velocity = data.rb.velocity;
+        if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
+        {
+            float desiredSpeed = data.stats.walkSpeed * data.input.movement;
+            float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+            velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
+        }
+        data.rb.velocity = velocity;
 
         if (data.isGrounded || data.t != 0.0f)
         {
