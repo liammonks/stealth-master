@@ -23,14 +23,14 @@ MonoBehaviour:
   diveVelocityMultiplier: 2
   slideVelocityMultiplier: 1.5
   standingSpringDistance: 0.85
-  standingSpringWidth: 0.3
+  standingSpringWidth: 0.4
   crawlingSpringDistance: 0.35
   crawlingSpringWidth: 0.6
-  springForce: 200
+  springForce: 600
   springDamping: 20
-  groundRotationForce: 200
+  groundRotationForce: 500
   airRotationForce: 50
-  groundedMaxAngle: 30
+  groundedMaxAngle: 60
   vaultGrabDistance: 0.5
   vaultMoveDistance: 0.5
   maxVaultHeight: 1
