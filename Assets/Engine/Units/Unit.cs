@@ -87,7 +87,7 @@ public class Unit : MonoBehaviour
     [SerializeField] private Vector2[] crawlingPoints;
     private float colliderInterpValue = 1.0f;
     private const float colliderInterpRate = 5.0f;
-    private const float groundSpringDistanceBuffer = 0.3f;
+    private const float groundSpringDistanceBuffer = 0.4f;
 
     private void Awake() {
         // Init layer masks
@@ -105,24 +105,19 @@ public class Unit : MonoBehaviour
 
     private void FixedUpdate() 
     {
-        ApplyGroundSpring();
-        ApplyMovement();
-        
+        UpdateGroundSpring();
+        UpdateMovement();
+        UpdateCeiling();
+        UpdateAnimation();
+
+        // Dont update collider if we are fully interped
         if (colliderInterpValue != (data.isStanding ? 1.0f : 0.0f))
             UpdateCollider();
 
-        // Animate
-        animator.SetFloat("VelocityX", data.rb.velocity.x);
-        if (data.rb.velocity.x > 0.5f) { data.isFacingRight = true; }
-        else if (data.rb.velocity.x < -0.5f) { data.isFacingRight = false; }
-        else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
-        else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
-        animator.SetBool("FacingRight", data.isFacingRight);
-
-        //Debug.DrawRay(transform.position, data.rb.velocity, Color.magenta);
+        Debug.DrawRay(transform.position, data.rb.velocity, Color.grey);
     }
     
-    private void ApplyMovement()
+    private void UpdateMovement()
     {
         // Execute movement, recieve next state
         UnitState nextState = UnitStates.Execute(data, state);
@@ -136,7 +131,7 @@ public class Unit : MonoBehaviour
         }
     }
     
-    private void ApplyGroundSpring()
+    private void UpdateGroundSpring()
     {
         float springDistance = Mathf.Lerp(data.stats.crawlingSpringDistance, data.stats.standingSpringDistance, colliderInterpValue);
         float springWidth = Mathf.Lerp(data.stats.crawlingSpringWidth, data.stats.standingSpringWidth, colliderInterpValue);
@@ -145,20 +140,21 @@ public class Unit : MonoBehaviour
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, new Vector2(springWidth, springWidth), transform.eulerAngles.z, -transform.up, springDistance - (springWidth * 0.5f) + groundSpringDistanceBuffer, collisionMask);
         if(hit && data.groundSpringActive)
         {
-            // Apply spring force
-            float springDisplacement = (springDistance - (springWidth * 0.5f)) - hit.distance;
-            float springForce = springDisplacement * data.stats.springForce;
-            float springDamp = Vector2.Dot(velocity, transform.up) * data.stats.springDamping;
-            velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
-            Debug.DrawRay(transform.position - transform.up * springDistance, transform.up * springDisplacement, Color.magenta);
-            Debug.DrawRay(hit.point, hit.normal, Color.cyan);
+            //Debug.DrawRay(transform.position, -transform.up * springDisplacement, Color.blue);
+            //Debug.DrawLine(transform.position, hit.point, Color.red);
+            //Debug.DrawRay(hit.point, hit.normal, Color.cyan);
 
             float groundAngle = Vector2.Angle(hit.normal, Vector2.up);
             if (groundAngle > data.stats.groundedMaxAngle)
             {
-                // Ground too steep, dive
+                Debug.DrawRay(hit.point, hit.normal, Color.red);
                 data.isGrounded = false;
-                data.input.crawlLocked = true;
+                
+                // Ground too steep, dive (not on corners)
+                if (groundAngle < 85.0f)
+                {
+                    data.input.crawlLocked = true;
+                }
 
                 // Apply gravity
                 velocity.x += Physics2D.gravity.x * Time.fixedDeltaTime;
@@ -166,10 +162,16 @@ public class Unit : MonoBehaviour
             }
             else
             {
+                Debug.DrawRay(hit.point, hit.normal, Color.green);
                 data.isGrounded = true;
                 data.input.crawlLocked = false;
+                
+                // Apply spring force
+                float springDisplacement = (springDistance - (springWidth * 0.5f)) - hit.distance;
+                float springForce = springDisplacement * data.stats.springForce;
+                float springDamp = Vector2.Dot(velocity, transform.up) * data.stats.springDamping;
+                velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
             }
-            Debug.DrawLine(transform.position, hit.point, Color.green);
         }
         else
         {
@@ -179,26 +181,30 @@ public class Unit : MonoBehaviour
             data.isGrounded = false;
             data.input.crawlLocked = false;
         }
-        
+
         // Rotate Unit
         float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
         if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
         rotationDisplacement -= Vector2.SignedAngle(Vector2.up, hit.normal);
         data.rb.angularVelocity = -rotationDisplacement * (data.isGrounded ? data.stats.groundRotationForce : data.stats.airRotationForce) * Time.fixedDeltaTime;
 
+        data.rb.velocity = velocity;
+    }
+    
+    private void UpdateCeiling()
+    {
         // Ceiling check
         if (data.isGrounded)
         {
             float ceilCheckHeight = Mathf.Lerp(data.stats.crawlingCeilingCheckHeight, data.stats.standingCeilingCheckHeight, colliderInterpValue);
-            hit = Physics2D.BoxCast(transform.position, new Vector2(springWidth, springWidth), transform.eulerAngles.z, transform.up, ceilCheckHeight - (springWidth * 0.5f), collisionMask);
+            float springWidth = Mathf.Lerp(data.stats.crawlingSpringWidth, data.stats.standingSpringWidth, colliderInterpValue);
+            RaycastHit2D hit = Physics2D.BoxCast(transform.position, new Vector2(springWidth, springWidth), transform.eulerAngles.z, transform.up, ceilCheckHeight - (springWidth * 0.5f), collisionMask);
             if (hit)
             {
                 Debug.DrawLine(transform.position, hit.point, Color.red);
                 data.input.crawlLocked = true;
             }
         }
-
-        data.rb.velocity = velocity;
     }
 
     private void UpdateCollider()
@@ -212,6 +218,17 @@ public class Unit : MonoBehaviour
             points[i] = Vector2.Lerp(crawlingPoints[i], standingPoints[i], colliderInterpValue);
         }
         activeCollider.points = points;
+    }
+    
+    private void UpdateAnimation()
+    {
+        // Animate
+        animator.SetFloat("VelocityX", data.rb.velocity.x);
+        if (data.rb.velocity.x > 0.5f) { data.isFacingRight = true; }
+        else if (data.rb.velocity.x < -0.5f) { data.isFacingRight = false; }
+        else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
+        else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
+        animator.SetBool("FacingRight", data.isFacingRight);
     }
     
     public InputData GetInputData()

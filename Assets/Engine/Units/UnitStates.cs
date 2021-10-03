@@ -92,7 +92,10 @@ public static class UnitStates
     {
         if(initialise)
         {
-            data.animator.Play("Run");
+            if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Right"))
+            {
+                data.animator.Play("Run");
+            }
             data.isStanding = true;
         }
 
@@ -201,10 +204,6 @@ public static class UnitStates
             {
                 data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
                 data.ApplyDrag(data.stats.groundDrag);
-
-                // Execute Jump (only 100ms before returning idle)
-                if (data.t < 0.1f && (data.possibleStates & UnitState.Jump) != 0 && data.input.jumpQueued)
-                    return UnitState.Jump;
 
                 if (data.t == 0.0f)
                     return UnitState.Idle;
@@ -419,8 +418,15 @@ public static class UnitStates
     {
         if (initialise)
         {
-            data.animator.Play("Fall");
+            data.t = 0.5f;
             data.isStanding = true;
+        }
+
+        data.t -= Time.deltaTime;
+        if(data.t <= 0.0f && data.t != -10.0f)
+        {
+            data.animator.Play("Fall");
+            data.t = -10.0f;
         }
 
         // Allow player to push towards movement speed while in the air
@@ -435,7 +441,14 @@ public static class UnitStates
         
         if (data.isGrounded)
         {
-            return UnitState.Idle;
+            if (Mathf.Abs(data.rb.velocity.x) > 0.1f)
+            {
+                return UnitState.Run;
+            }
+            else
+            {
+                return UnitState.Idle;
+            }
         }
 
         // Execute Dive
