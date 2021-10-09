@@ -31,13 +31,14 @@ public class UnitData
 public class InputData
 {
     public int movement;
-    public bool jumpQueued { get { return Time.unscaledTime - jumpRequestTime < 0.1f; } }
-    public float jumpRequestTime = -1.0f;
     public bool running;
     
-    public bool crawling { get { return _crawling || crawlLocked; } set { _crawling = value; } }
+    public bool jumpQueued { get { return Time.unscaledTime - jumpRequestTime < 0.1f; } }
+    public float jumpRequestTime = -1.0f;
+    
+    public bool crawling { get { return Time.unscaledTime - crawlRequestTime < 0.1f || _crawling; } set { _crawling = value; } }
     private bool _crawling = false;
-    public bool crawlLocked = false;
+    public float crawlRequestTime = -1.0f;
 }
 
 [Flags]
@@ -161,8 +162,8 @@ public class Unit : MonoBehaviour
                 // Raycast does not hit if we are on a corner
                 if (hit)
                 {
-                    // On Surface
-                    data.input.crawlLocked = true;
+                    // On Surface, force crawl
+                    data.input.crawlRequestTime = Time.unscaledTime;
                 }
                 data.isGrounded = false;
 
@@ -174,9 +175,7 @@ public class Unit : MonoBehaviour
             {
                 // Grounded on standable surface
                 Debug.DrawRay(hit.point, hit.normal, Color.green);
-                Debug.Log(springDisplacement);
                 data.isGrounded = springDisplacement > -0.05f;
-                data.input.crawlLocked = false;
             }
         }
         else
@@ -185,7 +184,6 @@ public class Unit : MonoBehaviour
             velocity.x += Physics2D.gravity.x * Time.fixedDeltaTime;
             velocity.y += Physics2D.gravity.y * Time.fixedDeltaTime;
             data.isGrounded = false;
-            data.input.crawlLocked = false;
         }
 
         // Rotate Unit
@@ -208,7 +206,7 @@ public class Unit : MonoBehaviour
             if (hit)
             {
                 Debug.DrawLine(transform.position, hit.point, Color.red);
-                data.input.crawlLocked = true;
+                data.input.crawlRequestTime = Time.unscaledTime;
             }
         }
     }

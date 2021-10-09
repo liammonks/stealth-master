@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Unit playerUnit;
 
     private InputData unitInputData;
+    private Coroutine enableCrawlCoroutine;
 
     private void Awake()
     {
@@ -34,7 +35,36 @@ public class Player : MonoBehaviour
 
     private void OnCrawl(InputValue value)
     {
-        unitInputData.crawling = value.Get<float>() == 1.0f;
+        if (value.Get<float>() == 1.0f)
+        {
+            // Set crawling
+            if (Time.unscaledTime - unitInputData.crawlRequestTime > 0.6f)
+            {
+                unitInputData.crawling = true;
+                unitInputData.crawlRequestTime = Time.unscaledTime;
+            }
+            else
+            {
+                // We tried crawling too quickly after the last crawl input
+                enableCrawlCoroutine = StartCoroutine(EnableCrawlDelay(Time.unscaledTime - unitInputData.crawlRequestTime));
+            }
+        }
+        else
+        {
+            unitInputData.crawling = false;
+            if(enableCrawlCoroutine != null)
+            {
+                StopCoroutine(enableCrawlCoroutine);
+                enableCrawlCoroutine = null;
+            }
+        }
+    }
+    
+    private IEnumerator EnableCrawlDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        unitInputData.crawling = true;
+        unitInputData.crawlRequestTime = Time.unscaledTime;
     }
 
     private void OnMouseMove(InputValue value)

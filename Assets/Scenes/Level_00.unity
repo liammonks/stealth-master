@@ -10363,7 +10363,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -10939,7 +10939,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -12867,6 +12867,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1012291798}
     m_Modifications:
+    - target: {fileID: 9172441988022678000, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9172441988022678002, guid: 851f217bc89848a458fdec919ee94abe, type: 3}
       propertyPath: m_Name
       value: Vent

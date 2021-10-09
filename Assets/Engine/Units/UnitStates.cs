@@ -229,7 +229,7 @@ public static class UnitStates
             }
         }
 
-        if (data.isGrounded)
+        if (data.isGrounded || data.t != 0.0f)
         {
             // If we are in the slide loop and let go of crawl input, start a timer to release the slide state
             if (data.input.crawling == false || data.t != 0.0f)
@@ -272,7 +272,7 @@ public static class UnitStates
         }
         else
         {
-                data.ApplyDrag(data.stats.airDrag);
+            data.ApplyDrag(data.stats.airDrag);
         }
         
         return UnitState.Slide;
@@ -292,14 +292,14 @@ public static class UnitStates
         }
 
         // Allow player to push towards movement speed while in the air
-        Vector2 velocity = data.rb.velocity;
         if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
         {
+            Vector2 velocity = data.rb.velocity;
             float desiredSpeed = data.stats.walkSpeed * data.input.movement;
             float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
             velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
+            data.rb.velocity = velocity;
         }
-        data.rb.velocity = velocity;
 
         if (data.isGrounded || data.t != 0.0f)
         {
@@ -380,7 +380,6 @@ public static class UnitStates
             velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
         }
         
-        
         if (data.isGrounded)
         {
             // As long as the jump is queued, apply jump force
@@ -403,17 +402,16 @@ public static class UnitStates
                 data.groundSpringActive = true;
                 return UnitState.Fall;
             }
+            // Execute Dive
+            if ((data.possibleStates & UnitState.Dive) != 0 && data.input.crawling)
+            {
+                data.groundSpringActive = true;
+                return UnitState.Dive;
+            }
         }
 
         data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
         data.rb.velocity = velocity;
-
-        // Execute Dive
-        if ((data.possibleStates & UnitState.Dive) != 0 && data.input.crawling)
-        {
-            data.groundSpringActive = true;
-            return UnitState.Dive;
-        }
 
         return UnitState.Jump;
     }
@@ -472,10 +470,11 @@ public static class UnitStates
             data.t = data.stats.vaultDuration;
             data.isStanding = true;
             data.groundSpringActive = false;
-            data.target = data.target - data.rb.velocity;
+            data.target = data.target - data.rb.position;
             Debug.DrawRay(data.rb.position, data.target, Color.blue, 3);
+            Debug.Break();
         }
-        Debug.Break();
+
         if (data.t > 0.0f)
         {
             Vector2 velocity = data.rb.velocity;
@@ -552,12 +551,12 @@ public static class UnitStates
             {
                 // Vault over object or on top of it
                 RaycastHit2D landingZoneHit = Physics2D.Raycast(
-                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * (data.stats.vaultGrabDistance + data.stats.vaultMoveDistance)) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
+                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
                     Vector2.down,
                     data.stats.maxVaultHeight - data.stats.minVaultHeight
                 );
                 Debug.DrawRay(
-                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * (data.stats.vaultGrabDistance + data.stats.vaultMoveDistance)) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
+                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
                     Vector2.down * (data.stats.maxVaultHeight - data.stats.minVaultHeight),
                     Color.red,
                     data.stats.vaultDuration
