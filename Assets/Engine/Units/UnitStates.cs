@@ -289,6 +289,9 @@ public static class UnitStates
             {
                 data.rb.velocity *= data.stats.diveVelocityMultiplier;
             }
+            // Set timer to stop ground spring
+            data.groundSpringActive = false;
+            data.t = 0.2f;
         }
 
         // Allow player to push towards movement speed while in the air
@@ -300,62 +303,76 @@ public static class UnitStates
             velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
             data.rb.velocity = velocity;
         }
-
-        if (data.isGrounded || data.t != 0.0f)
+        
+        // Re-enable ground spring after delay
+        if(!data.groundSpringActive)
         {
-            data.groundSpringActive = true;
-            // Return to standing on grounded, continue execution until t = 0
-            if (!data.input.crawling || data.t != 0.0f)
+            data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
+            if(data.t == 0.0f)
             {
-                // Set unit timer to exit animation duration
-                if (data.t == 0)
+                data.groundSpringActive = true;
+            }
+        }
+        else
+        {
+            // Have we landed already?
+            if (data.isGrounded || data.t != 0.0f)
+            {
+                // Return to standing on grounded, continue execution until t = 0
+                if (!data.input.crawling || data.t != 0.0f)
                 {
-                    // Execute animation transition
-                    data.animator.Play(Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed ? "DiveFlip" : "CrawlToStand");
-                    // Update animator to transition to relevant state
-                    data.animator.Update(0);
-                    data.animator.Update(0);
-                    data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
-                    data.isStanding = true;
-                }
-                // Tick unit timer
-                if (data.t != 0.0f)
-                {
-                    data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
-                    data.ApplyDrag(data.stats.groundDrag);
-
-                    // Execute Jump (only 100ms before returning idle)
-                    if (data.t < 0.1f && (data.possibleStates & UnitState.Jump) != 0 && data.input.jumpQueued)
+                    // Set unit timer to exit animation duration
+                    if (data.t == 0)
                     {
-                        return UnitState.Jump;
+                        // Execute animation transition
+                        data.animator.Play(Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed ? "DiveFlip" : "CrawlToStand");
+                        // Update animator to transition to relevant state
+                        data.animator.Update(0);
+                        data.animator.Update(0);
+                        data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                        data.isStanding = true;
                     }
-
-                    if (data.t == 0.0f && (data.possibleStates & UnitState.Idle) != 0)
+                    // Tick unit timer
+                    if (data.t != 0.0f)
                     {
-                        return UnitState.Idle;
+                        data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
+                        data.ApplyDrag(data.stats.groundDrag);
+
+                        // Execute Jump (only 100ms before returning idle)
+                        if (data.t < 0.1f && (data.possibleStates & UnitState.Jump) != 0 && data.input.jumpQueued && data.isGrounded)
+                        {
+                            return UnitState.Jump;
+                        }
+
+                        if (data.t == 0.0f && (data.possibleStates & UnitState.Idle) != 0)
+                        {
+                            data.groundSpringActive = true;
+                            return UnitState.Idle;
+                        }
+                    }
+                }
+                else
+                {
+                    data.groundSpringActive = true;
+                    // Landed but still crawling, belly slide
+                    if (data.rb.velocity.magnitude > data.stats.walkSpeed)
+                    {
+                        // Execute Slide
+                        data.animator.Play("BellySlide");
+                        return UnitState.Slide;
+                    }
+                    else
+                    {
+                        // Execute Crawl
+                        data.animator.Play("Crawl");
+                        return UnitState.Crawl;
                     }
                 }
             }
             else
             {
-                // Landed but still crawling, belly slide
-                if (data.rb.velocity.magnitude > data.stats.walkSpeed)
-                {
-                    // Execute Slide
-                    data.animator.Play("BellySlide");
-                    return UnitState.Slide;
-                }
-                else
-                {
-                    // Execute Crawl
-                    data.animator.Play("Crawl");
-                    return UnitState.Crawl;
-                }
+                data.ApplyDrag(data.stats.airDrag);
             }
-        }
-        else
-        {
-            data.ApplyDrag(data.stats.airDrag);
         }
         return UnitState.Dive;
     }
@@ -382,7 +399,7 @@ public static class UnitStates
             velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
         }
         
-        if (!data.isGrounded)
+        if (!data.isGrounded || !data.groundSpringActive)
         {
             // Execute Dive
             if ((data.possibleStates & UnitState.Dive) != 0 && data.input.crawling)
