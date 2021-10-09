@@ -87,8 +87,9 @@ public class Unit : MonoBehaviour
     [SerializeField] private Vector2[] standingPoints;
     [SerializeField] private Vector2[] crawlingPoints;
     private float colliderInterpValue = 1.0f;
-    private const float colliderInterpRate = 5.0f;
-    private const float groundSpringDistanceBuffer = 0.4f;
+    private const float colliderInterpRate = 10.0f;
+    private const float groundSpringDistanceBufferStanding = 0.4f;
+    private const float groundSpringDistanceBufferCrawling = 0.1f;
 
     private void Awake() {
         // Init layer masks
@@ -115,7 +116,7 @@ public class Unit : MonoBehaviour
         if (colliderInterpValue != (data.isStanding ? 1.0f : 0.0f))
             UpdateCollider();
 
-        //Debug.DrawRay(transform.position, data.rb.velocity, Color.grey);
+        //Debug.DrawRay(transform.position, data.rb.velocity * Time.fixedDeltaTime, Color.grey, 3.0f);
     }
     
     private void UpdateMovement()
@@ -136,24 +137,28 @@ public class Unit : MonoBehaviour
     {
         float springDistance = Mathf.Lerp(data.stats.crawlingSpringDistance, data.stats.standingSpringDistance, colliderInterpValue);
         float springWidth = Mathf.Lerp(data.stats.crawlingSpringWidth, data.stats.standingSpringWidth, colliderInterpValue);
+        float groundSpringDistanceBuffer = Mathf.Lerp(groundSpringDistanceBufferCrawling, groundSpringDistanceBufferStanding, colliderInterpValue);
         Vector2 velocity = data.rb.velocity;
         
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, new Vector2(springWidth, springWidth), transform.eulerAngles.z, -transform.up, springDistance - (springWidth * 0.5f) + groundSpringDistanceBuffer, collisionMask);
-        if(hit && data.groundSpringActive)
+        if(hit)
         {
-            ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springWidth, springWidth) * 0.5f, transform.rotation, -transform.up, hit.distance, Color.blue);
-
+            ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springWidth, springWidth) * 0.5f, transform.rotation, -transform.up, hit.distance, data.groundSpringActive ? Color.green : Color.gray);
+            
             // Apply spring force
             float springDisplacement = (springDistance - (springWidth * 0.5f)) - hit.distance;
             float springForce = springDisplacement * data.stats.springForce;
             float springDamp = Vector2.Dot(velocity, transform.up) * data.stats.springDamping;
-            velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
-            
+            if (data.groundSpringActive)
+            {
+                velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
+            }
+
             float groundAngle = Vector2.Angle(hit.normal, Vector2.up);
             if (groundAngle > data.stats.groundedMaxAngle)
             {
                 // Surface is not standable
-                Debug.DrawRay(hit.point, hit.normal, Color.red);
+                //Debug.DrawRay(hit.point, hit.normal, Color.red);
                 
                 // Check for a corner
                 Vector2 cornerCheckOrigin = hit.point + (Vector2.up * 0.5f);
@@ -166,24 +171,25 @@ public class Unit : MonoBehaviour
                     data.input.crawlRequestTime = Time.unscaledTime;
                 }
                 data.isGrounded = false;
-
-                // Apply gravity
-                velocity.x += Physics2D.gravity.x * Time.fixedDeltaTime;
-                velocity.y += Physics2D.gravity.y * Time.fixedDeltaTime;
             }
             else
             {
                 // Grounded on standable surface
-                Debug.DrawRay(hit.point, hit.normal, Color.green);
+                //Debug.DrawRay(hit.point, hit.normal, Color.green);
                 data.isGrounded = springDisplacement > -0.05f;
             }
         }
         else
         {
+            ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springWidth, springWidth) * 0.5f, transform.rotation, -transform.up, springDistance - (springWidth * 0.5f) + groundSpringDistanceBuffer, data.groundSpringActive ? Color.red : Color.gray);
+            data.isGrounded = false;
+        }
+        
+        if(!data.isGrounded || !data.groundSpringActive)
+        {
             // Apply gravity
             velocity.x += Physics2D.gravity.x * Time.fixedDeltaTime;
             velocity.y += Physics2D.gravity.y * Time.fixedDeltaTime;
-            data.isGrounded = false;
         }
 
         // Rotate Unit

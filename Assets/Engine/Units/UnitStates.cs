@@ -303,6 +303,7 @@ public static class UnitStates
 
         if (data.isGrounded || data.t != 0.0f)
         {
+            data.groundSpringActive = true;
             // Return to standing on grounded, continue execution until t = 0
             if (!data.input.crawling || data.t != 0.0f)
             {
@@ -361,6 +362,7 @@ public static class UnitStates
 
     private static UnitState JumpState(UnitData data, bool initialise)
     {
+        Vector2 velocity = data.rb.velocity;
         if(initialise)
         {
             data.animator.Play("Jump");
@@ -369,10 +371,10 @@ public static class UnitStates
             data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
             data.isStanding = true;
             data.groundSpringActive = false;
+            velocity.y = data.stats.jumpForce;
         }
 
         // Allow player to push towards movement speed while in the air
-        Vector2 velocity = data.rb.velocity;
         if (Mathf.Abs(data.rb.velocity.x) < data.stats.runSpeed)
         {
             float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
@@ -380,34 +382,20 @@ public static class UnitStates
             velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
         }
         
-        if (data.isGrounded)
+        if (!data.isGrounded)
         {
-            // As long as the jump is queued, apply jump force
-            if (data.t > 0.0f)
-            {
-                velocity.y = data.stats.jumpForce;
-                Vector2 horizontalVelocity = data.rb.velocity * Vector2.Dot(data.rb.velocity, data.rb.transform.right);
-                data.rb.velocity = horizontalVelocity + ((Vector2)data.rb.transform.up * data.stats.jumpForce);
-            }
-            else
-            {
-                data.groundSpringActive = true;
-                return UnitState.Idle;
-            }
-        }
-        else
-        {
-            if (data.t == 0.0f)
-            {
-                data.groundSpringActive = true;
-                return UnitState.Fall;
-            }
             // Execute Dive
             if ((data.possibleStates & UnitState.Dive) != 0 && data.input.crawling)
             {
-                data.groundSpringActive = true;
                 return UnitState.Dive;
             }
+        }
+        
+        // End of jump animation
+        if (data.t == 0.0f)
+        {
+            data.groundSpringActive = true;
+            return data.isGrounded ? UnitState.Idle : UnitState.Fall;
         }
 
         data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
