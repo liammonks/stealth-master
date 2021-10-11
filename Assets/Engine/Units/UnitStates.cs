@@ -475,31 +475,21 @@ public static class UnitStates
             data.t = data.stats.vaultDuration;
             data.isStanding = true;
             data.groundSpringActive = false;
-            data.target = data.target - data.rb.position;
-            Debug.DrawRay(data.rb.position, data.target, Color.blue, 3);
-            Debug.Break();
+            // Disable collider
+            data.rb.bodyType = RigidbodyType2D.Kinematic;
+            Debug.DrawLine(data.rb.position, data.target, Color.blue, data.t);
         }
 
         if (data.t > 0.0f)
         {
-            Vector2 velocity = data.rb.velocity;
-            float springDisplacement = data.target.x;
-            float springForce = springDisplacement * data.stats.springForce;
-            float springDamping = data.rb.velocity.x * data.stats.springDamping;
-            velocity.x += (springForce - springDamping) * Time.fixedDeltaTime;
-            
-            springDisplacement = data.target.y;
-            springForce = springDisplacement * data.stats.springForce;
-            springDamping = data.rb.velocity.y * data.stats.springDamping;
-            velocity.y += (springForce - springDamping) * Time.fixedDeltaTime;
-
-            data.rb.velocity = velocity;
-
             data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
+            data.rb.position = Vector2.Lerp(data.rb.position, data.target, Mathf.Pow(Mathf.Abs(data.t - data.stats.vaultDuration), 5));
         }
         if(data.t == 0.0f)
         {
             data.groundSpringActive = true;
+            // Enable collider
+            data.rb.bodyType = RigidbodyType2D.Dynamic;
             return UnitState.Idle;
         }
         return UnitState.VaultOverState;
@@ -570,13 +560,13 @@ public static class UnitStates
                 {
                     // Landing zone obstruction
                     Debug.DrawRay(
-                        data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * (data.stats.vaultGrabDistance + data.stats.vaultMoveDistance)) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
+                        data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
                         Vector2.down * (data.stats.maxVaultHeight - data.stats.minVaultHeight),
                         Color.green,
                         data.stats.vaultDuration
                     );
                     data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
-                    return UnitState.VaultOnState;
+                    return UnitState.Null;//UnitState.VaultOnState;
                 }
                 else
                 {

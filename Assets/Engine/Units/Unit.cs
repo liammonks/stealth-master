@@ -107,7 +107,23 @@ public class Unit : MonoBehaviour
 
     private void FixedUpdate() 
     {
-        UpdateGroundSpring();
+        if (data.groundSpringActive)
+        {
+            UpdateGroundSpring();
+        }
+        else
+        {
+            data.isGrounded = false;
+            // Rotate to default
+            float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
+            if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
+            rotationDisplacement -= Vector2.SignedAngle(Vector2.up, transform.up);
+            data.rb.angularVelocity = -rotationDisplacement * data.stats.airRotationForce * Time.fixedDeltaTime;
+        }
+        
+        // Apply gravity
+        data.rb.gravityScale = !data.isGrounded ? 1.0f : 0.0f;
+        
         UpdateMovement();
         UpdateCeiling();
         UpdateAnimation();
@@ -149,17 +165,16 @@ public class Unit : MonoBehaviour
             float springDisplacement = (springDistance - (springWidth * 0.5f)) - hit.distance;
             float springForce = springDisplacement * data.stats.springForce;
             float springDamp = Vector2.Dot(velocity, transform.up) * data.stats.springDamping;
-            if (data.groundSpringActive)
-            {
-                velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
-            }
 
+            velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
+            
+            // Check if we are grounded based on angle of surface
             float groundAngle = Vector2.Angle(hit.normal, Vector2.up);
             if (groundAngle > data.stats.groundedMaxAngle)
             {
-                // Surface is not standable
+                // Surface is not standable, or may have just hit a corner
                 //Debug.DrawRay(hit.point, hit.normal, Color.red);
-                
+
                 // Check for a corner
                 Vector2 cornerCheckOrigin = hit.point + (Vector2.up * 0.5f);
                 hit = Physics2D.Raycast(cornerCheckOrigin, Vector2.down, 0.6f, collisionMask);
@@ -183,13 +198,6 @@ public class Unit : MonoBehaviour
         {
             ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springWidth, springWidth) * 0.5f, transform.rotation, -transform.up, springDistance - (springWidth * 0.5f) + groundSpringDistanceBuffer, data.groundSpringActive ? Color.red : Color.gray);
             data.isGrounded = false;
-        }
-        
-        if(!data.isGrounded || !data.groundSpringActive)
-        {
-            // Apply gravity
-            velocity.x += Physics2D.gravity.x * Time.fixedDeltaTime;
-            velocity.y += Physics2D.gravity.y * Time.fixedDeltaTime;
         }
 
         // Rotate Unit

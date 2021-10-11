@@ -19,22 +19,22 @@ MonoBehaviour:
   groundDrag: 1
   airDrag: 0.2
   slideDrag: 0.5
-  jumpForce: 3
+  jumpForce: 3.5
   diveVelocityMultiplier: 2
   slideVelocityMultiplier: 1.5
   standingSpringDistance: 0.84
-  standingSpringWidth: 0.4
+  standingSpringWidth: 0.35
   crawlingSpringDistance: 0.4
   crawlingSpringWidth: 0.6
   springForce: 500
-  springDamping: 30
-  groundRotationForce: 800
-  airRotationForce: 500
+  springDamping: 40
+  groundRotationForce: 1000
+  airRotationForce: 750
   groundedMaxAngle: 25
   vaultGrabDistance: 0.5
-  vaultMoveDistance: 0.5
+  vaultMoveDistance: 1
   maxVaultHeight: 1
-  minVaultHeight: 1
-  vaultDuration: 0.5
+  minVaultHeight: 0.5
+  vaultDuration: 0.45
   standingCeilingCheckHeight: 0.85
   crawlingCeilingCheckHeight: 1.35
