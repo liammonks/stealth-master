@@ -36,6 +36,8 @@ public static class UnitStates
                 return VaultOverState(data, initialise);
             case UnitState.VaultOnState:
                 return VaultOnState(data, initialise);
+            case UnitState.CrawlIdle:
+                return CrawlIdleState(data, initialise);
         }
         return UnitState.Null;
     }
@@ -48,41 +50,57 @@ public static class UnitStates
             data.isStanding = true;
         }
 
-        data.ApplyDrag(data.stats.groundDrag);
-        
-        Vector2 velocity = data.rb.velocity;
-        float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
-        float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
-        // Increase acceleration when trying to move in opposite direction of travel
-        if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+        if (data.t == 0.0f)
         {
-            deltaSpeedRequired *= 2.0f;
-        }
-        velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
-        data.rb.velocity = velocity;
-        
-        if (Mathf.Abs(data.rb.velocity.x) > data.stats.runSpeed)
-        {
-            UnitHelper.Instance.EmitGroundParticles(data.rb.position + (Vector2.down * data.stats.standingSpringDistance), data.rb.velocity);
-        }
+            data.ApplyDrag(data.stats.groundDrag);
 
-        // Execute Jump
-        if (data.input.jumpQueued)
-        {
-            return UnitState.Jump;
+            Vector2 velocity = data.rb.velocity;
+            float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
+            float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+            // Increase acceleration when trying to move in opposite direction of travel
+            if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+            {
+                deltaSpeedRequired *= 2.0f;
+            }
+            velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
+            data.rb.velocity = velocity;
+            if (Mathf.Abs(data.rb.velocity.x) > data.stats.runSpeed)
+            {
+                UnitHelper.Instance.EmitGroundParticles(data.rb.position + (Vector2.down * data.stats.standingSpringDistance), data.rb.velocity);
+            }
+            
+            // Execute Jump
+            if (data.input.jumpQueued)
+            {
+                return UnitState.Jump;
+            }
+            // Execute Run
+            if (data.input.movement != 0 && Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.75f)
+            {
+                return UnitState.Run;
+            }
         }
 
         // Execute Crawl
-        if (data.input.crawling)
+        if (data.input.crawling || data.t != 0)
         {
-            data.animator.Play("StandToCrawl");
-            return UnitState.Crawl;
-        }
+            if (data.t == 0)
+            {
+                // Play stand to crawl, wait before entering state
+                data.animator.Play("StandToCrawl");
+                data.animator.Update(0);
+                data.animator.Update(0);
+                data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                data.isStanding = false;
+            }
+            else
+            {
+                // Waiting to enter crawl state
+                data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
 
-        // Execute Run
-        if (data.input.movement != 0 && Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.75f)
-        {
-            return UnitState.Run;
+                if (data.t == 0.0f)
+                    return UnitState.CrawlIdle;
+            }
         }
 
         return UnitState.Idle;
@@ -99,68 +117,138 @@ public static class UnitStates
             data.isStanding = true;
         }
 
-        if (Mathf.Abs(data.rb.velocity.x) < data.stats.runSpeed)
+        if (data.t == 0.0f)
         {
-            Vector2 velocity = data.rb.velocity;
-            float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
-            float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
-            // Increase acceleration when trying to move in opposite direction of travel
-            if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+            if (Mathf.Abs(data.rb.velocity.x) < data.stats.runSpeed)
             {
-                deltaSpeedRequired *= 2.0f;
+                Vector2 velocity = data.rb.velocity;
+                float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
+                float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+                // Increase acceleration when trying to move in opposite direction of travel
+                if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+                {
+                    deltaSpeedRequired *= 2.0f;
+                }
+                velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
+                data.rb.velocity = velocity;
             }
-            velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
-            data.rb.velocity = velocity;
-        }
-        else
-        {
-            // Apply drag when faster than run speed
-            UnitHelper.Instance.EmitGroundParticles(data.rb.position + (Vector2.down * data.stats.standingSpringDistance), data.rb.velocity);
-            data.ApplyDrag(data.stats.groundDrag);
-        }
-
-        // Check Vault
-        UnitState vaultState = TryVault(data);
-        if(vaultState != UnitState.Null)
-        {
-            return vaultState;
-        }
-        
-        // Execute Jump
-        if (data.input.jumpQueued)
-        {
-            return UnitState.Jump;
-        }
-
-        // Execute Fall
-        if (!data.isGrounded)
-        {
-            return UnitState.Fall;
-        }
-
-        if (data.input.crawling)
-        {
-            if ((data.possibleStates & UnitState.Slide) != 0 && Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
+            else
             {
-                // Execute Slide
-                data.animator.Play("Slide");
-                return UnitState.Slide;
+                // Apply drag when faster than run speed
+                UnitHelper.Instance.EmitGroundParticles(data.rb.position + (Vector2.down * data.stats.standingSpringDistance), data.rb.velocity);
+                data.ApplyDrag(data.stats.groundDrag);
             }
-            else if ((data.possibleStates & UnitState.Crawl) != 0)
+            // Check Vault
+            UnitState vaultState = TryVault(data);
+            if (vaultState != UnitState.Null)
             {
-                // Execute Crawl
-                data.animator.Play("StandToCrawl");
-                return UnitState.Crawl;
+                return vaultState;
+            }
+            // Execute Jump
+            if (data.input.jumpQueued)
+            {
+                return UnitState.Jump;
+            }
+            // Execute Fall
+            if (!data.isGrounded)
+            {
+                return UnitState.Fall;
+            }
+            // Return to Idle when below walk speed
+            if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed * 0.5f)
+            {
+                return UnitState.Idle;
             }
         }
-        
-        // Return to Idle when below walk speed
-        if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed * 0.5f)
+
+        if (data.input.crawling || data.t != 0)
         {
-            return UnitState.Idle;
+            if (data.t == 0)
+            {
+                if ((data.possibleStates & UnitState.Slide) != 0 && Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
+                {
+                    // Execute Slide
+                    data.animator.Play("Slide");
+                    return UnitState.Slide;
+                }
+                else if ((data.possibleStates & UnitState.Crawl) != 0)
+                {
+                    // Play stand to crawl, wait before entering state
+                    data.animator.Play("StandToCrawl");
+                    data.animator.Update(0);
+                    data.animator.Update(0);
+                    data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                    data.isStanding = false;
+                }
+            }
+            else
+            {
+                // Waiting to enter crawl state
+                data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
+                
+                if (data.t == 0.0f)
+                    return UnitState.Crawl;
+            }
         }
         
         return UnitState.Run;
+    }
+
+    private static UnitState CrawlIdleState(UnitData data, bool initialise)
+    {
+        if(initialise)
+        {
+            data.isStanding = false;
+            data.animator.Play("Crawl_Idle");
+        }
+
+        if (data.t == 0.0f)
+        {
+            // Apply movement input
+            if (data.isGrounded && data.rb.velocity.x < data.stats.walkSpeed)
+            {
+                Vector2 velocity = data.rb.velocity;
+                float desiredSpeed = data.stats.walkSpeed * data.input.movement;
+                float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+                // Increase acceleration when trying to move in opposite direction of travel
+                if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+                {
+                    deltaSpeedRequired *= 2.0f;
+                }
+                velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
+                data.rb.velocity = velocity;
+            }
+            if (Mathf.Abs(data.rb.velocity.x) > 0.1f)
+            {
+                return UnitState.Crawl;
+            }
+        }
+
+        // Return to Idle
+        if ((!data.input.crawling && data.isGrounded) || data.t != 0.0f)
+        {
+            // Set unit timer to exit animation duration
+            if (data.t == 0)
+            {
+                // Execute animation transition
+                data.animator.Play("CrawlToStand");
+                // Update animator to transition to relevant state
+                data.animator.Update(0);
+                data.animator.Update(0);
+                data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                data.isStanding = true;
+            }
+            else
+            {
+                data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
+                data.ApplyDrag(data.stats.groundDrag);
+
+                if (data.t == 0.0f)
+                    return UnitState.Idle;
+            }
+        }
+        
+        return UnitState.CrawlIdle;
     }
 
     private static UnitState CrawlState(UnitData data, bool initialise)
@@ -168,21 +256,30 @@ public static class UnitStates
         if(initialise)
         {
             data.isStanding = false;
+            data.animator.Play("Crawl");
         }
-        
-        // Apply movement input
-        if (data.isGrounded && data.rb.velocity.x < data.stats.walkSpeed)
+
+        if (data.t == 0.0f)
         {
-            Vector2 velocity = data.rb.velocity;
-            float desiredSpeed = data.stats.walkSpeed * data.input.movement;
-            float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
-            // Increase acceleration when trying to move in opposite direction of travel
-            if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+            // Apply movement input
+            if (data.isGrounded && data.rb.velocity.x < data.stats.walkSpeed)
             {
-                deltaSpeedRequired *= 2.0f;
+                Vector2 velocity = data.rb.velocity;
+                float desiredSpeed = data.stats.walkSpeed * data.input.movement;
+                float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+                // Increase acceleration when trying to move in opposite direction of travel
+                if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+                {
+                    deltaSpeedRequired *= 2.0f;
+                }
+                velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
+                data.rb.velocity = velocity;
             }
-            velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
-            data.rb.velocity = velocity;
+
+            if (Mathf.Abs(data.rb.velocity.x) < 0.1f)
+            {
+                return UnitState.CrawlIdle;
+            }
         }
 
         // Return to Idle
@@ -210,11 +307,6 @@ public static class UnitStates
             }
         }
         
-        // Fall
-        if(!data.isGrounded)
-        {
-            //return UnitState.Fall;
-        }
         return UnitState.Crawl;
     }
     
@@ -265,7 +357,7 @@ public static class UnitStates
                 // Return to crawl if speed drops too low
                 if (data.rb.velocity.magnitude < data.stats.walkSpeed)
                 {
-                    data.animator.Play("Crawl");
+                    data.animator.Play("Crawl_Idle");
                     return UnitState.Crawl;
                 }
             }
@@ -364,7 +456,7 @@ public static class UnitStates
                     else
                     {
                         // Execute Crawl
-                        data.animator.Play("Crawl");
+                        data.animator.Play("Crawl_Idle");
                         return UnitState.Crawl;
                     }
                 }

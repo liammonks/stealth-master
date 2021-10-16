@@ -63,7 +63,8 @@ public enum UnitState
     Jump            = 32,
     VaultOverState  = 64,
     VaultOnState    = 128,
-    Fall            = 256
+    Fall            = 256,
+    CrawlIdle       = 512
 }
 
 
