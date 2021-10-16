@@ -70,8 +70,8 @@ public enum UnitState
 public class Unit : MonoBehaviour
 {
 
-    protected LayerMask collisionMask;
-    protected LayerMask interactionMask;
+    public static LayerMask collisionMask;
+    public static LayerMask interactionMask;
 
     [Header("Components")]
     [SerializeField] private Transform spriteTransform;

@@ -391,6 +391,13 @@ public static class UnitStates
             velocity.y = data.stats.jumpForce;
         }
 
+        // Check Vault
+        UnitState vaultState = TryVault(data);
+        if (vaultState != UnitState.Null)
+        {
+            return vaultState;
+        }
+
         // Allow player to push towards movement speed while in the air
         if (Mathf.Abs(data.rb.velocity.x) < data.stats.runSpeed)
         {
@@ -477,13 +484,18 @@ public static class UnitStates
             data.groundSpringActive = false;
             // Disable collider
             data.rb.bodyType = RigidbodyType2D.Kinematic;
-            Debug.DrawLine(data.rb.position, data.target, Color.blue, data.t);
+            //Debug.DrawLine(data.rb.position, data.target, Color.blue, data.t);
+            data.target = data.target - data.rb.position;
+            Debug.DrawRay(data.rb.position, data.target, Color.blue, data.t);
         }
 
         if (data.t > 0.0f)
         {
             data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
-            data.rb.position = Vector2.Lerp(data.rb.position, data.target, Mathf.Pow(Mathf.Abs(data.t - data.stats.vaultDuration), 5));
+            //data.rb.position = Vector2.Lerp(data.rb.position, data.target, Mathf.Pow(Mathf.Abs(data.t - data.stats.vaultDuration), 5));
+            Debug.Log("PREV: " + data.rb.velocity);
+            data.rb.velocity = (data.target / data.stats.vaultDuration);
+            Debug.Log("CURR: " + data.rb.velocity);
         }
         if(data.t == 0.0f)
         {
@@ -523,6 +535,24 @@ public static class UnitStates
     
     private static UnitState TryVault(UnitData data)
     {
+        RaycastHit2D nearHit = Physics2D.BoxCast(
+            data.rb.position + (Vector2.down * data.stats.standingSpringDistance) + (Vector2.up * data.stats.maxVaultHeight * 0.5f),
+            new Vector2(data.stats.vaultGrabDistance, data.stats.maxVaultHeight) * 0.8f,
+            data.rb.rotation,
+            data.isFacingRight ? Vector2.right : Vector2.left,
+            data.stats.vaultGrabDistance * 0.5f,
+            Unit.collisionMask
+        );
+        ExtDebug.DrawBoxCastOnHit(
+            data.rb.position + (Vector2.down * data.stats.standingSpringDistance) + (Vector2.up * data.stats.maxVaultHeight * 0.5f),
+            new Vector2(data.stats.vaultGrabDistance, data.stats.maxVaultHeight) * 0.8f * 0.5f,
+            Quaternion.Euler(0, 0, data.rb.rotation),
+            data.isFacingRight ? Vector2.right : Vector2.left,
+            data.stats.vaultGrabDistance * 0.5f,
+            nearHit ? Color.green : Color.red
+        );
+        if (nearHit) { return UnitState.Null; }
+
         RaycastHit2D vaultHit = Physics2D.Raycast(
             data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultGrabDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
             Vector2.down,

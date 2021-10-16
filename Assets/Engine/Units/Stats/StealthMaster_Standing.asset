@@ -31,10 +31,10 @@ MonoBehaviour:
   groundRotationForce: 1000
   airRotationForce: 750
   groundedMaxAngle: 25
-  vaultGrabDistance: 0.5
-  vaultMoveDistance: 1
-  maxVaultHeight: 1
+  vaultGrabDistance: 1
+  vaultMoveDistance: 1.75
+  maxVaultHeight: 0.8
   minVaultHeight: 0.5
-  vaultDuration: 0.45
+  vaultDuration: 0.4
   standingCeilingCheckHeight: 0.85
   crawlingCeilingCheckHeight: 1.35
