@@ -1,7 +1,25 @@
 fileFormatVersion: 2
 guid: 7bcc1703638e9da49b0741b0c0b6a67e
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -474606751747295868
+    second: Stealth_Master_Vault_Onto_Left_WIP_0
+  - first:
+      213: -5320523835019577233
+    second: Stealth_Master_Vault_Onto_Left_WIP_1
+  - first:
+      213: 8968205019676509334
+    second: Stealth_Master_Vault_Onto_Left_WIP_2
+  - first:
+      213: 399417358793658891
+    second: Stealth_Master_Vault_Onto_Left_WIP_3
+  - first:
+      213: -2819894165598120745
+    second: Stealth_Master_Vault_Onto_Left_WIP_4
+  - first:
+      213: -5454861591840263114
+    second: Stealth_Master_Vault_Onto_Left_WIP_5
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -41,7 +59,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 0
   alignment: 0
@@ -87,9 +105,126 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Stealth_Master_Vault_Onto_Left_WIP_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 63
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.55}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f68b8aae2c3b926b0800000000000000
+      internalID: -5320523835019577233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Vault_Onto_Left_WIP_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 63
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.6}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69481b623f6757c70800000000000000
+      internalID: 8968205019676509334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Vault_Onto_Left_WIP_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 63
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.6}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b02550cb8f30b8500800000000000000
+      internalID: 399417358793658891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Vault_Onto_Left_WIP_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 63
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.55}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d4d3536239bdd8d0800000000000000
+      internalID: -2819894165598120745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Vault_Onto_Left_WIP_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 63
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 634707788407c44b0800000000000000
+      internalID: -5454861591840263114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []

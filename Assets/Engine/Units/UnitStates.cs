@@ -576,7 +576,6 @@ public static class UnitStates
             data.groundSpringActive = false;
             // Disable collider
             data.rb.bodyType = RigidbodyType2D.Kinematic;
-            //Debug.DrawLine(data.rb.position, data.target, Color.blue, data.t);
             data.target = data.target - data.rb.position;
             Debug.DrawRay(data.rb.position, data.target, Color.blue, data.t);
         }
@@ -584,10 +583,7 @@ public static class UnitStates
         if (data.t > 0.0f)
         {
             data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
-            //data.rb.position = Vector2.Lerp(data.rb.position, data.target, Mathf.Pow(Mathf.Abs(data.t - data.stats.vaultDuration), 5));
-            Debug.Log("PREV: " + data.rb.velocity);
             data.rb.velocity = (data.target / data.stats.vaultDuration);
-            Debug.Log("CURR: " + data.rb.velocity);
         }
         if(data.t == 0.0f)
         {
@@ -606,18 +602,23 @@ public static class UnitStates
             data.animator.Play("VaultOn");
             data.t = data.stats.vaultDuration;
             data.isStanding = true;
-            //Debug.DrawRay(data.target, Vector3.up , Color.blue, data.stats.vaultDuration);
+            data.groundSpringActive = false;
+            // Disable collider
+            data.rb.bodyType = RigidbodyType2D.Kinematic;
+            data.target = data.target - data.rb.position;
+            Debug.DrawRay(data.rb.position, data.target, Color.blue, data.t);
         }
-        // Get direction of the target position
+
         if (data.t > 0.0f)
         {
-            // Apply movement towards target
-            Debug.DrawLine(data.rb.position, data.target, Color.blue);
-            //data.rb.velocity = data.target / data.stats.vaultDuration;
-            data.t = Mathf.Max(0.0f, data.t - (Time.fixedDeltaTime / data.stats.vaultDuration));
+            data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
+            data.rb.velocity = (data.target / data.stats.vaultDuration);
         }
         if (data.t == 0.0f)
         {
+            data.groundSpringActive = true;
+            // Enable collider
+            data.rb.bodyType = RigidbodyType2D.Dynamic;
             return UnitState.Idle;
         }
         return UnitState.VaultOnState;
@@ -627,9 +628,10 @@ public static class UnitStates
     
     private static UnitState TryVault(UnitData data)
     {
+        const float nearHitBuffer = 0.2f;
         RaycastHit2D nearHit = Physics2D.BoxCast(
             data.rb.position + (Vector2.down * data.stats.standingSpringDistance) + (Vector2.up * data.stats.maxVaultHeight * 0.5f),
-            new Vector2(data.stats.vaultGrabDistance, data.stats.maxVaultHeight) * 0.8f,
+            new Vector2(data.stats.vaultGrabDistance - nearHitBuffer, data.stats.maxVaultHeight - nearHitBuffer),
             data.rb.rotation,
             data.isFacingRight ? Vector2.right : Vector2.left,
             data.stats.vaultGrabDistance * 0.5f,
@@ -637,7 +639,7 @@ public static class UnitStates
         );
         ExtDebug.DrawBoxCastOnHit(
             data.rb.position + (Vector2.down * data.stats.standingSpringDistance) + (Vector2.up * data.stats.maxVaultHeight * 0.5f),
-            new Vector2(data.stats.vaultGrabDistance, data.stats.maxVaultHeight) * 0.8f * 0.5f,
+            new Vector2(data.stats.vaultGrabDistance - nearHitBuffer, data.stats.maxVaultHeight - nearHitBuffer) * 0.5f,
             Quaternion.Euler(0, 0, data.rb.rotation),
             data.isFacingRight ? Vector2.right : Vector2.left,
             data.stats.vaultGrabDistance * 0.5f,
@@ -688,7 +690,7 @@ public static class UnitStates
                         data.stats.vaultDuration
                     );
                     data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
-                    return UnitState.Null;//UnitState.VaultOnState;
+                    return UnitState.VaultOnState;
                 }
                 else
                 {
