@@ -139,11 +139,14 @@ public static class UnitStates
                 data.ApplyDrag(data.stats.groundDrag);
             }
             // Check Vault
-            UnitState vaultState = TryVault(data);
-            if (vaultState != UnitState.Null)
-            {
-                return vaultState;
+            if(Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f) {
+                UnitState vaultState = TryVault(data);
+                if (vaultState != UnitState.Null)
+                {
+                    return vaultState;
+                }
             }
+            
             // Execute Jump
             if (data.input.jumpQueued)
             {
@@ -484,10 +487,13 @@ public static class UnitStates
         }
 
         // Check Vault
-        UnitState vaultState = TryVault(data);
-        if (vaultState != UnitState.Null)
+        if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
         {
-            return vaultState;
+            UnitState vaultState = TryVault(data);
+            if (vaultState != UnitState.Null)
+            {
+                return vaultState;
+            }
         }
 
         // Allow player to push towards movement speed while in the air
@@ -524,11 +530,26 @@ public static class UnitStates
     {
         if (initialise)
         {
+            
             data.t = 0.5f;
             data.isStanding = true;
         }
 
         data.t -= Time.deltaTime;
+        
+        if(data.t > 0.0f)
+        {
+            // Check Vault
+            if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
+            {
+                UnitState vaultState = TryVault(data);
+                if (vaultState != UnitState.Null)
+                {
+                    return vaultState;
+                }
+            }
+        }
+        
         if(data.t <= 0.0f && data.t != -10.0f)
         {
             data.animator.Play("Fall");
@@ -630,16 +651,16 @@ public static class UnitStates
     {
         const float nearHitBuffer = 0.2f;
         RaycastHit2D nearHit = Physics2D.BoxCast(
-            data.rb.position + (Vector2.down * data.stats.standingSpringDistance) + (Vector2.up * data.stats.maxVaultHeight * 0.5f),
-            new Vector2(data.stats.vaultGrabDistance - nearHitBuffer, data.stats.maxVaultHeight - nearHitBuffer),
+            data.rb.position + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)) + (Vector2.down * (data.stats.maxVaultHeight - data.stats.minVaultHeight) * 0.5f),
+            new Vector2(data.stats.vaultGrabDistance - nearHitBuffer, data.stats.maxVaultHeight - data.stats.minVaultHeight) * 0.5f,
             data.rb.rotation,
             data.isFacingRight ? Vector2.right : Vector2.left,
             data.stats.vaultGrabDistance * 0.5f,
             Unit.collisionMask
         );
         ExtDebug.DrawBoxCastOnHit(
-            data.rb.position + (Vector2.down * data.stats.standingSpringDistance) + (Vector2.up * data.stats.maxVaultHeight * 0.5f),
-            new Vector2(data.stats.vaultGrabDistance - nearHitBuffer, data.stats.maxVaultHeight - nearHitBuffer) * 0.5f,
+            data.rb.position + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)) + (Vector2.down * (data.stats.maxVaultHeight - data.stats.minVaultHeight) * 0.5f),
+            new Vector2(data.stats.vaultGrabDistance - nearHitBuffer, data.stats.maxVaultHeight - data.stats.minVaultHeight) * 0.5f,
             Quaternion.Euler(0, 0, data.rb.rotation),
             data.isFacingRight ? Vector2.right : Vector2.left,
             data.stats.vaultGrabDistance * 0.5f,
@@ -695,7 +716,7 @@ public static class UnitStates
                 else
                 {
                     // Landing zone clear
-                    data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance);// + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
+                    data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance);
                     return UnitState.VaultOverState;
                 }
             }
