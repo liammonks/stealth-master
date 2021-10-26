@@ -169,13 +169,12 @@ public class Unit : MonoBehaviour
 
             velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
             
+            //Debug.DrawRay(hit.point, hit.normal, Color.red);
             // Check if we are grounded based on angle of surface
             float groundAngle = Vector2.Angle(hit.normal, Vector2.up);
             if (groundAngle > data.stats.groundedMaxAngle)
             {
                 // Surface is not standable, or may have just hit a corner
-                //Debug.DrawRay(hit.point, hit.normal, Color.red);
-
                 // Check for a corner
                 Vector2 cornerCheckOrigin = hit.point + (Vector2.up * 0.5f);
                 hit = Physics2D.Raycast(cornerCheckOrigin, Vector2.down, 0.6f, collisionMask);
@@ -194,19 +193,20 @@ public class Unit : MonoBehaviour
                 //Debug.DrawRay(hit.point, hit.normal, Color.green);
                 data.isGrounded = springDisplacement > -0.05f;
             }
+
+            // Rotate Unit
+            float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
+            if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
+            rotationDisplacement -= Vector2.SignedAngle(Vector2.up, hit.normal);
+            data.rb.angularVelocity = -rotationDisplacement * (data.isGrounded ? data.stats.groundRotationForce : data.stats.airRotationForce) * Time.fixedDeltaTime;
         }
         else
         {
             ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springWidth, springWidth) * 0.5f, transform.rotation, -transform.up, springDistance - (springWidth * 0.5f) + groundSpringDistanceBuffer, data.groundSpringActive ? Color.red : Color.gray);
             data.isGrounded = false;
+            data.rb.angularVelocity = 0;
         }
-
-        // Rotate Unit
-        float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
-        if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
-        rotationDisplacement -= Vector2.SignedAngle(Vector2.up, hit.normal);
-        data.rb.angularVelocity = -rotationDisplacement * (data.isGrounded ? data.stats.groundRotationForce : data.stats.airRotationForce) * Time.fixedDeltaTime;
-
+        
         data.rb.velocity = velocity;
     }
     
