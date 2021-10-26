@@ -5347,7 +5347,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1261094148}
   - component: {fileID: 1261094149}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Standing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5445,7 +5445,7 @@ GameObject:
   - component: {fileID: 1518594399}
   - component: {fileID: 1518594401}
   - component: {fileID: 1518594402}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5798,7 +5798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1537005588}
   - component: {fileID: 1537005589}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Crawling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10669,7 +10669,7 @@ GameObject:
   - component: {fileID: 1950628591}
   - component: {fileID: 1950628593}
   - component: {fileID: 1950628592}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10770,7 +10770,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2064016324}
   - component: {fileID: 2064016326}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

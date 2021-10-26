@@ -686,8 +686,13 @@ public static class UnitStates
                 Color.green,
                 data.stats.vaultDuration
             );
+            // Dont vault if surface is not flat
+            if (Vector2.Dot(Vector2.up, vaultHit.normal) <= 0.9f) {
+                Debug.DrawRay(vaultHit.point, vaultHit.normal, Color.red, data.stats.vaultDuration);
+                return UnitState.Null;
+            }
             // Dont vault if ray is inside a collider
-            if(vaultHit.distance > 0.0f)
+            if (vaultHit.distance > 0.0f)
             {
                 // Vault over object or on top of it
                 RaycastHit2D landingZoneHit = Physics2D.Raycast(
