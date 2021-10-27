@@ -34,7 +34,12 @@ MonoBehaviour:
   vaultGrabDistance: 1
   vaultMoveDistance: 1.75
   maxVaultHeight: 0.8
-  minVaultHeight: 0.5
+  minVaultHeight: 0.4
   vaultDuration: 0.4
+  climbGrabDistance: 1
+  climbMoveDistance: 1.75
+  maxClimbHeight: 1.8
+  minClimbHeight: 1.5
+  climbDuration: 0.6
   standingCeilingCheckHeight: 0.85
   crawlingCeilingCheckHeight: 1.35

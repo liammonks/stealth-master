@@ -38,6 +38,13 @@ public class UnitStats : ScriptableObject {
     public float minVaultHeight = 0.5f;
     public float vaultDuration = 0.65f;
 
+    [Header("Climbing")]
+    public float climbGrabDistance = 0.5f;
+    public float climbMoveDistance = 0.5f;
+    public float maxClimbHeight = 2.0f;
+    public float minClimbHeight = 1.5f;
+    public float climbDuration = 0.65f;
+
     [Header("Ceiling")]
     public float standingCeilingCheckHeight = 1.0f;
     public float crawlingCeilingCheckHeight = 1.0f;

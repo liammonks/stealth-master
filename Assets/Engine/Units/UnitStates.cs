@@ -110,10 +110,10 @@ public static class UnitStates
     {
         if(initialise)
         {
-            if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Right"))
-            {
+            //if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Right"))
+            //{
                 data.animator.Play("Run");
-            }
+            //}
             data.isStanding = true;
         }
 
@@ -138,9 +138,14 @@ public static class UnitStates
                 UnitHelper.Instance.EmitGroundParticles(data.rb.position + (Vector2.down * data.stats.standingSpringDistance), data.rb.velocity);
                 data.ApplyDrag(data.stats.groundDrag);
             }
-            // Check Vault
+            // Check Vault / Climb
             if(Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f) {
                 UnitState vaultState = TryVault(data);
+                if (vaultState != UnitState.Null)
+                {
+                    return vaultState;
+                }
+                vaultState = TryClimb(data);
                 if (vaultState != UnitState.Null)
                 {
                     return vaultState;
@@ -486,10 +491,15 @@ public static class UnitStates
             velocity.y = data.stats.jumpForce;
         }
 
-        // Check Vault
+        // Check Vault / Climb
         if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
         {
             UnitState vaultState = TryVault(data);
+            if (vaultState != UnitState.Null)
+            {
+                return vaultState;
+            }
+            vaultState = TryClimb(data);
             if (vaultState != UnitState.Null)
             {
                 return vaultState;
@@ -539,10 +549,15 @@ public static class UnitStates
         
         if(data.t > 0.0f)
         {
-            // Check Vault
+            // Check Vault / Climb
             if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
             {
                 UnitState vaultState = TryVault(data);
+                if (vaultState != UnitState.Null)
+                {
+                    return vaultState;
+                }
+                vaultState = TryClimb(data);
                 if (vaultState != UnitState.Null)
                 {
                     return vaultState;
@@ -649,10 +664,10 @@ public static class UnitStates
     
     private static UnitState TryVault(UnitData data)
     {
-        const float nearHitBuffer = 0.2f;
+        const float nearHitBuffer = 0.25f;
         RaycastHit2D nearHit = Physics2D.BoxCast(
             data.rb.position + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)) + (Vector2.down * (data.stats.maxVaultHeight - data.stats.minVaultHeight) * 0.5f),
-            new Vector2(data.stats.vaultGrabDistance - nearHitBuffer, data.stats.maxVaultHeight - data.stats.minVaultHeight) * 0.5f,
+            new Vector2(data.stats.vaultGrabDistance - nearHitBuffer, data.stats.maxVaultHeight - data.stats.minVaultHeight),
             data.rb.rotation,
             data.isFacingRight ? Vector2.right : Vector2.left,
             data.stats.vaultGrabDistance * 0.5f,
@@ -723,6 +738,89 @@ public static class UnitStates
                     // Landing zone clear
                     data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance);
                     return UnitState.VaultOverState;
+                }
+            }
+        }
+        return UnitState.Null;
+    }
+
+    private static UnitState TryClimb(UnitData data)
+    {
+        const float nearHitBuffer = 0.2f;
+        RaycastHit2D nearHit = Physics2D.BoxCast(
+            data.rb.position + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)) + (Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight) * 0.5f),
+            new Vector2(data.stats.climbGrabDistance - nearHitBuffer, data.stats.maxClimbHeight - data.stats.minClimbHeight) * 0.5f,
+            data.rb.rotation,
+            data.isFacingRight ? Vector2.right : Vector2.left,
+            data.stats.climbGrabDistance * 0.5f,
+            Unit.collisionMask
+        );
+        ExtDebug.DrawBoxCastOnHit(
+            data.rb.position + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)) + (Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight) * 0.5f),
+            new Vector2(data.stats.climbGrabDistance - nearHitBuffer, data.stats.maxClimbHeight - data.stats.minClimbHeight) * 0.5f,
+            Quaternion.Euler(0, 0, data.rb.rotation),
+            data.isFacingRight ? Vector2.right : Vector2.left,
+            data.stats.climbGrabDistance * 0.5f,
+            nearHit ? Color.green : Color.red
+        );
+        if (nearHit) { return UnitState.Null; }
+
+        RaycastHit2D climbHit = Physics2D.Raycast(
+            data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+            Vector2.down,
+            data.stats.maxClimbHeight - data.stats.minClimbHeight
+        );
+        Debug.DrawRay(
+            data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+            Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight),
+            Color.red
+        );
+        if (climbHit)
+        {
+            Debug.DrawRay(
+                data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                Vector2.down * climbHit.distance,
+                Color.green,
+                data.stats.climbDuration
+            );
+            // Dont climb if surface is not flat
+            if (Vector2.Dot(Vector2.up, climbHit.normal) <= 0.9f)
+            {
+                Debug.DrawRay(climbHit.point, climbHit.normal, Color.red, data.stats.climbDuration);
+                return UnitState.Null;
+            }
+            // Dont climb if ray is inside a collider
+            if (climbHit.distance > 0.0f)
+            {
+                // Climb over object or on top of it
+                RaycastHit2D landingZoneHit = Physics2D.Raycast(
+                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                    Vector2.down,
+                    data.stats.maxClimbHeight - data.stats.minClimbHeight
+                );
+                Debug.DrawRay(
+                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                    Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight),
+                    Color.red,
+                    data.stats.climbDuration
+                );
+                if (landingZoneHit)
+                {
+                    // Landing zone obstruction
+                    Debug.DrawRay(
+                        data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                        Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight),
+                        Color.green,
+                        data.stats.climbDuration
+                    );
+                    //data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance) + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
+                    return UnitState.Null;
+                }
+                else
+                {
+                    // Landing zone clear
+                    //data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance);
+                    return UnitState.Null;
                 }
             }
         }
