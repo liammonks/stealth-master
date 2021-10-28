@@ -38,7 +38,16 @@ public static class UnitStates
                 return VaultOnState(data, initialise);
             case UnitState.CrawlIdle:
                 return CrawlIdleState(data, initialise);
+            case UnitState.LedgeGrab:
+                return LedgeGrabState(data, initialise);
+            case UnitState.WallJump:
+                return WallJumpState(data, initialise);
+            case UnitState.Climb:
+                return ClimbState(data, initialise);
+            case UnitState.WallSlide:
+                return WallSlideState(data, initialise);
         }
+        Debug.LogError("No State Function for " + state.ToString());
         return UnitState.Null;
     }
 
@@ -139,13 +148,16 @@ public static class UnitStates
                 data.ApplyDrag(data.stats.groundDrag);
             }
             // Check Vault / Climb
+            if (Mathf.Abs(data.rb.velocity.x) >= data.stats.walkSpeed * 0.9f)
+            {
+                UnitState climbState = TryClimb(data);
+                if (climbState != UnitState.Null)
+                {
+                    return climbState;
+                }
+            }
             if(Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f) {
                 UnitState vaultState = TryVault(data);
-                if (vaultState != UnitState.Null)
-                {
-                    return vaultState;
-                }
-                vaultState = TryClimb(data);
                 if (vaultState != UnitState.Null)
                 {
                     return vaultState;
@@ -482,6 +494,8 @@ public static class UnitStates
         Vector2 velocity = data.rb.velocity;
         if(initialise)
         {
+            // Reset jump input
+            data.input.jumpRequestTime = -1;
             data.animator.Play("Jump");
             data.animator.Update(0);
             data.animator.Update(0);
@@ -491,7 +505,16 @@ public static class UnitStates
             velocity.y = data.stats.jumpForce;
         }
 
-        // Check Vault / Climb
+        // Check Climb
+        if (Mathf.Abs(data.rb.velocity.x) >= 0.1f)
+        {
+            UnitState climbState = TryClimb(data);
+            if (climbState != UnitState.Null)
+            {
+                return climbState;
+            }
+        }
+        // Check Vault (Require Momentum)
         if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
         {
             UnitState vaultState = TryVault(data);
@@ -499,10 +522,25 @@ public static class UnitStates
             {
                 return vaultState;
             }
-            vaultState = TryClimb(data);
-            if (vaultState != UnitState.Null)
+        }
+
+        // Wall Slide
+        if (!initialise && Mathf.Abs(data.rb.velocity.x) > 0.1f)
+        {
+            RaycastHit2D wallHit = Physics2D.Raycast(
+                data.rb.position,
+                data.isFacingRight ? Vector3.right : Vector3.left,
+                data.stats.wallDetectionDistance,
+                Unit.collisionMask
+            );
+            Debug.DrawRay(
+                data.rb.position,
+                (data.isFacingRight ? Vector3.right : Vector3.left) * data.stats.wallDetectionDistance,
+                wallHit ? Color.green : Color.red
+            );
+            if (wallHit)
             {
-                return vaultState;
+                return UnitState.WallSlide;
             }
         }
 
@@ -532,7 +570,6 @@ public static class UnitStates
 
         data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
         data.rb.velocity = velocity;
-
         return UnitState.Jump;
     }
 
@@ -540,16 +577,15 @@ public static class UnitStates
     {
         if (initialise)
         {
-            
-            data.t = 0.5f;
+            data.t = 0.1f;
             data.isStanding = true;
+            data.groundSpringActive = true;
         }
 
-        data.t -= Time.deltaTime;
-        
         if(data.t > 0.0f)
         {
-            // Check Vault / Climb
+            data.t -= Time.deltaTime;
+            // Check Vault
             if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
             {
                 UnitState vaultState = TryVault(data);
@@ -557,14 +593,9 @@ public static class UnitStates
                 {
                     return vaultState;
                 }
-                vaultState = TryClimb(data);
-                if (vaultState != UnitState.Null)
-                {
-                    return vaultState;
-                }
             }
         }
-        
+
         if(data.t <= 0.0f && data.t != -10.0f)
         {
             data.animator.Play("Fall");
@@ -581,6 +612,7 @@ public static class UnitStates
             data.rb.velocity = velocity;
         }
         
+        // Return to ground
         if (data.isGrounded)
         {
             if (Mathf.Abs(data.rb.velocity.x) > 0.1f)
@@ -591,6 +623,31 @@ public static class UnitStates
             {
                 return UnitState.Idle;
             }
+        }
+
+
+        // Check Climb
+        UnitState climbState = TryClimb(data);
+        if (climbState != UnitState.Null)
+        {
+            return climbState;
+        }
+        
+        // Wall Slide
+        RaycastHit2D wallHit = Physics2D.Raycast(
+            data.rb.position,
+            data.isFacingRight ? Vector3.right : Vector3.left,
+            data.stats.wallDetectionDistance,
+            Unit.collisionMask
+        );
+        Debug.DrawRay(
+            data.rb.position,
+            (data.isFacingRight ? Vector3.right : Vector3.left) * data.stats.wallDetectionDistance,
+            wallHit ? Color.green : Color.red
+        );
+        if (wallHit)
+        {
+            return UnitState.WallSlide;
         }
 
         // Execute Dive
@@ -658,6 +715,198 @@ public static class UnitStates
             return UnitState.Idle;
         }
         return UnitState.VaultOnState;
+    }
+    
+    private static UnitState LedgeGrabState(UnitData data, bool initialise)
+    {
+        if(initialise)
+        {
+            data.animator.Play("LedgeGrab");
+            data.t = 0.1f;
+            data.groundSpringActive = false;
+            data.updateFacing = false;
+        }
+
+        data.t -= Time.fixedDeltaTime;
+
+        if (data.t > 0.0f) {
+            data.rb.velocity = (data.target - data.rb.position) / data.t;
+        }
+
+        if (data.t <= 0.0f && data.t != -10.0f) {
+            data.rb.position = data.target;
+            data.rb.velocity = Vector2.zero;
+            data.updateFacing = true;
+            data.t = -10.0f;
+        }
+        
+        if (data.t == -10.0f) {
+            // Wall Jump
+            if (data.input.jumpQueued)
+            {
+                return UnitState.WallJump;
+            }
+
+            // Climb Right
+            if (data.isFacingRight && data.input.movement > 0)
+            {
+                return UnitState.Climb;
+            }
+            // Climb Left
+            if (!data.isFacingRight && data.input.movement < 0)
+            {
+                return UnitState.Climb;
+            }
+
+            // Jump Away Right
+            if (!data.isFacingRight && data.input.movement > 0)
+            {
+                return UnitState.WallJump;
+            }
+            // Jump Away Left
+            if (data.isFacingRight && data.input.movement < 0)
+            {
+                return UnitState.WallJump;
+            }
+
+            // Drop
+            if (data.input.crawling)
+            {
+                return UnitState.WallSlide;
+            }
+        }
+        
+        return UnitState.LedgeGrab;
+    }
+    
+    private static UnitState WallJumpState(UnitData data, bool initialise)
+    {        
+        if(initialise)
+        {
+            data.isFacingRight = !data.isFacingRight;
+            data.animator.SetBool("FacingRight", data.isFacingRight);
+            data.animator.Play("WallJump");
+            data.animator.Update(0);
+            data.animator.Update(0);
+            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            data.rb.velocity = (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.wallJumpForce.x +
+                                Vector2.up * data.stats.wallJumpForce.y;
+        }
+        
+        data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
+        if(data.t == 0.0f)
+        {
+            data.groundSpringActive = true;
+            return UnitState.Fall;
+        }
+
+        // Try grabbing another ledge
+        if (Mathf.Abs(data.rb.velocity.x) >= data.stats.walkSpeed * 0.9f)
+        {
+            UnitState climbState = TryClimb(data);
+            if (climbState != UnitState.Null)
+            {
+                return climbState;
+            }
+        }
+        
+        return UnitState.WallJump;
+    }
+    
+    private static UnitState ClimbState(UnitData data, bool initialise)
+    {
+        if(initialise)
+        {
+            data.animator.Play("Climb");
+            Debug.DrawLine(
+                data.rb.position,
+                data.rb.position + (Vector2.up * (data.stats.standingSpringDistance - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.right : Vector2.left) * (data.stats.standingSpringWidth - data.stats.climbGrabOffset.x)),
+                Color.blue,
+                data.stats.climbDuration
+            );
+            data.t = data.stats.climbDuration;
+            data.target = data.rb.position + (Vector2.up * (data.stats.standingSpringDistance - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
+            data.rb.velocity = (data.target - data.rb.position) / data.t;
+            data.rb.isKinematic = true;
+        }
+
+        data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
+        if(data.t == 0.0f) {
+            data.rb.velocity = Vector2.zero;
+            data.rb.position = data.target;
+            data.rb.isKinematic = false;
+            data.groundSpringActive = true;
+            return UnitState.Idle;
+        } else {
+            data.rb.velocity = (data.target - data.rb.position) / data.t;
+        }
+        
+        return UnitState.Climb;
+    }
+    
+    private static UnitState WallSlideState(UnitData data, bool initialise)
+    {
+        if (initialise) {
+            data.animator.Play("WallSlide");
+            data.updateFacing = false;
+        }
+
+        // Check we are still on a wall
+        RaycastHit2D wallHit = Physics2D.Raycast(
+            data.rb.position,
+            data.isFacingRight ? Vector3.right : Vector3.left,
+            data.stats.wallDetectionDistance,
+            Unit.collisionMask
+        );
+        Debug.DrawRay(
+            data.rb.position,
+            (data.isFacingRight ? Vector3.right : Vector3.left) * data.stats.wallDetectionDistance,
+            wallHit ? Color.green : Color.red
+        );
+        if (!wallHit)
+        {
+            data.updateFacing = true;
+            return UnitState.Fall;
+        }
+        
+        if (data.rb.velocity.y <= 0.0f) {
+            data.groundSpringActive = true;
+        }
+        
+        // Wall Jump
+        if (data.rb.velocity.y > 0)
+        {
+            if (data.input.jumpQueued)
+            {
+                data.updateFacing = true;
+                return UnitState.WallJump;
+            }
+            // Jump Away Right
+            if (!data.isFacingRight && data.input.movement > 0)
+            {
+                data.updateFacing = true;
+                return UnitState.WallJump;
+            }
+            // Jump Away Left
+            if (data.isFacingRight && data.input.movement < 0)
+            {
+                data.updateFacing = true;
+                return UnitState.WallJump;
+            }
+        }
+
+        // Grab Ledge
+        UnitState climbState = TryClimb(data);
+        if (climbState != UnitState.Null) {
+            return climbState;
+        }
+
+        if (data.isGrounded)
+        {
+            data.updateFacing = true;
+            return UnitState.Idle;
+        }
+        return UnitState.WallSlide;
     }
     
     #region Helpers
@@ -746,25 +995,6 @@ public static class UnitStates
 
     private static UnitState TryClimb(UnitData data)
     {
-        const float nearHitBuffer = 0.2f;
-        RaycastHit2D nearHit = Physics2D.BoxCast(
-            data.rb.position + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)) + (Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight) * 0.5f),
-            new Vector2(data.stats.climbGrabDistance - nearHitBuffer, data.stats.maxClimbHeight - data.stats.minClimbHeight) * 0.5f,
-            data.rb.rotation,
-            data.isFacingRight ? Vector2.right : Vector2.left,
-            data.stats.climbGrabDistance * 0.5f,
-            Unit.collisionMask
-        );
-        ExtDebug.DrawBoxCastOnHit(
-            data.rb.position + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)) + (Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight) * 0.5f),
-            new Vector2(data.stats.climbGrabDistance - nearHitBuffer, data.stats.maxClimbHeight - data.stats.minClimbHeight) * 0.5f,
-            Quaternion.Euler(0, 0, data.rb.rotation),
-            data.isFacingRight ? Vector2.right : Vector2.left,
-            data.stats.climbGrabDistance * 0.5f,
-            nearHit ? Color.green : Color.red
-        );
-        if (nearHit) { return UnitState.Null; }
-
         RaycastHit2D climbHit = Physics2D.Raycast(
             data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
             Vector2.down,
@@ -775,54 +1005,43 @@ public static class UnitStates
             Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight),
             Color.red
         );
-        if (climbHit)
+
+        if (climbHit && climbHit.distance > 0.0f && Vector2.Dot(Vector2.up, climbHit.normal) >= 0.9f)
         {
-            Debug.DrawRay(
-                data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
-                Vector2.down * climbHit.distance,
-                Color.green,
-                data.stats.climbDuration
-            );
-            // Dont climb if surface is not flat
-            if (Vector2.Dot(Vector2.up, climbHit.normal) <= 0.9f)
-            {
-                Debug.DrawRay(climbHit.point, climbHit.normal, Color.red, data.stats.climbDuration);
-                return UnitState.Null;
-            }
-            // Dont climb if ray is inside a collider
-            if (climbHit.distance > 0.0f)
-            {
-                // Climb over object or on top of it
-                RaycastHit2D landingZoneHit = Physics2D.Raycast(
-                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+            // Scan for nearest edge
+            bool hitPlatform = true;
+            float inset = 0.0f;
+            while (hitPlatform) {
+                inset += 0.1f;
+                RaycastHit2D edgeScan = Physics2D.Raycast(
+                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * (data.stats.climbGrabDistance - inset)) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
                     Vector2.down,
                     data.stats.maxClimbHeight - data.stats.minClimbHeight
                 );
                 Debug.DrawRay(
-                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                    data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * (data.stats.climbGrabDistance - inset)) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
                     Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight),
                     Color.red,
                     data.stats.climbDuration
                 );
-                if (landingZoneHit)
-                {
-                    // Landing zone obstruction
-                    Debug.DrawRay(
-                        data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
-                        Vector2.down * (data.stats.maxClimbHeight - data.stats.minClimbHeight),
-                        Color.green,
-                        data.stats.climbDuration
-                    );
-                    //data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance) + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
-                    return UnitState.Null;
-                }
-                else
-                {
-                    // Landing zone clear
-                    //data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbMoveDistance);
-                    return UnitState.Null;
+                if(edgeScan && Vector2.Dot(Vector2.up, edgeScan.normal) >= 0.9f) {
+                    hitPlatform = true;
+                    climbHit = edgeScan;
+                } else {
+                    inset -= 0.1f;
+                    hitPlatform = false;
                 }
             }
+            
+            Debug.DrawRay(
+                data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * (data.stats.climbGrabDistance - inset)) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                Vector2.down * climbHit.distance,
+                Color.green,
+                data.stats.climbDuration
+            );
+            
+            data.target = climbHit.point + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
+            return UnitState.LedgeGrab;
         }
         return UnitState.Null;
     }

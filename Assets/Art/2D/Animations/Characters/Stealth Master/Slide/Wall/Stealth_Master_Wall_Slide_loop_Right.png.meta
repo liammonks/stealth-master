@@ -1,7 +1,13 @@
 fileFormatVersion: 2
 guid: ff90566da7f4c2c448c22f43c3cc9107
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -5357822694876930627
+    second: Stealth_Master_Wall_Slide_loop_Right_0
+  - first:
+      213: 2669935794544258962
+    second: Stealth_Master_Wall_Slide_loop_Right_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -89,11 +95,53 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Stealth_Master_Wall_Slide_loop_Right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbd955e55a035a5b0800000000000000
+      internalID: -5357822694876930627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Wall_Slide_loop_Right_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29f29ee85748d0520800000000000000
+      internalID: 2669935794544258962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 52ddecd3885911c41a5b100e0c29eb97
     internalID: 0
     vertices: []
     indices: 

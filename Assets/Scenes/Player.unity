@@ -5567,6 +5567,7 @@ MonoBehaviour:
     isStanding: 1
     isFacingRight: 1
     groundSpringActive: 1
+    updateFacing: 1
     t: 0
   activeCollider: {fileID: 2064016326}
   standingPoints:
@@ -10802,7 +10803,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 2064016323}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 421ced3e257cb424dbc5d93d7ea3cb88, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

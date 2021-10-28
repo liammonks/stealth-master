@@ -18,6 +18,7 @@ public class UnitData
     public bool isStanding = true;
     public bool isFacingRight = true;
     public bool groundSpringActive = true;
+    public bool updateFacing = true;
     public float t = 0.0f;
 
     public void ApplyDrag(float drag)
@@ -64,9 +65,12 @@ public enum UnitState
     VaultOverState  = 64,
     VaultOnState    = 128,
     Fall            = 256,
-    CrawlIdle       = 512
+    CrawlIdle       = 512,
+    LedgeGrab       = 1024,
+    WallJump        = 2048,
+    Climb           = 4096,
+    WallSlide       = 8192,
 }
-
 
 public class Unit : MonoBehaviour
 {
@@ -143,6 +147,7 @@ public class Unit : MonoBehaviour
         // State Updated
         if (state != nextState)
         {
+            Debug.Log("STATE UPDATED: " + state.ToString());
             // Initialise new state
             data.previousState = state;
             UnitStates.Initialise(data, nextState);
@@ -243,11 +248,14 @@ public class Unit : MonoBehaviour
     {
         // Animate
         animator.SetFloat("VelocityX", data.rb.velocity.x);
-        if (data.rb.velocity.x > 0.5f) { data.isFacingRight = true; }
-        else if (data.rb.velocity.x < -0.5f) { data.isFacingRight = false; }
-        else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
-        else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
-        animator.SetBool("FacingRight", data.isFacingRight);
+        if (data.updateFacing)
+        {
+            if (data.rb.velocity.x > 0.1f) { data.isFacingRight = true; }
+            else if (data.rb.velocity.x < -0.1f) { data.isFacingRight = false; }
+            else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
+            else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
+            animator.SetBool("FacingRight", data.isFacingRight);
+        }
     }
     
     public InputData GetInputData()

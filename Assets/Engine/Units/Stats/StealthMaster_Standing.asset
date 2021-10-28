@@ -23,7 +23,7 @@ MonoBehaviour:
   diveVelocityMultiplier: 2
   slideVelocityMultiplier: 1.5
   standingSpringDistance: 0.84
-  standingSpringWidth: 0.35
+  standingSpringWidth: 0.25
   crawlingSpringDistance: 0.4
   crawlingSpringWidth: 0.6
   springForce: 500
@@ -36,10 +36,13 @@ MonoBehaviour:
   maxVaultHeight: 0.8
   minVaultHeight: 0.4
   vaultDuration: 0.4
-  climbGrabDistance: 1
+  climbGrabDistance: 0.8
   climbMoveDistance: 1.75
-  maxClimbHeight: 1.8
-  minClimbHeight: 1.5
-  climbDuration: 0.6
+  maxClimbHeight: 1.6
+  minClimbHeight: 1.4
+  climbDuration: 0.5
+  climbGrabOffset: {x: -0.375, y: -1}
+  wallJumpForce: {x: 5, y: 6}
+  wallDetectionDistance: 0.5
   standingCeilingCheckHeight: 0.85
   crawlingCeilingCheckHeight: 1.35

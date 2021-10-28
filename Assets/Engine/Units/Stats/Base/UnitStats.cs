@@ -44,6 +44,9 @@ public class UnitStats : ScriptableObject {
     public float maxClimbHeight = 2.0f;
     public float minClimbHeight = 1.5f;
     public float climbDuration = 0.65f;
+    public Vector2 climbGrabOffset;
+    public Vector2 wallJumpForce;
+    public float wallDetectionDistance = 0.75f;
 
     [Header("Ceiling")]
     public float standingCeilingCheckHeight = 1.0f;
