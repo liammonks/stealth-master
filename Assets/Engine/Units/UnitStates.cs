@@ -818,6 +818,12 @@ public static class UnitStates
                 return climbState;
             }
         }
+
+        // Execute Dive
+        if (data.input.crawling)
+        {
+            return UnitState.Dive;
+        }
         
         return UnitState.WallJump;
     }
