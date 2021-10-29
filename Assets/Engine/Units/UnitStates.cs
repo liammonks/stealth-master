@@ -268,6 +268,10 @@ public static class UnitStates
             }
         }
         
+        if (!data.isGrounded) {
+            return UnitState.Fall;
+        }
+        
         return UnitState.CrawlIdle;
     }
 
@@ -325,6 +329,11 @@ public static class UnitStates
                 if (data.t == 0.0f)
                     return UnitState.Idle;
             }
+        }
+
+        if (!data.isGrounded)
+        {
+            return UnitState.Fall;
         }
         
         return UnitState.Crawl;
