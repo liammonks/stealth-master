@@ -406,7 +406,7 @@ public static class UnitStates
             data.animator.Play("Dive");
             data.isStanding = false;
             // Boost when diving from jump
-            if (data.previousState == UnitState.Jump)
+            if (data.previousState == UnitState.Jump || data.previousState == UnitState.WallJump)
             {
                 data.rb.velocity *= data.stats.diveVelocityMultiplier;
             }
