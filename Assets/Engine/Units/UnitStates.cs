@@ -408,7 +408,11 @@ public static class UnitStates
             // Boost when diving from jump
             if (data.previousState == UnitState.Jump || data.previousState == UnitState.WallJump)
             {
-                data.rb.velocity *= data.stats.diveVelocityMultiplier;
+                //data.rb.velocity *= data.stats.diveVelocityMultiplier;
+                Vector2 velocity = data.rb.velocity;
+                velocity.x += 5 * Mathf.Sign(data.rb.velocity.x);
+                velocity.y += 2 * Mathf.Sign(data.rb.velocity.y);
+                data.rb.velocity = velocity;
             }
             // Set timer to stop ground spring
             data.groundSpringActive = false;
