@@ -92,6 +92,7 @@ public class Unit : MonoBehaviour
     [SerializeField] private Vector2[] standingPoints;
     [SerializeField] private Vector2[] crawlingPoints;
     private float colliderInterpValue = 1.0f;
+    private float stateDuration = 0.0f;
     private const float colliderInterpRate = 10.0f;
     private const float groundSpringDistanceBufferStanding = 0.4f;
     private const float groundSpringDistanceBufferCrawling = 0.1f;
@@ -142,12 +143,16 @@ public class Unit : MonoBehaviour
     
     private void UpdateMovement()
     {
+        // Log out current state
+        stateDuration += Time.fixedDeltaTime;
+        Log.UnitState(state, stateDuration);
+
         // Execute movement, recieve next state
         UnitState nextState = UnitStates.Execute(data, state);
         // State Updated
         if (state != nextState)
         {
-            Debug.Log("STATE UPDATED: " + state.ToString());
+            stateDuration = 0.0f;
             // Initialise new state
             data.previousState = state;
             UnitStates.Initialise(data, nextState);
@@ -181,8 +186,8 @@ public class Unit : MonoBehaviour
             {
                 // Surface is not standable, or may have just hit a corner
                 // Check for a corner
-                Vector2 cornerCheckOrigin = hit.point + (Vector2.up * 0.5f);
-                hit = Physics2D.Raycast(cornerCheckOrigin, Vector2.down, 0.6f, collisionMask);
+                Vector2 cornerCheckOrigin = hit.point + (Vector2.up * 0.1f);
+                hit = Physics2D.Raycast(cornerCheckOrigin, Vector2.down, 0.15f, collisionMask);
                 //Debug.DrawRay(cornerCheckOrigin, Vector2.down * 0.6f, Color.red);
                 // Raycast does not hit if we are on a corner
                 if (hit)

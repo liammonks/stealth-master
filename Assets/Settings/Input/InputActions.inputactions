@@ -166,6 +166,52 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "DebugWindow",
+            "id": "bd1f2a70-596e-476f-9f99-9743c5b9d68f",
+            "actions": [
+                {
+                    "name": "MouseMove",
+                    "type": "Value",
+                    "id": "2ade193e-429d-4e18-9840-dd714824065e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "MouseDown",
+                    "type": "Value",
+                    "id": "3d7d2a13-e4be-47d2-9eb2-99b5eb29a85f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "99ba2333-d34e-4a02-b119-cdc49bdbc682",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "96597d2c-1dbd-4852-b1af-1920a9ac193f",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
