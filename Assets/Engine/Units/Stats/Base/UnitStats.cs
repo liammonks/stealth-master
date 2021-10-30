@@ -19,10 +19,12 @@ public class UnitStats : ScriptableObject {
 
     [Header("Ground Spring")]
     public float standingSpringDistance = 1.0f;
-    public float standingSpringWidth = 0.3f;
+    public Vector2 standingSpringSize;
+    //public float standingSpringWidth = 0.3f;
     [Space(10)]
     public float crawlingSpringDistance = 0.5f;
-    public float crawlingSpringWidth = 0.6f;
+    //public float crawlingSpringWidth = 0.6f;
+    public Vector2 crawlingSpringSize;
     [Space(10)]
     public float springForce = 100.0f;
     public float springDamping = 20.0f;

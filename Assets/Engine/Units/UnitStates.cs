@@ -330,11 +330,6 @@ public static class UnitStates
                     return UnitState.Idle;
             }
         }
-
-        if (!data.isGrounded)
-        {
-            return UnitState.Fall;
-        }
         
         return UnitState.Crawl;
     }
@@ -771,18 +766,15 @@ public static class UnitStates
                 return UnitState.Climb;
             }
 
-            // Jump Away Right
+            // Drop
             if (!data.isFacingRight && data.input.movement > 0)
             {
-                return UnitState.WallJump;
+                return UnitState.WallSlide;
             }
-            // Jump Away Left
             if (data.isFacingRight && data.input.movement < 0)
             {
-                return UnitState.WallJump;
+                return UnitState.WallSlide;
             }
-
-            // Drop
             if (data.input.crawling)
             {
                 return UnitState.WallSlide;
@@ -837,16 +829,16 @@ public static class UnitStates
         if(initialise)
         {
             data.animator.Play("Climb");
-            Debug.DrawLine(
-                data.rb.position,
-                data.rb.position + (Vector2.up * (data.stats.standingSpringDistance - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.right : Vector2.left) * (data.stats.standingSpringWidth - data.stats.climbGrabOffset.x)),
-                Color.blue,
-                data.stats.climbDuration
-            );
             data.t = data.stats.climbDuration;
             data.target = data.rb.position + (Vector2.up * (data.stats.standingSpringDistance - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
             data.rb.velocity = (data.target - data.rb.position) / data.t;
             data.rb.isKinematic = true;
+            Debug.DrawLine(
+                data.rb.position,
+                data.target,
+                Color.blue,
+                data.stats.climbDuration
+            );
         }
 
         data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
