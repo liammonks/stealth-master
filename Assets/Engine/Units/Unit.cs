@@ -131,7 +131,7 @@ public class Unit : MonoBehaviour
         data.rb.gravityScale = !data.isGrounded ? 1.0f : 0.0f;
         
         UpdateMovement();
-        UpdateCeiling();
+        //UpdateCeiling();
         UpdateAnimation();
 
         // Dont update collider if we are fully interped
@@ -166,14 +166,14 @@ public class Unit : MonoBehaviour
         Vector2 springSize = Vector2.Lerp(data.stats.crawlingSpringSize, data.stats.standingSpringSize, colliderInterpValue);
         float groundSpringDistanceBuffer = Mathf.Lerp(groundSpringDistanceBufferCrawling, groundSpringDistanceBufferStanding, colliderInterpValue);
         Vector2 velocity = data.rb.velocity;
-        
+
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, springSize, transform.eulerAngles.z, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, collisionMask);
         if(hit)
         {
             ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springSize.x, springSize.y) * 0.5f, transform.rotation, -transform.up, hit.distance, data.groundSpringActive ? Color.green : Color.gray);
             
             // Apply spring force
-            float springDisplacement = (springDistance - (springSize.x * 0.5f)) - hit.distance;
+            float springDisplacement = (springDistance - (springSize.y * 0.5f)) - hit.distance;
             float springForce = springDisplacement * data.stats.springForce;
             float springDamp = Vector2.Dot(velocity, transform.up) * data.stats.springDamping;
 

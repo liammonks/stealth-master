@@ -29,10 +29,30 @@ public static class ExtDebug
         DrawBox(topBox, color);
     }
 
+    public static void DrawBoxCastBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Vector3 direction, float distance, Color color, float duration)
+    {
+        direction.Normalize();
+        Box bottomBox = new Box(origin, halfExtents, orientation);
+        Box topBox = new Box(origin + (direction * distance), halfExtents, orientation);
+
+        Debug.DrawLine(bottomBox.backBottomLeft, topBox.backBottomLeft, color, duration);
+        Debug.DrawLine(bottomBox.backBottomRight, topBox.backBottomRight, color, duration);
+        Debug.DrawLine(bottomBox.backTopLeft, topBox.backTopLeft, color, duration);
+        Debug.DrawLine(bottomBox.backTopRight, topBox.backTopRight, color, duration);
+        Debug.DrawLine(bottomBox.frontTopLeft, topBox.frontTopLeft, color, duration);
+        Debug.DrawLine(bottomBox.frontTopRight, topBox.frontTopRight, color, duration);
+        Debug.DrawLine(bottomBox.frontBottomLeft, topBox.frontBottomLeft, color, duration);
+        Debug.DrawLine(bottomBox.frontBottomRight, topBox.frontBottomRight, color, duration);
+
+        DrawBox(bottomBox, color);
+        DrawBox(topBox, color);
+    }
+
     public static void DrawBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Color color)
     {
         DrawBox(new Box(origin, halfExtents, orientation), color);
     }
+    
     public static void DrawBox(Box box, Color color)
     {
         Debug.DrawLine(box.frontTopLeft, box.frontTopRight, color);
@@ -49,6 +69,24 @@ public static class ExtDebug
         Debug.DrawLine(box.frontTopRight, box.backTopRight, color);
         Debug.DrawLine(box.frontBottomRight, box.backBottomRight, color);
         Debug.DrawLine(box.frontBottomLeft, box.backBottomLeft, color);
+    }
+
+    public static void DrawBox(Box box, Color color, float duration)
+    {
+        Debug.DrawLine(box.frontTopLeft, box.frontTopRight, color, duration);
+        Debug.DrawLine(box.frontTopRight, box.frontBottomRight, color, duration);
+        Debug.DrawLine(box.frontBottomRight, box.frontBottomLeft, color, duration);
+        Debug.DrawLine(box.frontBottomLeft, box.frontTopLeft, color, duration);
+
+        Debug.DrawLine(box.backTopLeft, box.backTopRight, color, duration);
+        Debug.DrawLine(box.backTopRight, box.backBottomRight, color, duration);
+        Debug.DrawLine(box.backBottomRight, box.backBottomLeft, color, duration);
+        Debug.DrawLine(box.backBottomLeft, box.backTopLeft, color, duration);
+
+        Debug.DrawLine(box.frontTopLeft, box.backTopLeft, color, duration);
+        Debug.DrawLine(box.frontTopRight, box.backTopRight, color, duration);
+        Debug.DrawLine(box.frontBottomRight, box.backBottomRight, color, duration);
+        Debug.DrawLine(box.frontBottomLeft, box.backBottomLeft, color, duration);
     }
 
     public struct Box

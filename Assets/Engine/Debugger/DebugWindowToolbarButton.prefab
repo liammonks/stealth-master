@@ -185,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowType: 0
+  title: {fileID: 3033897533825988804}
 --- !u!1 &3089409462601249193
 GameObject:
   m_ObjectHideFlags: 0

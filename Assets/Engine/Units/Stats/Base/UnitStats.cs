@@ -17,13 +17,15 @@ public class UnitStats : ScriptableObject {
     public float diveVelocityMultiplier = 0.75f;
     public float slideVelocityMultiplier = 0.25f;
 
+    [Header("Scaling")]
+    public Vector2 standingScale;
+    public Vector2 crawlingScale;
+
     [Header("Ground Spring")]
     public float standingSpringDistance = 1.0f;
     public Vector2 standingSpringSize;
-    //public float standingSpringWidth = 0.3f;
     [Space(10)]
     public float crawlingSpringDistance = 0.5f;
-    //public float crawlingSpringWidth = 0.6f;
     public Vector2 crawlingSpringSize;
     [Space(10)]
     public float springForce = 100.0f;
