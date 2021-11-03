@@ -208,7 +208,8 @@ public class Unit : MonoBehaviour
             float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
             if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
             rotationDisplacement -= Vector2.SignedAngle(Vector2.up, hit.normal);
-            data.rb.angularVelocity = -rotationDisplacement * (data.isGrounded ? data.stats.groundRotationForce : data.stats.airRotationForce) * Time.fixedDeltaTime;
+            float rotationForce = (-(rotationDisplacement / Time.fixedDeltaTime) * (data.isGrounded ? data.stats.groundRotationForce : data.stats.airRotationForce)) - (data.isGrounded ? data.stats.groundRotationDamping : data.stats.airRotationDamping);
+            data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
         }
         else
         {

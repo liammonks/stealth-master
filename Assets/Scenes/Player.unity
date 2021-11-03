@@ -148,7 +148,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 277009325}
   m_LocalRotation: {x: 0.024937715, y: 0.024968827, z: -0.0006230537, w: 0.99937695}
-  m_LocalPosition: {x: 34.27888, y: 12.016384, z: -19.241098}
+  m_LocalPosition: {x: 61.84888, y: 12.466384, z: -19.241098}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 801115986}
@@ -5460,7 +5460,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518594397}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 36.58, y: 12.06, z: 0}
+  m_LocalPosition: {x: 64.15, y: 12.51, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1950628591}
@@ -5574,10 +5574,10 @@ MonoBehaviour:
   - {x: 0.1, y: 0.8}
   - {x: -0.1, y: 0.8}
   - {x: -0.25, y: 0.5}
-  - {x: -0.25, y: 0}
-  - {x: -0.05, y: -0.5}
-  - {x: 0.05, y: -0.5}
-  - {x: 0.25, y: 0}
+  - {x: -0.25, y: -0.2}
+  - {x: -0.1, y: -0.5}
+  - {x: 0.1, y: -0.5}
+  - {x: 0.25, y: -0.2}
   - {x: 0.25, y: 0.5}
   crawlingPoints:
   - {x: 0.5, y: 0.2}
@@ -10670,6 +10670,7 @@ GameObject:
   - component: {fileID: 1950628591}
   - component: {fileID: 1950628593}
   - component: {fileID: 1950628592}
+  - component: {fileID: 1950628594}
   m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
@@ -10761,6 +10762,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1950628594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950628590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fbee442b43179c40b23a8fc91e86308, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationRate: 10
 --- !u!1 &2064016323
 GameObject:
   m_ObjectHideFlags: 0
@@ -10822,8 +10836,8 @@ PolygonCollider2D:
     - - {x: 0.1, y: 0.8}
       - {x: -0.1, y: 0.8}
       - {x: -0.25, y: 0.5}
-      - {x: -0.25, y: 0}
-      - {x: -0.05, y: -0.5}
-      - {x: 0.05, y: -0.5}
-      - {x: 0.25, y: 0}
+      - {x: -0.25, y: -0.2}
+      - {x: -0.1, y: -0.5}
+      - {x: 0.1, y: -0.5}
+      - {x: 0.25, y: -0.2}
       - {x: 0.25, y: 0.5}

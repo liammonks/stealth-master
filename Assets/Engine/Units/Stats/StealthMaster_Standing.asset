@@ -30,20 +30,22 @@ MonoBehaviour:
   crawlingSpringSize: {x: 1.2, y: 0.3}
   springForce: 500
   springDamping: 40
-  groundRotationForce: 1000
-  airRotationForce: 750
+  groundRotationForce: 10
+  groundRotationDamping: 2
+  airRotationForce: 20
+  airRotationDamping: 5
   groundedMaxAngle: 25
   vaultGrabDistance: 1
   vaultMoveDistance: 1.75
   maxVaultHeight: 0.8
   minVaultHeight: 0.4
   vaultDuration: 0.4
-  climbGrabDistance: 0.8
+  climbGrabDistance: 0.4
   climbMoveDistance: 1.75
-  maxClimbHeight: 1.6
+  maxClimbHeight: 1.8
   minClimbHeight: 1.4
   climbDuration: 0.5
-  climbGrabOffset: {x: -0.375, y: -1}
+  climbGrabOffset: {x: -0.3, y: -1}
   wallJumpForce: {x: 5, y: 6}
   wallDetectionDistance: 0.5
   standingCeilingCheckHeight: 0.85

@@ -32,7 +32,9 @@ public class UnitStats : ScriptableObject {
     public float springDamping = 20.0f;
     [Space(10)]
     public float groundRotationForce = 100.0f;
+    public float groundRotationDamping = 100.0f;
     public float airRotationForce = 100.0f;
+    public float airRotationDamping = 100.0f;
     public float groundedMaxAngle = 25.0f;
 
     [Header("Vaulting")]
