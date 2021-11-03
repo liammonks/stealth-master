@@ -1,37 +1,7 @@
 fileFormatVersion: 2
 guid: 5567673492b3a1b4bbbebe944c89ae53
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 4245837271370809536
-    second: Stealth_Master_Crouch_Idle_0
-  - first:
-      213: -7335191054706334159
-    second: Stealth_Master_Crouch_Idle_1
-  - first:
-      213: -2034005802569176253
-    second: Stealth_Master_Crouch_Idle_2
-  - first:
-      213: 2924058576463684605
-    second: Stealth_Master_Crouch_Idle_3
-  - first:
-      213: -5473320859823662022
-    second: Stealth_Master_Crouch_Idle_4
-  - first:
-      213: -1122325776743524422
-    second: Stealth_Master_Crouch_Idle_5
-  - first:
-      213: 2752471549926843424
-    second: Stealth_Master_Crouch_Idle_6
-  - first:
-      213: 8277124401644175655
-    second: Stealth_Master_Crouch_Idle_7
-  - first:
-      213: -4721609749064674512
-    second: Stealth_Master_Crouch_Idle_8
-  - first:
-      213: 797548974358042009
-    second: Stealth_Master_Crouch_Idle_9
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -95,7 +65,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -107,7 +77,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 1024
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -119,7 +89,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 1024
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -133,112 +103,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 576
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0c0cb2eb08e3cea30800000000000000
-      internalID: 4245837271370809536
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 512
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1362b98699a243a90800000000000000
-      internalID: -7335191054706334159
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 448
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 34be7cacf72c5c3e0800000000000000
-      internalID: -2034005802569176253
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 384
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: df36d8078c7549820800000000000000
-      internalID: 2924058576463684605
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 320
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a3c99784dabda04b0800000000000000
-      internalID: -5473320859823662022
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_5
+      name: Stealth Master Test Idle_0
       rect:
         serializedVersion: 2
         x: 0
@@ -252,14 +117,35 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab710f207a2bc60f0800000000000000
-      internalID: -1122325776743524422
+      spriteID: 2039c34d4986f2940800000000000000
+      internalID: 5273548677099328258
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_6
+      name: Stealth Master Test Idle_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3710666ae4211c00800000000000000
+      internalID: 869516792217737023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_2
       rect:
         serializedVersion: 2
         x: 0
@@ -273,14 +159,35 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 02422cb9a4eb23620800000000000000
-      internalID: 2752471549926843424
+      spriteID: 1972d9257aa41d300800000000000000
+      internalID: 275083134752335761
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_7
+      name: Stealth Master Test Idle_3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fbd08d8e56ec4980800000000000000
+      internalID: -8553208298508067851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_4
       rect:
         serializedVersion: 2
         x: 0
@@ -294,14 +201,35 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 72108b90ac04ed270800000000000000
-      internalID: 8277124401644175655
+      spriteID: faa985904f988d720800000000000000
+      internalID: 2871196443670518447
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_8
+      name: Stealth Master Test Idle_5
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7080a00f8109f020800000000000000
+      internalID: 2375931992117117051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_6
       rect:
         serializedVersion: 2
         x: 0
@@ -315,14 +243,35 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0339afa03f8797eb0800000000000000
-      internalID: -4721609749064674512
+      spriteID: ba4f225025fab7010800000000000000
+      internalID: 1187735693550613675
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Crouch_Idle_9
+      name: Stealth Master Test Idle_7
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 598864e1aa98e9c50800000000000000
+      internalID: 6673923061555038357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_8
       rect:
         serializedVersion: 2
         x: 0
@@ -336,8 +285,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 995969b0196711b00800000000000000
-      internalID: 797548974358042009
+      spriteID: c697212639c992a20800000000000000
+      internalID: 3038131580457613676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth Master Test Idle_9
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 802c1c9d1d2e86c10800000000000000
+      internalID: 2047135421569286664
       vertices: []
       indices: 
       edges: []

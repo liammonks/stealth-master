@@ -170,7 +170,6 @@ public class Unit : MonoBehaviour
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, springSize, transform.eulerAngles.z, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, collisionMask);
         if(hit)
         {
-            //Debug.DrawLine(transform.position, hit.point, Color.red);
             ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springSize.x, springSize.y) * 0.5f, transform.rotation, -transform.up, hit.distance, data.groundSpringActive ? Color.green : Color.gray);
             
             // Apply spring force

@@ -112,12 +112,6 @@ public static class UnitStates
             }
         }
 
-        // Execute Fall
-        if (!data.isGrounded)
-        {
-            return UnitState.Fall;
-        }
-
         return UnitState.Idle;
     }
     
@@ -125,7 +119,10 @@ public static class UnitStates
     {
         if(initialise)
         {
-            data.animator.Play("Run");
+            //if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Right"))
+            //{
+                data.animator.Play("Run");
+            //}
             data.isStanding = true;
         }
 
@@ -513,7 +510,7 @@ public static class UnitStates
             data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
             data.isStanding = true;
             data.groundSpringActive = false;
-            velocity.y = data.previousState == UnitState.LedgeGrab ? data.stats.wallJumpForce.y : data.stats.jumpForce;
+            velocity.y = data.stats.jumpForce;
         }
 
         // Check Climb
@@ -665,7 +662,7 @@ public static class UnitStates
         }
 
         // Execute Dive
-        if (data.previousState != UnitState.WallSlide && data.input.crawling && CanCrawl(data))
+        if (data.input.crawling && CanCrawl(data))
         {
             return UnitState.Dive;
         }
@@ -759,7 +756,7 @@ public static class UnitStates
             // Wall Jump
             if (data.input.jumpQueued)
             {
-                return UnitState.Jump;
+                return UnitState.WallJump;
             }
 
             // Climb Right
@@ -772,19 +769,16 @@ public static class UnitStates
             {
                 return UnitState.Climb;
             }
-            
-            // Jump Right
+
+            // Drop
             if (!data.isFacingRight && data.input.movement > 0)
             {
-                return UnitState.WallJump;
+                return UnitState.WallSlide;
             }
-            // Jump Left
             if (data.isFacingRight && data.input.movement < 0)
             {
-                return UnitState.WallJump;
+                return UnitState.WallSlide;
             }
-            
-            // Drop
             if (data.input.crawling)
             {
                 return UnitState.WallSlide;
@@ -1016,57 +1010,54 @@ public static class UnitStates
 
     private static UnitState TryClimb(UnitData data)
     {
-        // Disable climbing when unit is rotated
-        //if (Mathf.Abs(data.rb.rotation) > 10) { return UnitState.Null; }
-        
-        float minLedgeThickness = 0.1f;
-        float scanHeight = data.stats.maxClimbHeight - data.stats.minClimbHeight;
-        float scanHeightInterval = 0.01f;
-        RaycastHit2D climbHit = Physics2D.BoxCast(
-            data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
-            new Vector2(0.1f, scanHeight),
-            data.rb.rotation,
-            data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right,
-            data.stats.climbGrabDistance - 0.05f,
-            Unit.collisionMask
+        RaycastHit2D climbHit = Physics2D.Raycast(
+            data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * data.stats.climbGrabDistance) + (-(Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+            -(Vector2)data.rb.transform.up,
+            data.stats.maxClimbHeight - data.stats.minClimbHeight
         );
-        // Dont climb if ledge is too close
-        if(climbHit && climbHit.distance <= data.stats.standingScale.x * 0.5f) {
-            return UnitState.Null;
-        }
-        ExtDebug.DrawBox(
-            data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * data.stats.climbGrabDistance * 0.5f) - ((Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
-            new Vector2(data.stats.climbGrabDistance, scanHeight) * 0.5f,
-            Quaternion.Euler(0, 0, data.rb.rotation),
+        Debug.DrawRay(
+            data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * data.stats.climbGrabDistance) + (-(Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+            -(Vector2)data.rb.transform.up * (data.stats.maxClimbHeight - data.stats.minClimbHeight),
             Color.red
         );
-        while(climbHit && scanHeight > (scanHeightInterval * 2))
+
+        if (climbHit && climbHit.distance > 0.0f && Vector2.Dot(Vector2.up, climbHit.normal) >= 0.9f)
         {
-            scanHeight -= scanHeightInterval;
-            RaycastHit2D scanHit = Physics2D.BoxCast(
-                data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
-                new Vector2(0.1f, scanHeight),
-                data.rb.rotation,
-                data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right,
-                data.stats.climbGrabDistance - 0.05f,
-                Unit.collisionMask
-            );
-            if (scanHit && scanHit.distance <= climbHit.distance + minLedgeThickness)
-            {
-                
-            } else {
-                Debug.DrawLine(
-                    data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
-                    climbHit.point,
-                    Color.green,
+            // Scan for nearest edge
+            bool hitPlatform = true;
+            float inset = 0.0f;
+            while (hitPlatform) {
+                inset += 0.1f;
+                RaycastHit2D edgeScan = Physics2D.Raycast(
+                    data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * (data.stats.climbGrabDistance - inset)) + (-(Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                    -(Vector2)data.rb.transform.up,
+                    data.stats.maxClimbHeight - data.stats.minClimbHeight
+                );
+                Debug.DrawRay(
+                    data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * (data.stats.climbGrabDistance - inset)) + (-(Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                    -(Vector2)data.rb.transform.up * (data.stats.maxClimbHeight - data.stats.minClimbHeight),
+                    Color.red,
                     data.stats.climbDuration
                 );
-                data.target = climbHit.point + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
-                return UnitState.LedgeGrab;
+                if(edgeScan && Vector2.Dot(Vector2.up, edgeScan.normal) >= 0.9f) {
+                    hitPlatform = true;
+                    climbHit = edgeScan;
+                } else {
+                    inset -= 0.1f;
+                    hitPlatform = false;
+                }
             }
-            climbHit = scanHit;
-        }
 
+            Debug.DrawRay(
+                data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * (data.stats.climbGrabDistance - inset)) + (-(Vector2)data.rb.transform.up * (data.stats.standingSpringDistance - data.stats.maxClimbHeight)),
+                -(Vector2)data.rb.transform.up * climbHit.distance,
+                Color.green,
+                data.stats.climbDuration
+            );
+            
+            data.target = climbHit.point + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
+            return UnitState.LedgeGrab;
+        }
         return UnitState.Null;
     }
     
@@ -1074,16 +1065,16 @@ public static class UnitStates
         float heighOffset = -data.stats.standingSpringDistance + data.stats.crawlingSpringDistance + 0.01f;
         RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
-        //if (hit) {
-        //    // Check left side
-        //    hit = Physics2D.BoxCast(data.rb.position + (Vector2.up * heighOffset) + (Vector2.left * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
-        //    ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + (Vector2.up * heighOffset) + (Vector2.left * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
-        //    if (hit) {
-        //        // Check Right side
-        //        hit = Physics2D.BoxCast(data.rb.position + (Vector2.up * heighOffset) + (Vector2.right * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
-        //        ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + (Vector2.up * heighOffset) + (Vector2.right * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
-        //    }
-        //}
+        if (hit) {
+            // Check left side
+            hit = Physics2D.BoxCast(data.rb.position + (Vector2.up * heighOffset) + (Vector2.left * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+            ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + (Vector2.up * heighOffset) + (Vector2.left * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
+            if (hit) {
+                // Check Right side
+                hit = Physics2D.BoxCast(data.rb.position + (Vector2.up * heighOffset) + (Vector2.right * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+                ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + (Vector2.up * heighOffset) + (Vector2.right * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
+            }
+        }
         return !hit;
     }
     
