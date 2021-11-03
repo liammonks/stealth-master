@@ -52,6 +52,11 @@ public static class ExtDebug
     {
         DrawBox(new Box(origin, halfExtents, orientation), color);
     }
+
+    public static void DrawBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Color color, float duration)
+    {
+        DrawBox(new Box(origin, halfExtents, orientation), color, duration);
+    }
     
     public static void DrawBox(Box box, Color color)
     {

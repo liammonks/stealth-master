@@ -27,7 +27,7 @@ MonoBehaviour:
   standingSpringDistance: 0.8
   standingSpringSize: {x: 0.25, y: 0.3}
   crawlingSpringDistance: 0.33
-  crawlingSpringSize: {x: 1.2, y: 0.3}
+  crawlingSpringSize: {x: 0.6, y: 0.3}
   springForce: 500
   springDamping: 40
   groundRotationForce: 10
