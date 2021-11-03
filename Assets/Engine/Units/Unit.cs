@@ -20,6 +20,7 @@ public class UnitData
     public bool groundSpringActive = true;
     public bool updateFacing = true;
     public float t = 0.0f;
+    public float stateDuration = 0.0f;
 
     public void ApplyDrag(float drag)
     {
@@ -92,7 +93,6 @@ public class Unit : MonoBehaviour
     [SerializeField] private Vector2[] standingPoints;
     [SerializeField] private Vector2[] crawlingPoints;
     private float colliderInterpValue = 1.0f;
-    private float stateDuration = 0.0f;
     private const float colliderInterpRate = 10.0f;
     private const float groundSpringDistanceBufferStanding = 0.4f;
     private const float groundSpringDistanceBufferCrawling = 0.1f;
@@ -144,15 +144,15 @@ public class Unit : MonoBehaviour
     private void UpdateMovement()
     {
         // Log out current state
-        stateDuration += Time.fixedDeltaTime;
-        Log.UnitState(state, stateDuration);
+        data.stateDuration += Time.fixedDeltaTime;
+        Log.UnitState(state, data.stateDuration);
 
         // Execute movement, recieve next state
         UnitState nextState = UnitStates.Execute(data, state);
         // State Updated
         if (state != nextState)
         {
-            stateDuration = 0.0f;
+            data.stateDuration = 0.0f;
             // Initialise new state
             data.previousState = state;
             UnitStates.Initialise(data, nextState);

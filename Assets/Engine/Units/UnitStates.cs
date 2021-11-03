@@ -394,7 +394,7 @@ public static class UnitStates
             data.ApplyDrag(data.stats.airDrag);
         }
 
-        if (!data.isGrounded)
+        if (data.stateDuration <= 0.3f && !data.isGrounded)
         {
             // Grab on to ledges below
             UnitState ledgeDrop = TryDrop(data);
