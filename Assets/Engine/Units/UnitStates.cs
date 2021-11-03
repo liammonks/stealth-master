@@ -724,7 +724,7 @@ public static class UnitStates
         if(initialise)
         {
             data.animator.Play("LedgeGrab");
-            data.t = 0.1f;
+            data.t = 0.2f;
             data.groundSpringActive = false;
             data.updateFacing = false;
             data.isStanding = true;
@@ -734,7 +734,7 @@ public static class UnitStates
         data.t -= Time.fixedDeltaTime;
 
         if (data.t > 0.0f) {
-            data.rb.velocity = (data.target - data.rb.position) / data.t;
+            data.rb.velocity = (data.target - data.rb.position) / Mathf.Max(0.01f, data.t);
         }
 
         if (data.t <= 0.0f && data.t != -10.0f) {
@@ -1087,16 +1087,15 @@ public static class UnitStates
                 Color.red,
                 1.0f
             );
-            Debug.DrawLine(
-                data.rb.position + (Vector2.down * (data.stats.crawlingSpringDistance + (scanHeight * 0.5f))),
-                ledgeHit.point,
-                ledgeHit ? Color.green : Color.red,
-                1.0f
-            );
 
             if(ledgeHit) {
+                Debug.DrawLine(
+                    data.rb.position + (Vector2.down * (data.stats.crawlingSpringDistance + (scanHeight * 0.5f))),
+                    ledgeHit.point,
+                    Color.green,
+                    1.0f
+                );
                 data.target = ledgeHit.point + (data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
-                Debug.DrawLine(data.rb.position, data.target, Color.magenta);
                 data.isFacingRight = !data.isFacingRight;
                 data.animator.SetBool("FacingRight", data.isFacingRight);
                 return UnitState.LedgeGrab;
