@@ -400,6 +400,8 @@ public static class UnitStates
             UnitState ledgeDrop = TryDrop(data);
             if (ledgeDrop != UnitState.Null)
             {
+                data.input.crawling = false;
+                data.input.crawlRequestTime = -1;
                 return ledgeDrop;
             }
         }
