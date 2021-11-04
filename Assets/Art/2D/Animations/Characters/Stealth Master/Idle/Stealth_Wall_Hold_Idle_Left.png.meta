@@ -1,7 +1,13 @@
 fileFormatVersion: 2
 guid: 79ae9a21a9230d04ba3f4cadfe05d786
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 5135237210693338299
+    second: Stealth_Wall_Hold_Idle_Left_0
+  - first:
+      213: 8686062773996949402
+    second: Stealth_Wall_Hold_Idle_Left_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -89,11 +95,53 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Stealth_Wall_Hold_Idle_Left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb48eb41907044740800000000000000
+      internalID: 5135237210693338299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Wall_Hold_Idle_Left_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9f05dc72181b8870800000000000000
+      internalID: 8686062773996949402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 0f4e3457865e447478a2404ca23575a7
     internalID: 0
     vertices: []
     indices: 

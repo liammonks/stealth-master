@@ -116,7 +116,22 @@ public static class UnitStates
             {
                 return UnitState.Fall;
             }
-        }
+            // Push against wall
+            if (FacingWall(data))
+            {
+                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Right"))
+                {
+                    data.animator.Play("AgainstWall");
+                }
+            }
+            else
+            {
+                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_Right"))
+                {
+                    data.animator.Play("Idle");
+                }
+            }
+        }        
 
         return UnitState.Idle;
     }
@@ -211,6 +226,14 @@ public static class UnitStates
                 
                 if (data.t == 0.0f)
                     return UnitState.Crawl;
+            }
+        }
+        
+        if(FacingWall(data)) {
+            data.animator.Play("AgainstWall");
+        } else {
+            if(!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Right")) {
+                data.animator.Play("Run");
             }
         }
         
@@ -812,8 +835,9 @@ public static class UnitStates
         }
         
         data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
-        if(data.t == 0.0f)
+        if(data.t == 0.0f && data.rb.velocity.y < 0)
         {
+            data.animator.Play("WallJumpFall");
             data.groundSpringActive = true;
             return UnitState.Fall;
         }
@@ -832,6 +856,12 @@ public static class UnitStates
         if (data.input.crawling)
         {
             return UnitState.Dive;
+        }
+
+        // Wall Slide
+        if (FacingWall(data))
+        {
+            return UnitState.WallSlide;
         }
         
         return UnitState.WallJump;

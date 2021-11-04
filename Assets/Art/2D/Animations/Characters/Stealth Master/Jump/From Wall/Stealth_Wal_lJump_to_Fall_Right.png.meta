@@ -1,7 +1,10 @@
 fileFormatVersion: 2
 guid: 964af7f8f51b1e74f9fddbc422499d6f
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 3489046876088974767
+    second: Stealth_Wal_lJump_to_Fall_Right_0
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -89,11 +92,32 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Stealth_Wal_lJump_to_Fall_Right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fad38f5e5a59b6030800000000000000
+      internalID: 3489046876088974767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 9b90227e6c60bfe4a848a551cafebd9c
     internalID: 0
     vertices: []
     indices: 
