@@ -673,7 +673,6 @@ public static class UnitStates
             data.groundSpringActive = false;
             // Disable collider
             data.rb.bodyType = RigidbodyType2D.Kinematic;
-            data.target = data.target - data.rb.position;
             Debug.DrawRay(data.rb.position, data.target, Color.blue, data.t);
         }
 
@@ -702,7 +701,6 @@ public static class UnitStates
             data.groundSpringActive = false;
             // Disable collider
             data.rb.bodyType = RigidbodyType2D.Kinematic;
-            data.target = data.target - data.rb.position;
             Debug.DrawRay(data.rb.position, data.target, Color.blue, data.t);
         }
 
@@ -978,21 +976,59 @@ public static class UnitStates
                 );
                 if(landingZoneHit)
                 {
-                    // Landing zone obstruction
+                    // Landing zone obstruction, try to vault on top of the object
                     Debug.DrawRay(
                         data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.down * (data.stats.standingSpringDistance - data.stats.maxVaultHeight)),
                         Vector2.down * (data.stats.maxVaultHeight - data.stats.minVaultHeight),
                         Color.green,
                         data.stats.vaultDuration
                     );
-                    data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
-                    return UnitState.VaultOnState;
+                    data.target = ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.up * data.stats.standingSpringDistance * 0.5f);
+                    // Check if the target area is clear for standing
+                    landingZoneHit = Physics2D.BoxCast(
+                        data.rb.position + data.target + (Vector2.up * data.stats.standingSpringDistance * 0.5f) + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.standingScale.x * 0.5f),
+                        data.stats.standingScale,
+                        0,
+                        Vector2.zero,
+                        0,
+                        Unit.collisionMask
+                    );
+                    ExtDebug.DrawBox(
+                        data.rb.position + data.target + (Vector2.up * data.stats.standingSpringDistance * 0.5f) + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.standingScale.x * 0.5f),
+                        data.stats.standingScale * 0.5f,
+                        Quaternion.identity,
+                        landingZoneHit ? Color.green : Color.red,
+                        data.stats.vaultDuration
+                    );
+                    if (!landingZoneHit)
+                    {
+                        return UnitState.VaultOnState;
+                    }
                 }
                 else
                 {
-                    // Landing zone clear
-                    data.target = data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance);
-                    return UnitState.VaultOverState;
+                    const float groundClearance = 0.25f;
+                    // Landing zone clear, try to vault over
+                    data.target = ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance);
+                    landingZoneHit = Physics2D.BoxCast(
+                        data.rb.position + data.target + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.standingScale.x * 0.5f) + (Vector2.up * groundClearance),
+                        new Vector2(data.stats.standingScale.x, data.stats.standingScale.y - groundClearance),
+                        0,
+                        Vector2.zero,
+                        0,
+                        Unit.collisionMask
+                    );
+                    ExtDebug.DrawBox(
+                        data.rb.position + data.target + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.standingScale.x * 0.5f) + (Vector2.up * groundClearance),
+                        new Vector2(data.stats.standingScale.x, data.stats.standingScale.y - groundClearance) * 0.5f,
+                        Quaternion.identity,
+                        landingZoneHit ? Color.green : Color.red,
+                        data.stats.vaultDuration
+                    );
+                    if (!landingZoneHit)
+                    {
+                        return UnitState.VaultOverState;
+                    }
                 }
             }
         }
