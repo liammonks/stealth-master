@@ -46,8 +46,6 @@ public static class UnitStates
                 return ClimbState(data, initialise);
             case UnitState.WallSlide:
                 return WallSlideState(data, initialise);
-            case UnitState.Venting:
-                return VentingState(data, initialise);
         }
         if (state != UnitState.Null)
         {
@@ -957,10 +955,6 @@ public static class UnitStates
         }
         
         return UnitState.WallSlide;
-    }
-    
-    private static UnitState VentingState(UnitData data, bool initialise) {
-        return UnitState.Venting;
     }
     
     #region Helpers

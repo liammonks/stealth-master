@@ -77,7 +77,6 @@ public enum UnitState
     WallJump,
     Climb,
     WallSlide,
-    Venting,
 }
 
 public class Unit : MonoBehaviour
