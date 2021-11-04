@@ -1053,9 +1053,8 @@ public static class UnitStates
     private static UnitState TryDrop(UnitData data)
     {
         const float boxDepth = 0.1f;
-        float minLedgeThickness = 0.1f;
-        float scanHeight = 0.02f;
-        float scanHeightInterval = 0.01f;
+        const float scanDepth = 0.5f;
+        const float scanDepthInterval = 0.01f;
         float castDist = data.stats.standingScale.x;
         
         RaycastHit2D dropHit = Physics2D.BoxCast(
@@ -1074,33 +1073,28 @@ public static class UnitStates
         //);
         
         if(!dropHit) {
-            RaycastHit2D ledgeHit = Physics2D.BoxCast(
-                data.rb.position + (Vector2.down * (data.stats.crawlingSpringDistance + (scanHeight * 0.5f))),
-                new Vector2(boxDepth, scanHeight),
-                0,
-                data.isFacingRight ? -(Vector2)data.rb.transform.right : (Vector2)data.rb.transform.right,
-                castDist - (boxDepth * 0.05f),
-                Unit.collisionMask
-            );
-            ExtDebug.DrawBox(
-                data.rb.position + (Vector2.down * (data.stats.crawlingSpringDistance + scanHeight)) + (data.isFacingRight ? -(Vector2)data.rb.transform.right : (Vector2)data.rb.transform.right * castDist * 0.5f),
-                new Vector2(castDist, scanHeight) * 0.5f,
-                Quaternion.identity,
-                Color.red,
-                1.0f
-            );
-
-            if(ledgeHit) {
-                Debug.DrawLine(
-                    data.rb.position + (Vector2.down * (data.stats.crawlingSpringDistance + (scanHeight * 0.5f))),
-                    ledgeHit.point,
-                    Color.green,
-                    1.0f
+            float depth = 0.0f;
+            while (depth <= scanDepth)
+            {
+                RaycastHit2D ledgeHit = Physics2D.Raycast(
+                    data.rb.position + (Vector2.down * (data.stats.crawlingSpringDistance + depth)),
+                    data.isFacingRight ? Vector2.left : Vector2.right,
+                    data.stats.standingScale.x,
+                    Unit.collisionMask
                 );
-                data.target = ledgeHit.point + (data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
-                data.isFacingRight = !data.isFacingRight;
-                data.animator.SetBool("FacingRight", data.isFacingRight);
-                return UnitState.LedgeGrab;
+                Debug.DrawRay(
+                    data.rb.position + (Vector2.down * (data.stats.crawlingSpringDistance + depth)),
+                    (data.isFacingRight ? Vector2.left : Vector2.right) * (ledgeHit ? ledgeHit.distance : data.stats.standingScale.x),
+                    ledgeHit ? Color.green : Color.red
+                );
+                if (ledgeHit)
+                {
+                    data.target = ledgeHit.point + (data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
+                    data.isFacingRight = !data.isFacingRight;
+                    data.animator.SetBool("FacingRight", data.isFacingRight);
+                    return UnitState.LedgeGrab;
+                }
+                depth += scanDepthInterval;
             }
         }
 

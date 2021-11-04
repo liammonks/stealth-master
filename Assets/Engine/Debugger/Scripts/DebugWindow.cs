@@ -48,7 +48,7 @@ public class DebugWindow : MonoBehaviour, IPointerDownHandler
     
     private void UpdateLineCount() {
         currentLine = 0;
-        maxLineCount = Mathf.RoundToInt(logText.GetComponent<RectTransform>().rect.height / logText.fontSize);
+        maxLineCount = Mathf.Max(1, Mathf.RoundToInt(logText.GetComponent<RectTransform>().rect.height / logText.fontSize));
         lines = new string[maxLineCount];
         UpdateText();
     }
