@@ -42,7 +42,7 @@ public class DebugWindowManager : MonoBehaviour
         debugWindows.Add(debugWindowType, window);
 
         // Set window offsets
-        string path = $"Assets/Engine/Debugger/Data/{debugWindowType}.txt";
+        string path = $"Assets/Debugger/Data/{debugWindowType}.txt";
         StreamReader reader = new StreamReader(path);
         window.SetMinOffset(StringToVector2(reader.ReadLine()));
         window.SetMaxOffset(StringToVector2(reader.ReadLine()));
@@ -78,7 +78,7 @@ public class DebugWindowManager : MonoBehaviour
 
     private void OnDestroy() {
         foreach(KeyValuePair<DebugWindowType, DebugWindow> pair in debugWindows) {
-            string path = $"Assets/Engine/Debugger/Data/{pair.Key}.txt";
+            string path = $"Assets/Debugger/Data/{pair.Key}.txt";
             File.Delete(path);
             //Write some text to the test.txt file
             StreamWriter writer = new StreamWriter(path, true);

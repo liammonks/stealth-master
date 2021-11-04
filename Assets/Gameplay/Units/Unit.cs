@@ -8,7 +8,6 @@ public class UnitData
 {
     [HideInInspector] public Animator animator;
     [HideInInspector] public Rigidbody2D rb;
-    [HideInInspector] public UnitState possibleStates;
     [HideInInspector] public UnitState previousState;
     
     public InputData input = new InputData();
@@ -41,6 +40,14 @@ public class InputData
     public bool crawling { get { return Time.unscaledTime - crawlRequestTime < 0.1f || _crawling; } set { _crawling = value; } }
     private bool _crawling = false;
     public float crawlRequestTime = -1.0f;
+    
+    public void Reset() {
+        movement = 0;
+        running = false;
+        jumpRequestTime = -1;
+        crawling = false;
+        crawlRequestTime = -1;
+    }
 }
 
 [Flags]
@@ -53,24 +60,24 @@ public enum UnitCollision
     Ceil    = 8
 }
 
-[Flags]
 public enum UnitState
 {
-    Null            = 0,
-    Idle            = 1,
-    Run             = 2,
-    Crawl           = 4,
-    Slide           = 8,
-    Dive            = 16,
-    Jump            = 32,
-    VaultOverState  = 64,
-    VaultOnState    = 128,
-    Fall            = 256,
-    CrawlIdle       = 512,
-    LedgeGrab       = 1024,
-    WallJump        = 2048,
-    Climb           = 4096,
-    WallSlide       = 8192,
+    Null,
+    Idle,
+    Run,
+    Crawl,
+    Slide,
+    Dive,
+    Jump,
+    VaultOverState,
+    VaultOnState,
+    Fall,
+    CrawlIdle,
+    LedgeGrab,
+    WallJump,
+    Climb,
+    WallSlide,
+    Venting,
 }
 
 public class Unit : MonoBehaviour
@@ -84,7 +91,6 @@ public class Unit : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [Header("State Data")]
-    [SerializeField] private UnitState possibleStates;
     [SerializeField] private UnitState state;
     public UnitData data;
     
@@ -97,6 +103,11 @@ public class Unit : MonoBehaviour
     private const float groundSpringDistanceBufferStanding = 0.4f;
     private const float groundSpringDistanceBufferCrawling = 0.1f;
 
+    [Header("Interaction")]
+    [SerializeField] private List<Interactable> interactables = new List<Interactable>();
+
+    private bool lockedRB = false;
+
     private void Awake() {
         // Init layer masks
         collisionMask = LayerMask.GetMask("UnitCollider");
@@ -105,7 +116,6 @@ public class Unit : MonoBehaviour
         // Init data
         data.rb = GetComponent<Rigidbody2D>();
         data.animator = animator;
-        data.possibleStates = possibleStates;
         
         // Init default state
         UnitStates.Initialise(data, state);
@@ -113,6 +123,7 @@ public class Unit : MonoBehaviour
 
     private void FixedUpdate() 
     {
+        if (lockedRB) { return; }
         if (data.groundSpringActive)
         {
             UpdateGroundSpring();
@@ -268,5 +279,48 @@ public class Unit : MonoBehaviour
     {
         return data.input;
     }
+    
+    public void SetVisible(bool isVisible) {
+        spriteTransform.gameObject.SetActive(isVisible);
+    }
+    
+    public void LockRB(bool locked) {
+        lockedRB = locked;
+        data.rb.velocity = Vector2.zero;
+        data.rb.angularVelocity = 0;
+        data.rb.constraints = locked ? RigidbodyConstraints2D.FreezeAll : RigidbodyConstraints2D.None;
+    }
+    
+    public void SetState(UnitState toSet) {
+        state = UnitStates.Initialise(data, toSet);
+    }
 
+    #region Interaction
+    
+    public void AddInteractable(Interactable interactable) {
+        interactables.Add(interactable);
+    }
+
+    public void RemoveInteractable(Interactable interactable) {
+        interactables.Remove(interactable);
+    }
+
+    public void Interact()
+    {
+        // Interact with the nearest available interactable
+        float nearestInteractableDistance = Mathf.Infinity;
+        Interactable nearestInteractable = null;
+        foreach(Interactable interactable in interactables) {
+            float dist = (interactable.transform.position - transform.position).sqrMagnitude;
+            if(dist < nearestInteractableDistance) {
+                nearestInteractable = interactable;
+                nearestInteractableDistance = dist;
+            }
+        }
+        if(nearestInteractable != null) {
+            nearestInteractable.Interact(this);
+        }
+    }
+
+    #endregion
 }

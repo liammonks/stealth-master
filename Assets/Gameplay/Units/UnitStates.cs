@@ -46,8 +46,13 @@ public static class UnitStates
                 return ClimbState(data, initialise);
             case UnitState.WallSlide:
                 return WallSlideState(data, initialise);
+            case UnitState.Venting:
+                return VentingState(data, initialise);
         }
-        Debug.LogError("No State Function for " + state.ToString());
+        if (state != UnitState.Null)
+        {
+            Debug.LogError("No State Function for " + state.ToString());
+        }
         return UnitState.Null;
     }
 
@@ -203,13 +208,13 @@ public static class UnitStates
         {
             if (data.t == 0)
             {
-                if ((data.possibleStates & UnitState.Slide) != 0 && Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
+                if (Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
                 {
                     // Execute Slide
                     data.animator.Play("Slide");
                     return UnitState.Slide;
                 }
-                else if ((data.possibleStates & UnitState.Crawl) != 0)
+                else
                 {
                     // Play stand to crawl, wait before entering state
                     data.animator.Play("StandToCrawl");
@@ -405,7 +410,7 @@ public static class UnitStates
                     data.ApplyDrag(data.stats.groundDrag);
 
                     // Execute Jump (only 100ms before returning idle)
-                    if (data.t < 0.1f && (data.possibleStates & UnitState.Jump) != 0 && data.input.jumpQueued)
+                    if (data.t < 0.1f && data.input.jumpQueued)
                         return UnitState.Jump;
 
                     if (data.t == 0.0f)
@@ -512,12 +517,12 @@ public static class UnitStates
                         data.ApplyDrag(data.stats.groundDrag);
 
                         // Execute Jump (only 100ms before returning idle)
-                        if (data.t < 0.1f && (data.possibleStates & UnitState.Jump) != 0 && data.input.jumpQueued && data.isGrounded)
+                        if (data.t < 0.1f && data.input.jumpQueued && data.isGrounded)
                         {
                             return UnitState.Jump;
                         }
 
-                        if (data.t == 0.0f && (data.possibleStates & UnitState.Idle) != 0)
+                        if (data.t == 0.0f)
                         {
                             data.groundSpringActive = true;
                             return UnitState.Idle;
@@ -952,6 +957,10 @@ public static class UnitStates
         }
         
         return UnitState.WallSlide;
+    }
+    
+    private static UnitState VentingState(UnitData data, bool initialise) {
+        return UnitState.Venting;
     }
     
     #region Helpers

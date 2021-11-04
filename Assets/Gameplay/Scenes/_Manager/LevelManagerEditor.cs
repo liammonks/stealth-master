@@ -12,8 +12,8 @@ public class LevelManagerEditor : MonoBehaviour
     {
         if (!EditorApplication.isPlaying)
         {
-            EditorSceneManager.OpenScene("Assets/Scenes/Player.unity", OpenSceneMode.Additive);
-            EditorSceneManager.OpenScene("Assets/Engine/Debugger/Debugger.unity", OpenSceneMode.Additive);
+            EditorSceneManager.OpenScene("Assets/Gameplay/Scenes/Player.unity", OpenSceneMode.Additive);
+            EditorSceneManager.OpenScene("Assets/Debugger/Debugger.unity", OpenSceneMode.Additive);
         }
     }
 

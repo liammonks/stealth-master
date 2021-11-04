@@ -74,7 +74,10 @@ public class Player : MonoBehaviour
 
     private void OnInteract(InputValue value)
     {
-
+        if (value.Get<float>() == 1.0f)
+        {
+            playerUnit.Interact();
+        }
     }
     
 }
