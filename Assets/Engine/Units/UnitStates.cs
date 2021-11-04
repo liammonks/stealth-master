@@ -308,6 +308,17 @@ public static class UnitStates
                 return UnitState.CrawlIdle;
             }
         }
+        
+        if(!data.isGrounded) {
+            // Grab on to ledges below
+            UnitState ledgeDrop = TryDrop(data);
+            if (ledgeDrop != UnitState.Null)
+            {
+                data.input.crawling = false;
+                data.input.crawlRequestTime = -1;
+                return ledgeDrop;
+            }
+        }
 
         // Return to Idle
         if (data.t != 0.0f || (!data.input.crawling && data.isGrounded && CanStand(data)))
@@ -1170,19 +1181,27 @@ public static class UnitStates
     }
     
     private static bool FacingWall(UnitData data) {
-        const float detectionBuffer = 0.1f;
-        float detectionDistance = ((data.isStanding ? data.stats.standingScale.x : data.stats.crawlingScale.x) * 0.5f) + detectionBuffer;
-        RaycastHit2D wallHit = Physics2D.Raycast(
-                data.rb.position,
-                data.isFacingRight ? Vector3.right : Vector3.left,
-                detectionDistance,
-                Unit.collisionMask
-            );
-        Debug.DrawRay(
+        const float detectionDepth = 0.1f;
+        float bodyWidth = ((data.isStanding ? data.stats.standingScale.x : data.stats.crawlingScale.x) * 0.5f);
+        RaycastHit2D wallHit = Physics2D.BoxCast(
             data.rb.position,
-            (data.isFacingRight ? Vector3.right : Vector3.left) * detectionDistance,
-            wallHit ? Color.green : Color.red
+            new Vector2(detectionDepth, data.stats.standingScale.y * 0.5f),
+            data.rb.rotation,
+            data.isFacingRight ? data.rb.transform.right : -data.rb.transform.right,
+            bodyWidth,
+            Unit.collisionMask
         );
+        if (wallHit)
+        {
+            ExtDebug.DrawBoxCastOnHit(
+                data.rb.position,
+                new Vector2(detectionDepth, data.stats.standingScale.y * 0.5f) * 0.5f,
+                Quaternion.Euler(0, 0, data.rb.rotation),
+                data.isFacingRight ? data.rb.transform.right : -data.rb.transform.right,
+                wallHit.distance,
+                Color.green
+            );
+        }
         return wallHit;
     }
     
