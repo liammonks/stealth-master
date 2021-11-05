@@ -60,4 +60,8 @@ public class UnitStats : ScriptableObject {
     public float standingCeilingCheckHeight = 1.0f;
     public float crawlingCeilingCheckHeight = 1.0f;
 
+    [Header("Combat")]
+    public float maxHealth = 100;
+    public float impactDamageMultiplier = 0.5f;
+
 }

@@ -118,6 +118,9 @@ public class Unit : MonoBehaviour
         
         // Init default state
         UnitStates.Initialise(data, state);
+        
+        // Combat
+        health = data.stats.maxHealth;
     }
 
     private void FixedUpdate() 
@@ -210,7 +213,10 @@ public class Unit : MonoBehaviour
             else
             {
                 // Grounded on standable surface
-                //Debug.DrawRay(hit.point, hit.normal, Color.green);
+                // Check impact force if we just landed
+                if(!data.isGrounded) {
+                    OnImpact(Mathf.Abs(data.rb.velocity.y));
+                }
                 data.isGrounded = springDisplacement > -0.05f;
             }
 
@@ -294,8 +300,45 @@ public class Unit : MonoBehaviour
         state = UnitStates.Initialise(data, toSet);
     }
 
-    #region Interaction
+    #region Combat
+
+    [Header("Combat")]
+    [SerializeField] private float health;
+    [SerializeField] private HealthBar healthBar;
+    private const float impactDamageThreshold = 5.0f;
+
+    public void TakeDamage(float damage) {
+        Debug.Log("Recieved Damage: " + damage);
+        health = Mathf.Max(0, health - damage);
+        if(healthBar != null) {
+            healthBar.UpdateHealth(health, data.stats.maxHealth);
+        }
+        if(health == 0) {
+            Die();
+        }
+    }
     
+    public void Die() {
+        Destroy(gameObject);
+    }
+    
+    private void OnCollisionEnter2D(Collision2D other) {
+        float impactForce = other.relativeVelocity.magnitude;
+        if (impactForce < impactDamageThreshold) { return; }
+        if (other.rigidbody != null) { impactForce *= other.rigidbody.mass; }
+        OnImpact(impactForce);
+    }
+    
+    public void OnImpact(float impactForce) {
+        impactForce = impactForce * data.stats.impactDamageMultiplier;
+        if (impactForce < impactDamageThreshold) { return; }
+        TakeDamage(impactForce);
+    }
+
+    #endregion
+
+    #region Interaction
+
     public void AddInteractable(Interactable interactable) {
         interactables.Add(interactable);
     }

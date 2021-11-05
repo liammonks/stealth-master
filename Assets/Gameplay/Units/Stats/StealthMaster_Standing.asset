@@ -23,10 +23,8 @@ MonoBehaviour:
   diveVelocityMultiplier: 2
   slideVelocityMultiplier: 1.5
   standingScale: {x: 0.6, y: 1.6}
-  crawlingScale: {x: 1.6, y: 0.6}
-  standingSpringDistance: 0.8
+  crawlingScale: {x: 1.6, y: 0.65}
   standingSpringSize: {x: 0.25, y: 0.3}
-  crawlingSpringDistance: 0.33
   crawlingSpringSize: {x: 0.6, y: 0.3}
   springForce: 500
   springDamping: 40
@@ -50,3 +48,5 @@ MonoBehaviour:
   wallDetectionDistance: 0.5
   standingCeilingCheckHeight: 0.85
   crawlingCeilingCheckHeight: 1.35
+  maxHealth: 100
+  impactDamageMultiplier: 0.5
