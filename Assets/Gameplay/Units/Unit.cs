@@ -172,7 +172,7 @@ public class Unit : MonoBehaviour
 
     private void UpdateGroundSpring()
     {
-        float springDistance = Mathf.Lerp(data.stats.crawlingSpringDistance, data.stats.standingSpringDistance, colliderInterpValue);
+        float springDistance = Mathf.Lerp(data.stats.crawlingHalfHeight, data.stats.standingHalfHeight, colliderInterpValue);
         Vector2 springSize = Vector2.Lerp(data.stats.crawlingSpringSize, data.stats.standingSpringSize, colliderInterpValue);
         float groundSpringDistanceBuffer = Mathf.Lerp(groundSpringDistanceBufferCrawling, groundSpringDistanceBufferStanding, colliderInterpValue);
         Vector2 velocity = data.rb.velocity;

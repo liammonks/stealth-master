@@ -19,13 +19,15 @@ public class UnitStats : ScriptableObject {
 
     [Header("Scaling")]
     public Vector2 standingScale;
+    public float standingHalfWidth { get { return standingScale.x * 0.5f; } }
+    public float standingHalfHeight { get { return standingScale.y * 0.5f; } }
     public Vector2 crawlingScale;
+    public float crawlingHalfWidth { get { return crawlingScale.x * 0.5f; } }
+    public float crawlingHalfHeight { get { return crawlingScale.y * 0.5f; } }
 
     [Header("Ground Spring")]
-    public float standingSpringDistance = 1.0f;
     public Vector2 standingSpringSize;
     [Space(10)]
-    public float crawlingSpringDistance = 0.5f;
     public Vector2 crawlingSpringSize;
     [Space(10)]
     public float springForce = 100.0f;
