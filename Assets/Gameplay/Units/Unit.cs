@@ -362,7 +362,7 @@ public class Unit : MonoBehaviour
 
     public void Die()
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
