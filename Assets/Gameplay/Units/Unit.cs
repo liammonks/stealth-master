@@ -348,6 +348,7 @@ public class Unit : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        return;
         Debug.Log("Recieved Damage: " + damage);
         health = Mathf.Max(0, health - damage);
         if (healthBar != null)
