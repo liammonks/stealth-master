@@ -50,6 +50,8 @@ public static class UnitStates
                 return WallSlideState(data, initialise);
             case UnitState.Melee:
                 return MeleeState(data, initialise);
+            case UnitState.JumpMelee:
+                return JumpMeleeState(data, initialise);
         }
         Debug.LogError("No State Function for " + state.ToString());
         return UnitState.Null;
@@ -633,6 +635,12 @@ public static class UnitStates
             }
         }
         
+        // Melee
+        if(data.input.meleeQueued)
+        {
+            return UnitState.JumpMelee;
+        }
+        
         // End of jump animation
         if (data.t == 0.0f)
         {
@@ -1013,6 +1021,30 @@ public static class UnitStates
             return UnitState.Idle;
         }
         return UnitState.Melee;
+    }
+
+    private static UnitState JumpMeleeState(UnitData data, bool initialise)
+    {
+        if (initialise)
+        {
+            data.animator.Play("JumpMelee");
+            data.animator.Update(0);
+            data.animator.Update(0);
+            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+        }
+        data.t = Mathf.Max(0.0f, data.t - Time.deltaTime);
+        if (data.t == 0.0f)
+        {
+            if (data.isGrounded)
+            {
+                return UnitState.Idle;
+            }
+            else
+            {
+                return UnitState.Fall;
+            }
+        }
+        return UnitState.JumpMelee;
     }
     
     #region Helpers

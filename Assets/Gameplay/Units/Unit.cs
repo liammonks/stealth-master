@@ -81,7 +81,8 @@ public enum UnitState
     WallJump,
     Climb,
     WallSlide,
-    Melee
+    Melee,
+    JumpMelee
 }
 
 public class Unit : MonoBehaviour
@@ -319,6 +320,8 @@ public class Unit : MonoBehaviour
 
     public void SetState(UnitState toSet)
     {
+        data.stateDuration = 0.0f;
+        data.previousState = state;
         state = UnitStates.Initialise(data, toSet);
     }
 

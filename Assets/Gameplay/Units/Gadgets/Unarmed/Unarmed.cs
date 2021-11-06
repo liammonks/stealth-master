@@ -7,8 +7,7 @@ public class Unarmed : Gadget
 
     public override void PrimaryFunction()
     {
-        // Must be Idle or Running to Punch
-        if (owner.GetState() != UnitState.Idle && owner.GetState() != UnitState.Run) { return; }
+        if (!availableStates.Contains(owner.GetState())) { return; }
         // Current state must not be in transition
         if (owner.data.t != 0.0f) { return; }
         
