@@ -1,13 +1,7 @@
 fileFormatVersion: 2
-guid: f6bf0811de2b2fa4fb46b12fb2f98e13
+guid: db1c735b2e9976749942db9b88d0698c
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -492607505882884678
-    second: Stealth_Master_Hang_From_Arm_WIP_0
-  - first:
-      213: -324791060772158025
-    second: Stealth_Master_Hang_From_Arm_WIP_1
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -95,53 +89,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: Stealth_Master_Hang_From_Arm_WIP_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ab5d8265518e929f0800000000000000
-      internalID: -492607505882884678
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Hang_From_Arm_WIP_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7b50474404c1e7bf0800000000000000
-      internalID: -324791060772158025
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 507923410d2594d448133a35eb3e7c74
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
