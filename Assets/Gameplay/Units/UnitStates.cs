@@ -582,7 +582,7 @@ public static class UnitStates
         {
             // Reset jump input
             data.input.jumpRequestTime = -1;
-            data.animator.Play("Jump");
+            data.animator.Play(data.previousState == UnitState.LedgeGrab ? "LedgeJump" : "Jump");
             data.animator.Update(0);
             data.animator.Update(0);
             data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
@@ -784,14 +784,14 @@ public static class UnitStates
         {
             // Check if the ledge wall extends down to feet
             RaycastHit2D feetHit = Physics2D.Raycast(
-                data.rb.position + (Vector2.down * data.stats.standingScale * 0.5f),
+                data.target + (Vector2.down * data.stats.standingScale * 0.4f),
                 data.isFacingRight ? Vector2.right : Vector2.left,
-                data.stats.standingScale.x,
+                data.stats.standingScale.x * 0.6f,
                 Unit.collisionMask
             );
             Debug.DrawRay(
-                data.rb.position + (Vector2.down * data.stats.standingScale * 0.5f),
-                data.isFacingRight ? Vector2.right : Vector2.left,
+                data.target + (Vector2.down * data.stats.standingScale * 0.4f),
+                (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.standingScale.x * 0.6f,
                 feetHit ? Color.green : Color.red,
                 1.0f
             );
@@ -1272,9 +1272,9 @@ public static class UnitStates
     
     private static bool FacingWall(UnitData data) {
         const float detectionDepth = 0.1f;
-        float bodyWidth = ((data.isStanding ? data.stats.standingScale.x : data.stats.crawlingScale.x) * 0.5f);
+        float bodyWidth = data.isStanding ? data.stats.standingHalfWidth : data.stats.crawlingHalfWidth;
         RaycastHit2D wallHit = Physics2D.BoxCast(
-            data.rb.position,
+            data.rb.position + (Vector2.up * data.stats.standingScale.y * 0.25f),
             new Vector2(detectionDepth, data.stats.standingScale.y * 0.5f),
             data.rb.rotation,
             data.isFacingRight ? data.rb.transform.right : -data.rb.transform.right,
@@ -1284,7 +1284,7 @@ public static class UnitStates
         if (wallHit)
         {
             ExtDebug.DrawBoxCastOnHit(
-                data.rb.position + (Vector2.up * data.stats.standingScale.y * 0.5f),
+                data.rb.position + (Vector2.up * data.stats.standingScale.y * 0.25f),
                 new Vector2(detectionDepth, data.stats.standingScale.y * 0.5f) * 0.5f,
                 Quaternion.Euler(0, 0, data.rb.rotation),
                 data.isFacingRight ? data.rb.transform.right : -data.rb.transform.right,

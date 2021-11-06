@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Stealth_Master_Ledge_Grab_Right
+  m_Name: StealthMaster_Ledge_Grab_Left
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,9 +20,9 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: -2607326481850833354, guid: 8c382a6559bf3624a9b3274b7d83f6f3, type: 3}
+      value: {fileID: 7806632141504596426, guid: 000d2588b1d0d984a862d48be50b26e8, type: 3}
     - time: 0.083333336
-      value: {fileID: 426329367857811544, guid: 8c382a6559bf3624a9b3274b7d83f6f3, type: 3}
+      value: {fileID: 932272130009853207, guid: 000d2588b1d0d984a862d48be50b26e8, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -42,8 +42,8 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: -2607326481850833354, guid: 8c382a6559bf3624a9b3274b7d83f6f3, type: 3}
-    - {fileID: 426329367857811544, guid: 8c382a6559bf3624a9b3274b7d83f6f3, type: 3}
+    - {fileID: 7806632141504596426, guid: 000d2588b1d0d984a862d48be50b26e8, type: 3}
+    - {fileID: 932272130009853207, guid: 000d2588b1d0d984a862d48be50b26e8, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

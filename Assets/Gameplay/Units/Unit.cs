@@ -363,6 +363,7 @@ public class Unit : MonoBehaviour
     public void Die()
     {
         //Destroy(gameObject);
+        LevelManager.Instance.RespawnPlayer();
     }
 
     private void OnCollisionEnter2D(Collision2D other)
