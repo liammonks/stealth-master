@@ -7,6 +7,7 @@ public class UnitHelper : MonoBehaviour
     public static UnitHelper Instance;
 
     [SerializeField] private ParticleSystem groundParticlePrefab;
+    [SerializeField] private Unit playerUnit;
 
     private Queue<ParticleSystem> groundParticles;
 
@@ -43,5 +44,10 @@ public class UnitHelper : MonoBehaviour
         yield return new WaitForSeconds(groundParticlePrefab.main.duration + groundParticlePrefab.main.startLifetime.constant);
         ps.gameObject.SetActive(false);
         psQueue.Enqueue(ps);
+    }
+    
+    public Unit GetPlayerUnit()
+    {
+        return playerUnit;
     }
 }
