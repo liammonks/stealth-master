@@ -1,7 +1,28 @@
 fileFormatVersion: 2
 guid: 196f9fa436f95cd438b7871924de6107
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 3623376834160090724
+    second: Stealth_Lower_Kick_Right_0
+  - first:
+      213: -7468774972443562650
+    second: Stealth_Lower_Kick_Right_1
+  - first:
+      213: -8092930966426755521
+    second: Stealth_Lower_Kick_Right_2
+  - first:
+      213: 3511761872916668992
+    second: Stealth_Lower_Kick_Right_3
+  - first:
+      213: -7369717080814101802
+    second: Stealth_Lower_Kick_Right_4
+  - first:
+      213: 2246070609597879350
+    second: Stealth_Lower_Kick_Right_5
+  - first:
+      213: 7275169743252077508
+    second: Stealth_Lower_Kick_Right_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -89,11 +110,158 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Stealth_Lower_Kick_Right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46edd7f7802d84230800000000000000
+      internalID: 3623376834160090724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Lower_Kick_Right_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66d6c2cdbb4995890800000000000000
+      internalID: -7468774972443562650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Lower_Kick_Right_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3edf5a0a2220bf80800000000000000
+      internalID: -8092930966426755521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Lower_Kick_Right_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04265fa31d84cb030800000000000000
+      internalID: 3511761872916668992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Lower_Kick_Right_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6da52f68c5189b990800000000000000
+      internalID: -7369717080814101802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Lower_Kick_Right_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 634d689b155ab2f10800000000000000
+      internalID: 2246070609597879350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Lower_Kick_Right_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cbb533065896f460800000000000000
+      internalID: 7275169743252077508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 24d456030ad1ae5479788f2b087ea2ce
     internalID: 0
     vertices: []
     indices: 

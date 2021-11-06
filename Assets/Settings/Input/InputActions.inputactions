@@ -52,6 +52,30 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "GadgetPrimary",
+                    "type": "Value",
+                    "id": "f33cb182-6eef-434c-84c7-c1998a5a882b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "GadgetSecondary",
+                    "type": "Value",
+                    "id": "7ac9030a-402f-46c7-9bb4-65023ddb8568",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Melee",
+                    "type": "Value",
+                    "id": "a2b3b0b8-c97e-4b5f-868a-2c11deac365c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -162,6 +186,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e0d84bf-20bc-4ac0-9706-1477fddf9658",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GadgetPrimary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "973c727f-e0ac-4d39-812f-3de720d885b6",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GadgetSecondary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b01c4c3-a63f-474b-8102-c489480dc3fd",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Melee",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -67,6 +67,30 @@ public class Player : MonoBehaviour
         unitInputData.crawlRequestTime = Time.unscaledTime;
     }
 
+    private void OnGadgetPrimary(InputValue value) 
+    {
+        if (value.Get<float>() == 1.0f)
+        {
+            playerUnit.GadgetPrimary();
+        }
+    }
+
+    private void OnGadgetSecondary(InputValue value)
+    {
+        if (value.Get<float>() == 1.0f)
+        {
+            playerUnit.GadgetSecondary();
+        }
+    }
+    
+    private void OnMelee(InputValue value)
+    {
+        if (value.Get<float>() == 1.0f)
+        {
+            unitInputData.meleeRequestTime = Time.unscaledTime;
+        }
+    }
+
     private void OnMouseMove(InputValue value)
     {
 
