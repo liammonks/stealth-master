@@ -9,6 +9,9 @@ public class Unarmed : Gadget
     {
         // Must be Idle or Running to Punch
         if (owner.GetState() != UnitState.Idle && owner.GetState() != UnitState.Run) { return; }
+        // Current state must not be in transition
+        if (owner.data.t != 0.0f) { return; }
+        
         owner.SetState(UnitState.Null);
         owner.data.animator.Play("Punch");
         owner.data.animator.Update(0);
