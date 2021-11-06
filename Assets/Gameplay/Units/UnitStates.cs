@@ -582,7 +582,7 @@ public static class UnitStates
         {
             // Reset jump input
             data.input.jumpRequestTime = -1;
-            data.animator.Play(data.previousState == UnitState.LedgeGrab ? "LedgeJump" : "Jump");
+            data.animator.Play("Jump");
             data.animator.Update(0);
             data.animator.Update(0);
             data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
