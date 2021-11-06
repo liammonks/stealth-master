@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 0d0973c444130594fb6da9d5a44b3fce
+guid: 2165b14a8fb05d24888fe3f7d15a45be
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 932337300343483392
-    second: Stealth_Master_Hang_From_Arm_Left_WIP_0
+      213: -4971800515219927214
+    second: Stealth_Master_Hang_From_Arm_Left_WIP__0
   - first:
-      213: 379003025897025143
-    second: Stealth_Master_Hang_From_Arm_Left_WIP_1
+      213: 5899716913223619802
+    second: Stealth_Master_Hang_From_Arm_Left_WIP__1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -43,7 +43,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth_Master_Hang_From_Arm_Left_WIP_0
+      name: Stealth_Master_Hang_From_Arm_Left_WIP__0
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +111,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 00ce1ddb5d350fc00800000000000000
-      internalID: 932337300343483392
+      spriteID: 25f463ce5cd900bb0800000000000000
+      internalID: -4971800515219927214
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Hang_From_Arm_Left_WIP_1
+      name: Stealth_Master_Hang_From_Arm_Left_WIP__1
       rect:
         serializedVersion: 2
         x: 0
@@ -132,8 +132,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 77ee3677e3d724500800000000000000
-      internalID: 379003025897025143
+      spriteID: ad4de08464100e150800000000000000
+      internalID: 5899716913223619802
       vertices: []
       indices: 
       edges: []
@@ -141,7 +141,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 2df2feda29736814598b1d92733c257a
+    spriteID: 01f9084846281c5499fe6faa42a5fd56
     internalID: 0
     vertices: []
     indices: 
