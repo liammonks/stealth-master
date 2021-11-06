@@ -10,10 +10,10 @@ public class HealthBar : MonoBehaviour
     private Coroutine lerpCoroutine;
 
     public void UpdateHealth(float currentHealth, float maxHealth) {
-        float percentage = currentHealth / maxHealth;
-        currentHealthImage.fillAmount = percentage;
-        if (lerpCoroutine != null) { StopCoroutine(lerpCoroutine); }
-        lerpCoroutine = StartCoroutine(LerpHealth(percentage));
+        //float percentage = currentHealth / maxHealth;
+        //currentHealthImage.fillAmount = percentage;
+        //if (lerpCoroutine != null) { StopCoroutine(lerpCoroutine); }
+        //lerpCoroutine = StartCoroutine(LerpHealth(percentage));
     }
     
     private IEnumerator LerpHealth(float percentage) {
