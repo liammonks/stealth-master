@@ -9,7 +9,7 @@ public class UnitData
     [HideInInspector] public Animator animator;
     [HideInInspector] public Rigidbody2D rb;
     [HideInInspector] public UnitState previousState;
-    
+
     public InputData input = new InputData();
     public UnitStats stats;
     public Vector2 target;
@@ -33,15 +33,19 @@ public class InputData
 {
     public int movement;
     public bool running;
-    
+
     public bool jumpQueued { get { return Time.unscaledTime - jumpRequestTime < 0.1f; } }
     public float jumpRequestTime = -1.0f;
-    
+
     public bool crawling { get { return Time.unscaledTime - crawlRequestTime < 0.1f || _crawling; } set { _crawling = value; } }
     private bool _crawling = false;
     public float crawlRequestTime = -1.0f;
-    
-    public void Reset() {
+
+    public bool meleeQueued { get { return Time.unscaledTime - meleeRequestTime < 0.1f; } }
+    public float meleeRequestTime = -1.0f;
+
+    public void Reset()
+    {
         movement = 0;
         running = false;
         jumpRequestTime = -1;
@@ -53,11 +57,11 @@ public class InputData
 [Flags]
 public enum UnitCollision
 {
-    None    = 0,
-    Ground  = 1,
-    Left    = 2,
-    Right   = 4,
-    Ceil    = 8
+    None = 0,
+    Ground = 1,
+    Left = 2,
+    Right = 4,
+    Ceil = 8
 }
 
 public enum UnitState
@@ -77,6 +81,7 @@ public enum UnitState
     WallJump,
     Climb,
     WallSlide,
+    Melee
 }
 
 public class Unit : MonoBehaviour
@@ -92,7 +97,7 @@ public class Unit : MonoBehaviour
     [Header("State Data")]
     [SerializeField] private UnitState state;
     public UnitData data;
-    
+
     [Header("Collider")]
     [SerializeField] private PolygonCollider2D activeCollider;
     [SerializeField] private Vector2[] standingPoints;
@@ -104,26 +109,34 @@ public class Unit : MonoBehaviour
 
     [Header("Interaction")]
     [SerializeField] private List<Interactable> interactables = new List<Interactable>();
-
     private bool lockedRB = false;
 
-    private void Awake() {
+    [Header("Combat")]
+    [SerializeField] private Gadget equippedGadget;
+    [SerializeField] private float health;
+    [SerializeField] private HealthBar healthBar;
+    private const float impactDamageThreshold = 10.0f;
+
+
+    private void Awake()
+    {
         // Init layer masks
         collisionMask = LayerMask.GetMask("UnitCollider");
         interactionMask = LayerMask.GetMask("Interactable");
-        
+
         // Init data
         data.rb = GetComponent<Rigidbody2D>();
         data.animator = animator;
-        
+
         // Init default state
         UnitStates.Initialise(data, state);
-        
+
         // Combat
+        EquipGadget(equippedGadget);
         health = data.stats.maxHealth;
     }
 
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
         if (lockedRB) { return; }
         if (data.groundSpringActive)
@@ -139,10 +152,10 @@ public class Unit : MonoBehaviour
             rotationDisplacement -= Vector2.SignedAngle(Vector2.up, transform.up);
             data.rb.angularVelocity = -rotationDisplacement * data.stats.airRotationForce * Time.fixedDeltaTime;
         }
-        
+
         // Apply gravity
         data.rb.gravityScale = !data.isGrounded ? 1.0f : 0.0f;
-        
+
         UpdateMovement();
         //UpdateCeiling();
         UpdateAnimation();
@@ -153,7 +166,7 @@ public class Unit : MonoBehaviour
 
         //Debug.DrawRay(transform.position, data.rb.velocity * Time.fixedDeltaTime, Color.grey, 3.0f);
     }
-    
+
     private void UpdateMovement()
     {
         // Log out current state
@@ -181,17 +194,17 @@ public class Unit : MonoBehaviour
         Vector2 velocity = data.rb.velocity;
 
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, springSize, transform.eulerAngles.z, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, collisionMask);
-        if(hit)
+        if (hit)
         {
             ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springSize.x, springSize.y) * 0.5f, transform.rotation, -transform.up, hit.distance, data.groundSpringActive ? Color.green : Color.gray);
-            
+
             // Apply spring force
             float springDisplacement = (springDistance - (springSize.y * 0.5f)) - hit.distance;
             float springForce = springDisplacement * data.stats.springForce;
             float springDamp = Vector2.Dot(velocity, transform.up) * data.stats.springDamping;
 
             velocity += (Vector2)transform.up * (springForce - springDamp) * Time.fixedDeltaTime;
-            
+
             //Debug.DrawRay(hit.point, hit.normal, Color.red);
             // Check if we are grounded based on angle of surface
             float groundAngle = Vector2.Angle(hit.normal, Vector2.up);
@@ -214,7 +227,8 @@ public class Unit : MonoBehaviour
             {
                 // Grounded on standable surface
                 // Check impact force if we just landed
-                if(!data.isGrounded) {
+                if (!data.isGrounded)
+                {
                     OnImpact(Mathf.Abs(data.rb.velocity.y));
                 }
                 data.isGrounded = springDisplacement > -0.05f;
@@ -233,10 +247,10 @@ public class Unit : MonoBehaviour
             data.isGrounded = false;
             data.rb.angularVelocity = 0;
         }
-        
+
         data.rb.velocity = velocity;
     }
-    
+
     private void UpdateCeiling()
     {
         // Ceiling check
@@ -257,7 +271,7 @@ public class Unit : MonoBehaviour
     {
         float targetInterpValue = data.isStanding ? 1.0f : 0.0f;
         colliderInterpValue = Mathf.MoveTowards(colliderInterpValue, targetInterpValue, Time.fixedDeltaTime * colliderInterpRate);
-        
+
         Vector2[] points = new Vector2[standingPoints.Length];
         for (int i = 0; i < points.Length; ++i)
         {
@@ -265,7 +279,7 @@ public class Unit : MonoBehaviour
         }
         activeCollider.points = points;
     }
-    
+
     private void UpdateAnimation()
     {
         // Animate
@@ -279,57 +293,88 @@ public class Unit : MonoBehaviour
             animator.SetBool("FacingRight", data.isFacingRight);
         }
     }
-    
+
     public InputData GetInputData()
     {
         return data.input;
     }
-    
-    public void SetVisible(bool isVisible) {
+
+    public void SetVisible(bool isVisible)
+    {
         spriteTransform.gameObject.SetActive(isVisible);
     }
-    
-    public void LockRB(bool locked) {
+
+    public void LockRB(bool locked)
+    {
         lockedRB = locked;
         data.rb.velocity = Vector2.zero;
         data.rb.angularVelocity = 0;
         data.rb.constraints = locked ? RigidbodyConstraints2D.FreezeAll : RigidbodyConstraints2D.None;
     }
     
-    public void SetState(UnitState toSet) {
+    public UnitState GetState()
+    {
+        return state;
+    }
+
+    public void SetState(UnitState toSet)
+    {
         state = UnitStates.Initialise(data, toSet);
     }
 
     #region Combat
 
-    [Header("Combat")]
-    [SerializeField] private float health;
-    [SerializeField] private HealthBar healthBar;
-    private const float impactDamageThreshold = 5.0f;
+    public void EquipGadget(Gadget toEquip)
+    {
+        equippedGadget = toEquip;
+        equippedGadget.Equip(this);
+    }
 
-    public void TakeDamage(float damage) {
+    public void GadgetPrimary()
+    {
+        if(equippedGadget != null)
+        {
+            equippedGadget.PrimaryFunction();
+        }
+    }
+
+    public void GadgetSecondary()
+    {
+        if (equippedGadget != null)
+        {
+            equippedGadget.SecondaryFunction();
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
         Debug.Log("Recieved Damage: " + damage);
         health = Mathf.Max(0, health - damage);
-        if(healthBar != null) {
+        if (healthBar != null)
+        {
             healthBar.UpdateHealth(health, data.stats.maxHealth);
         }
-        if(health == 0) {
+        if (health == 0)
+        {
             Die();
         }
     }
-    
-    public void Die() {
-        Destroy(gameObject);
+
+    public void Die()
+    {
+        //Destroy(gameObject);
     }
-    
-    private void OnCollisionEnter2D(Collision2D other) {
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
         float impactForce = other.relativeVelocity.magnitude;
         if (impactForce < impactDamageThreshold) { return; }
         if (other.rigidbody != null) { impactForce *= other.rigidbody.mass; }
         OnImpact(impactForce);
     }
-    
-    public void OnImpact(float impactForce) {
+
+    public void OnImpact(float impactForce)
+    {
         impactForce = impactForce * data.stats.impactDamageMultiplier;
         if (impactForce < impactDamageThreshold) { return; }
         TakeDamage(impactForce);
@@ -339,11 +384,13 @@ public class Unit : MonoBehaviour
 
     #region Interaction
 
-    public void AddInteractable(Interactable interactable) {
+    public void AddInteractable(Interactable interactable)
+    {
         interactables.Add(interactable);
     }
 
-    public void RemoveInteractable(Interactable interactable) {
+    public void RemoveInteractable(Interactable interactable)
+    {
         interactables.Remove(interactable);
     }
 
@@ -352,14 +399,17 @@ public class Unit : MonoBehaviour
         // Interact with the nearest available interactable
         float nearestInteractableDistance = Mathf.Infinity;
         Interactable nearestInteractable = null;
-        foreach(Interactable interactable in interactables) {
+        foreach (Interactable interactable in interactables)
+        {
             float dist = (interactable.transform.position - transform.position).sqrMagnitude;
-            if(dist < nearestInteractableDistance) {
+            if (dist < nearestInteractableDistance)
+            {
                 nearestInteractable = interactable;
                 nearestInteractableDistance = dist;
             }
         }
-        if(nearestInteractable != null) {
+        if (nearestInteractable != null)
+        {
             nearestInteractable.Interact(this);
         }
     }

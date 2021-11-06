@@ -18,6 +18,8 @@ public static class UnitStates
     {
         switch (state)
         {
+            case UnitState.Null:
+                return NullState(data, initialise);
             case UnitState.Idle:
                 return IdleState(data, initialise);
             case UnitState.Run:
@@ -46,11 +48,16 @@ public static class UnitStates
                 return ClimbState(data, initialise);
             case UnitState.WallSlide:
                 return WallSlideState(data, initialise);
+            case UnitState.Melee:
+                return MeleeState(data, initialise);
         }
-        if (state != UnitState.Null)
-        {
-            Debug.LogError("No State Function for " + state.ToString());
-        }
+        Debug.LogError("No State Function for " + state.ToString());
+        return UnitState.Null;
+    }
+    
+    private static UnitState NullState(UnitData data, bool initialise)
+    {
+        data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
         return UnitState.Null;
     }
 
@@ -91,6 +98,31 @@ public static class UnitStates
             {
                 return UnitState.Run;
             }
+            // Execute Fall
+            if (!data.isGrounded)
+            {
+                return UnitState.Fall;
+            }
+            // Push against wall
+            if (FacingWall(data))
+            {
+                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Right"))
+                {
+                    data.animator.Play("AgainstWall");
+                }
+            }
+            else
+            {
+                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_Right"))
+                {
+                    data.animator.Play("Idle");
+                }
+            }
+            // Execute Melee
+            if(data.input.meleeQueued)
+            {
+                return UnitState.Melee;
+            }
         }
 
         // Execute Crawl
@@ -113,29 +145,7 @@ public static class UnitStates
                 if (data.t == 0.0f)
                     return UnitState.CrawlIdle;
             }
-        } else {
-            // Execute Fall
-            if (!data.isGrounded)
-            {
-                return UnitState.Fall;
-            }
-            // Push against wall
-            if (FacingWall(data))
-            {
-                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Right"))
-                {
-                    data.animator.Play("AgainstWall");
-                }
-            }
-            else
-            {
-                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_Right"))
-                {
-                    data.animator.Play("Idle");
-                }
-            }
-        }        
-
+        }
         return UnitState.Idle;
     }
     
@@ -200,6 +210,26 @@ public static class UnitStates
             {
                 return UnitState.Idle;
             }
+            // Face Wall
+            if (FacingWall(data))
+            {
+                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Right"))
+                {
+                    data.animator.Play("AgainstWall");
+                }
+            }
+            else
+            {
+                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Right"))
+                {
+                    data.animator.Play("Run");
+                }
+            }
+            // Execute Melee
+            if (data.input.meleeQueued)
+            {
+                return UnitState.Melee;
+            }
         }
 
         if (data.t != 0 || (data.input.crawling && CanCrawl(data)))
@@ -229,20 +259,6 @@ public static class UnitStates
                 
                 if (data.t == 0.0f)
                     return UnitState.Crawl;
-            }
-        }
-        else
-        {
-            if (FacingWall(data))
-            {
-                data.animator.Play("AgainstWall");
-            }
-            else
-            {
-                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Right"))
-                {
-                    data.animator.Play("Run");
-                }
             }
         }
 
@@ -980,6 +996,23 @@ public static class UnitStates
         }
         
         return UnitState.WallSlide;
+    }
+    
+    private static UnitState MeleeState(UnitData data, bool initialise)
+    {
+        if(initialise)
+        {
+            data.animator.Play("Melee");
+            data.animator.Update(0);
+            data.animator.Update(0);
+            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            data.rb.velocity = Vector2.zero;
+        }
+        data.t = Mathf.Max(0.0f, data.t - Time.deltaTime);
+        if(data.t == 0.0f) {
+            return UnitState.Idle;
+        }
+        return UnitState.Melee;
     }
     
     #region Helpers
