@@ -52,10 +52,10 @@ MonoBehaviour:
   collisionDamageMultiplier: 0.5
   knockbackMultiplier: 10
   meleeDamage: 10
-  meleeScale: {x: 1.6, y: 0.5}
+  meleeScale: {x: 1.7, y: 0.5}
   meleeOffset: {x: 0, y: -0.4}
   meleeKnockback: 1
   jumpMeleeDamage: 10
-  jumpMeleeScale: {x: 0, y: 0}
-  jumpMeleeOffset: {x: 0, y: 0}
-  jumpMeleeKnockback: 0
+  jumpMeleeScale: {x: 0.8, y: 0.5}
+  jumpMeleeOffset: {x: 0.8, y: -0.4}
+  jumpMeleeKnockback: 2

@@ -1064,18 +1064,43 @@ public static class UnitStates
             data.animator.Update(0);
             data.animator.Update(0);
             data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            data.hitIDs.Clear();
         }
         data.t = Mathf.Max(0.0f, data.t - Time.deltaTime);
+
+        if (data.t <= data.animator.GetCurrentAnimatorStateInfo(0).length * 0.5f)
+        {
+            RaycastHit2D[] hits = Physics2D.BoxCastAll(
+                data.rb.position + (Vector2.up * data.stats.jumpMeleeOffset.y) + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.jumpMeleeOffset.x),
+                data.stats.jumpMeleeScale,
+                data.rb.rotation,
+                Vector2.zero,
+                0,
+                data.hitMask
+            );
+            ExtDebug.DrawBox(
+                data.rb.position + (Vector2.up * data.stats.jumpMeleeOffset.y) + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.jumpMeleeOffset.x),
+                data.stats.jumpMeleeScale * 0.5f,
+                Quaternion.Euler(0, 0, data.rb.rotation),
+                hits.Length > 0 ? Color.green : Color.red
+            );
+            foreach (RaycastHit2D hit in hits)
+            {
+                Unit unit = hit.rigidbody?.GetComponent<Unit>();
+                if (unit && !data.hitIDs.Contains(unit.ID))
+                {
+                    unit.TakeDamage(
+                        data.stats.jumpMeleeDamage,
+                        data.rb.velocity + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.jumpMeleeKnockback * data.stats.knockbackMultiplier)
+                    );
+                    data.hitIDs.Add(unit.ID);
+                }
+            }
+        }
+
         if (data.t == 0.0f)
         {
-            if (data.isGrounded)
-            {
-                return UnitState.Idle;
-            }
-            else
-            {
-                return UnitState.Fall;
-            }
+            return UnitState.Idle;
         }
         return UnitState.JumpMelee;
     }
