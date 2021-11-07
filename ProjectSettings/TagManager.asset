@@ -14,8 +14,8 @@ TagManager:
   - Interactable
   - Post-processing
   - Rain Collider
-  - Unit
-  - 
+  - Player
+  - Enemy
   - 
   - 
   - 

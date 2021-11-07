@@ -42,6 +42,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -235,6 +236,12 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Stealth_Master_Vault_Onto_WIP_2: -4743022982719678757
+      Stealth_Master_Vault_Onto_WIP_4: -6502395742603978287
+      Stealth_Master_Vault_Onto_WIP_3: 8955392888975913167
+      Stealth_Master_Vault_Onto_WIP_1: -8192997370575795951
+      Stealth_Master_Vault_Onto_WIP_5: 7060861614734345361
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

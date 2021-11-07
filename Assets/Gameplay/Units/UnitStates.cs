@@ -1015,31 +1015,37 @@ public static class UnitStates
             data.animator.Update(0);
             data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
             data.rb.velocity = Vector2.zero;
+            data.hitIDs.Clear();
         }
         data.t = Mathf.Max(0.0f, data.t - Time.deltaTime);
         
         if(data.t <= data.animator.GetCurrentAnimatorStateInfo(0).length * 0.5f)
         {
-            RaycastHit2D hit = Physics2D.BoxCast(
+            RaycastHit2D[] hits = Physics2D.BoxCastAll(
                 data.rb.position + data.stats.meleeOffset,
                 data.stats.meleeScale,
                 data.rb.rotation,
                 Vector2.zero,
                 0,
-                Unit.collisionMask
+                data.hitMask
             );
             ExtDebug.DrawBox(
                 data.rb.position + data.stats.meleeOffset,
                 data.stats.meleeScale * 0.5f,
                 Quaternion.Euler(0, 0, data.rb.rotation),
-                hit ? Color.green : Color.red
+                hits.Length > 0 ? Color.green : Color.red
             );
-            if(hit)
+            foreach(RaycastHit2D hit in hits)
             {
-                hit.rigidbody?.GetComponent<Unit>().TakeDamage(
-                    data.stats.meleeDamage,
-                    data.rb.velocity + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.meleeKnockback * data.stats.knockbackMultiplier)
-                );
+                Unit unit = hit.rigidbody?.GetComponent<Unit>();
+                if (unit && !data.hitIDs.Contains(unit.ID))
+                {
+                    unit.TakeDamage(
+                        data.stats.meleeDamage,
+                        data.rb.velocity + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.meleeKnockback * data.stats.knockbackMultiplier)
+                    );
+                    data.hitIDs.Add(unit.ID);
+                }
             }
         }
         

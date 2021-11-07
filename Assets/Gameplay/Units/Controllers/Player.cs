@@ -3,33 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : Unit
 {
-    [SerializeField] private Unit playerUnit;
-
-    private InputData unitInputData;
     private Coroutine enableCrawlCoroutine;
 
-    private void Awake()
+    protected override void Awake()
     {
-        unitInputData = playerUnit.GetInputData();
+        base.Awake();
+        data.hitMask = LayerMask.GetMask("Enemy");
+    }
+
+    public override void Die()
+    {
+        LevelManager.Instance.RespawnPlayer();
     }
 
     private void OnMovement(InputValue value)
     {
-        unitInputData.movement = Mathf.CeilToInt(value.Get<Vector2>().x);
+        data.input.movement = Mathf.CeilToInt(value.Get<Vector2>().x);
     }
 
     private void OnRun(InputValue value)
     {
-        unitInputData.running = value.Get<float>() == 1.0f;
+        data.input.running = value.Get<float>() == 1.0f;
     }
 
     private void OnJump(InputValue value)
     {
         if (value.Get<float>() == 1.0f)
         {
-            unitInputData.jumpRequestTime = Time.unscaledTime;
+            data.input.jumpRequestTime = Time.unscaledTime;
         }
     }
 
@@ -38,20 +41,20 @@ public class Player : MonoBehaviour
         if (value.Get<float>() == 1.0f)
         {
             // Set crawling
-            if (Time.unscaledTime - unitInputData.crawlRequestTime > 0.6f)
+            if (Time.unscaledTime - data.input.crawlRequestTime > 0.6f)
             {
-                unitInputData.crawling = true;
-                unitInputData.crawlRequestTime = Time.unscaledTime;
+                data.input.crawling = true;
+                data.input.crawlRequestTime = Time.unscaledTime;
             }
             else
             {
                 // We tried crawling too quickly after the last crawl input
-                enableCrawlCoroutine = StartCoroutine(EnableCrawlDelay(Time.unscaledTime - unitInputData.crawlRequestTime));
+                enableCrawlCoroutine = StartCoroutine(EnableCrawlDelay(Time.unscaledTime - data.input.crawlRequestTime));
             }
         }
         else
         {
-            unitInputData.crawling = false;
+            data.input.crawling = false;
             if(enableCrawlCoroutine != null)
             {
                 StopCoroutine(enableCrawlCoroutine);
@@ -63,15 +66,15 @@ public class Player : MonoBehaviour
     private IEnumerator EnableCrawlDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        unitInputData.crawling = true;
-        unitInputData.crawlRequestTime = Time.unscaledTime;
+        data.input.crawling = true;
+        data.input.crawlRequestTime = Time.unscaledTime;
     }
 
     private void OnGadgetPrimary(InputValue value) 
     {
         if (value.Get<float>() == 1.0f)
         {
-            playerUnit.GadgetPrimary();
+            GadgetPrimary();
         }
     }
 
@@ -79,7 +82,7 @@ public class Player : MonoBehaviour
     {
         if (value.Get<float>() == 1.0f)
         {
-            playerUnit.GadgetSecondary();
+            GadgetSecondary();
         }
     }
     
@@ -87,7 +90,7 @@ public class Player : MonoBehaviour
     {
         if (value.Get<float>() == 1.0f)
         {
-            unitInputData.meleeRequestTime = Time.unscaledTime;
+            data.input.meleeRequestTime = Time.unscaledTime;
         }
     }
 
@@ -100,7 +103,7 @@ public class Player : MonoBehaviour
     {
         if (value.Get<float>() == 1.0f)
         {
-            playerUnit.Interact();
+            Interact();
         }
     }
     

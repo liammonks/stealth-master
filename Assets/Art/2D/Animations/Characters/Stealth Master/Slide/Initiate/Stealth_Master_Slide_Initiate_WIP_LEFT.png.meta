@@ -42,6 +42,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -193,6 +194,10 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Stealth_Master_Slide_Initiate_WIP_LEFT_3: -279915806025302443
+      Stealth_Master_Slide_Initiate_WIP_LEFT_2: -5149076613244206998
+      Stealth_Master_Slide_Initiate_WIP_LEFT_1: -6952361923568349663
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -9,6 +9,7 @@ public class UnitData
     [HideInInspector] public Animator animator;
     [HideInInspector] public Rigidbody2D rb;
     [HideInInspector] public UnitState previousState;
+    [HideInInspector] public LayerMask hitMask;
 
     public InputData input = new InputData();
     public UnitStats stats;
@@ -20,6 +21,7 @@ public class UnitData
     public bool updateFacing = true;
     public float t = 0.0f;
     public float stateDuration = 0.0f;
+    public List<uint> hitIDs = new List<uint>();
 
     public void ApplyDrag(float drag)
     {
@@ -86,15 +88,15 @@ public enum UnitState
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Unit : MonoBehaviour
+public abstract class Unit : MonoBehaviour
 {
-
     public static LayerMask collisionMask;
     public static LayerMask interactionMask;
 
+    public uint ID;
+
     [Header("Components")]
     [SerializeField] private Transform spriteTransform;
-    [SerializeField] private Animator animator;
 
     [Header("State Data")]
     [SerializeField] private UnitState state;
@@ -114,21 +116,23 @@ public class Unit : MonoBehaviour
     private bool lockedRB = false;
 
     [Header("Combat")]
+    public HealthBar healthBar;
     [SerializeField] private Gadget equippedGadget;
-    [SerializeField] private float health;
-    [SerializeField] private HealthBar healthBar;
+    private float health;
     private const float impactDamageThreshold = 10.0f;
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
+        ID = UnitHelper.GetUnitID();
+        
         // Init layer masks
         collisionMask = LayerMask.GetMask("UnitCollider");
         interactionMask = LayerMask.GetMask("Interactable");
-
+        
         // Init data
         data.rb = GetComponent<Rigidbody2D>();
-        data.animator = animator;
+        data.animator = spriteTransform.GetComponent<Animator>();
 
         // Init default state
         UnitStates.Initialise(data, state);
@@ -285,14 +289,14 @@ public class Unit : MonoBehaviour
     private void UpdateAnimation()
     {
         // Animate
-        animator.SetFloat("VelocityX", data.rb.velocity.x);
+        data.animator.SetFloat("VelocityX", data.rb.velocity.x);
         if (data.updateFacing)
         {
             if (data.rb.velocity.x > 0.1f) { data.isFacingRight = true; }
             else if (data.rb.velocity.x < -0.1f) { data.isFacingRight = false; }
             else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
             else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
-            animator.SetBool("FacingRight", data.isFacingRight);
+            data.animator.SetBool("FacingRight", data.isFacingRight);
         }
     }
 
@@ -328,13 +332,13 @@ public class Unit : MonoBehaviour
 
     #region Combat
 
-    public void EquipGadget(Gadget toEquip)
+    protected void EquipGadget(Gadget toEquip)
     {
         equippedGadget = toEquip;
         equippedGadget.Equip(this);
     }
 
-    public void GadgetPrimary()
+    protected void GadgetPrimary()
     {
         if(equippedGadget != null)
         {
@@ -342,7 +346,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void GadgetSecondary()
+    protected void GadgetSecondary()
     {
         if (equippedGadget != null)
         {
@@ -377,11 +381,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void Die()
-    {
-        //Destroy(gameObject);
-        LevelManager.Instance.RespawnPlayer();
-    }
+    public abstract void Die();
 
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -412,7 +412,7 @@ public class Unit : MonoBehaviour
         interactables.Remove(interactable);
     }
 
-    public void Interact()
+    protected void Interact()
     {
         // Interact with the nearest available interactable
         float nearestInteractableDistance = Mathf.Infinity;

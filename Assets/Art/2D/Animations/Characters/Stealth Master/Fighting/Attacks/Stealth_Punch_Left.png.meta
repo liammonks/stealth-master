@@ -39,6 +39,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -220,6 +221,12 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Stealth_Punch_Left_4: -2509798428276406910
+      Stealth_Punch_Left_2: 6451087880669162268
+      Stealth_Punch_Left_1: -6981424072387504152
+      Stealth_Punch_Left_3: -3607627887604120784
+      Stealth_Punch_Left_0: 6869795580332510813
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -45,6 +45,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -280,6 +281,14 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Stealth_Master_Dive_Exit_WIP_5: 1556604253867198161
+      Stealth_Master_Dive_Exit_WIP_2: 8891888371241930204
+      Stealth_Master_Dive_Exit_WIP_4: 2644358429956758273
+      Stealth_Master_Dive_Exit_WIP_1: -1558658515536570184
+      Stealth_Master_Dive_Exit_WIP_3: 5454947918167215439
+      Stealth_Master_Dive_Exit_WIP_6: -8286360107561581541
+      Stealth_Master_Dive_Exit_WIP_0: -7769227224012987047
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -36,6 +36,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -208,6 +209,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Stealth_Master_Wall_Jump_Right_2: -8256098579651718659
+      Stealth_Master_Wall_Jump_Right_1: -4725074153022486234
+      Stealth_Master_Wall_Jump_Right_3: -8058225010278397990
+      Stealth_Master_Wall_Jump_Right_0: -6599755175829502495
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

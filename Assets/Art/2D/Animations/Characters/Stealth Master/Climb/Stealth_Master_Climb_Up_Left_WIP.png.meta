@@ -39,6 +39,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -220,6 +221,12 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Stealth_Master_Climb_Up_Left_WIP_2: 872973417532703933
+      Stealth_Master_Climb_Up_Left_WIP_3: 1765174158771359601
+      Stealth_Master_Climb_Up_Left_WIP_4: 8958160221543612675
+      Stealth_Master_Climb_Up_Left_WIP_1: -8116434389904987224
+      Stealth_Master_Climb_Up_Left_WIP_0: -1323156125765103781
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

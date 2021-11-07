@@ -42,6 +42,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -256,6 +257,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Stealth_Master_Crawl_Right_5: -146905511294631711
+      Stealth_Master_Crawl_Right_1: 2742178455956551865
+      Stealth_Master_Crawl_Right_3: -5712613799027781011
+      Stealth_Master_Crawl_Right_0: -8990933527735335225
+      Stealth_Master_Crawl_Right_2: -3811374865260572844
+      Stealth_Master_Crawl_Right_4: -7359732320506222263
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

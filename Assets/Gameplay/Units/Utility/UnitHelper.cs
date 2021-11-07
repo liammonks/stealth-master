@@ -50,4 +50,9 @@ public class UnitHelper : MonoBehaviour
     {
         return playerUnit;
     }
+
+    private static uint availableUnitID = 0;
+    public static uint GetUnitID() {
+        return availableUnitID++;
+    }
 }
