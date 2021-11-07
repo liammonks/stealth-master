@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameplayUI : MonoBehaviour
+public class PlayerUI : MonoBehaviour
 {
-    public static GameplayUI Instance;
+    public static PlayerUI Instance;
 
     [SerializeField] private Image interactPopup;
     private Vector2 interactPopupOffset = new Vector2(0.5f, 0.5f);

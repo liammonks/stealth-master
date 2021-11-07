@@ -5,6 +5,8 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
 
+    public LevelUI UI;
+
     [SerializeField] private PlayerSpawn activePlayerSpawn;
 
     private void Awake() {

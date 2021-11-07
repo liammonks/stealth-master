@@ -1017,7 +1017,34 @@ public static class UnitStates
             data.rb.velocity = Vector2.zero;
         }
         data.t = Mathf.Max(0.0f, data.t - Time.deltaTime);
-        if(data.t == 0.0f) {
+        
+        if(data.t <= data.animator.GetCurrentAnimatorStateInfo(0).length * 0.5f)
+        {
+            RaycastHit2D hit = Physics2D.BoxCast(
+                data.rb.position + data.stats.meleeOffset,
+                data.stats.meleeScale,
+                data.rb.rotation,
+                Vector2.zero,
+                0,
+                Unit.collisionMask
+            );
+            ExtDebug.DrawBox(
+                data.rb.position + data.stats.meleeOffset,
+                data.stats.meleeScale * 0.5f,
+                Quaternion.Euler(0, 0, data.rb.rotation),
+                hit ? Color.green : Color.red
+            );
+            if(hit)
+            {
+                hit.rigidbody?.GetComponent<Unit>().TakeDamage(
+                    data.stats.meleeDamage,
+                    data.rb.velocity + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.meleeKnockback * data.stats.knockbackMultiplier)
+                );
+            }
+        }
+        
+        if(data.t == 0.0f)
+        {
             return UnitState.Idle;
         }
         return UnitState.Melee;

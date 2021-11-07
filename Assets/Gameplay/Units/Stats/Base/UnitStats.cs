@@ -62,6 +62,17 @@ public class UnitStats : ScriptableObject {
 
     [Header("Combat")]
     public float maxHealth = 100;
-    public float impactDamageMultiplier = 0.5f;
+    public float collisionDamageMultiplier = 0.5f;
+    public float knockbackMultiplier = 1.0f;
+    [Space(10)]
+    public float meleeDamage = 10;
+    public Vector2 meleeScale;
+    public Vector2 meleeOffset;
+    public float meleeKnockback;
+    [Space(10)]
+    public float jumpMeleeDamage = 10;
+    public Vector2 jumpMeleeScale;
+    public Vector2 jumpMeleeOffset;
+    public float jumpMeleeKnockback;
 
 }

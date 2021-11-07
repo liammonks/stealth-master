@@ -85,6 +85,7 @@ public enum UnitState
     JumpMelee
 }
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Unit : MonoBehaviour
 {
 
@@ -230,7 +231,7 @@ public class Unit : MonoBehaviour
                 // Check impact force if we just landed
                 if (!data.isGrounded)
                 {
-                    OnImpact(Mathf.Abs(data.rb.velocity.y));
+                    OnCollisionImpact(Mathf.Abs(data.rb.velocity.y));
                 }
                 data.isGrounded = springDisplacement > -0.05f;
             }
@@ -351,7 +352,20 @@ public class Unit : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("Recieved Damage: " + damage);
+        health = Mathf.Max(0, health - damage);
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealth(health, data.stats.maxHealth);
+        }
+        if (health == 0)
+        {
+            Die();
+        }
+    }
+
+    public void TakeDamage(float damage, Vector2 velocity)
+    {
+        data.rb.velocity += velocity;
         health = Mathf.Max(0, health - damage);
         if (healthBar != null)
         {
@@ -374,12 +388,12 @@ public class Unit : MonoBehaviour
         float impactForce = other.relativeVelocity.magnitude;
         if (impactForce < impactDamageThreshold) { return; }
         if (other.rigidbody != null) { impactForce *= other.rigidbody.mass; }
-        OnImpact(impactForce);
+        OnCollisionImpact(impactForce);
     }
 
-    public void OnImpact(float impactForce)
+    public void OnCollisionImpact(float impactForce)
     {
-        impactForce = impactForce * data.stats.impactDamageMultiplier;
+        impactForce = impactForce * data.stats.collisionDamageMultiplier;
         if (impactForce < impactDamageThreshold) { return; }
         TakeDamage(impactForce);
     }
