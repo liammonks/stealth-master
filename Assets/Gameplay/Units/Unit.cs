@@ -99,7 +99,7 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] private Transform spriteTransform;
 
     [Header("State Data")]
-    [SerializeField] private UnitState state;
+    [SerializeField] protected UnitState state;
     public UnitData data;
 
     [Header("Collider")]
@@ -142,7 +142,7 @@ public abstract class Unit : MonoBehaviour
         health = data.stats.maxHealth;
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (lockedRB) { return; }
         if (data.groundSpringActive)
@@ -162,8 +162,7 @@ public abstract class Unit : MonoBehaviour
         // Apply gravity
         data.rb.gravityScale = !data.isGrounded ? 1.0f : 0.0f;
 
-        UpdateMovement();
-        //UpdateCeiling();
+        UpdateState();
         UpdateAnimation();
 
         // Dont update collider if we are fully interped
@@ -173,14 +172,14 @@ public abstract class Unit : MonoBehaviour
         //Debug.DrawRay(transform.position, data.rb.velocity * Time.fixedDeltaTime, Color.grey, 3.0f);
     }
 
-    private void UpdateMovement()
+    private void UpdateState()
     {
         // Log out current state
         data.stateDuration += Time.fixedDeltaTime;
-        Log.UnitState(state, data.stateDuration);
 
         // Execute movement, recieve next state
         UnitState nextState = UnitStates.Execute(data, state);
+
         // State Updated
         if (state != nextState)
         {
@@ -257,22 +256,6 @@ public abstract class Unit : MonoBehaviour
         data.rb.velocity = velocity;
     }
 
-    private void UpdateCeiling()
-    {
-        // Ceiling check
-        if (data.isGrounded)
-        {
-            float ceilCheckHeight = Mathf.Lerp(data.stats.crawlingCeilingCheckHeight, data.stats.standingCeilingCheckHeight, colliderInterpValue);
-            Vector2 springSize = Vector2.Lerp(data.stats.crawlingSpringSize, data.stats.standingSpringSize, colliderInterpValue);
-            RaycastHit2D hit = Physics2D.BoxCast(transform.position, springSize, transform.eulerAngles.z, transform.up, ceilCheckHeight - (springSize.y * 0.5f), collisionMask);
-            if (hit)
-            {
-                Debug.DrawLine(transform.position, hit.point, Color.red);
-                data.input.crawlRequestTime = Time.unscaledTime;
-            }
-        }
-    }
-
     private void UpdateCollider()
     {
         float targetInterpValue = data.isStanding ? 1.0f : 0.0f;
@@ -338,19 +321,19 @@ public abstract class Unit : MonoBehaviour
         equippedGadget.Equip(this);
     }
 
-    protected void GadgetPrimary()
+    protected void GadgetPrimary(bool active)
     {
         if(equippedGadget != null)
         {
-            equippedGadget.PrimaryFunction();
+            equippedGadget.PrimaryFunction(active);
         }
     }
 
-    protected void GadgetSecondary()
+    protected void GadgetSecondary(bool active)
     {
         if (equippedGadget != null)
         {
-            equippedGadget.SecondaryFunction();
+            equippedGadget.SecondaryFunction(active);
         }
     }
 

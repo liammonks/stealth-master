@@ -6,11 +6,12 @@ public abstract class Gadget : MonoBehaviour
 {
     [SerializeField] protected List<UnitState> availableStates;
     protected Unit owner;
+    protected bool primaryActive, secondaryActive;
 
     public void Equip(Unit unit) {
         owner = unit;
     }
 
-    public abstract void PrimaryFunction();
-    public abstract void SecondaryFunction();
+    public abstract void PrimaryFunction(bool active);
+    public abstract void SecondaryFunction(bool active);
 }

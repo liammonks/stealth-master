@@ -1329,7 +1329,8 @@ public static class UnitStates
         return UnitState.Null;
     }
     
-    private static bool CanCrawl(UnitData data) {
+    private static bool CanCrawl(UnitData data)
+    {
         const float sideCheckOffset = 0.1f;
         float heighOffset = -data.stats.standingHalfHeight + data.stats.crawlingHalfHeight + 0.01f;
         RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
@@ -1347,16 +1348,17 @@ public static class UnitStates
         return !hit;
     }
 
+    private static bool CanStand(UnitData data, Vector2 offset)
+    {
+        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + offset, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+        ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + offset, data.stats.standingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
+        return !hit;
+    }
+
     private static bool CanClimb(UnitData data) {
         Vector2 target = data.rb.position + (Vector2.up * (data.stats.standingHalfHeight + 0.1f - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
         RaycastHit2D hit = Physics2D.BoxCast(target, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(target, data.stats.standingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green, data.stats.climbDuration);
-        return !hit;
-    }
-    
-    private static bool CanStand(UnitData data, Vector2 offset) {
-        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + offset, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
-        ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + offset, data.stats.standingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
         return !hit;
     }
     

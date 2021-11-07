@@ -12,6 +12,12 @@ public class Player : Unit
         base.Awake();
         data.hitMask = LayerMask.GetMask("Enemy");
     }
+    
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        Log.UnitState(state, data.stateDuration);
+    }
 
     public override void Die()
     {
@@ -72,18 +78,12 @@ public class Player : Unit
 
     private void OnGadgetPrimary(InputValue value) 
     {
-        if (value.Get<float>() == 1.0f)
-        {
-            GadgetPrimary();
-        }
+        GadgetPrimary(value.Get<float>() == 1.0f);
     }
 
     private void OnGadgetSecondary(InputValue value)
     {
-        if (value.Get<float>() == 1.0f)
-        {
-            GadgetSecondary();
-        }
+        GadgetSecondary(value.Get<float>() == 1.0f);
     }
     
     private void OnMelee(InputValue value)

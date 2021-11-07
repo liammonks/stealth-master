@@ -5582,6 +5582,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availableStates: 010000000200000006000000
+  damage: 10
+  knockback: 1
+  hitScale: {x: 0.5, y: 0.5}
+  hitOffset: {x: 0.5, y: 0.4}
 --- !u!1 &1083611841
 GameObject:
   m_ObjectHideFlags: 0
