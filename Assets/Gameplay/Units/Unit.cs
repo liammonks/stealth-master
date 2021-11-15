@@ -33,17 +33,19 @@ public class UnitData
 [Serializable]
 public class InputData
 {
+    public static readonly float tolerance = 0.1f;
+
     public int movement;
     public bool running;
 
-    public bool jumpQueued { get { return Time.unscaledTime - jumpRequestTime < 0.1f; } }
+    public bool jumpQueued { get { return Time.unscaledTime - jumpRequestTime < tolerance; } }
     public float jumpRequestTime = -1.0f;
 
-    public bool crawling { get { return Time.unscaledTime - crawlRequestTime < 0.1f || _crawling; } set { _crawling = value; } }
+    public bool crawling { get { return Time.unscaledTime - crawlRequestTime < tolerance || _crawling; } set { _crawling = value; } }
     private bool _crawling = false;
     public float crawlRequestTime = -1.0f;
 
-    public bool meleeQueued { get { return Time.unscaledTime - meleeRequestTime < 0.1f; } }
+    public bool meleeQueued { get { return Time.unscaledTime - meleeRequestTime < tolerance; } }
     public float meleeRequestTime = -1.0f;
 
     public void Reset()
@@ -117,10 +119,9 @@ public abstract class Unit : MonoBehaviour
 
     [Header("Combat")]
     public HealthBar healthBar;
-    [SerializeField] private Gadget equippedGadget;
+    private Gadget equippedGadget;
     private float health;
     private const float impactDamageThreshold = 10.0f;
-
 
     protected virtual void Awake()
     {
@@ -137,10 +138,13 @@ public abstract class Unit : MonoBehaviour
         // Init default state
         UnitStates.Initialise(data, state);
 
-        // Combat
-        EquipGadget(equippedGadget);
+        // Init gadgets
+        EquipGadget(GlobalData.Gadgets[0]);
+
         health = data.stats.maxHealth;
     }
+    
+    #region Controller
 
     protected virtual void FixedUpdate()
     {
@@ -283,59 +287,9 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
-    public InputData GetInputData()
-    {
-        return data.input;
-    }
-
-    public void SetVisible(bool isVisible)
-    {
-        spriteTransform.gameObject.SetActive(isVisible);
-    }
-
-    public void LockRB(bool locked)
-    {
-        lockedRB = locked;
-        data.rb.velocity = Vector2.zero;
-        data.rb.angularVelocity = 0;
-        data.rb.constraints = locked ? RigidbodyConstraints2D.FreezeAll : RigidbodyConstraints2D.None;
-    }
-    
-    public UnitState GetState()
-    {
-        return state;
-    }
-
-    public void SetState(UnitState toSet)
-    {
-        data.stateDuration = 0.0f;
-        data.previousState = state;
-        state = UnitStates.Initialise(data, toSet);
-    }
+    #endregion
 
     #region Combat
-
-    protected void EquipGadget(Gadget toEquip)
-    {
-        equippedGadget = toEquip;
-        equippedGadget.Equip(this);
-    }
-
-    protected void GadgetPrimary(bool active)
-    {
-        if(equippedGadget != null)
-        {
-            equippedGadget.PrimaryFunction(active);
-        }
-    }
-
-    protected void GadgetSecondary(bool active)
-    {
-        if (equippedGadget != null)
-        {
-            equippedGadget.SecondaryFunction(active);
-        }
-    }
 
     public void TakeDamage(float damage)
     {
@@ -383,6 +337,75 @@ public abstract class Unit : MonoBehaviour
 
     #endregion
 
+    #region Gadgets
+
+    private Coroutine enableGadgetPrimary, enableGadgetSecondary;
+
+    protected void EquipGadget(Gadget toEquip)
+    {
+        if (equippedGadget != null) { Destroy(equippedGadget); }
+        equippedGadget = Instantiate(toEquip, transform);
+        equippedGadget.Equip(this);
+    }
+
+    protected void GadgetPrimary(bool active)
+    {
+        if (active)
+        {
+            enableGadgetPrimary = StartCoroutine(EnableGadgetPrimary());
+        }
+        else
+        {
+            if (enableGadgetPrimary != null)
+            {
+                StopCoroutine(enableGadgetPrimary);
+            }
+            equippedGadget.DisablePrimary();
+        }
+    }
+
+    private IEnumerator EnableGadgetPrimary()
+    {
+        float t = InputData.tolerance;
+        while (t > 0.0f)
+        {
+            if (equippedGadget == null) { break; }
+            equippedGadget.EnablePrimary();
+            t -= Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    protected void GadgetSecondary(bool active)
+    {
+        if (active)
+        {
+            enableGadgetSecondary = StartCoroutine(EnableGadgetSecondary());
+        }
+        else
+        {
+            if (enableGadgetSecondary != null)
+            {
+                StopCoroutine(enableGadgetSecondary);
+            }
+            equippedGadget.DisableSecondary();
+        }
+    }
+
+    private IEnumerator EnableGadgetSecondary()
+    {
+        float t = InputData.tolerance;
+        while (t > 0.0f)
+        {
+            if (equippedGadget == null) { break; }
+            equippedGadget.EnableSecondary();
+            t -= Time.deltaTime;
+            yield return null;
+        }
+    }
+    
+    #endregion
+
     #region Interaction
 
     public void AddInteractable(Interactable interactable)
@@ -415,5 +438,39 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Helpers
+
+    public InputData GetInputData()
+    {
+        return data.input;
+    }
+
+    public void SetVisible(bool isVisible)
+    {
+        spriteTransform.gameObject.SetActive(isVisible);
+    }
+
+    public void LockRB(bool locked)
+    {
+        lockedRB = locked;
+        data.rb.velocity = Vector2.zero;
+        data.rb.angularVelocity = 0;
+        data.rb.constraints = locked ? RigidbodyConstraints2D.FreezeAll : RigidbodyConstraints2D.None;
+    }
+
+    public UnitState GetState()
+    {
+        return state;
+    }
+
+    public void SetState(UnitState toSet)
+    {
+        data.stateDuration = 0.0f;
+        data.previousState = state;
+        state = UnitStates.Initialise(data, toSet);
+    }
+    
     #endregion
 }

@@ -3556,6 +3556,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8149771102376434567, guid: 5ec7bc8206472f84ab16547bbe6e1810, type: 3}
+      propertyPath: scenes.Array.data[3].m_ScenePath
+      value: Assets/Debugger/Debugger.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: -8149771102376434567, guid: 5ec7bc8206472f84ab16547bbe6e1810, type: 3}
+      propertyPath: scenes.Array.data[3].m_SceneAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: e8099ff2f872cb94b83e7fccd9a8745d, type: 3}
+    - target: {fileID: 3627044486325234057, guid: 5ec7bc8206472f84ab16547bbe6e1810, type: 3}
+      propertyPath: activePlayerSpawn
+      value: 
+      objectReference: {fileID: 1861177810}
     - target: {fileID: 5239299706398915842, guid: 5ec7bc8206472f84ab16547bbe6e1810, type: 3}
       propertyPath: activePlayerSpawn
       value: 

@@ -9,46 +9,25 @@ public class Unarmed : Gadget
     [SerializeField] private Vector2 hitScale = new Vector2(0.5f, 0.5f);
     [SerializeField] private Vector2 hitOffset = new Vector2(0.5f, 0.4f);
 
-    public override void PrimaryFunction(bool active)
+    protected override void OnPrimaryEnabled()
     {
-        if (!active || primaryActive) { return; }
-        if (!availableStates.Contains(owner.GetState())) { return; }
-        // Current state must not be in transition
-        if (owner.data.t != 0.0f) { return; }
-        primaryActive = true;
         StartCoroutine(Punch());
     }
 
-    public override void SecondaryFunction(bool active)
+    protected override void OnPrimaryDisabled()
     {
-        if (active)
-        {
-            // Block
-            if (!availableStates.Contains(owner.GetState())) { return; }
-            // Current state must not be in transition
-            if (owner.data.t != 0.0f) { return; }
-            
-            owner.SetState(UnitState.Null);
-            owner.data.animator.Play("Block");
-            owner.data.rb.velocity = Vector2.zero;
-            secondaryActive = true;
-        }
-        else if(secondaryActive)
-        {
-            // Release Block
-            owner.SetState(UnitState.Idle);
-            secondaryActive = false;
-        }
+
     }
-    
-    private IEnumerator Punch() {
+
+    private IEnumerator Punch()
+    {
         owner.SetState(UnitState.Null);
         owner.data.animator.Play("Punch");
         owner.data.animator.Update(0);
         owner.data.animator.Update(0);
         float duration = owner.data.animator.GetCurrentAnimatorStateInfo(0).length;
         owner.data.rb.velocity = Vector2.zero;
-        
+
         yield return new WaitForSeconds(duration * 0.5f);
         RaycastHit2D[] hits = Physics2D.BoxCastAll(
                 owner.data.rb.position + (Vector2.up * hitOffset.y) + ((owner.data.isFacingRight ? Vector2.right : Vector2.left) * hitOffset.x),
@@ -76,11 +55,21 @@ public class Unarmed : Gadget
                 );
             }
         }
-        
+
         yield return new WaitForSeconds(duration * 0.5f);
         owner.SetState(UnitState.Idle);
-        primaryActive = false;
     }
 
-    
+    protected override void OnSecondaryEnabled()
+    {
+        owner.SetState(UnitState.Null);
+        owner.data.animator.Play("Block");
+        owner.data.rb.velocity = Vector2.zero;
+    }
+
+    protected override void OnSecondaryDisabled()
+    {
+        owner.SetState(UnitState.Idle);
+    }
+
 }

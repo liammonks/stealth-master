@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3627044486325234056}
   - component: {fileID: 3627044486325234057}
-  - component: {fileID: 3627044486325234059}
+  - component: {fileID: -8149771102376434567}
+  - component: {fileID: 7775018115626590177}
   m_Layer: 0
   m_Name: Level Manager
   m_TagString: Untagged
@@ -48,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 8854185636685449825}
   activePlayerSpawn: {fileID: 0}
---- !u!114 &3627044486325234059
+--- !u!114 &-8149771102376434567
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,7 +58,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 3627044486325234062}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a851009a9c94d614db7192b027d8a4fb, type: 3}
+  m_Script: {fileID: 11500000, guid: 7db9420fed5a3454fa71ec9c0a83365b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scenes:
+  - m_SceneAsset: {fileID: 102900000, guid: 1056f11ef8793de478f3ead267d43789, type: 3}
+    m_IsDirty: 0
+    m_ScenePath: Assets/Gameplay/Scenes/Player.unity
+  - m_SceneAsset: {fileID: 102900000, guid: e8099ff2f872cb94b83e7fccd9a8745d, type: 3}
+    m_IsDirty: 0
+    m_ScenePath: Assets/Debugger/Debugger.unity
+  - m_SceneAsset: {fileID: 102900000, guid: 770e182bdff9fb34a80d4c284d43f843, type: 3}
+    m_IsDirty: 0
+    m_ScenePath: Assets/Gameplay/Scenes/Global Data/Global.unity
+--- !u!114 &7775018115626590177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3627044486325234062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ca944b8190ee1f41a08f24fe5db7b4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8854185636685449827
