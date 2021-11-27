@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &102563979
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 102563980}
+  m_Layer: 9
+  m_Name: CameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &102563980
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102563979}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 288241322}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &277009325
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +179,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 277009325}
   m_LocalRotation: {x: 0.024937715, y: 0.024968827, z: -0.0006230537, w: 0.99937695}
-  m_LocalPosition: {x: -1.301121, y: 1.5563838, z: -19.241098}
+  m_LocalPosition: {x: 0, y: 2.9, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -176,8 +207,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 1950628591}
-  m_Follow: {fileID: 1950628591}
+  m_LookAt: {fileID: 102563980}
+  m_Follow: {fileID: 102563980}
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 5
@@ -196,6 +227,38 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 801115986}
+--- !u!1 &288241321
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 288241322}
+  m_Layer: 9
+  m_Name: Arm Pivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &288241322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288241321}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 102563980}
+  m_Father: {fileID: 1518594398}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &352991811 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6524446484773778605, guid: 0434ffe8dc017a348b4897394e6042ca, type: 3}
@@ -5112,7 +5175,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundParticlePrefab: {fileID: 7559014573707121322, guid: 135ef959a12e0d940b671dc5a88958d9, type: 3}
-  playerUnit: {fileID: 1518594400}
 --- !u!4 &583339124
 Transform:
   m_ObjectHideFlags: 0
@@ -5595,7 +5657,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1384138013}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.301121, y: 1.2036161, z: -0.85890245}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5636,6 +5698,7 @@ Transform:
   m_Children:
   - {fileID: 1950628591}
   - {fileID: 2064016324}
+  - {fileID: 288241322}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5707,6 +5770,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   spriteTransform: {fileID: 1950628591}
+  armPivot: {fileID: 288241322}
   state: 1
   data:
     animator: {fileID: 0}
@@ -5752,6 +5816,8 @@ MonoBehaviour:
   - {x: 0.75, y: 0.1}
   interactables: []
   healthBar: {fileID: 352991812}
+  overrideGadget: {fileID: 4553645213085457798, guid: 1e6494be9541f334cacaceec58edf76c, type: 3}
+  cameraTarget: {fileID: 102563980}
 --- !u!50 &1518594402
 Rigidbody2D:
   serializedVersion: 4

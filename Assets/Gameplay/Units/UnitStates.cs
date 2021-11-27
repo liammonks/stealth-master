@@ -60,6 +60,9 @@ public static class UnitStates
     private static UnitState NullState(UnitData data, bool initialise)
     {
         data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
+        Vector2 velocity = data.rb.velocity;
+        velocity.x -= data.rb.velocity.x * data.stats.groundAcceleration;
+        data.rb.velocity = velocity;
         return UnitState.Null;
     }
 
@@ -148,6 +151,7 @@ public static class UnitStates
                     return UnitState.CrawlIdle;
             }
         }
+        UpdateFacing(data);
         return UnitState.Idle;
     }
     
@@ -263,7 +267,7 @@ public static class UnitStates
                     return UnitState.Crawl;
             }
         }
-
+        UpdateFacing(data);
         return UnitState.Run;
     }
 
@@ -324,7 +328,7 @@ public static class UnitStates
         if(!data.isGrounded) {
             return UnitState.Dive;
         }
-        
+        UpdateFacing(data);
         return UnitState.CrawlIdle;
     }
 
@@ -394,7 +398,7 @@ public static class UnitStates
                     return UnitState.Idle;
             }
         }
-        
+        UpdateFacing(data);
         return UnitState.Crawl;
     }
     
@@ -466,7 +470,7 @@ public static class UnitStates
                 return ledgeDrop;
             }
         }
-        
+        UpdateFacing(data);
         return UnitState.Slide;
     }
     
@@ -574,6 +578,7 @@ public static class UnitStates
                 data.ApplyDrag(data.stats.airDrag);
             }
         }
+        UpdateFacing(data);
         return UnitState.Dive;
     }
 
@@ -650,6 +655,7 @@ public static class UnitStates
 
         data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
         data.rb.velocity = velocity;
+        UpdateFacing(data);
         return UnitState.Jump;
     }
 
@@ -726,7 +732,7 @@ public static class UnitStates
         {
             return UnitState.Dive;
         }
-
+        UpdateFacing(data);
         return UnitState.Fall;
     }
     
@@ -807,7 +813,6 @@ public static class UnitStates
             data.animator.Play(feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
             data.t = 0.2f;
             data.groundSpringActive = false;
-            data.updateFacing = false;
             data.isStanding = true;
         }
 
@@ -828,7 +833,6 @@ public static class UnitStates
             // Wall Jump
             if (data.input.jumpQueued)
             {
-                data.updateFacing = true;
                 return UnitState.Jump;
             }
             // Climb Right
@@ -836,7 +840,6 @@ public static class UnitStates
             {
                 if (CanClimb(data))
                 {
-                    data.updateFacing = true;
                     return UnitState.Climb;
                 }
             }
@@ -845,26 +848,22 @@ public static class UnitStates
             {
                 if (CanClimb(data))
                 {
-                    data.updateFacing = true;
                     return UnitState.Climb;
                 }
             }
             // Jump Right
             if (!data.isFacingRight && data.input.movement > 0 && CanStand(data, new Vector2(data.stats.standingHalfWidth, 0)))
             {
-                data.updateFacing = true;
                 return UnitState.WallJump;
             }
             // Jump Left
             if (data.isFacingRight && data.input.movement < 0 && CanStand(data, new Vector2(-data.stats.standingHalfWidth, 0)))
             {
-                data.updateFacing = true;
                 return UnitState.WallJump;
             }
             // Drop
             if (data.input.crawling)
             {
-                data.updateFacing = true;
                 return UnitState.WallSlide;
             }
         }
@@ -876,6 +875,7 @@ public static class UnitStates
     {        
         if(initialise)
         {
+            // Flip facing
             data.isFacingRight = !data.isFacingRight;
             data.animator.SetBool("FacingRight", data.isFacingRight);
             data.animator.Play("WallJump");
@@ -915,7 +915,7 @@ public static class UnitStates
         {
             return UnitState.WallSlide;
         }
-        
+        UpdateFacing(data);
         return UnitState.WallJump;
     }
     
@@ -954,13 +954,11 @@ public static class UnitStates
     {
         if (initialise) {
             data.animator.Play("WallSlide");
-            data.updateFacing = false;
         }
 
         // Check we are still on a wall
         if (!FacingWall(data))
         {
-            data.updateFacing = true;
             return UnitState.Fall;
         }
         
@@ -973,26 +971,22 @@ public static class UnitStates
         {
             if (data.input.jumpQueued && CanStand(data, new Vector2(data.isFacingRight ? -data.stats.standingHalfWidth : data.stats.standingHalfHeight, 0)))
             {
-                data.updateFacing = true;
                 return UnitState.WallJump;
             }
             // Jump Away Right
             if (!data.isFacingRight && data.input.movement > 0 && CanStand(data, new Vector2(data.stats.standingHalfWidth, 0)))
             {
-                data.updateFacing = true;
                 return UnitState.WallJump;
             }
             // Jump Away Left
             if (data.isFacingRight && data.input.movement < 0 && CanStand(data, new Vector2(-data.stats.standingHalfWidth, 0)))
             {
-                data.updateFacing = true;
                 return UnitState.WallJump;
             }
         }
 
         if (data.isGrounded)
         {
-            data.updateFacing = true;
             return UnitState.Idle;
         }
 
@@ -1104,8 +1098,19 @@ public static class UnitStates
         }
         return UnitState.JumpMelee;
     }
-    
+
     #region Helpers
+
+    private static void UpdateFacing(UnitData data)
+    {
+        data.animator.SetFloat("VelocityX", data.rb.velocity.x);
+
+        if (data.rb.velocity.x > 0.1f) { data.isFacingRight = true; }
+        else if (data.rb.velocity.x < -0.1f) { data.isFacingRight = false; }
+        else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
+        else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
+        data.animator.SetBool("FacingRight", data.isFacingRight);
+    }
     
     private static UnitState TryVault(UnitData data)
     {

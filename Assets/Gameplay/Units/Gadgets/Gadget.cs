@@ -8,7 +8,12 @@ public abstract class Gadget : MonoBehaviour
     
     protected Unit owner;
     protected bool primaryActive, secondaryActive;
-    
+
+    protected bool CanPrimary { get { return (!primaryActive && canPrimaryOverride) || (!primaryActive && primaryAvailableStates.Contains(owner.GetState()) && owner.data.t == 0.0f); } }
+    protected bool canPrimaryOverride = false;
+    protected bool CanSecondary { get { return (!secondaryActive && canSecondaryOverride) || (!secondaryActive && secondaryAvailableStates.Contains(owner.GetState()) && owner.data.t == 0.0f); } }
+    protected bool canSecondaryOverride = false;
+
     public void Equip(Unit unit)
     {
         owner = unit;
@@ -16,12 +21,11 @@ public abstract class Gadget : MonoBehaviour
     
     public void EnablePrimary()
     {
-        if (primaryActive) { return; }
-        if (!primaryAvailableStates.Contains(owner.GetState())) { return; }
-        // Current state must not be in transition
-        if (owner.data.t != 0.0f) { return; }
-        OnPrimaryEnabled();
-        primaryActive = true;
+        if (CanPrimary)
+        {
+            OnPrimaryEnabled();
+            primaryActive = true;
+        }
     }
 
     public void DisablePrimary()
@@ -33,12 +37,11 @@ public abstract class Gadget : MonoBehaviour
 
     public void EnableSecondary()
     {
-        if (secondaryActive) { return; }
-        if (!secondaryAvailableStates.Contains(owner.GetState())) { return; }
-        // Current state must not be in transition
-        if (owner.data.t != 0.0f) { return; }
-        OnSecondaryEnabled();
-        secondaryActive = true;
+        if (CanSecondary)
+        {
+            OnSecondaryEnabled();
+            secondaryActive = true;
+        }
     }
 
     public void DisableSecondary()

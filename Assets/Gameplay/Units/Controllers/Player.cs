@@ -5,12 +5,19 @@ using UnityEngine.InputSystem;
 
 public class Player : Unit
 {
+    public static Vector3 MousePosition;
+
+    [Header("Player")]
+    [SerializeField] private Gadget overrideGadget;
+    [SerializeField] private Transform cameraTarget;
+    
     private Coroutine enableCrawlCoroutine;
 
-    protected override void Awake()
+    protected override void Start()
     {
-        base.Awake();
+        base.Start();
         data.hitMask = LayerMask.GetMask("Enemy");
+        if (overrideGadget != null) { EquipGadget(overrideGadget); }
     }
     
     protected override void FixedUpdate()
@@ -96,7 +103,8 @@ public class Player : Unit
 
     private void OnMouseMove(InputValue value)
     {
-
+        MousePosition = value.Get<Vector2>();
+        MousePosition.z = 20.0f;
     }
 
     private void OnInteract(InputValue value)
@@ -105,6 +113,11 @@ public class Player : Unit
         {
             Interact();
         }
+    }
+    
+    public void SetCameraOffset(Vector2 offset)
+    {
+        cameraTarget.localPosition = offset;
     }
     
 }

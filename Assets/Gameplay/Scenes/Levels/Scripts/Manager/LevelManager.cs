@@ -26,7 +26,7 @@ public class LevelManager : MonoBehaviour
     {
         if (activePlayerSpawn != null)
         {
-            UnitHelper.Instance.GetPlayerUnit().transform.position = activePlayerSpawn.transform.position;
+            UnitHelper.Player.transform.position = activePlayerSpawn.transform.position;
         }
     }
 }

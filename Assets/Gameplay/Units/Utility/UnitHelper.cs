@@ -5,9 +5,9 @@ using UnityEngine;
 public class UnitHelper : MonoBehaviour
 {
     public static UnitHelper Instance;
+    public static Player Player;
 
     [SerializeField] private ParticleSystem groundParticlePrefab;
-    [SerializeField] private Unit playerUnit;
 
     private Queue<ParticleSystem> groundParticles;
 
@@ -26,6 +26,7 @@ public class UnitHelper : MonoBehaviour
         {
             groundParticles.Enqueue(Instantiate(groundParticlePrefab, transform));
         }
+        Player = FindObjectOfType<Player>();
     }
     
     public void EmitGroundParticles(Vector3 position, Vector3 direction) 
@@ -44,11 +45,6 @@ public class UnitHelper : MonoBehaviour
         yield return new WaitForSeconds(groundParticlePrefab.main.duration + groundParticlePrefab.main.startLifetime.constant);
         ps.gameObject.SetActive(false);
         psQueue.Enqueue(ps);
-    }
-    
-    public Unit GetPlayerUnit()
-    {
-        return playerUnit;
     }
 
     private static uint availableUnitID = 0;

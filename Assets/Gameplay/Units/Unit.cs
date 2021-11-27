@@ -18,7 +18,6 @@ public class UnitData
     public bool isStanding = true;
     public bool isFacingRight = true;
     public bool groundSpringActive = true;
-    public bool updateFacing = true;
     public float t = 0.0f;
     public float stateDuration = 0.0f;
     public List<uint> hitIDs = new List<uint>();
@@ -99,6 +98,7 @@ public abstract class Unit : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] private Transform spriteTransform;
+    [SerializeField] private Transform armPivot;
 
     [Header("State Data")]
     [SerializeField] protected UnitState state;
@@ -123,7 +123,7 @@ public abstract class Unit : MonoBehaviour
     private float health;
     private const float impactDamageThreshold = 10.0f;
 
-    protected virtual void Awake()
+    protected virtual void Start()
     {
         ID = UnitHelper.GetUnitID();
         
@@ -167,7 +167,6 @@ public abstract class Unit : MonoBehaviour
         data.rb.gravityScale = !data.isGrounded ? 1.0f : 0.0f;
 
         UpdateState();
-        UpdateAnimation();
 
         // Dont update collider if we are fully interped
         if (colliderInterpValue != (data.isStanding ? 1.0f : 0.0f))
@@ -273,20 +272,6 @@ public abstract class Unit : MonoBehaviour
         activeCollider.points = points;
     }
 
-    private void UpdateAnimation()
-    {
-        // Animate
-        data.animator.SetFloat("VelocityX", data.rb.velocity.x);
-        if (data.updateFacing)
-        {
-            if (data.rb.velocity.x > 0.1f) { data.isFacingRight = true; }
-            else if (data.rb.velocity.x < -0.1f) { data.isFacingRight = false; }
-            else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
-            else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
-            data.animator.SetBool("FacingRight", data.isFacingRight);
-        }
-    }
-
     #endregion
 
     #region Combat
@@ -344,7 +329,7 @@ public abstract class Unit : MonoBehaviour
     protected void EquipGadget(Gadget toEquip)
     {
         if (equippedGadget != null) { Destroy(equippedGadget); }
-        equippedGadget = Instantiate(toEquip, transform);
+        equippedGadget = Instantiate(toEquip, armPivot);
         equippedGadget.Equip(this);
     }
 

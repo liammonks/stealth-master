@@ -9,7 +9,7 @@ public class TabletGadgets : MonoBehaviour
     [SerializeField] private Transform gadgetsParent;
     [SerializeField] private Button gadgetButton;
 
-    private void Awake() {
+    private void Start() {
         foreach(Gadget gadget in GlobalData.Gadgets)
         {
             Button button = Instantiate(gadgetButton, gadgetsParent);
