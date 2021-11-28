@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 51b74d7bad397457d883c5940f7664d8, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.00902176, g: 0.013141945, b: 0.020598974, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -167,8 +167,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 755420f8494a2594bb3581c99d5ae2fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultGadget: {fileID: 1966840045767890537, guid: 3f520e6da23901d498075bdb006412b0, type: 3}
   gadgets:
-  - {fileID: 1966840045767890537, guid: 3f520e6da23901d498075bdb006412b0, type: 3}
+  - {fileID: 4553645213085457798, guid: 1e6494be9541f334cacaceec58edf76c, type: 3}
+  - {fileID: 2897104739337924167, guid: ba125dad057f2fd459e74bdc4417b60c, type: 3}
+  - {fileID: -8674523412710931160, guid: 7d860fc968af1bf4db07bc716a6538a8, type: 3}
+  - {fileID: -4835889183553070445, guid: 03585ae2529a63f43aedf8117583c5d6, type: 3}
   missions:
   - {fileID: 11400000, guid: e13984a85e96cec45b758a4e78b56aa3, type: 2}
   - {fileID: 11400000, guid: 1b53af639e5936a4fb10120636df29a4, type: 2}

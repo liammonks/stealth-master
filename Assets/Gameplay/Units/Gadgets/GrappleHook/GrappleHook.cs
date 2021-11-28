@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Gadgets
 {
-    public class Bat : BaseGadget
+    public class GrappleHook : BaseGadget
     {
         protected override void OnPrimaryDisabled()
         {
@@ -25,6 +25,5 @@ namespace Gadgets
         {
 
         }
-
     }
 }

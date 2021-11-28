@@ -11,7 +11,8 @@
                     "id": "8359df2c-dd2f-446d-8784-29f73e5176c9",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Run",
@@ -19,7 +20,8 @@
                     "id": "8baa2e5d-4a75-4aaa-ae62-231fa00e2d9c",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Jump",
@@ -27,7 +29,8 @@
                     "id": "5b1ce4ff-ab1d-4113-8c9e-a3bb90bf681d",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Crawl",
@@ -35,7 +38,8 @@
                     "id": "00dd2f57-d11a-41ba-a982-a2f30a779b10",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "MouseMove",
@@ -43,7 +47,8 @@
                     "id": "cdcf1961-176b-4fa3-933b-6236b90b5edd",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Interact",
@@ -51,7 +56,8 @@
                     "id": "432e5a40-7be4-4e66-828e-6523b4a98800",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "GadgetPrimary",
@@ -59,7 +65,8 @@
                     "id": "f33cb182-6eef-434c-84c7-c1998a5a882b",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "GadgetSecondary",
@@ -67,7 +74,8 @@
                     "id": "7ac9030a-402f-46c7-9bb4-65023ddb8568",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Melee",
@@ -75,7 +83,35 @@
                     "id": "a2b3b0b8-c97e-4b5f-868a-2c11deac365c",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "88e10f03-c4e7-400e-b806-b456b6596cfd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NextGadget",
+                    "type": "Value",
+                    "id": "2913bdc7-0cb6-43b8-bcd1-e4650d1e1c68",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PreviousGadget",
+                    "type": "Value",
+                    "id": "ed657f02-4685-4011-97af-ada735b279f6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -221,6 +257,39 @@
                     "action": "Melee",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b0ad35a0-a015-4f86-9334-0c00b9202f73",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8854c9b0-3233-4745-bf2b-fd375f02b0cf",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "Clamp(max=1)",
+                    "groups": "",
+                    "action": "NextGadget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e55f723e-4b14-433a-9e04-f9c6097636f6",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "Clamp(min=-1)",
+                    "groups": "",
+                    "action": "PreviousGadget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -234,7 +303,8 @@
                     "id": "2ade193e-429d-4e18-9840-dd714824065e",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "MouseDown",
@@ -242,7 +312,8 @@
                     "id": "3d7d2a13-e4be-47d2-9eb2-99b5eb29a85f",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

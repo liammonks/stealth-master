@@ -8,16 +8,15 @@ public class Player : Unit
     public static Vector3 MousePosition;
 
     [Header("Player")]
-    [SerializeField] private Gadget overrideGadget;
     [SerializeField] private Transform cameraTarget;
-    
+    [SerializeField]
+    private int equippedGadgetIndex = -1;
     private Coroutine enableCrawlCoroutine;
 
     protected override void Start()
     {
         base.Start();
         data.hitMask = LayerMask.GetMask("Enemy");
-        if (overrideGadget != null) { EquipGadget(overrideGadget); }
     }
     
     protected override void FixedUpdate()
@@ -120,4 +119,51 @@ public class Player : Unit
         cameraTarget.localPosition = offset;
     }
     
+    public void OnNextGadget(InputValue value)
+    {
+        if(value.Get<float>() > 0)
+        {
+            int originalGadgetIndex = equippedGadgetIndex;
+            bool newGadgetEquipped = false;
+            equippedGadgetIndex++;
+            
+            if (equippedGadgetIndex == GlobalData.playerGadgets.Count)
+            { 
+                equippedGadgetIndex = -1;
+                newGadgetEquipped = EquipGadget(GlobalData.DefaultGadget);
+            }
+            else
+            {
+                newGadgetEquipped = EquipGadget(GlobalData.playerGadgets[equippedGadgetIndex]);
+            }
+
+            if (!newGadgetEquipped) equippedGadgetIndex = originalGadgetIndex;
+        }
+    }
+
+    public void OnPreviousGadget(InputValue value)
+    {
+        if (value.Get<float>() < 0)
+        {
+            int originalGadgetIndex = equippedGadgetIndex;
+            bool newGadgetEquipped = false;
+            equippedGadgetIndex--;
+            
+            switch (equippedGadgetIndex)
+            {
+                case -2:
+                    equippedGadgetIndex = GlobalData.playerGadgets.Count - 1;
+                    newGadgetEquipped = EquipGadget(GlobalData.playerGadgets[equippedGadgetIndex]);
+                    break;
+                case -1:
+                    newGadgetEquipped = EquipGadget(GlobalData.DefaultGadget);
+                    break;
+                default:
+                    newGadgetEquipped = EquipGadget(GlobalData.playerGadgets[equippedGadgetIndex]);
+                    break;
+            }
+            
+            if (!newGadgetEquipped) equippedGadgetIndex = originalGadgetIndex;
+        }
+    }
 }

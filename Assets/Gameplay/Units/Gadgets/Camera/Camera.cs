@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Gadgets
 {
-    public class Bat : BaseGadget
+    public class Camera : BaseGadget
     {
         protected override void OnPrimaryDisabled()
         {
@@ -25,6 +22,5 @@ namespace Gadgets
         {
 
         }
-
     }
 }

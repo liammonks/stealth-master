@@ -119,7 +119,7 @@ public abstract class Unit : MonoBehaviour
 
     [Header("Combat")]
     public HealthBar healthBar;
-    private Gadget equippedGadget;
+    private Gadgets.BaseGadget equippedGadget;
     private float health;
     private const float impactDamageThreshold = 10.0f;
 
@@ -139,7 +139,7 @@ public abstract class Unit : MonoBehaviour
         UnitStates.Initialise(data, state);
 
         // Init gadgets
-        EquipGadget(GlobalData.Gadgets[0]);
+        EquipGadget(GlobalData.DefaultGadget);
 
         health = data.stats.maxHealth;
     }
@@ -326,11 +326,19 @@ public abstract class Unit : MonoBehaviour
 
     private Coroutine enableGadgetPrimary, enableGadgetSecondary;
 
-    protected void EquipGadget(Gadget toEquip)
+    protected bool EquipGadget(Gadgets.BaseGadget toEquip)
     {
-        if (equippedGadget != null) { Destroy(equippedGadget); }
+        if (equippedGadget != null)
+        {
+            if (equippedGadget.PrimaryActive || equippedGadget.SecondaryActive || state == UnitState.Null)
+            {
+                return false;
+            }
+            Destroy(equippedGadget.gameObject);
+        }
         equippedGadget = Instantiate(toEquip, armPivot);
         equippedGadget.Equip(this);
+        return true;
     }
 
     protected void GadgetPrimary(bool active)
