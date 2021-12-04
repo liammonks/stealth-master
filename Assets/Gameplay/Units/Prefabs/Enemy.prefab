@@ -44,7 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e700d996df3b14b83c31c74b1c6be3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableStates: 010000000200000006000000
+  primaryAvailableStates: 
+  secondaryAvailableStates: 
+  damage: 10
+  knockback: 1
+  hitScale: {x: 0.5, y: 0.5}
+  hitOffset: {x: 0.5, y: 0.4}
 --- !u!1 &4187026451363292258
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,7 +124,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25dd597020861604bb1362757629b02c, type: 2}
+  - {fileID: 2100000, guid: b2cbfe5d7eeacb54b80652a3a4cc5190, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -313,6 +318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   spriteTransform: {fileID: 1365848420957705654}
+  armPivot: {fileID: 0}
   state: 1
   data:
     animator: {fileID: 0}
@@ -333,7 +339,6 @@ MonoBehaviour:
     isStanding: 1
     isFacingRight: 1
     groundSpringActive: 1
-    updateFacing: 1
     t: 0
     stateDuration: 0
     hitIDs: 
@@ -358,7 +363,6 @@ MonoBehaviour:
   - {x: 0.75, y: 0.1}
   interactables: []
   healthBar: {fileID: 0}
-  equippedGadget: {fileID: 2932770053392989178}
 --- !u!50 &692787668539105511
 Rigidbody2D:
   serializedVersion: 4

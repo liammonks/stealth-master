@@ -5,7 +5,8 @@ using UnityEngine.Pool;
 
 public class LevelUI : MonoBehaviour
 {
-    public IObjectPool<HealthBar> healthBarPool;
+    public IObjectPool<HealthBar> HealthBarPool => m_HealthBarPool;
+    private IObjectPool<HealthBar> m_HealthBarPool;
 
     [SerializeField] private HealthBar healthBarPrefab;
 
@@ -13,7 +14,7 @@ public class LevelUI : MonoBehaviour
     private const int healthbarCount = 5;
     
     public void Awake() {
-        healthBarPool = new ObjectPool<HealthBar>(CreateHealthBar, GetHealthBar, ReleaseHealthBar, DestroyHealthBar, collectionChecks, healthbarCount);
+        m_HealthBarPool = new ObjectPool<HealthBar>(CreateHealthBar, GetHealthBar, ReleaseHealthBar, DestroyHealthBar, collectionChecks, healthbarCount);
     }
 
 

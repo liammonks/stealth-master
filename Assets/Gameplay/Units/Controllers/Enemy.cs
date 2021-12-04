@@ -10,7 +10,7 @@ public class Enemy : Unit
         base.Start();
         // Init layer masks
         data.hitMask = LayerMask.GetMask("Player");
-        healthBar = LevelManager.Instance.UI.healthBarPool.Get();
+        healthBar = LevelManager.Instance.UI.HealthBarPool.Get();
     }
 
     private void Update() {
@@ -20,7 +20,7 @@ public class Enemy : Unit
 
     public override void Die()
     {
-        LevelManager.Instance.UI.healthBarPool.Release(healthBar);
+        LevelManager.Instance.UI.HealthBarPool.Release(healthBar);
         Destroy(gameObject);
     }
 }

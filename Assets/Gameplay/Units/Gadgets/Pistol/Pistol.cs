@@ -6,6 +6,8 @@ namespace Gadgets
 {
     public class Pistol : BaseGadget
     {
+        [SerializeField] private BulletStats stats;
+        
         private const float cameraOffsetDistance = 2.0f;
 
         private bool aiming = false;
@@ -17,7 +19,8 @@ namespace Gadgets
 
         protected override void OnPrimaryEnabled()
         {
-            Debug.DrawLine(transform.position, UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition), Color.red, 1.0f);
+            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - transform.position;
+            BulletPool.Fire(transform.position, direction, owner.data.rb.velocity, stats, owner is Player);
         }
 
         protected override void OnSecondaryDisabled()

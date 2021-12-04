@@ -6273,8 +6273,8 @@ MonoBehaviour:
   - {x: 0.75, y: 0.1}
   interactables: []
   healthBar: {fileID: 352991812}
-  overrideGadget: {fileID: 0}
   cameraTarget: {fileID: 102563980}
+  equippedGadgetIndex: -1
 --- !u!50 &1518594402
 Rigidbody2D:
   serializedVersion: 4
