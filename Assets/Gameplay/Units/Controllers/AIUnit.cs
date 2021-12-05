@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TheKiwiCoder;
 
-public class Enemy : Unit
+[RequireComponent(typeof(BehaviourTreeRunner))]
+public class AIUnit : Unit
 {
+    public AIStats aiStats;
+    
     private Vector2 healthBarOffset = new Vector2(0, 1);
 
     protected override void Start() {

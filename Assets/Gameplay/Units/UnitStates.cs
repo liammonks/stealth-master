@@ -302,7 +302,7 @@ public static class UnitStates
         }
 
         // Return to Idle
-        if (data.t != 0.0f || (!data.input.crawling && data.isGrounded && CanStand(data, new Vector2(0, -data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f))))
+        if (data.t != 0.0f || (!data.input.crawling && data.isGrounded && CanStand(data, data.rb.transform.up * (-data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f))))
         {
             // Set unit timer to exit animation duration
             if (data.t == 0)
@@ -375,7 +375,7 @@ public static class UnitStates
         }
 
         // Return to Idle
-        if (data.t != 0.0f || (!data.input.crawling && data.isGrounded && CanStand(data, new Vector2(0, -data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f))))
+        if (data.t != 0.0f || (!data.input.crawling && data.isGrounded && CanStand(data, data.rb.transform.up * (-data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f))))
         {
             // Set unit timer to exit animation duration
             if (data.t == 0)
@@ -416,7 +416,7 @@ public static class UnitStates
         if (data.isGrounded || data.t != 0.0f)
         {
             // If we are in the slide loop and let go of crawl input, start a timer to release the slide state
-            if (data.t != 0.0f || (!data.input.crawling && CanStand(data, new Vector2(0, -data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f))))
+            if (data.t != 0.0f || (!data.input.crawling && CanStand(data, data.rb.transform.up * (-data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f))))
             {
                 // Set unit timer to exit animation duration
                 if (data.t == 0)
@@ -499,7 +499,7 @@ public static class UnitStates
         }
 
         // Allow player to push towards movement speed while in the air
-        if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
+        if (!data.isSlipping && Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
         {
             Vector2 velocity = data.rb.velocity;
             float desiredSpeed = data.stats.walkSpeed * data.input.movement;
@@ -523,7 +523,7 @@ public static class UnitStates
             if (data.isGrounded || data.t != 0.0f)
             {
                 // Return to standing on grounded, continue execution until t = 0
-                if (data.t != 0.0f || (!data.input.crawling && CanStand(data, new Vector2(0, -data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f))))
+                if (data.t != 0.0f || (!data.input.crawling && CanStand(data, data.rb.transform.up * (-data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f))))
                 {
                     // Set unit timer to exit animation duration
                     if (data.t == 0)
@@ -692,7 +692,7 @@ public static class UnitStates
         }
 
         // Allow player to push towards movement speed while in the air
-        if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
+        if (!data.isSlipping && Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
         {
             Vector2 velocity = data.rb.velocity;
             float desiredSpeed = data.stats.walkSpeed * data.input.movement;
@@ -1337,17 +1337,17 @@ public static class UnitStates
     private static bool CanCrawl(UnitData data)
     {
         const float sideCheckOffset = 0.1f;
-        float heighOffset = -data.stats.standingHalfHeight + data.stats.crawlingHalfHeight + 0.01f;
-        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
-        ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
+        float heightOffset = -data.stats.standingHalfHeight + data.stats.crawlingHalfHeight + 0.05f;
+        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+        ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
         if (hit) {
             // Check left side
-            hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
-            ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
+            hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+            ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
             if (hit) {
                 // Check Right side
-                hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
-                ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heighOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
+                hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+                ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
             }
         }
         return !hit;

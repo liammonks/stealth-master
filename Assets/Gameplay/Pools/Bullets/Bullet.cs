@@ -14,8 +14,7 @@ public class Bullet : MonoBehaviour
 
     public void Fire(Vector2 position, Vector2 direction, Vector2 parentVelocity, BulletStats stats, bool isPlayer)
     {
-        //bulletMask &= ~(1 << (isPlayer ? 9 : 10)); // Enemy friendly fire
-        if(isPlayer) { bulletMask &= ~(1 << 9); }
+        bulletMask &= ~(1 << (isPlayer ? 9 : 10)); // Enemy friendly fire
         transform.position = position;
         m_InitialPosition = position;
         m_Direction = direction.normalized;

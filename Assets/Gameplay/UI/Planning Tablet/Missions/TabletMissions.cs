@@ -16,7 +16,7 @@ public class TabletMissions : MonoBehaviour
         {
             Button button = Instantiate(missionButton, missionsParent);
             button.GetComponentInChildren<TextMeshProUGUI>().text = mission.name;
-            button.onClick.AddListener(delegate { SceneManager.LoadScene(mission.scene.SceneName); });
+            button.onClick.AddListener(delegate { SceneManager.LoadScene(mission.scene); });
         }
     }
 }

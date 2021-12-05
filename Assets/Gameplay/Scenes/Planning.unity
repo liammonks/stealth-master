@@ -1139,9 +1139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scenes:
-  - m_SceneAsset: {fileID: 102900000, guid: 770e182bdff9fb34a80d4c284d43f843, type: 3}
-    m_IsDirty: 0
-    m_ScenePath: Assets/Gameplay/Scenes/Global Data/Global.unity
+  - Global
 --- !u!4 &215853009
 Transform:
   m_ObjectHideFlags: 0
@@ -1169,6 +1167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ca944b8190ee1f41a08f24fe5db7b4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  active: 1
 --- !u!1 &232441472
 GameObject:
   m_ObjectHideFlags: 0

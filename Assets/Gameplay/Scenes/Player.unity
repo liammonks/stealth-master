@@ -179,7 +179,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 277009325}
   m_LocalRotation: {x: 0.024937715, y: 0.024968827, z: -0.0006230537, w: 0.99937695}
-  m_LocalPosition: {x: 0, y: 2.9, z: -20}
+  m_LocalPosition: {x: -1, y: 3.3, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -218,7 +218,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 2.0148516, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -399,17 +399,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6524446484773778605, guid: 0434ffe8dc017a348b4897394e6042ca, type: 3}
   m_PrefabInstance: {fileID: 6524446485125697262}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &352991812 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6524446484773778602, guid: 0434ffe8dc017a348b4897394e6042ca, type: 3}
-  m_PrefabInstance: {fileID: 6524446485125697262}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533c00acfffd5274a8a94e5e0a792d35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &382013581
 GameObject:
   m_ObjectHideFlags: 0
@@ -6150,7 +6139,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518594397}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 1.6, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6248,6 +6237,7 @@ MonoBehaviour:
     isGrounded: 0
     isStanding: 1
     isFacingRight: 1
+    isSlipping: 0
     groundSpringActive: 1
     t: 0
     stateDuration: 0
@@ -6272,7 +6262,6 @@ MonoBehaviour:
   - {x: 0.75, y: -0.1}
   - {x: 0.75, y: 0.1}
   interactables: []
-  healthBar: {fileID: 352991812}
   cameraTarget: {fileID: 102563980}
   equippedGadgetIndex: -1
 --- !u!50 &1518594402

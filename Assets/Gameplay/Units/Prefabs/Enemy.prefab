@@ -279,6 +279,7 @@ GameObject:
   - component: {fileID: 5850155815012235795}
   - component: {fileID: 2651598891350480566}
   - component: {fileID: 692787668539105511}
+  - component: {fileID: 2207391587657742950}
   m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
@@ -313,7 +314,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6456761080052816565}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c54514c688835e4b86bdfe3c4986b80, type: 3}
+  m_Script: {fileID: 11500000, guid: fbbf1d58f64c5534a94e1173cd020561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 0
@@ -338,6 +339,7 @@ MonoBehaviour:
     isGrounded: 0
     isStanding: 1
     isFacingRight: 1
+    isSlipping: 0
     groundSpringActive: 1
     t: 0
     stateDuration: 0
@@ -362,7 +364,7 @@ MonoBehaviour:
   - {x: 0.75, y: -0.1}
   - {x: 0.75, y: 0.1}
   interactables: []
-  healthBar: {fileID: 0}
+  aiStats: {fileID: 11400000, guid: 9fad1aa00a354d241828d69f3a400684, type: 2}
 --- !u!50 &692787668539105511
 Rigidbody2D:
   serializedVersion: 4
@@ -384,6 +386,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2207391587657742950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6456761080052816565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58c6f9b140a52a14881ec09eaebb66eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Tree: {fileID: 11400000, guid: 1f323e7111d11f7419d8f3b9b94c805d, type: 2}
 --- !u!1 &6523166786411328378
 GameObject:
   m_ObjectHideFlags: 0

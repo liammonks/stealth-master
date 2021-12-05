@@ -12,7 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f2488ee803aea48b20f55dde4e5f8d, type: 3}
   m_Name: Mission_00
   m_EditorClassIdentifier: 
-  scene:
-    m_SceneAsset: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
-    m_IsDirty: 0
-    m_ScenePath: Assets/Gameplay/Scenes/Levels/Level_00/Level_00.unity
+  scene: Level_00

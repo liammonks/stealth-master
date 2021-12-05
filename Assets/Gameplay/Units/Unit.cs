@@ -17,6 +17,7 @@ public class UnitData
     public bool isGrounded = false;
     public bool isStanding = true;
     public bool isFacingRight = true;
+    public bool isSlipping = false;
     public bool groundSpringActive = true;
     public float t = 0.0f;
     public float stateDuration = 0.0f;
@@ -117,8 +118,7 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] private List<Interactable> interactables = new List<Interactable>();
     private bool lockedRB = false;
 
-    [Header("Combat")]
-    public HealthBar healthBar;
+    protected HealthBar healthBar;
     private Gadgets.BaseGadget equippedGadget;
     private float health;
     private const float impactDamageThreshold = 10.0f;
@@ -200,6 +200,7 @@ public abstract class Unit : MonoBehaviour
         Vector2 springSize = Vector2.Lerp(data.stats.crawlingSpringSize, data.stats.standingSpringSize, colliderInterpValue);
         float groundSpringDistanceBuffer = Mathf.Lerp(groundSpringDistanceBufferCrawling, groundSpringDistanceBufferStanding, colliderInterpValue);
         Vector2 velocity = data.rb.velocity;
+        data.isSlipping = false;
 
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, springSize, transform.eulerAngles.z, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, collisionMask);
         if (hit)
@@ -228,6 +229,7 @@ public abstract class Unit : MonoBehaviour
                 {
                     // On Surface, force crawl
                     data.input.crawlRequestTime = Time.unscaledTime;
+                    data.isSlipping = true;
                 }
                 data.isGrounded = false;
             }

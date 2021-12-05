@@ -12,7 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f2488ee803aea48b20f55dde4e5f8d, type: 3}
   m_Name: Mission_Parkour
   m_EditorClassIdentifier: 
-  scene:
-    m_SceneAsset: {fileID: 102900000, guid: cbb8393634873e74c8e09649ab813c05, type: 3}
-    m_IsDirty: 0
-    m_ScenePath: Assets/Gameplay/Scenes/Levels/Level_Parkour/Level_Parkour.unity
+  scene: Level_Parkour
