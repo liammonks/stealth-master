@@ -19,7 +19,7 @@ namespace BTAction
                 context.transform.position + (Vector3.right * context.unit.data.stats.standingHalfHeight * 2),
                 Vector2.down,
                 context.unit.data.stats.standingHalfHeight + context.unit.aiStats.maxFallDistance,
-                UnitHelper.EnvironmentMask
+                Unit.CollisionMask
             );
             if (hit)
             {

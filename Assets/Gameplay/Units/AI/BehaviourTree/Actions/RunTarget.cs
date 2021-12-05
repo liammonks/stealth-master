@@ -7,14 +7,14 @@ namespace BTAction
 {
     public class RunTarget : ActionNode
     {
-        private const float successDistance = 0.1f;
+        private const float successDistance = 0.5f;
 
         protected override void OnStart() {
             blackboard.lastPosition = context.transform.position;
         }
 
         protected override void OnStop() {
-
+            context.unit.data.input.movement = 0;
         }
 
         protected override State OnUpdate() {
@@ -29,10 +29,10 @@ namespace BTAction
                 context.unit.data.input.movement = -1;
             }
             
-            float currentDist = Vector3.Distance(context.transform.position, blackboard.target);
+            float currentDist = Vector2.Distance(context.transform.position, blackboard.target);
             if (currentDist <= successDistance) { return State.Success; }
             
-            float lastDist = Vector3.Distance(blackboard.lastPosition, blackboard.target);
+            float lastDist = Vector2.Distance(blackboard.lastPosition, blackboard.target);
             blackboard.lastPosition = context.transform.position;
             return currentDist <= lastDist ? State.Running : State.Failure;
         }

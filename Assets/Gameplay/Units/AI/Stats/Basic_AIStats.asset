@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20ef34cd77b3d1a47ab6e18ee17cf313, type: 3}
   m_Name: Basic_AIStats
   m_EditorClassIdentifier: 
+  fear: 0
+  hunger: 10
+  thirst: 25
   maxFallDistance: 1

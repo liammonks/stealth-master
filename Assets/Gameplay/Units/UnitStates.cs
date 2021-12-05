@@ -801,7 +801,7 @@ public static class UnitStates
                 data.target + (Vector2.down * data.stats.standingScale * 0.4f),
                 data.isFacingRight ? Vector2.right : Vector2.left,
                 data.stats.standingScale.x * 0.6f,
-                Unit.collisionMask
+                Unit.CollisionMask
             );
             Debug.DrawRay(
                 data.target + (Vector2.down * data.stats.standingScale * 0.4f),
@@ -1121,7 +1121,7 @@ public static class UnitStates
             data.rb.rotation,
             data.isFacingRight ? Vector2.right : Vector2.left,
             data.stats.vaultGrabDistance * 0.5f,
-            Unit.collisionMask
+            Unit.CollisionMask
         );
         ExtDebug.DrawBoxCastOnHit(
             data.rb.position + (-(Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxVaultHeight)) + (-(Vector2)data.rb.transform.up * (data.stats.maxVaultHeight - data.stats.minVaultHeight) * 0.5f),
@@ -1188,7 +1188,7 @@ public static class UnitStates
                         0,
                         Vector2.zero,
                         0,
-                        Unit.collisionMask
+                        Unit.CollisionMask
                     );
                     ExtDebug.DrawBox(
                         data.rb.position + data.target + (Vector2.up * data.stats.standingHalfHeight * 0.5f) + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.standingScale.x * 0.5f),
@@ -1213,7 +1213,7 @@ public static class UnitStates
                         0,
                         Vector2.zero,
                         0,
-                        Unit.collisionMask
+                        Unit.CollisionMask
                     );
                     ExtDebug.DrawBox(
                         data.rb.position + data.target + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.standingScale.x * 0.5f) + (Vector2.up * groundClearance),
@@ -1245,7 +1245,7 @@ public static class UnitStates
             0,
             data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right,
             castDist - (boxDepth * 0.05f),
-            Unit.collisionMask
+            Unit.CollisionMask
         );
         ExtDebug.DrawBox(
             data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * castDist * 0.5f) - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
@@ -1263,7 +1263,7 @@ public static class UnitStates
                 0,
                 data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right,
                 castDist - (boxDepth * 0.05f),
-                Unit.collisionMask
+                Unit.CollisionMask
             );
             if (scanHit && scanHit.distance <= climbHit.distance + minLedgeThickness)
             {
@@ -1296,7 +1296,7 @@ public static class UnitStates
             0,
             Vector2.down,
             data.stats.standingScale.y - (boxDepth * 0.05f),
-            Unit.collisionMask
+            Unit.CollisionMask
         );
         //ExtDebug.DrawBox(
         //    data.rb.position + (Vector2.down * data.stats.standingScale.y * 0.5f),
@@ -1313,7 +1313,7 @@ public static class UnitStates
                     data.rb.position + (Vector2.down * (data.stats.crawlingHalfHeight + depth)),
                     data.isFacingRight ? Vector2.left : Vector2.right,
                     data.stats.standingScale.x,
-                    Unit.collisionMask
+                    Unit.CollisionMask
                 );
                 Debug.DrawRay(
                     data.rb.position + (Vector2.down * (data.stats.crawlingHalfHeight + depth)),
@@ -1338,15 +1338,15 @@ public static class UnitStates
     {
         const float sideCheckOffset = 0.1f;
         float heightOffset = -data.stats.standingHalfHeight + data.stats.crawlingHalfHeight + 0.05f;
-        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
         if (hit) {
             // Check left side
-            hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+            hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
             ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
             if (hit) {
                 // Check Right side
-                hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+                hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
                 ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
             }
         }
@@ -1355,14 +1355,14 @@ public static class UnitStates
 
     private static bool CanStand(UnitData data, Vector2 offset)
     {
-        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + offset, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + offset, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + offset, data.stats.standingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
         return !hit;
     }
 
     private static bool CanClimb(UnitData data) {
         Vector2 target = data.rb.position + (Vector2.up * (data.stats.standingHalfHeight + 0.1f - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
-        RaycastHit2D hit = Physics2D.BoxCast(target, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.collisionMask);
+        RaycastHit2D hit = Physics2D.BoxCast(target, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(target, data.stats.standingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green, data.stats.climbDuration);
         return !hit;
     }
@@ -1376,7 +1376,7 @@ public static class UnitStates
             data.rb.rotation,
             data.isFacingRight ? data.rb.transform.right : -data.rb.transform.right,
             bodyWidth,
-            Unit.collisionMask
+            Unit.CollisionMask
         );
         if (wallHit)
         {

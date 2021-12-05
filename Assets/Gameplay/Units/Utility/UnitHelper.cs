@@ -6,7 +6,7 @@ public class UnitHelper : MonoBehaviour
 {
     public static UnitHelper Instance;
     public static Player Player;
-    public static LayerMask EnvironmentMask;
+    public static Interactable[] Interactables;
 
     [SerializeField] private ParticleSystem groundParticlePrefab;
 
@@ -28,10 +28,7 @@ public class UnitHelper : MonoBehaviour
             groundParticles.Enqueue(Instantiate(groundParticlePrefab, transform));
         }
         Player = FindObjectOfType<Player>();
-        
-        EnvironmentMask = ~0;
-        EnvironmentMask &= ~(1 << 9);
-        EnvironmentMask &= ~(1 << 10);
+        Interactables = FindObjectsOfType<Interactable>();
     }
     
     public void EmitGroundParticles(Vector3 position, Vector3 direction) 

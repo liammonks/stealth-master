@@ -92,8 +92,11 @@ public enum UnitState
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class Unit : MonoBehaviour
 {
-    public static LayerMask collisionMask;
-    public static LayerMask interactionMask;
+    public static LayerMask CollisionMask => m_CollisionMask;
+    private static LayerMask m_CollisionMask;
+    
+    public static LayerMask InteractionMask => m_InteractionMask;
+    private static LayerMask m_InteractionMask;
 
     public uint ID;
 
@@ -128,8 +131,8 @@ public abstract class Unit : MonoBehaviour
         ID = UnitHelper.GetUnitID();
         
         // Init layer masks
-        collisionMask = LayerMask.GetMask("UnitCollider");
-        interactionMask = LayerMask.GetMask("Interactable");
+        m_CollisionMask = LayerMask.GetMask("UnitCollider");
+        m_InteractionMask = LayerMask.GetMask("Interactable");
         
         // Init data
         data.rb = GetComponent<Rigidbody2D>();
@@ -202,7 +205,7 @@ public abstract class Unit : MonoBehaviour
         Vector2 velocity = data.rb.velocity;
         data.isSlipping = false;
 
-        RaycastHit2D hit = Physics2D.BoxCast(transform.position, springSize, transform.eulerAngles.z, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, collisionMask);
+        RaycastHit2D hit = Physics2D.BoxCast(transform.position, springSize, transform.eulerAngles.z, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, CollisionMask);
         if (hit)
         {
             ExtDebug.DrawBoxCastOnHit(transform.position, new Vector2(springSize.x, springSize.y) * 0.5f, transform.rotation, -transform.up, hit.distance, data.groundSpringActive ? Color.green : Color.gray);
@@ -222,7 +225,7 @@ public abstract class Unit : MonoBehaviour
                 // Surface is not standable, or may have just hit a corner
                 // Check for a corner
                 Vector2 cornerCheckOrigin = hit.point + (Vector2.up * 0.1f);
-                hit = Physics2D.Raycast(cornerCheckOrigin, Vector2.down, 0.15f, collisionMask);
+                hit = Physics2D.Raycast(cornerCheckOrigin, Vector2.down, 0.15f, CollisionMask);
                 //Debug.DrawRay(cornerCheckOrigin, Vector2.down * 0.6f, Color.red);
                 // Raycast does not hit if we are on a corner
                 if (hit)
@@ -413,7 +416,7 @@ public abstract class Unit : MonoBehaviour
         interactables.Remove(interactable);
     }
 
-    protected void Interact()
+    public bool Interact()
     {
         // Interact with the nearest available interactable
         float nearestInteractableDistance = Mathf.Infinity;
@@ -430,7 +433,9 @@ public abstract class Unit : MonoBehaviour
         if (nearestInteractable != null)
         {
             nearestInteractable.Interact(this);
+            return true;
         }
+        return false;
     }
 
     #endregion
