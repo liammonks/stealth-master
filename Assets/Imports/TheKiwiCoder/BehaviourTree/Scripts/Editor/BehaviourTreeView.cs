@@ -55,7 +55,6 @@ namespace TheKiwiCoder {
         }
 
         internal void PopulateView(BehaviourTree tree) {
-            if(tree == null) { return;}
             this.tree = tree;
 
             graphViewChanged -= OnGraphViewChanged;
