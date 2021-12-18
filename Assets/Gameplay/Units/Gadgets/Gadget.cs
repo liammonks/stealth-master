@@ -14,9 +14,9 @@ namespace Gadgets
         protected Unit owner;
         protected bool primaryActive, secondaryActive;
 
-        protected bool CanPrimary { get { return (!primaryActive && canPrimaryOverride) || (!primaryActive && primaryAvailableStates.Contains(owner.GetState()) && owner.data.t == 0.0f); } }
+        protected bool CanPrimary { get { return (!primaryActive && canPrimaryOverride) || (!primaryActive && primaryAvailableStates.Contains(owner.GetState())); } }
         protected bool canPrimaryOverride = false;
-        protected bool CanSecondary { get { return (!secondaryActive && canSecondaryOverride) || (!secondaryActive && secondaryAvailableStates.Contains(owner.GetState()) && owner.data.t == 0.0f); } }
+        protected bool CanSecondary { get { return (!secondaryActive && canSecondaryOverride) || (!secondaryActive && secondaryAvailableStates.Contains(owner.GetState())); } }
         protected bool canSecondaryOverride = false;
 
         public void Equip(Unit unit)

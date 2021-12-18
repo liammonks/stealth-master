@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 220992d4860190e48a2381cefa377fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  primaryAvailableStates: 
+  primaryAvailableStates: 010000000200000005000000040000000600000009000000
   secondaryAvailableStates: 

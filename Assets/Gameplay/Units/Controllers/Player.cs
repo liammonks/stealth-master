@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,8 +10,8 @@ public class Player : Unit
 
     [Header("Player")]
     [SerializeField] private Transform cameraTarget;
-    [SerializeField]
-    private int equippedGadgetIndex = -1;
+    [SerializeField] private int equippedGadgetIndex = -1;
+    [SerializeField] private CinemachineVirtualCamera mainCamera;
     private Coroutine enableCrawlCoroutine;
 
     protected override void Start()
@@ -103,7 +104,7 @@ public class Player : Unit
     private void OnMouseMove(InputValue value)
     {
         MousePosition = value.Get<Vector2>();
-        MousePosition.z = 20.0f;
+        MousePosition.z = -mainCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z;
     }
 
     private void OnInteract(InputValue value)
