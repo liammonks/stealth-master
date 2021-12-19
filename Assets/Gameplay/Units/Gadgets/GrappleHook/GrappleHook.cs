@@ -7,12 +7,12 @@ namespace Gadgets
     public class GrappleHook : BaseGadget
     {
         
-        private class AttatchPoint
+        private class AttachPoint
         {
             public Vector2 point;
             public Vector2 wrapDirection;
             
-            public AttatchPoint(Vector2 a_point, Vector2 a_wrapDirection)
+            public AttachPoint(Vector2 a_point, Vector2 a_wrapDirection)
             {
                 point = a_point;
                 wrapDirection = a_wrapDirection;
@@ -22,8 +22,8 @@ namespace Gadgets
         private const float range = 8.0f;
         private const float reelRate = 2.0f;
 
-        private bool attatched = false;
-        private List<AttatchPoint> attatchPoints = new List<AttatchPoint>();
+        private bool attached = false;
+        private List<AttachPoint> attachPoints = new List<AttachPoint>();
         private SpringJoint2D joint;
         private LineRenderer lineRenderer;
         private LayerMask mask;
@@ -39,8 +39,8 @@ namespace Gadgets
         protected override void OnPrimaryDisabled()
         {
             Destroy(joint);
-            attatchPoints.Clear();
-            attatched = false;
+            attachPoints.Clear();
+            attached = false;
             lineRenderer.enabled = false;
         }
 
@@ -51,7 +51,7 @@ namespace Gadgets
             
             if(hit.collider)
             {
-                attatchPoints.Add(new AttatchPoint(hit.point, Vector2.zero));
+                attachPoints.Add(new AttachPoint(hit.point, Vector2.zero));
                 float jointDistance = Vector2.Distance(transform.position, hit.point);
                 joint = owner.gameObject.AddComponent<SpringJoint2D>();
                 joint.autoConfigureConnectedAnchor = false;
@@ -62,7 +62,7 @@ namespace Gadgets
                 joint.dampingRatio = 0.1f;
                 joint.frequency = 1.0f;
 
-                attatched = true;
+                attached = true;
                 lineRenderer.enabled = true;
             }
         }
@@ -78,32 +78,32 @@ namespace Gadgets
         }
         
         private void FixedUpdate() {
-            if(attatched)
+            if(attached)
             {
                 // Cast towards the last attatch point
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, attatchPoints[attatchPoints.Count - 1].point - (Vector2)transform.position, Vector2.Distance(transform.position, attatchPoints[attatchPoints.Count - 1].point) - 0.1f, mask);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, attachPoints[attachPoints.Count - 1].point - (Vector2)transform.position, Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point) - 0.1f, mask);
                 if(hit.collider)
                 {
                     joint.connectedAnchor = hit.point;
                     joint.distance = Vector2.Distance(transform.position, hit.point);
                     
-                    Vector3 dir = (hit.point - attatchPoints[attatchPoints.Count - 1].point).normalized;
+                    Vector3 dir = (hit.point - attachPoints[attachPoints.Count - 1].point).normalized;
                     Vector3 cross = Vector3.Cross(Vector3.forward, dir).normalized;
                     Vector2 deltaPos = (Vector2)transform.position - lastPos;
-                    attatchPoints.Add(new AttatchPoint(hit.point, Vector2.Dot(deltaPos, cross) > 0 ? cross : -cross));
+                    attachPoints.Add(new AttachPoint(hit.point, Vector2.Dot(deltaPos, cross) > 0 ? cross : -cross));
                 }
 
-                if(attatchPoints.Count > 1)
+                if(attachPoints.Count > 1)
                 {
                     //Debug.DrawRay(attatchPoints[attatchPoints.Count - 1].point, attatchPoints[attatchPoints.Count - 1].point - attatchPoints[attatchPoints.Count - 2].point, Color.magenta);
                     //Debug.DrawRay(attatchPoints[attatchPoints.Count - 1].point, attatchPoints[attatchPoints.Count - 1].wrapDirection, Color.red);
 
-                    float dot = Vector2.Dot(((Vector2)transform.position - attatchPoints[attatchPoints.Count - 1].point).normalized, attatchPoints[attatchPoints.Count - 1].wrapDirection);
+                    float dot = Vector2.Dot(((Vector2)transform.position - attachPoints[attachPoints.Count - 1].point).normalized, attachPoints[attachPoints.Count - 1].wrapDirection);
                     if(dot <= -0.01f)
                     {
-                        attatchPoints.RemoveAt(attatchPoints.Count - 1);
-                        joint.connectedAnchor = attatchPoints[attatchPoints.Count - 1].point;
-                        joint.distance = Vector2.Distance(transform.position, attatchPoints[attatchPoints.Count - 1].point);
+                        attachPoints.RemoveAt(attachPoints.Count - 1);
+                        joint.connectedAnchor = attachPoints[attachPoints.Count - 1].point;
+                        joint.distance = Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point);
                     }
                 }
 
@@ -117,18 +117,18 @@ namespace Gadgets
                 }
                 else
                 {
-                    float jointDistance = Vector2.Distance(transform.position, attatchPoints[attatchPoints.Count - 1].point);
+                    float jointDistance = Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point);
                     if (jointDistance < joint.distance - 0.1f)
                     {
                         joint.distance = jointDistance + 0.05f;
                     }
                 }
                 
-                for (int i = 0; i < attatchPoints.Count - 1; ++i)
+                for (int i = 0; i < attachPoints.Count - 1; ++i)
                 {
-                    Debug.DrawLine(attatchPoints[i].point, attatchPoints[i + 1].point, Color.black);
+                    Debug.DrawLine(attachPoints[i].point, attachPoints[i + 1].point, Color.black);
                 }
-                Debug.DrawLine(attatchPoints[attatchPoints.Count - 1].point, transform.position, Color.black);
+                Debug.DrawLine(attachPoints[attachPoints.Count - 1].point, transform.position, Color.black);
 
                 UpdateLineRenderer();
             }
@@ -137,12 +137,12 @@ namespace Gadgets
         
         private void UpdateLineRenderer()
         {
-            Vector3[] points = new Vector3[attatchPoints.Count + 1];
-            for (int i = 0; i < attatchPoints.Count; ++i)
+            Vector3[] points = new Vector3[attachPoints.Count + 1];
+            for (int i = 0; i < attachPoints.Count; ++i)
             {
-                points[i] = attatchPoints[i].point;
+                points[i] = attachPoints[i].point;
             }
-            points[attatchPoints.Count] = transform.position;
+            points[attachPoints.Count] = transform.position;
             lineRenderer.positionCount = points.Length;
             lineRenderer.SetPositions(points);
         }
