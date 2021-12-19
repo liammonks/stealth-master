@@ -258,7 +258,13 @@ public abstract class Unit : MonoBehaviour
         {
             ExtDebug.DrawBoxCastOnHit(transform.position, springSize * 0.5f, transform.rotation, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, data.groundSpringActive ? Color.red : Color.gray);
             data.isGrounded = false;
-            data.rb.angularVelocity = 0;
+            
+            // Rotate Unit
+            float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
+            if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
+            rotationDisplacement -= Vector2.SignedAngle(Vector2.up, hit.normal);
+            float rotationForce = (-(rotationDisplacement / Time.fixedDeltaTime) * data.stats.airRotationForce) - data.stats.airRotationDamping;
+            data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
         }
 
         data.rb.velocity = velocity;

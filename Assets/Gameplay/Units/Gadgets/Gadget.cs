@@ -22,6 +22,7 @@ namespace Gadgets
         public void Equip(Unit unit)
         {
             owner = unit;
+            OnEquip();
         }
 
         public void EnablePrimary()
@@ -55,6 +56,8 @@ namespace Gadgets
             OnSecondaryDisabled();
             secondaryActive = false;
         }
+
+        protected virtual void OnEquip() { }
 
         protected abstract void OnPrimaryEnabled();
         protected abstract void OnPrimaryDisabled();
