@@ -20,7 +20,7 @@ namespace Gadgets
         }
 
         private const float range = 8.0f;
-        private const float reelRate = 2.0f;
+        private const float reelRate = 3.0f;
 
         private bool attached = false;
         private List<AttachPoint> attachPoints = new List<AttachPoint>();
@@ -39,9 +39,11 @@ namespace Gadgets
         protected override void OnPrimaryDisabled()
         {
             Destroy(joint);
+            owner.SetState(UnitState.Idle);
             attachPoints.Clear();
             attached = false;
             lineRenderer.enabled = false;
+            owner.data.groundSpringActive = true;
         }
 
         protected override void OnPrimaryEnabled()
@@ -59,11 +61,14 @@ namespace Gadgets
                 joint.connectedAnchor = hit.point;
                 joint.enableCollision = true;
                 joint.distance = jointDistance;
-                joint.dampingRatio = 0.1f;
+                joint.dampingRatio = 0.5f;
                 joint.frequency = 1.0f;
 
+                owner.SetState(UnitState.GrappleHookSwing);
                 attached = true;
+                lineRenderer.positionCount = 0;
                 lineRenderer.enabled = true;
+                owner.data.groundSpringActive = false;
             }
         }
 

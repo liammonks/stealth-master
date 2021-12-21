@@ -52,6 +52,8 @@ public static class UnitStates
                 return MeleeState(data, initialise);
             case UnitState.JumpMelee:
                 return JumpMeleeState(data, initialise);
+            case UnitState.GrappleHookSwing:
+                return GrappleHookSwingState(data, initialise);
         }
         Debug.LogError("No State Function for " + state.ToString());
         return UnitState.Null;
@@ -60,10 +62,32 @@ public static class UnitStates
     private static UnitState NullState(UnitData data, bool initialise)
     {
         data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
-        Vector2 velocity = data.rb.velocity;
-        velocity.x -= data.rb.velocity.x * data.stats.groundAcceleration;
-        data.rb.velocity = velocity;
         return UnitState.Null;
+    }
+
+    private static UnitState GrappleHookSwingState(UnitData data, bool initialise)
+    {
+        if(initialise)
+        {
+            data.animator.Play("Fall");
+        }
+
+        Vector2 velocity = data.rb.velocity;
+        float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
+        if (Mathf.Abs(desiredSpeed) > Mathf.Abs(velocity.x))
+        {
+            float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+            // Increase acceleration when trying to move in opposite direction of travel
+            if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+            {
+                deltaSpeedRequired *= 2.0f;
+            }
+            velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
+            data.rb.velocity = velocity;
+        }
+
+        data.ApplyDrag(data.stats.airDrag);
+        return UnitState.GrappleHookSwing;
     }
 
     private static UnitState IdleState(UnitData data, bool initialise)

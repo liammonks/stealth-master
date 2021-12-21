@@ -86,7 +86,8 @@ public enum UnitState
     Climb,
     WallSlide,
     Melee,
-    JumpMelee
+    JumpMelee,
+    GrappleHookSwing
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -162,8 +163,8 @@ public abstract class Unit : MonoBehaviour
             // Rotate to default
             float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
             if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
-            rotationDisplacement -= Vector2.SignedAngle(Vector2.up, transform.up);
-            data.rb.angularVelocity = -rotationDisplacement * data.stats.airRotationForce * Time.fixedDeltaTime;
+            float rotationForce = (-(rotationDisplacement / Time.fixedDeltaTime) * (data.stats.airRotationForce)) - (data.stats.airRotationDamping);
+            data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
         }
 
         // Apply gravity
@@ -258,12 +259,11 @@ public abstract class Unit : MonoBehaviour
         {
             ExtDebug.DrawBoxCastOnHit(transform.position, springSize * 0.5f, transform.rotation, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, data.groundSpringActive ? Color.red : Color.gray);
             data.isGrounded = false;
-            
-            // Rotate Unit
+
+            // Rotate to default
             float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
             if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
-            rotationDisplacement -= Vector2.SignedAngle(Vector2.up, hit.normal);
-            float rotationForce = (-(rotationDisplacement / Time.fixedDeltaTime) * data.stats.airRotationForce) - data.stats.airRotationDamping;
+            float rotationForce = (-(rotationDisplacement / Time.fixedDeltaTime) * (data.stats.airRotationForce)) - (data.stats.airRotationDamping);
             data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
         }
 

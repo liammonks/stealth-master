@@ -15,7 +15,7 @@ MonoBehaviour:
   walkSpeed: 3
   runSpeed: 5
   groundAcceleration: 0.2
-  airAcceleration: 0.05
+  airAcceleration: 0.02
   groundDrag: 1
   airDrag: 0.2
   slideDrag: 0.5
@@ -30,8 +30,8 @@ MonoBehaviour:
   springDamping: 40
   groundRotationForce: 10
   groundRotationDamping: 2
-  airRotationForce: 20
-  airRotationDamping: 5
+  airRotationForce: 5
+  airRotationDamping: 1
   groundedMaxAngle: 25
   vaultGrabDistance: 1
   vaultMoveDistance: 1.75
