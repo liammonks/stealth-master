@@ -120,7 +120,7 @@ public class Player : Unit
         cameraTarget.localPosition = offset;
     }
     
-    public void OnNextGadget(InputValue value)
+    private void OnNextGadget(InputValue value)
     {
         if(value.Get<float>() > 0)
         {
@@ -142,7 +142,7 @@ public class Player : Unit
         }
     }
 
-    public void OnPreviousGadget(InputValue value)
+    private void OnPreviousGadget(InputValue value)
     {
         if (value.Get<float>() < 0)
         {
@@ -165,6 +165,58 @@ public class Player : Unit
             }
             
             if (!newGadgetEquipped) equippedGadgetIndex = originalGadgetIndex;
+        }
+    }
+
+    private void OnGadget_0()
+    {
+        if(GlobalData.playerGadgets.Count <= 0) { return; }
+        if(equippedGadgetIndex == 0)
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 0;
+        }
+        else
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[0]) ? 0 : equippedGadgetIndex;
+        }
+    }
+
+    private void OnGadget_1()
+    {
+        if(GlobalData.playerGadgets.Count <= 1) { return; }
+        if(equippedGadgetIndex == 1)
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 1;
+        }
+        else
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[1]) ? 1 : equippedGadgetIndex;
+        }
+    }
+
+    private void OnGadget_2()
+    {
+        if(GlobalData.playerGadgets.Count <= 2) { return; }
+        if(equippedGadgetIndex == 0)
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 2;
+        }
+        else
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[2]) ? 2 : equippedGadgetIndex;
+        }
+    }
+
+    private void OnGadget_3()
+    {
+        if(GlobalData.playerGadgets.Count <= 3) { return; }
+        if(equippedGadgetIndex == 0)
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 3;
+        }
+        else
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[3]) ? 3 : equippedGadgetIndex;
         }
     }
 }

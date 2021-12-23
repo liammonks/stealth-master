@@ -6,14 +6,9 @@ using UnityEditor.SceneManagement;
 
 [ExecuteInEditMode] [RequireComponent(typeof(SceneDependencies))]
 public class SceneDependenciesEditor : MonoBehaviour
-{
-
-    [SerializeField] private bool active = true;
-
-    private void OnDrawGizmos()
-    {
+{    
+    private void Update() {
         #if UNITY_EDITOR
-        if (!active) { return; }
         foreach (string scene in gameObject.GetComponent<SceneDependencies>().scenes)
         {
             if (!EditorApplication.isPlaying)
@@ -23,5 +18,4 @@ public class SceneDependenciesEditor : MonoBehaviour
         }
         #endif
     }
-    
 }

@@ -112,6 +112,42 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Gadget_0",
+                    "type": "Button",
+                    "id": "bf33bac2-1af6-4cc2-a7b5-b4e3b2ba91db",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Gadget_1",
+                    "type": "Button",
+                    "id": "53c67a35-6baf-4c1b-a4c7-a7fb6c4724dc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Gadget_2",
+                    "type": "Button",
+                    "id": "859147e9-726a-4069-8b21-835fc7afd34e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Gadget_3",
+                    "type": "Button",
+                    "id": "028a145a-034a-4cc7-827d-5791829b8d29",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -290,6 +326,50 @@
                     "action": "PreviousGadget",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9073577-21a7-44b0-9f73-97e39dff78eb",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Gadget_0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a3c4940-b548-4202-bd8a-50c154a20bbf",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Gadget_1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "90e86c88-0692-4436-9b89-638c1a0c53b6",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Gadget_2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1254deb3-c199-4211-bf7a-785e6b850233",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Gadget_3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -336,6 +416,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "MouseDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Level",
+            "id": "7a9d1c5f-e0ec-442c-934a-49df9f567091",
+            "actions": [
+                {
+                    "name": "Respawn",
+                    "type": "Button",
+                    "id": "d51c323f-58d3-46e7-bf0d-05e30ca0a7aa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "970397b7-b2d1-406c-8499-ab46bfdf70b8",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Respawn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
