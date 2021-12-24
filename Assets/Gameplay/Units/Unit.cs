@@ -87,7 +87,9 @@ public enum UnitState
     WallSlide,
     Melee,
     JumpMelee,
-    GrappleHookSwing
+    GrappleHookSwing,
+    HitImpact,
+    Launched
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -123,9 +125,9 @@ public abstract class Unit : MonoBehaviour
     private bool lockedRB = false;
 
     protected HealthBar healthBar;
+    protected float health;
     private Gadgets.BaseGadget equippedGadget;
-    private float health;
-    private const float impactDamageThreshold = 10.0f;
+    private const float impactRateThreshold = 5.0f;
 
     protected virtual void Start()
     {
@@ -239,12 +241,6 @@ public abstract class Unit : MonoBehaviour
             }
             else
             {
-                // Grounded on standable surface
-                // Check impact force if we just landed
-                if (!data.isGrounded)
-                {
-                    OnCollisionImpact(Mathf.Abs(data.rb.velocity.y));
-                }
                 data.isGrounded = springDisplacement > -0.05f;
             }
 
@@ -290,6 +286,7 @@ public abstract class Unit : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health = Mathf.Max(0, health - damage);
+        state = UnitStates.Initialise(data, UnitState.HitImpact);
         if (healthBar != null)
         {
             healthBar.UpdateHealth(health, data.stats.maxHealth);
@@ -303,6 +300,7 @@ public abstract class Unit : MonoBehaviour
     public void TakeDamage(float damage, Vector2 velocity)
     {
         data.rb.velocity += velocity;
+        state = UnitStates.Initialise(data, UnitState.Launched);
         health = Mathf.Max(0, health - damage);
         if (healthBar != null)
         {
@@ -318,17 +316,14 @@ public abstract class Unit : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        float impactForce = other.relativeVelocity.magnitude;
-        if (impactForce < impactDamageThreshold) { return; }
-        if (other.rigidbody != null) { impactForce *= other.rigidbody.mass; }
-        OnCollisionImpact(impactForce);
-    }
+        AnimatedRigidbody animatedRigidbody = other.gameObject.GetComponent<AnimatedRigidbody>();
+        float impactRate = animatedRigidbody ? (data.rb.velocity - animatedRigidbody.velocity).magnitude : other.relativeVelocity.magnitude;
 
-    public void OnCollisionImpact(float impactForce)
-    {
-        impactForce = impactForce * data.stats.collisionDamageMultiplier;
-        if (impactForce < impactDamageThreshold) { return; }
-        TakeDamage(impactForce);
+        if (impactRate > impactRateThreshold) {
+            float impactDamage = impactRate * data.stats.collisionDamageMultiplier;
+            if (other.rigidbody) { impactDamage *= other.rigidbody.mass; }
+            TakeDamage(impactDamage, other.relativeVelocity.normalized * impactDamage);
+        }
     }
 
     #endregion
@@ -337,7 +332,7 @@ public abstract class Unit : MonoBehaviour
 
     private Coroutine enableGadgetPrimary, enableGadgetSecondary;
 
-    protected bool EquipGadget(Gadgets.BaseGadget toEquip)
+    public bool EquipGadget(Gadgets.BaseGadget toEquip)
     {
         if (equippedGadget != null)
         {

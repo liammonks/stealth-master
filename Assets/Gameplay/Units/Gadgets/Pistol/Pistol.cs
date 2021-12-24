@@ -55,5 +55,6 @@ namespace Gadgets
                 transform.localScale = owner.data.isFacingRight ? Vector3.one : new Vector3(1, -1, 1);
             }
         }
+
     }
 }

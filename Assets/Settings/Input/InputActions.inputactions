@@ -148,6 +148,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "OpenGadgetWheel",
+                    "type": "Value",
+                    "id": "30dedeeb-12a1-4268-9983-e2c3e84cb34a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -368,6 +377,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Gadget_3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "66f2e10b-1f22-466f-9639-ef2f9229c632",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenGadgetWheel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

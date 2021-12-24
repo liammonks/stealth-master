@@ -54,6 +54,10 @@ public static class UnitStates
                 return JumpMeleeState(data, initialise);
             case UnitState.GrappleHookSwing:
                 return GrappleHookSwingState(data, initialise);
+            case UnitState.HitImpact:
+                return HitImpactState(data, initialise);
+            case UnitState.Launched:
+                return LaunchedState(data, initialise);
         }
         Debug.LogError("No State Function for " + state.ToString());
         return UnitState.Null;
@@ -1121,6 +1125,42 @@ public static class UnitStates
             return UnitState.Idle;
         }
         return UnitState.JumpMelee;
+    }
+
+    private static UnitState HitImpactState(UnitData data, bool initialise)
+    {
+        if(initialise)
+        {
+            data.animator.Play("Hit_Impact");
+            data.animator.Update(0);
+            data.animator.Update(0);
+            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+        }
+        data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
+        data.t = Mathf.Max(data.t - Time.fixedDeltaTime, 0.0f);
+        if(data.t == 0.0f)
+        {
+            return UnitState.Idle;
+        }
+        return UnitState.HitImpact;
+    }
+
+    private static UnitState LaunchedState(UnitData data, bool initialise)
+    {
+        if (initialise)
+        {
+            data.animator.Play("Launched");
+            data.animator.Update(0);
+            data.animator.Update(0);
+            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+        }
+        data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
+        data.t = Mathf.Max(data.t - Time.fixedDeltaTime, 0.0f);
+        if (data.t == 0.0f)
+        {
+            return UnitState.Idle;
+        }
+        return UnitState.Launched;
     }
 
     #region Helpers

@@ -5,6 +5,7 @@ using UnityEngine;
 using Gadgets;
 using UnityEngine.SceneManagement;
 
+[ExecuteAlways]
 public class GlobalData : MonoBehaviour
 {
     #region Gadgets
@@ -34,6 +35,7 @@ public class GlobalData : MonoBehaviour
     
     public static void LoadPlayerGadgets()
     {
+        playerGadgets.Clear();
         int data = PlayerPrefs.GetInt("PlayerGadgets", 1);
         for (int i = 0; i < _gadgets.Count; ++i)
         {
@@ -58,16 +60,14 @@ public class GlobalData : MonoBehaviour
 
     #endregion
 
-    private static bool initialised = false;
-
     private void Awake() {
-        if (initialised) { return; }
+        OnValidate();
+    }
 
+    private void OnValidate() {
         _gadgets = gadgets;
         _defaultGadget = defaultGadget;
         _missions = missions;
         LoadPlayerGadgets();
-
-        initialised = true;
     }
 }

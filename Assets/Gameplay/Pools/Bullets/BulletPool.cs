@@ -5,6 +5,10 @@ using UnityEngine.Pool;
 
 public class BulletPool : MonoBehaviour
 {
+    public class BulletHitData
+    {
+        
+    }
     public static BulletPool Instance;
 
     private static IObjectPool<Bullet> bulletPool;

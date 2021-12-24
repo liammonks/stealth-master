@@ -49,8 +49,8 @@ MonoBehaviour:
   standingCeilingCheckHeight: 0.85
   crawlingCeilingCheckHeight: 1.35
   maxHealth: 100
-  collisionDamageMultiplier: 0.5
-  knockbackMultiplier: 10
+  collisionDamageMultiplier: 1
+  knockbackMultiplier: 5
   meleeDamage: 10
   meleeScale: {x: 1.7, y: 0.5}
   meleeOffset: {x: 0, y: -0.4}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class PlayerUI : MonoBehaviour
 
     [SerializeField] private GameObject menuRoot;
 
-    public void OnMenu()
+    private void OnMenu()
     {
         menuRoot.SetActive(!menuRoot.activeInHierarchy);
     }
@@ -49,6 +50,17 @@ public class PlayerUI : MonoBehaviour
         interactPopup.gameObject.SetActive(false);
     }
 
+    #endregion
+
+    #region Gadget Wheel
+
+    [SerializeField] private GadgetWheelUI gadgetWheelUI;
+
+    private void OnOpenGadgetWheel(InputValue value)
+    {
+        gadgetWheelUI.Toggle(value.Get<float>() == 1.0f);
+    }
+    
     #endregion
     
     private void Update() {

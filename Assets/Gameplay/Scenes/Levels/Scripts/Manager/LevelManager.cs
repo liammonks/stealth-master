@@ -4,9 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    
+
     private enum WinCondition
     {
+        Null,
         EnemiesEliminated
     }
 

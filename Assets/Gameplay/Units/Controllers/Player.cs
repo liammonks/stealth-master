@@ -17,6 +17,7 @@ public class Player : Unit
     protected override void Start()
     {
         base.Start();
+        healthBar = FindObjectOfType<HealthBar>();
         data.hitMask = LayerMask.GetMask("Enemy");
     }
     
@@ -29,6 +30,8 @@ public class Player : Unit
     public override void Die()
     {
         LevelManager.Instance.RespawnPlayer();
+        health = data.stats.maxHealth;
+        healthBar.UpdateHealth(health, data.stats.maxHealth);
     }
 
     private void OnMovement(InputValue value)
@@ -82,16 +85,6 @@ public class Player : Unit
         data.input.crawling = true;
         data.input.crawlRequestTime = Time.unscaledTime;
     }
-
-    private void OnGadgetPrimary(InputValue value) 
-    {
-        GadgetPrimary(value.Get<float>() == 1.0f);
-    }
-
-    private void OnGadgetSecondary(InputValue value)
-    {
-        GadgetSecondary(value.Get<float>() == 1.0f);
-    }
     
     private void OnMelee(InputValue value)
     {
@@ -118,6 +111,18 @@ public class Player : Unit
     public void SetCameraOffset(Vector2 offset)
     {
         cameraTarget.localPosition = offset;
+    }
+
+    #region Gadgets
+
+    private void OnGadgetPrimary(InputValue value)
+    {
+        GadgetPrimary(value.Get<float>() == 1.0f);
+    }
+
+    private void OnGadgetSecondary(InputValue value)
+    {
+        GadgetSecondary(value.Get<float>() == 1.0f);
     }
     
     private void OnNextGadget(InputValue value)
@@ -154,7 +159,8 @@ public class Player : Unit
             {
                 case -2:
                     equippedGadgetIndex = GlobalData.playerGadgets.Count - 1;
-                    newGadgetEquipped = EquipGadget(GlobalData.playerGadgets[equippedGadgetIndex]);
+                    if (equippedGadgetIndex != -1)
+                        newGadgetEquipped = EquipGadget(GlobalData.playerGadgets[equippedGadgetIndex]);
                     break;
                 case -1:
                     newGadgetEquipped = EquipGadget(GlobalData.DefaultGadget);
@@ -197,7 +203,7 @@ public class Player : Unit
     private void OnGadget_2()
     {
         if(GlobalData.playerGadgets.Count <= 2) { return; }
-        if(equippedGadgetIndex == 0)
+        if(equippedGadgetIndex == 2)
         {
             equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 2;
         }
@@ -210,7 +216,7 @@ public class Player : Unit
     private void OnGadget_3()
     {
         if(GlobalData.playerGadgets.Count <= 3) { return; }
-        if(equippedGadgetIndex == 0)
+        if(equippedGadgetIndex == 3)
         {
             equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 3;
         }
@@ -219,4 +225,6 @@ public class Player : Unit
             equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[3]) ? 3 : equippedGadgetIndex;
         }
     }
+    
+    #endregion
 }
