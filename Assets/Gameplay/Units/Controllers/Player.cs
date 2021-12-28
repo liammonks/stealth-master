@@ -7,11 +7,12 @@ using UnityEngine.InputSystem;
 public class Player : Unit
 {
     public static Vector3 MousePosition;
+    public static Vector2 MouseDelta;
 
     [Header("Player")]
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private int equippedGadgetIndex = -1;
-    [SerializeField] private CinemachineVirtualCamera mainCamera;
+    [SerializeField] private Camera mainCamera;
     private Coroutine enableCrawlCoroutine;
 
     protected override void Start()
@@ -96,8 +97,10 @@ public class Player : Unit
 
     private void OnMouseMove(InputValue value)
     {
+        Vector3 lastPosition = MousePosition;
         MousePosition = value.Get<Vector2>();
-        MousePosition.z = -mainCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z;
+        MousePosition.z = (transform.position - mainCamera.transform.position).z;
+        MouseDelta = MousePosition - lastPosition;
     }
 
     private void OnInteract(InputValue value)

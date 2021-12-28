@@ -51,6 +51,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "MouseDelta",
+                    "type": "Value",
+                    "id": "ebcea538-a823-43ba-8174-d156727e562f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Interact",
                     "type": "Value",
                     "id": "432e5a40-7be4-4e66-828e-6523b4a98800",
@@ -388,6 +397,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "OpenGadgetWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e6a9e78-e02d-4f42-9ad2-3b06b9c3efdc",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseDelta",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

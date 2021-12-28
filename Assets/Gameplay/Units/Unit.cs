@@ -127,7 +127,7 @@ public abstract class Unit : MonoBehaviour
     protected HealthBar healthBar;
     protected float health;
     private Gadgets.BaseGadget equippedGadget;
-    private const float impactRateThreshold = 5.0f;
+    private const float impactRateThreshold = 10.0f;
 
     protected virtual void Start()
     {
