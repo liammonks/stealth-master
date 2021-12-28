@@ -1,67 +1,7 @@
 fileFormatVersion: 2
-guid: 79d9213208d637d4aa8a9826b4c68b08
+guid: ad196ff48fd35c546a2079ef24a283f7
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 5273548677099328258
-    second: Stealth Master Test Idle_0
-  - first:
-      213: 869516792217737023
-    second: Stealth Master Test Idle_1
-  - first:
-      213: 275083134752335761
-    second: Stealth Master Test Idle_2
-  - first:
-      213: -8553208298508067851
-    second: Stealth Master Test Idle_3
-  - first:
-      213: 2871196443670518447
-    second: Stealth Master Test Idle_4
-  - first:
-      213: 2375931992117117051
-    second: Stealth Master Test Idle_5
-  - first:
-      213: 1187735693550613675
-    second: Stealth Master Test Idle_6
-  - first:
-      213: 6673923061555038357
-    second: Stealth Master Test Idle_7
-  - first:
-      213: 3038131580457613676
-    second: Stealth Master Test Idle_8
-  - first:
-      213: 2047135421569286664
-    second: Stealth Master Test Idle_9
-  - first:
-      213: -4861089463547811680
-    second: Stealth_Master_Idle_Right_0
-  - first:
-      213: -2695585653493712780
-    second: Stealth_Master_Idle_Right_1
-  - first:
-      213: -203240702573543342
-    second: Stealth_Master_Idle_Right_2
-  - first:
-      213: 8790875696970804286
-    second: Stealth_Master_Idle_Right_3
-  - first:
-      213: -6310545787976100222
-    second: Stealth_Master_Idle_Right_4
-  - first:
-      213: 5275244572154425223
-    second: Stealth_Master_Idle_Right_5
-  - first:
-      213: -3034783732525913961
-    second: Stealth_Master_Idle_Right_6
-  - first:
-      213: -1149396149306216013
-    second: Stealth_Master_Idle_Right_7
-  - first:
-      213: 8331049977424652772
-    second: Stealth_Master_Idle_Right_8
-  - first:
-      213: -4535524617719480370
-    second: Stealth_Master_Idle_Right_9
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
