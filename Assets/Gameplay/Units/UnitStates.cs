@@ -139,17 +139,11 @@ public static class UnitStates
             // Push against wall
             if (FacingWall(data))
             {
-                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Right"))
-                {
-                    data.animator.Play("AgainstWall");
-                }
+                data.animator.Play("AgainstWall");
             }
             else
             {
-                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_Right"))
-                {
-                    data.animator.Play("Idle");
-                }
+                data.animator.Play("Idle");
             }
             // Execute Melee
             if(data.input.meleeQueued)
@@ -165,9 +159,9 @@ public static class UnitStates
             {
                 // Play stand to crawl, wait before entering state
                 data.animator.Play("StandToCrawl");
-                data.animator.Update(0);
-                data.animator.Update(0);
-                data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                //data.animator.Update(0);
+                //data.animator.Update(0);
+                data.t = data.animator.GetState().length;
                 data.isStanding = false;
             }
             else
@@ -247,17 +241,11 @@ public static class UnitStates
             // Face Wall
             if (FacingWall(data))
             {
-                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Against_Wall_Right"))
-                {
-                    data.animator.Play("AgainstWall");
-                }
+                data.animator.Play("AgainstWall");
             }
             else
             {
-                if (!data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Left") && !data.animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Right"))
-                {
-                    data.animator.Play("Run");
-                }
+                data.animator.Play("Run");
             }
             // Execute Melee
             if (data.input.meleeQueued)
@@ -280,9 +268,9 @@ public static class UnitStates
                 {
                     // Play stand to crawl, wait before entering state
                     data.animator.Play("StandToCrawl");
-                    data.animator.Update(0);
-                    data.animator.Update(0);
-                    data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                    //data.animator.Update(0);
+                    //data.animator.Update(0);
+                    data.t = data.animator.GetState().length;
                     data.isStanding = false;
                 }
             }
@@ -338,9 +326,9 @@ public static class UnitStates
                 // Execute animation transition
                 data.animator.Play("CrawlToStand");
                 // Update animator to transition to relevant state
-                data.animator.Update(0);
-                data.animator.Update(0);
-                data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                //data.animator.Update(0);
+                //data.animator.Update(0);
+                data.t = data.animator.GetState().length;
                 data.isStanding = true;
             }
             else
@@ -411,9 +399,9 @@ public static class UnitStates
                 // Execute animation transition
                 data.animator.Play("CrawlToStand");
                 // Update animator to transition to relevant state
-                data.animator.Update(0);
-                data.animator.Update(0);
-                data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                //data.animator.Update(0);
+                //data.animator.Update(0);
+                data.t = data.animator.GetState().length;
                 data.isStanding = true;
             }
             // Tick unit timer
@@ -452,9 +440,9 @@ public static class UnitStates
                     // Execute animation transition
                     data.animator.Play(data.previousState == UnitState.Dive ? "DiveFlip" : "SlideExit");
                     // Update animator to transition to relevant state
-                    data.animator.Update(0);
-                    data.animator.Update(0);
-                    data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                    //data.animator.Update(0);
+                    //data.animator.Update(0);
+                    data.t = data.animator.GetState().length;
                     data.isStanding = true;
                 }
                 // Tick unit timer
@@ -559,9 +547,9 @@ public static class UnitStates
                         // Execute animation transition
                         data.animator.Play(Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed ? "DiveFlip" : "CrawlToStand");
                         // Update animator to transition to relevant state
-                        data.animator.Update(0);
-                        data.animator.Update(0);
-                        data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+                        //data.animator.Update(0);
+                        //data.animator.Update(0);
+                        data.t = data.animator.GetState().length;
                         data.isStanding = true;
                     }
                     // Tick unit timer
@@ -618,9 +606,9 @@ public static class UnitStates
             // Reset jump input
             data.input.jumpRequestTime = -1;
             data.animator.Play("Jump");
-            data.animator.Update(0);
-            data.animator.Update(0);
-            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            //data.animator.Update(0);
+            //data.animator.Update(0);
+            data.t = data.animator.GetState().length;
             data.isStanding = true;
             data.groundSpringActive = false;
             velocity.y = data.previousState == UnitState.LedgeGrab ? data.stats.wallJumpForce.y : data.stats.jumpForce;
@@ -905,11 +893,11 @@ public static class UnitStates
         {
             // Flip facing
             data.isFacingRight = !data.isFacingRight;
-            data.animator.SetBool("FacingRight", data.isFacingRight);
+            data.animator.SetFacing(data.isFacingRight);
             data.animator.Play("WallJump");
-            data.animator.Update(0);
-            data.animator.Update(0);
-            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            //data.animator.Update(0);
+            //data.animator.Update(0);
+            data.t = data.animator.GetState().length;
             data.rb.velocity = (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.wallJumpForce.x +
                                 Vector2.up * data.stats.wallJumpForce.y;
         }
@@ -1033,15 +1021,15 @@ public static class UnitStates
         if(initialise)
         {
             data.animator.Play("Melee");
-            data.animator.Update(0);
-            data.animator.Update(0);
-            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            //data.animator.Update(0);
+            //data.animator.Update(0);
+            data.t = data.animator.GetState().length;
             data.rb.velocity = Vector2.zero;
             data.hitIDs.Clear();
         }
         data.t = Mathf.Max(0.0f, data.t - Time.deltaTime);
         
-        if(data.t <= data.animator.GetCurrentAnimatorStateInfo(0).length * 0.5f)
+        if(data.t <= data.animator.GetState().length * 0.5f)
         {
             RaycastHit2D[] hits = Physics2D.BoxCastAll(
                 data.rb.position + data.stats.meleeOffset,
@@ -1083,14 +1071,14 @@ public static class UnitStates
         if (initialise)
         {
             data.animator.Play("JumpMelee");
-            data.animator.Update(0);
-            data.animator.Update(0);
-            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            //data.animator.Update(0);
+            //data.animator.Update(0);
+            data.t = data.animator.GetState().length;
             data.hitIDs.Clear();
         }
         data.t = Mathf.Max(0.0f, data.t - Time.deltaTime);
 
-        if (data.t <= data.animator.GetCurrentAnimatorStateInfo(0).length * 0.5f)
+        if (data.t <= data.animator.GetState().length * 0.5f)
         {
             RaycastHit2D[] hits = Physics2D.BoxCastAll(
                 data.rb.position + (Vector2.up * data.stats.jumpMeleeOffset.y) + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.jumpMeleeOffset.x),
@@ -1132,9 +1120,9 @@ public static class UnitStates
         if(initialise)
         {
             data.animator.Play("Hit_Impact");
-            data.animator.Update(0);
-            data.animator.Update(0);
-            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            //data.animator.Update(0);
+            //data.animator.Update(0);
+            data.t = data.animator.GetState().length;
         }
         data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
         data.t = Mathf.Max(data.t - Time.fixedDeltaTime, 0.0f);
@@ -1150,9 +1138,9 @@ public static class UnitStates
         if (initialise)
         {
             data.animator.Play("Launched");
-            data.animator.Update(0);
-            data.animator.Update(0);
-            data.t = data.animator.GetCurrentAnimatorStateInfo(0).length;
+            //data.animator.Update(0);
+            //data.animator.Update(0);
+            data.t = data.animator.GetState().length;
         }
         data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
         data.t = Mathf.Max(data.t - Time.fixedDeltaTime, 0.0f);
@@ -1167,13 +1155,13 @@ public static class UnitStates
 
     private static void UpdateFacing(UnitData data)
     {
-        data.animator.SetFloat("VelocityX", data.rb.velocity.x);
+        data.animator.SetVelocity(data.rb.velocity.x);
 
         if (data.rb.velocity.x > 0.1f) { data.isFacingRight = true; }
         else if (data.rb.velocity.x < -0.1f) { data.isFacingRight = false; }
         else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
         else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
-        data.animator.SetBool("FacingRight", data.isFacingRight);
+        data.animator.SetFacing(data.isFacingRight);
     }
     
     private static UnitState TryVault(UnitData data)
@@ -1388,7 +1376,7 @@ public static class UnitStates
                 {
                     data.target = ledgeHit.point + (data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
                     data.isFacingRight = !data.isFacingRight;
-                    data.animator.SetBool("FacingRight", data.isFacingRight);
+                    data.animator.SetFacing(data.isFacingRight);
                     return UnitState.LedgeGrab;
                 }
                 depth += scanDepthInterval;

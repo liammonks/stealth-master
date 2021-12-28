@@ -44,15 +44,15 @@ namespace Gadgets
 
         private void Update()
         {
-            if (aiming && owner == UnitHelper.Player)
+            if (owner == UnitHelper.Player)
             {
                 Vector2 mouseOffset = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - UnitHelper.Player.transform.position;
                 mouseOffset = Vector2.ClampMagnitude(mouseOffset, cameraOffsetDistance);
                 UnitHelper.Player.SetCameraOffset(mouseOffset);
-                owner.data.isFacingRight = mouseOffset.x > 0;
-                transform.localPosition = mouseOffset.normalized * 0.5f;
-                transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, mouseOffset));
-                transform.localScale = owner.data.isFacingRight ? Vector3.one : new Vector3(1, -1, 1);
+                //owner.data.isFacingRight = mouseOffset.x > 0;
+                Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, -mouseOffset));
+                owner.data.animator.RotateLayer(UnitAnimatorLayer.BackArm, rotation);
+                //transform.localScale = owner.data.isFacingRight ? Vector3.one : new Vector3(1, -1, 1);
             }
         }
 

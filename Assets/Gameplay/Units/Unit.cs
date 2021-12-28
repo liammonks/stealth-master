@@ -6,10 +6,10 @@ using UnityEngine;
 [Serializable]
 public class UnitData
 {
-    [HideInInspector] public Animator animator;
     [HideInInspector] public Rigidbody2D rb;
     [HideInInspector] public UnitState previousState;
     [HideInInspector] public LayerMask hitMask;
+    [HideInInspector] public UnitAnimator animator;
 
     public InputData input = new InputData();
     public UnitStats stats;
@@ -58,16 +58,6 @@ public class InputData
     }
 }
 
-[Flags]
-public enum UnitCollision
-{
-    None = 0,
-    Ground = 1,
-    Left = 2,
-    Right = 4,
-    Ceil = 8
-}
-
 public enum UnitState
 {
     Null,
@@ -103,10 +93,6 @@ public abstract class Unit : MonoBehaviour
 
     public uint ID;
 
-    [Header("Components")]
-    [SerializeField] private Transform spriteTransform;
-    [SerializeField] private Transform armPivot;
-
     [Header("State Data")]
     [SerializeField] protected UnitState state;
     public UnitData data;
@@ -139,7 +125,7 @@ public abstract class Unit : MonoBehaviour
         
         // Init data
         data.rb = GetComponent<Rigidbody2D>();
-        data.animator = spriteTransform.GetComponent<Animator>();
+        data.animator = GetComponentInChildren<UnitAnimator>();
 
         // Init default state
         UnitStates.Initialise(data, state);
@@ -342,7 +328,7 @@ public abstract class Unit : MonoBehaviour
             }
             Destroy(equippedGadget.gameObject);
         }
-        equippedGadget = Instantiate(toEquip, armPivot);
+        equippedGadget = Instantiate(toEquip, transform);
         equippedGadget.Equip(this);
         return true;
     }
@@ -446,11 +432,6 @@ public abstract class Unit : MonoBehaviour
     public InputData GetInputData()
     {
         return data.input;
-    }
-
-    public void SetVisible(bool isVisible)
-    {
-        spriteTransform.gameObject.SetActive(isVisible);
     }
 
     public void LockRB(bool locked)

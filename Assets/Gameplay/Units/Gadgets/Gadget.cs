@@ -10,6 +10,8 @@ namespace Gadgets
         public bool SecondaryActive { get => secondaryActive; }
 
         [SerializeField] protected List<UnitState> primaryAvailableStates, secondaryAvailableStates;
+        [SerializeField] private RuntimeAnimatorController frontArmAnimatorController;
+        [SerializeField] private RuntimeAnimatorController backArmAnimatorController;
 
         protected Unit owner;
         protected bool primaryActive, secondaryActive;
@@ -22,6 +24,8 @@ namespace Gadgets
         public void Equip(Unit unit)
         {
             owner = unit;
+            unit.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, frontArmAnimatorController);
+            unit.data.animator.SetLayer(UnitAnimatorLayer.BackArm, backArmAnimatorController);
             OnEquip();
         }
 

@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -136,7 +136,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -216,4 +216,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   primaryAvailableStates: 0100000002000000
   secondaryAvailableStates: 0100000002000000
+  frontArmAnimatorController: {fileID: 22100000, guid: 20a25a82186bf6641a7cebf91827d5d6, type: 2}
+  backArmAnimatorController: {fileID: 22100000, guid: 56fe2cc617ea6d94f8f81c9c1debd696, type: 2}
   stats: {fileID: 11400000, guid: cdc56ce4876e6644cbce2ae09e51200e, type: 2}

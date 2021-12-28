@@ -18,7 +18,7 @@ public class Vent : Interactable
         {
             // Remove unit from this vent
             activeUnits.Remove(interactingUnit);
-            interactingUnit.SetVisible(true);
+            interactingUnit.data.animator.SetVisible(true);
             interactingUnit.SetState(UnitState.Idle);
             interactingUnit.LockRB(false);
         }
@@ -26,7 +26,7 @@ public class Vent : Interactable
         {
             // Add unit to this vent
             Enter(interactingUnit);
-            interactingUnit.SetVisible(false);
+            interactingUnit.data.animator.SetVisible(false);
             interactingUnit.SetState(UnitState.Null);
             interactingUnit.LockRB(true);
         }
