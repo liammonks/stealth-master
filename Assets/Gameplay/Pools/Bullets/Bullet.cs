@@ -18,6 +18,7 @@ public class Bullet : MonoBehaviour
         bulletMask = Unit.CollisionMask | (1 << (isPlayer ? 10 : 9));
         m_Stats = stats;
         m_Velocity = (direction.normalized * m_Stats.speed) + parentVelocity;
+        transform.rotation = Quaternion.LookRotation(Vector3.forward, direction);
         transform.position = position;
         distanceTraveled = 0.0f;
         trail.Clear();

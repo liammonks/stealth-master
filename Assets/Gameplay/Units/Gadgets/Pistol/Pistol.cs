@@ -9,7 +9,7 @@ namespace Gadgets
         [SerializeField] private BulletStats stats;
         [SerializeField] private Transform pivot, bulletSpawn;
         
-        private const float cameraOffsetDistance = 2.0f;
+        private const float cameraOffsetDistance = 3.0f;
 
         private bool aiming = false;
 
@@ -46,7 +46,12 @@ namespace Gadgets
             {
                 Vector2 mouseOffset = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - UnitHelper.Player.transform.position;
                 mouseOffset = Vector2.ClampMagnitude(mouseOffset, cameraOffsetDistance);
-                if (aiming) { UnitHelper.Player.SetCameraOffset(mouseOffset); }
+                
+                if (aiming) {
+                    Vector2 cameraOffset = Vector2.ClampMagnitude(mouseOffset, cameraOffsetDistance);
+                    if (!owner.data.isFacingRight) { cameraOffset.x *= -1; }
+                    UnitHelper.Player.SetCameraOffset(cameraOffset);
+                }
                 
                 //owner.data.isFacingRight = mouseOffset.x > 0;
                 Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? mouseOffset : -mouseOffset));
