@@ -10,10 +10,11 @@ public class Player : Unit
     public static Vector2 MouseDelta;
 
     [Header("Player")]
-    [SerializeField] private Transform cameraTarget;
     [SerializeField] private int equippedGadgetIndex = -1;
     [SerializeField] private Camera mainCamera;
     private Coroutine enableCrawlCoroutine;
+
+    private Vector2 defaultCameraOffset = new Vector2(0, 0.3f);
 
     protected override void Start()
     {
@@ -109,11 +110,6 @@ public class Player : Unit
         {
             Interact();
         }
-    }
-    
-    public void SetCameraOffset(Vector2 offset)
-    {
-        cameraTarget.localPosition = offset;
     }
 
     #region Gadgets

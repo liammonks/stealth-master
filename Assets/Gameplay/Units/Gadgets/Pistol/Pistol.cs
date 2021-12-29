@@ -28,6 +28,10 @@ namespace Gadgets
         {
             canPrimaryOverride = true;
             aiming = true;
+            if (owner == UnitHelper.Player)
+            {
+                PlayerCamera.Instance.SetState(PlayerCameraState.Aiming);
+            }
         }
 
         protected override void OnSecondaryDisabled()
@@ -36,7 +40,7 @@ namespace Gadgets
             aiming = false;
             if (owner == UnitHelper.Player)
             {
-                UnitHelper.Player.SetCameraOffset(Vector2.zero);
+                PlayerCamera.Instance.SetState(PlayerCameraState.Default);
             }
         }
 
@@ -49,11 +53,9 @@ namespace Gadgets
                 
                 if (aiming) {
                     Vector2 cameraOffset = Vector2.ClampMagnitude(mouseOffset, cameraOffsetDistance);
-                    if (!owner.data.isFacingRight) { cameraOffset.x *= -1; }
-                    UnitHelper.Player.SetCameraOffset(cameraOffset);
+                    PlayerCamera.Instance.SetOffset(cameraOffset, true);
                 }
                 
-                //owner.data.isFacingRight = mouseOffset.x > 0;
                 Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? mouseOffset : -mouseOffset));
                 owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, rotation);
                 pivot.rotation = rotation;

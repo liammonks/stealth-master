@@ -6,7 +6,8 @@ using UnityEngine;
 public enum PlayerCameraState
 {
     Default,
-    Inventory
+    Inventory,
+    Aiming
 }
 
 public class PlayerCamera : MonoBehaviour
@@ -15,6 +16,8 @@ public class PlayerCamera : MonoBehaviour
     public static PlayerCamera Instance;
 
     public PlayerCameraState CurrentState => currentState;
+
+    [SerializeField] private Transform dynamicCameraTarget;
 
     private Animator cameraAnimator;
     private PlayerCameraState currentState;
@@ -38,4 +41,8 @@ public class PlayerCamera : MonoBehaviour
         currentState = state;
     }
 
+    public void SetOffset(Vector2 offset, bool playerRelative)
+    {
+        dynamicCameraTarget.position = playerRelative ? UnitHelper.Player.transform.position + (Vector3)offset : offset;
+    }
 }
