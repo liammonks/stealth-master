@@ -25,8 +25,7 @@ namespace Gadgets
         {
             owner.SetState(UnitState.Null);
             owner.data.animator.Play("Punch");
-            //owner.data.animator.Update(0);
-            //owner.data.animator.Update(0);
+            owner.data.animator.UpdateState();
             float duration = owner.data.animator.GetState().length;
             owner.data.rb.velocity = Vector2.zero;
 

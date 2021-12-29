@@ -7,25 +7,31 @@ namespace Gadgets
     public class Pistol : BaseGadget
     {
         [SerializeField] private BulletStats stats;
+        [SerializeField] private Transform pivot, bulletSpawn;
         
         private const float cameraOffsetDistance = 2.0f;
 
         private bool aiming = false;
 
+        protected override void OnPrimaryEnabled()
+        {
+            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - transform.position;
+            BulletPool.Fire(bulletSpawn.position, direction, owner.data.rb.velocity, stats, owner is Player);
+        }
+        
         protected override void OnPrimaryDisabled()
         {
 
         }
 
-        protected override void OnPrimaryEnabled()
+        protected override void OnSecondaryEnabled()
         {
-            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - transform.position;
-            BulletPool.Fire(transform.position, direction, owner.data.rb.velocity, stats, owner is Player);
+            canPrimaryOverride = true;
+            aiming = true;
         }
 
         protected override void OnSecondaryDisabled()
         {
-            owner.SetState(UnitState.Idle);
             canPrimaryOverride = false;
             aiming = false;
             if (owner == UnitHelper.Player)
@@ -34,25 +40,19 @@ namespace Gadgets
             }
         }
 
-        protected override void OnSecondaryEnabled()
-        {
-            owner.data.animator.Play("Idle");
-            owner.SetState(UnitState.Null);
-            canPrimaryOverride = true;
-            aiming = true;
-        }
-
         private void Update()
         {
             if (owner == UnitHelper.Player)
             {
                 Vector2 mouseOffset = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - UnitHelper.Player.transform.position;
                 mouseOffset = Vector2.ClampMagnitude(mouseOffset, cameraOffsetDistance);
-                UnitHelper.Player.SetCameraOffset(mouseOffset);
+                if (aiming) { UnitHelper.Player.SetCameraOffset(mouseOffset); }
+                
                 //owner.data.isFacingRight = mouseOffset.x > 0;
-                Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, -mouseOffset));
+                Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? mouseOffset : -mouseOffset));
                 owner.data.animator.RotateLayer(UnitAnimatorLayer.BackArm, rotation);
-                //transform.localScale = owner.data.isFacingRight ? Vector3.one : new Vector3(1, -1, 1);
+                owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, rotation);
+                pivot.rotation = rotation;
             }
         }
 

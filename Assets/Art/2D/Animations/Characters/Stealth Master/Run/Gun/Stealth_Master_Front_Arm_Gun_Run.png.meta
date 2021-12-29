@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2856058a2b4537644800110bc6e57d8a
+guid: 688b17e82896ca441ac7a6cccd04b514
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,7 +116,154 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth Master Test Idle_0
+      name: Stealth_Master_Front_Arm_Gun_Run_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b9493b901eeace4291b8bf107d64f70
+      internalID: -658260018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Front_Arm_Gun_Run_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a01d636b5e27b504fb61a585e060d2d6
+      internalID: -290038982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Front_Arm_Gun_Run_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df92b9344ca24864d977eb001cfc12e5
+      internalID: 685201749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Front_Arm_Gun_Run_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9278c8adfc418c844b78a983c6fda965
+      internalID: 1056774018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Front_Arm_Gun_Run_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 662db271d1470bc4fa298ddc56d4e9a2
+      internalID: 865640253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Front_Arm_Gun_Run_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e1b897e1b92e03418116f2bdb0bac82
+      internalID: -205688678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Front_Arm_Gun_Run_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36cb3552180eb0249b83251179600538
+      internalID: 744263580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Front_Arm_Gun_Run_7
       rect:
         serializedVersion: 2
         x: 0
@@ -124,41 +271,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2039c34d4986f2940800000000000000
-      internalID: 5273548677099328258
+      spriteID: 5c064dd4fa65ec4468e1e7a5a1660590
+      internalID: 932046986
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_1
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 256
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f3710666ae4211c00800000000000000
-      internalID: 869516792217737023
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth Master Test Idle_2
+      name: Stealth_Master_Front_Arm_Gun_Run_8
       rect:
         serializedVersion: 2
         x: 0
@@ -166,41 +292,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1972d9257aa41d300800000000000000
-      internalID: 275083134752335761
+      spriteID: 43061fac6dae13a419daa7ed0b84524c
+      internalID: 727120047
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_3
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 192
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5fbd08d8e56ec4980800000000000000
-      internalID: -8553208298508067851
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth Master Test Idle_4
+      name: Stealth_Master_Front_Arm_Gun_Run_9
       rect:
         serializedVersion: 2
         x: 0
@@ -208,41 +313,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: faa985904f988d720800000000000000
-      internalID: 2871196443670518447
+      spriteID: 638ab2442329f4c47b00cd2fe950637b
+      internalID: -1247364431
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_5
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 128
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b7080a00f8109f020800000000000000
-      internalID: 2375931992117117051
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth Master Test Idle_6
+      name: Stealth_Master_Front_Arm_Gun_Run_10
       rect:
         serializedVersion: 2
         x: 0
@@ -250,41 +334,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba4f225025fab7010800000000000000
-      internalID: 1187735693550613675
+      spriteID: 760bc22d34850cc45a5274c976e1ec3a
+      internalID: -1679701250
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth Master Test Idle_7
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 598864e1aa98e9c50800000000000000
-      internalID: 6673923061555038357
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth Master Test Idle_8
+      name: Stealth_Master_Front_Arm_Gun_Run_11
       rect:
         serializedVersion: 2
         x: 0
@@ -292,35 +355,14 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c697212639c992a20800000000000000
-      internalID: 3038131580457613676
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth Master Test Idle_9
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 802c1c9d1d2e86c10800000000000000
-      internalID: 2047135421569286664
+      spriteID: 99a4e74b801d9ce4da8b04da99e63190
+      internalID: 1741143661
       vertices: []
       indices: 
       edges: []
@@ -336,16 +378,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Stealth Master Test Idle_5: 2375931992117117051
-      Stealth Master Test Idle_6: 1187735693550613675
-      Stealth Master Test Idle_4: 2871196443670518447
-      Stealth Master Test Idle_2: 275083134752335761
-      Stealth Master Test Idle_7: 6673923061555038357
-      Stealth Master Test Idle_3: -8553208298508067851
-      Stealth Master Test Idle_9: 2047135421569286664
-      Stealth Master Test Idle_8: 3038131580457613676
-      Stealth Master Test Idle_1: 869516792217737023
-      Stealth Master Test Idle_0: 5273548677099328258
+      Stealth_Master_Front_Arm_Gun_Run_7: 932046986
+      Stealth_Master_Front_Arm_Gun_Run_5: -205688678
+      Stealth_Master_Front_Arm_Gun_Run_0: -658260018
+      Stealth_Master_Front_Arm_Gun_Run_1: -290038982
+      Stealth_Master_Front_Arm_Gun_Run_4: 865640253
+      Stealth_Master_Front_Arm_Gun_Run_8: 727120047
+      Stealth_Master_Front_Arm_Gun_Run_2: 685201749
+      Stealth_Master_Front_Arm_Gun_Run_10: -1679701250
+      Stealth_Master_Front_Arm_Gun_Run_9: -1247364431
+      Stealth_Master_Front_Arm_Gun_Run_6: 744263580
+      Stealth_Master_Front_Arm_Gun_Run_11: 1741143661
+      Stealth_Master_Front_Arm_Gun_Run_3: 1056774018
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

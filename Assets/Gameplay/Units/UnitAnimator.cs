@@ -14,7 +14,7 @@ public class UnitAnimator : MonoBehaviour
     [SerializeField] private Animator body, frontArm, backArm;
     [SerializeField] private Transform frontArmPivot, backArmPivot;
 
-    private string lastState;
+    private string lastState = "Idle";
     private bool animationLocked;
 
     public void Play(string animation, bool forced = false)
@@ -46,13 +46,16 @@ public class UnitAnimator : MonoBehaviour
     
     public void SetLayer(UnitAnimatorLayer layer, RuntimeAnimatorController controller)
     {
+        float normalizedTime = GetState().normalizedTime;
         switch (layer)
         {
             case UnitAnimatorLayer.FrontArm:
                 frontArm.runtimeAnimatorController = controller;
+                frontArm.Play(lastState, 0, normalizedTime);
                 break;
             case UnitAnimatorLayer.BackArm:
                 backArm.runtimeAnimatorController = controller;
+                backArm.Play(lastState, 0, normalizedTime);
                 break;
         }
     }
@@ -79,7 +82,7 @@ public class UnitAnimator : MonoBehaviour
 
     public void SetFacing(bool facingRight)
     {
-        transform.localScale = facingRight ? Vector3.one : new Vector3(-1, 1, 1);
+        transform.parent.localScale = facingRight ? Vector3.one : new Vector3(-1, 1, 1);
     }
     
     public void SetVelocity(float velocity)

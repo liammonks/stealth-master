@@ -268,8 +268,7 @@ public static class UnitStates
                 {
                     // Play stand to crawl, wait before entering state
                     data.animator.Play("StandToCrawl");
-                    //data.animator.Update(0);
-                    //data.animator.Update(0);
+                    data.animator.UpdateState();
                     data.t = data.animator.GetState().length;
                     data.isStanding = false;
                 }
@@ -440,8 +439,7 @@ public static class UnitStates
                     // Execute animation transition
                     data.animator.Play(data.previousState == UnitState.Dive ? "DiveFlip" : "SlideExit");
                     // Update animator to transition to relevant state
-                    //data.animator.Update(0);
-                    //data.animator.Update(0);
+                    data.animator.UpdateState();
                     data.t = data.animator.GetState().length;
                     data.isStanding = true;
                 }
@@ -494,14 +492,15 @@ public static class UnitStates
     {
         if (initialise)
         {
-            if (data.previousState == UnitState.Crawl || data.previousState == UnitState.CrawlIdle)
-            {
-                data.animator.Play("BellySlide");
-            }
-            else
-            {
-                data.animator.Play("Dive");
-            }
+            //if (data.previousState == UnitState.Crawl || data.previousState == UnitState.CrawlIdle)
+            //{
+            //    data.animator.Play("BellySlide");
+            //}
+            //else
+            //{
+            //    data.animator.Play("Dive");
+            //}
+            data.animator.Play("Dive");
             data.isStanding = false;
             // Boost when diving from jump
             if (data.previousState == UnitState.Jump || data.previousState == UnitState.WallJump)
@@ -550,8 +549,7 @@ public static class UnitStates
                         // Execute animation transition
                         data.animator.Play(Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed ? "DiveFlip" : "CrawlToStand");
                         // Update animator to transition to relevant state
-                        //data.animator.Update(0);
-                        //data.animator.Update(0);
+                        data.animator.UpdateState();
                         data.t = data.animator.GetState().length;
                         data.isStanding = true;
                     }
@@ -609,8 +607,7 @@ public static class UnitStates
             // Reset jump input
             data.input.jumpRequestTime = -1;
             data.animator.Play("Jump");
-            //data.animator.Update(0);
-            //data.animator.Update(0);
+            data.animator.UpdateState();
             data.t = data.animator.GetState().length;
             data.isStanding = true;
             data.groundSpringActive = false;
@@ -903,8 +900,7 @@ public static class UnitStates
             data.isFacingRight = !data.isFacingRight;
             data.animator.SetFacing(data.isFacingRight);
             data.animator.Play("WallJump");
-            //data.animator.Update(0);
-            //data.animator.Update(0);
+            data.animator.UpdateState();
             data.t = data.animator.GetState().length;
             data.rb.velocity = (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.wallJumpForce.x +
                                 Vector2.up * data.stats.wallJumpForce.y;
@@ -1034,8 +1030,7 @@ public static class UnitStates
         if (initialise)
         {
             data.animator.Play("Melee");
-            //data.animator.Update(0);
-            //data.animator.Update(0);
+            data.animator.UpdateState();
             data.t = data.animator.GetState().length;
             data.rb.velocity = Vector2.zero;
             data.hitIDs.Clear();
@@ -1084,8 +1079,7 @@ public static class UnitStates
         if (initialise)
         {
             data.animator.Play("JumpMelee");
-            //data.animator.Update(0);
-            //data.animator.Update(0);
+            data.animator.UpdateState();
             data.t = data.animator.GetState().length;
             data.hitIDs.Clear();
         }
@@ -1133,8 +1127,7 @@ public static class UnitStates
         if (initialise)
         {
             data.animator.Play("Hit_Impact");
-            //data.animator.Update(0);
-            //data.animator.Update(0);
+            data.animator.UpdateState();
             data.t = data.animator.GetState().length;
         }
         data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
@@ -1151,8 +1144,7 @@ public static class UnitStates
         if (initialise)
         {
             data.animator.Play("Launched");
-            //data.animator.Update(0);
-            //data.animator.Update(0);
+            data.animator.UpdateState();
             data.t = data.animator.GetState().length;
         }
         data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
