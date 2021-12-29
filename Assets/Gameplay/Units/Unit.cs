@@ -91,6 +91,9 @@ public abstract class Unit : MonoBehaviour
     public static LayerMask InteractionMask => m_InteractionMask;
     private static LayerMask m_InteractionMask;
 
+    public delegate void OnDamageTaken();
+    public event OnDamageTaken onDamageTaken;
+
     public uint ID;
 
     [Header("State Data")]
@@ -306,9 +309,9 @@ public abstract class Unit : MonoBehaviour
         float impactRate = animatedRigidbody ? (data.rb.velocity - animatedRigidbody.velocity).magnitude : other.relativeVelocity.magnitude;
 
         if (impactRate > impactRateThreshold) {
-            float impactDamage = impactRate * data.stats.collisionDamageMultiplier;
-            if (other.rigidbody) { impactDamage *= other.rigidbody.mass; }
+            float impactDamage = (impactRate * data.stats.collisionDamageMultiplier) * (animatedRigidbody ? animatedRigidbody.mass : other.rigidbody.mass);
             TakeDamage(impactDamage, other.relativeVelocity.normalized * impactDamage);
+            onDamageTaken.Invoke();
         }
     }
 

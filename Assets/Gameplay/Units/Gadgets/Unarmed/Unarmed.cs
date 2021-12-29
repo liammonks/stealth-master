@@ -61,18 +61,28 @@ namespace Gadgets
             yield return new WaitForSeconds(duration * 0.5f);
             owner.SetState(UnitState.Idle);
         }
+        
+        #region Block
 
         protected override void OnSecondaryEnabled()
         {
             owner.SetState(UnitState.Null);
             owner.data.animator.Play("Block");
             owner.data.rb.velocity = Vector2.zero;
+            owner.onDamageTaken += OnDamageTaken;
+        }
+        
+        private void OnDamageTaken()
+        {
+            owner.data.animator.Play("Block_Impact", true);
         }
 
         protected override void OnSecondaryDisabled()
         {
             owner.SetState(UnitState.Idle);
+            owner.onDamageTaken -= OnDamageTaken;
         }
 
+        #endregion
     }
 }

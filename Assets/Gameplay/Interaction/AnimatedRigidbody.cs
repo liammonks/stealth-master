@@ -5,6 +5,7 @@ using UnityEngine;
 public class AnimatedRigidbody : MonoBehaviour
 {
     public Vector2 velocity;
+    public float mass = 1.0f;
 
     private Vector2 lastPosition;
     

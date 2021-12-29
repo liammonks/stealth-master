@@ -62,7 +62,7 @@ public static class UnitStates
         Debug.LogError("No State Function for " + state.ToString());
         return UnitState.Null;
     }
-    
+
     private static UnitState NullState(UnitData data, bool initialise)
     {
         data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
@@ -71,7 +71,7 @@ public static class UnitStates
 
     private static UnitState GrappleHookSwingState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.animator.Play("Fall");
         }
@@ -120,7 +120,7 @@ public static class UnitStates
             {
                 UnitHelper.Instance.EmitGroundParticles(data.rb.position + (Vector2.down * data.stats.standingHalfHeight), data.rb.velocity);
             }
-            
+
             // Execute Jump
             if (data.input.jumpQueued)
             {
@@ -146,7 +146,7 @@ public static class UnitStates
                 data.animator.Play("Idle");
             }
             // Execute Melee
-            if(data.input.meleeQueued)
+            if (data.input.meleeQueued)
             {
                 return UnitState.Melee;
             }
@@ -159,8 +159,7 @@ public static class UnitStates
             {
                 // Play stand to crawl, wait before entering state
                 data.animator.Play("StandToCrawl");
-                //data.animator.Update(0);
-                //data.animator.Update(0);
+                data.animator.UpdateState();
                 data.t = data.animator.GetState().length;
                 data.isStanding = false;
             }
@@ -176,10 +175,10 @@ public static class UnitStates
         UpdateFacing(data);
         return UnitState.Idle;
     }
-    
+
     private static UnitState RunState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.animator.Play("Run");
             data.isStanding = true;
@@ -215,14 +214,15 @@ public static class UnitStates
                     return climbState;
                 }
             }
-            if(Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f) {
+            if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
+            {
                 UnitState vaultState = TryVault(data);
                 if (vaultState != UnitState.Null)
                 {
                     return vaultState;
                 }
             }
-            
+
             // Execute Jump
             if (data.input.jumpQueued)
             {
@@ -278,7 +278,7 @@ public static class UnitStates
             {
                 // Waiting to enter crawl state
                 data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
-                
+
                 if (data.t == 0.0f)
                     return UnitState.Crawl;
             }
@@ -289,7 +289,7 @@ public static class UnitStates
 
     private static UnitState CrawlIdleState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.isStanding = false;
             data.animator.Play("Crawl_Idle");
@@ -326,8 +326,7 @@ public static class UnitStates
                 // Execute animation transition
                 data.animator.Play("CrawlToStand");
                 // Update animator to transition to relevant state
-                //data.animator.Update(0);
-                //data.animator.Update(0);
+                data.animator.UpdateState();
                 data.t = data.animator.GetState().length;
                 data.isStanding = true;
             }
@@ -340,8 +339,9 @@ public static class UnitStates
                     return UnitState.Idle;
             }
         }
-        
-        if(!data.isGrounded) {
+
+        if (!data.isGrounded)
+        {
             return UnitState.Dive;
         }
         UpdateFacing(data);
@@ -350,7 +350,7 @@ public static class UnitStates
 
     private static UnitState CrawlState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.isStanding = false;
             data.animator.Play("Crawl");
@@ -378,8 +378,9 @@ public static class UnitStates
                 return UnitState.CrawlIdle;
             }
         }
-        
-        if(!data.isGrounded) {
+
+        if (!data.isGrounded)
+        {
             // Grab on to ledges below
             UnitState ledgeDrop = TryDrop(data);
             if (ledgeDrop != UnitState.Null)
@@ -399,8 +400,7 @@ public static class UnitStates
                 // Execute animation transition
                 data.animator.Play("CrawlToStand");
                 // Update animator to transition to relevant state
-                //data.animator.Update(0);
-                //data.animator.Update(0);
+                data.animator.UpdateState();
                 data.t = data.animator.GetState().length;
                 data.isStanding = true;
             }
@@ -417,10 +417,10 @@ public static class UnitStates
         UpdateFacing(data);
         return UnitState.Crawl;
     }
-    
+
     private static UnitState SlideState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.isStanding = false;
             if (data.previousState != UnitState.Dive)
@@ -489,14 +489,17 @@ public static class UnitStates
         UpdateFacing(data);
         return UnitState.Slide;
     }
-    
+
     private static UnitState DiveState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
-            if (data.previousState == UnitState.Crawl || data.previousState == UnitState.CrawlIdle) {
+            if (data.previousState == UnitState.Crawl || data.previousState == UnitState.CrawlIdle)
+            {
                 data.animator.Play("BellySlide");
-            } else {
+            }
+            else
+            {
                 data.animator.Play("Dive");
             }
             data.isStanding = false;
@@ -523,12 +526,12 @@ public static class UnitStates
             velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
             data.rb.velocity = velocity;
         }
-        
+
         // Re-enable ground spring after delay
-        if(!data.groundSpringActive)
+        if (!data.groundSpringActive)
         {
             data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
-            if(data.t == 0.0f)
+            if (data.t == 0.0f)
             {
                 data.groundSpringActive = true;
             }
@@ -601,7 +604,7 @@ public static class UnitStates
     private static UnitState JumpState(UnitData data, bool initialise)
     {
         Vector2 velocity = data.rb.velocity;
-        if(initialise)
+        if (initialise)
         {
             // Reset jump input
             data.input.jumpRequestTime = -1;
@@ -646,7 +649,7 @@ public static class UnitStates
             float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
             velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
         }
-        
+
         if (!data.isGrounded || !data.groundSpringActive)
         {
             // Execute Dive
@@ -655,13 +658,13 @@ public static class UnitStates
                 return UnitState.Dive;
             }
         }
-        
+
         // Melee
-        if(data.input.meleeQueued)
+        if (data.input.meleeQueued)
         {
             return UnitState.JumpMelee;
         }
-        
+
         // End of jump animation
         if (data.t == 0.0f)
         {
@@ -683,7 +686,7 @@ public static class UnitStates
             data.isStanding = true;
         }
 
-        if(data.t > 0.0f)
+        if (data.t > 0.0f)
         {
             data.t -= Time.deltaTime;
             // Check Vault
@@ -697,13 +700,14 @@ public static class UnitStates
             }
         }
 
-        if(data.t <= 0.0f && data.t != -10.0f)
+        if (data.t <= 0.0f && data.t != -10.0f)
         {
             data.animator.Play("Fall");
             data.t = -10.0f;
         }
-        
-        if(data.rb.velocity.y < 0) {
+
+        if (data.rb.velocity.y < 0)
+        {
             data.groundSpringActive = true;
         }
 
@@ -716,7 +720,7 @@ public static class UnitStates
             velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
             data.rb.velocity = velocity;
         }
-        
+
         // Return to ground
         if (data.isGrounded)
         {
@@ -737,9 +741,10 @@ public static class UnitStates
         {
             return climbState;
         }
-        
+
         // Wall Slide
-        if(FacingWall(data)) {
+        if (FacingWall(data))
+        {
             return UnitState.WallSlide;
         }
 
@@ -751,10 +756,10 @@ public static class UnitStates
         UpdateFacing(data);
         return UnitState.Fall;
     }
-    
+
     private static UnitState VaultOverState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.animator.Play("VaultOver");
             data.t = data.stats.vaultDuration;
@@ -770,7 +775,7 @@ public static class UnitStates
             data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
             data.rb.velocity = (data.target / data.stats.vaultDuration);
         }
-        if(data.t == 0.0f)
+        if (data.t == 0.0f)
         {
             data.groundSpringActive = true;
             // Enable collider
@@ -779,7 +784,7 @@ public static class UnitStates
         }
         return UnitState.VaultOverState;
     }
-    
+
     private static UnitState VaultOnState(UnitData data, bool initialise)
     {
         if (initialise)
@@ -807,10 +812,10 @@ public static class UnitStates
         }
         return UnitState.VaultOnState;
     }
-    
+
     private static UnitState LedgeGrabState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             // Check if the ledge wall extends down to feet
             RaycastHit2D feetHit = Physics2D.Raycast(
@@ -825,7 +830,7 @@ public static class UnitStates
                 feetHit ? Color.green : Color.red,
                 1.0f
             );
-            
+
             data.animator.Play(feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
             data.t = 0.2f;
             data.groundSpringActive = false;
@@ -835,17 +840,20 @@ public static class UnitStates
         data.rb.rotation = 0;
         data.t -= Time.fixedDeltaTime;
 
-        if (data.t > 0.0f) {
+        if (data.t > 0.0f)
+        {
             data.rb.velocity = (data.target - data.rb.position) / Mathf.Max(0.01f, data.t);
         }
 
-        if (data.t <= 0.0f && data.t != -10.0f) {
+        if (data.t <= 0.0f && data.t != -10.0f)
+        {
             data.rb.position = data.target;
             data.rb.velocity = Vector2.zero;
             data.t = -10.0f;
         }
 
-        if (data.t == -10.0f) {
+        if (data.t == -10.0f)
+        {
             // Wall Jump
             if (data.input.jumpQueued)
             {
@@ -883,13 +891,13 @@ public static class UnitStates
                 return UnitState.WallSlide;
             }
         }
-        
+
         return UnitState.LedgeGrab;
     }
-    
+
     private static UnitState WallJumpState(UnitData data, bool initialise)
-    {        
-        if(initialise)
+    {
+        if (initialise)
         {
             // Flip facing
             data.isFacingRight = !data.isFacingRight;
@@ -901,9 +909,9 @@ public static class UnitStates
             data.rb.velocity = (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.wallJumpForce.x +
                                 Vector2.up * data.stats.wallJumpForce.y;
         }
-        
+
         data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
-        if(data.t == 0.0f && data.rb.velocity.y < 0)
+        if (data.t == 0.0f && data.rb.velocity.y < 0)
         {
             data.animator.Play("WallJumpFall");
             data.groundSpringActive = true;
@@ -934,10 +942,10 @@ public static class UnitStates
         UpdateFacing(data);
         return UnitState.WallJump;
     }
-    
+
     private static UnitState ClimbState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.animator.Play("Climb");
             data.t = data.stats.climbDuration;
@@ -953,22 +961,26 @@ public static class UnitStates
         }
 
         data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
-        if(data.t == 0.0f) {
+        if (data.t == 0.0f)
+        {
             data.rb.velocity = Vector2.zero;
             data.rb.position = data.target;
             data.rb.isKinematic = false;
             data.groundSpringActive = true;
             return UnitState.Idle;
-        } else {
+        }
+        else
+        {
             data.rb.velocity = (data.target - data.rb.position) / data.t;
         }
-        
+
         return UnitState.Climb;
     }
-    
+
     private static UnitState WallSlideState(UnitData data, bool initialise)
     {
-        if (initialise) {
+        if (initialise)
+        {
             data.animator.Play("WallSlide");
         }
 
@@ -977,11 +989,12 @@ public static class UnitStates
         {
             return UnitState.Fall;
         }
-        
-        if (data.rb.velocity.y <= 0.0f) {
+
+        if (data.rb.velocity.y <= 0.0f)
+        {
             data.groundSpringActive = true;
         }
-        
+
         // Wall Jump
         if (data.rb.velocity.y > 0)
         {
@@ -1012,13 +1025,13 @@ public static class UnitStates
         {
             return climbState;
         }
-        
+
         return UnitState.WallSlide;
     }
-    
+
     private static UnitState MeleeState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.animator.Play("Melee");
             //data.animator.Update(0);
@@ -1028,8 +1041,8 @@ public static class UnitStates
             data.hitIDs.Clear();
         }
         data.t = Mathf.Max(0.0f, data.t - Time.deltaTime);
-        
-        if(data.t <= data.animator.GetState().length * 0.5f)
+
+        if (data.t <= data.animator.GetState().length * 0.5f)
         {
             RaycastHit2D[] hits = Physics2D.BoxCastAll(
                 data.rb.position + data.stats.meleeOffset,
@@ -1045,7 +1058,7 @@ public static class UnitStates
                 Quaternion.Euler(0, 0, data.rb.rotation),
                 hits.Length > 0 ? Color.green : Color.red
             );
-            foreach(RaycastHit2D hit in hits)
+            foreach (RaycastHit2D hit in hits)
             {
                 Unit unit = hit.rigidbody?.GetComponent<Unit>();
                 if (unit && !data.hitIDs.Contains(unit.ID))
@@ -1058,8 +1071,8 @@ public static class UnitStates
                 }
             }
         }
-        
-        if(data.t == 0.0f)
+
+        if (data.t == 0.0f)
         {
             return UnitState.Idle;
         }
@@ -1117,7 +1130,7 @@ public static class UnitStates
 
     private static UnitState HitImpactState(UnitData data, bool initialise)
     {
-        if(initialise)
+        if (initialise)
         {
             data.animator.Play("Hit_Impact");
             //data.animator.Update(0);
@@ -1126,7 +1139,7 @@ public static class UnitStates
         }
         data.ApplyDrag(data.isGrounded ? data.stats.groundDrag : data.stats.airDrag);
         data.t = Mathf.Max(data.t - Time.fixedDeltaTime, 0.0f);
-        if(data.t == 0.0f)
+        if (data.t == 0.0f)
         {
             return UnitState.Idle;
         }
@@ -1163,7 +1176,7 @@ public static class UnitStates
         else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
         data.animator.SetFacing(data.isFacingRight);
     }
-    
+
     private static UnitState TryVault(UnitData data)
     {
         const float nearHitBuffer = 0.25f;
@@ -1195,7 +1208,7 @@ public static class UnitStates
             -(Vector2)data.rb.transform.up * (data.stats.maxVaultHeight - data.stats.minVaultHeight),
             Color.red
         );
-        if(vaultHit)
+        if (vaultHit)
         {
             Debug.DrawRay(
                 data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultGrabDistance) + (Vector2.down * (data.stats.standingHalfHeight - data.stats.maxVaultHeight)),
@@ -1204,7 +1217,8 @@ public static class UnitStates
                 data.stats.vaultDuration
             );
             // Dont vault if surface is not flat
-            if (Vector2.Dot(Vector2.up, vaultHit.normal) <= 0.9f) {
+            if (Vector2.Dot(Vector2.up, vaultHit.normal) <= 0.9f)
+            {
                 Debug.DrawRay(vaultHit.point, vaultHit.normal, Color.red, data.stats.vaultDuration);
                 return UnitState.Null;
             }
@@ -1223,7 +1237,7 @@ public static class UnitStates
                     Color.red,
                     data.stats.vaultDuration
                 );
-                if(landingZoneHit)
+                if (landingZoneHit)
                 {
                     // Landing zone obstruction, try to vault on top of the object
                     Debug.DrawRay(
@@ -1319,8 +1333,10 @@ public static class UnitStates
             );
             if (scanHit && scanHit.distance <= climbHit.distance + minLedgeThickness)
             {
-                
-            } else {
+
+            }
+            else
+            {
                 Debug.DrawLine(
                     data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
                     climbHit.point,
@@ -1341,7 +1357,7 @@ public static class UnitStates
         const float scanDepth = 0.5f;
         const float scanDepthInterval = 0.01f;
         float castDist = data.stats.standingScale.x;
-        
+
         RaycastHit2D dropHit = Physics2D.BoxCast(
             data.rb.position,
             new Vector2(data.stats.standingScale.x, boxDepth),
@@ -1356,8 +1372,9 @@ public static class UnitStates
         //    Quaternion.identity,
         //    dropHit ? Color.green : Color.red
         //);
-        
-        if(!dropHit) {
+
+        if (!dropHit)
+        {
             float depth = 0.0f;
             while (depth <= scanDepth)
             {
@@ -1385,18 +1402,20 @@ public static class UnitStates
 
         return UnitState.Null;
     }
-    
+
     private static bool CanCrawl(UnitData data)
     {
         const float sideCheckOffset = 0.1f;
         float heightOffset = -data.stats.standingHalfHeight + data.stats.crawlingHalfHeight + 0.05f;
         RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
-        if (hit) {
+        if (hit)
+        {
             // Check left side
             hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
             ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + (-(Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
-            if (hit) {
+            if (hit)
+            {
                 // Check Right side
                 hit = Physics2D.BoxCast(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
                 ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + ((Vector2)data.rb.transform.up * heightOffset) + ((Vector2)data.rb.transform.right * (data.stats.crawlingScale.x + sideCheckOffset - data.stats.standingScale.x) * 0.5f), data.stats.crawlingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
@@ -1412,14 +1431,16 @@ public static class UnitStates
         return !hit;
     }
 
-    private static bool CanClimb(UnitData data) {
+    private static bool CanClimb(UnitData data)
+    {
         Vector2 target = data.rb.position + (Vector2.up * (data.stats.standingHalfHeight + 0.1f - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
         RaycastHit2D hit = Physics2D.BoxCast(target, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(target, data.stats.standingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green, data.stats.climbDuration);
         return !hit;
     }
-    
-    private static bool FacingWall(UnitData data) {
+
+    private static bool FacingWall(UnitData data)
+    {
         const float detectionDepth = 0.1f;
         float bodyWidth = data.isStanding ? data.stats.standingHalfWidth : data.stats.crawlingHalfWidth;
         RaycastHit2D wallHit = Physics2D.BoxCast(
@@ -1443,6 +1464,6 @@ public static class UnitStates
         }
         return wallHit;
     }
-        
+
     #endregion
 }
