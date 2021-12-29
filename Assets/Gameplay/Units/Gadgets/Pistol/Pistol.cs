@@ -50,7 +50,6 @@ namespace Gadgets
                 
                 //owner.data.isFacingRight = mouseOffset.x > 0;
                 Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? mouseOffset : -mouseOffset));
-                owner.data.animator.RotateLayer(UnitAnimatorLayer.BackArm, rotation);
                 owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, rotation);
                 pivot.rotation = rotation;
             }

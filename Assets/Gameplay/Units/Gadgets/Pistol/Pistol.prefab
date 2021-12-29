@@ -110,8 +110,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   primaryAvailableStates: 0100000002000000
   secondaryAvailableStates: 0100000002000000
-  frontArmAnimatorController: {fileID: 9100000, guid: 3b28c3aad6d34524da2e0ab6ef25f72e, type: 2}
-  backArmAnimatorController: {fileID: 9100000, guid: fc9193ab76e622c4686677d8bd29d3c3, type: 2}
+  frontArmAnimatorController: {fileID: 22100000, guid: 636379274b9f3304f86d595f8d156116, type: 2}
+  backArmAnimatorController: {fileID: 22100000, guid: 3ef4c1f85310ae94ab3d15d33cb9e7d7, type: 2}
   stats: {fileID: 11400000, guid: cdc56ce4876e6644cbce2ae09e51200e, type: 2}
   pivot: {fileID: 7169392390908831529}
   bulletSpawn: {fileID: 3488696330094168166}

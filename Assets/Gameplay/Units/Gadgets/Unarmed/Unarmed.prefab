@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   primaryAvailableStates: 0100000002000000
   secondaryAvailableStates: 0100000002000000
-  frontArmAnimatorController: {fileID: 9100000, guid: cffe30f533bec884cadad68794a600bc, type: 2}
-  backArmAnimatorController: {fileID: 9100000, guid: dca6138f6ec880c4ea3758f554b79d41, type: 2}
+  frontArmAnimatorController: {fileID: 22100000, guid: 25c8ef957bd38d946a133e6206083447, type: 2}
+  backArmAnimatorController: {fileID: 22100000, guid: 480b869b6f676024fa9b99c2b44ead7e, type: 2}
   damage: 10
   knockback: 1
   hitScale: {x: 0.5, y: 0.5}
