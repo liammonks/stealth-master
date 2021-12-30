@@ -9,6 +9,7 @@ public class UnitHelper : MonoBehaviour
     public static Interactable[] Interactables;
 
     [SerializeField] private ParticleSystem groundParticlePrefab;
+    [SerializeField] private List<GameObject> gibPrefabs;
 
     private Queue<ParticleSystem> groundParticles;
 
@@ -52,5 +53,14 @@ public class UnitHelper : MonoBehaviour
     private static uint availableUnitID = 0;
     public static uint GetUnitID() {
         return availableUnitID++;
+    }
+    
+    public void SpawnGibs(Vector2 position, float force)
+    {
+        foreach(GameObject gibPrefab in gibPrefabs)
+        {
+            GameObject gib = Instantiate(gibPrefab, position, Quaternion.Euler(0, 0, Random.Range(0, 360)), transform);
+            gib.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f)).normalized * (force * Random.Range(0.5f, 1.0f));
+        }
     }
 }

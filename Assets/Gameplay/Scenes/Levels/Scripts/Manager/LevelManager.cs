@@ -39,6 +39,7 @@ public class LevelManager : MonoBehaviour
     {
         if (activePlayerSpawn != null)
         {
+            UnitHelper.Player.data.rb.velocity = Vector2.zero;
             UnitHelper.Player.transform.position = activePlayerSpawn.transform.position;
         }
     }

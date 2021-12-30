@@ -6,8 +6,7 @@ namespace Gadgets
 {
     public class Unarmed : BaseGadget
     {
-        [SerializeField] private float damage = 10.0f;
-        [SerializeField] private float knockback = 1.0f;
+        [SerializeField] private float power = 10.0f;
         [SerializeField] private Vector2 hitScale = new Vector2(0.5f, 0.5f);
         [SerializeField] private Vector2 hitOffset = new Vector2(0.5f, 0.4f);
 
@@ -50,10 +49,8 @@ namespace Gadgets
                 Unit unit = hit.rigidbody?.GetComponent<Unit>();
                 if (unit)
                 {
-                    unit.TakeDamage(
-                        damage,
-                        owner.data.rb.velocity + ((owner.data.isFacingRight ? Vector2.right : Vector2.left) * knockback * owner.data.stats.knockbackMultiplier)
-                    );
+                    Vector2 impact = owner.data.rb.velocity + ((owner.data.isFacingRight ? Vector2.right : Vector2.left) * owner.data.stats.knockbackMultiplier);
+                    unit.TakeDamage(impact * power);
                 }
             }
 

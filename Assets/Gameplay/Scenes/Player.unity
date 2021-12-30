@@ -6191,6 +6191,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundParticlePrefab: {fileID: 7559014573707121322, guid: 135ef959a12e0d940b671dc5a88958d9, type: 3}
+  gibPrefabs:
+  - {fileID: 4363105413672967797, guid: c72ecf6deade52b47a480a2692111ee9, type: 3}
+  - {fileID: 4363105413672967797, guid: be7fb35bca95d6d4c925c69317b42343, type: 3}
+  - {fileID: 4363105413672967797, guid: b42add87e65cf564ebb7250741c74f63, type: 3}
+  - {fileID: 4363105413672967797, guid: 03e412961efbf8e43b236467debac9e4, type: 3}
+  - {fileID: 4363105413672967797, guid: 53058a1cf60862c4cbd587d27cdcf026, type: 3}
+  - {fileID: 4363105413672967797, guid: cb06ce4d1a1786349b21d2e54bda2f05, type: 3}
+  - {fileID: 4363105413672967797, guid: 7ec0578d4cace3c43bfc1b3b4ba86475, type: 3}
 --- !u!4 &583339124
 Transform:
   m_ObjectHideFlags: 0

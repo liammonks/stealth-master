@@ -1058,10 +1058,8 @@ public static class UnitStates
                 Unit unit = hit.rigidbody?.GetComponent<Unit>();
                 if (unit && !data.hitIDs.Contains(unit.ID))
                 {
-                    unit.TakeDamage(
-                        data.stats.meleeDamage,
-                        data.rb.velocity + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.meleeKnockback * data.stats.knockbackMultiplier)
-                    );
+                    Vector2 impact = data.rb.velocity + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.meleeKnockback * data.stats.knockbackMultiplier;
+                    unit.TakeDamage(impact * data.stats.meleeDamage);
                     data.hitIDs.Add(unit.ID);
                 }
             }
@@ -1106,10 +1104,8 @@ public static class UnitStates
                 Unit unit = hit.rigidbody?.GetComponent<Unit>();
                 if (unit && !data.hitIDs.Contains(unit.ID))
                 {
-                    unit.TakeDamage(
-                        data.stats.jumpMeleeDamage,
-                        data.rb.velocity + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.jumpMeleeKnockback * data.stats.knockbackMultiplier)
-                    );
+                    Vector2 impact = data.rb.velocity + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.jumpMeleeKnockback * data.stats.knockbackMultiplier;
+                    unit.TakeDamage(impact * data.stats.jumpMeleeDamage);
                     data.hitIDs.Add(unit.ID);
                 }
             }

@@ -87,7 +87,7 @@ public abstract class Unit : MonoBehaviour
 {
     public static LayerMask CollisionMask => m_CollisionMask;
     private static LayerMask m_CollisionMask;
-    
+
     public static LayerMask InteractionMask => m_InteractionMask;
     private static LayerMask m_InteractionMask;
 
@@ -284,20 +284,32 @@ public abstract class Unit : MonoBehaviour
         {
             Die();
         }
+        if (onDamageTaken != null)
+        {
+            onDamageTaken.Invoke();
+        }
     }
 
-    public void TakeDamage(float damage, Vector2 velocity)
+    public void TakeDamage(Vector2 impactVelocity)
     {
-        data.rb.velocity += velocity;
+        data.rb.velocity += impactVelocity;
+        if (impactVelocity.magnitude < impactRateThreshold) { return; }
+        
         state = UnitStates.Initialise(data, UnitState.Launched);
-        health = Mathf.Max(0, health - damage);
+        float impactDamage = impactVelocity.magnitude * data.stats.collisionDamageMultiplier;
+        health = Mathf.Max(0, health - impactDamage);
         if (healthBar != null)
         {
             healthBar.UpdateHealth(health, data.stats.maxHealth);
         }
         if (health == 0)
         {
+            UnitHelper.Instance.SpawnGibs(transform.position, impactVelocity.magnitude);
             Die();
+        }
+        if (onDamageTaken != null)
+        {
+            onDamageTaken.Invoke();
         }
     }
 
@@ -306,13 +318,8 @@ public abstract class Unit : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         AnimatedRigidbody animatedRigidbody = other.gameObject.GetComponent<AnimatedRigidbody>();
-        float impactRate = animatedRigidbody ? (data.rb.velocity - animatedRigidbody.velocity).magnitude : other.relativeVelocity.magnitude;
-
-        if (impactRate > impactRateThreshold) {
-            float impactDamage = (impactRate * data.stats.collisionDamageMultiplier) * (animatedRigidbody ? animatedRigidbody.mass : other.rigidbody.mass);
-            TakeDamage(impactDamage, other.relativeVelocity.normalized * impactDamage);
-            onDamageTaken.Invoke();
-        }
+        Vector2 impactVelocity = animatedRigidbody ? (animatedRigidbody.velocity - data.rb.velocity) * animatedRigidbody.mass : other.relativeVelocity * (other.rigidbody ? other.rigidbody.mass : 1.0f);
+        TakeDamage(impactVelocity * 0.1f);
     }
 
     #endregion
