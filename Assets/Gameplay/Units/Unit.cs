@@ -186,6 +186,7 @@ public abstract class Unit : MonoBehaviour
             data.previousState = state;
             UnitStates.Initialise(data, nextState);
             state = nextState;
+            equippedGadget?.OnUnitStateUpdated(state);
         }
     }
 

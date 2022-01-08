@@ -27,6 +27,7 @@ namespace Gadgets
             unit.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, frontArmAnimatorController);
             unit.data.animator.SetLayer(UnitAnimatorLayer.BackArm, backArmAnimatorController);
             OnEquip();
+            OnUnitStateUpdated(unit.GetState());
         }
 
         public void EnablePrimary()
@@ -59,6 +60,20 @@ namespace Gadgets
             if (!secondaryActive) { return; }
             OnSecondaryDisabled();
             secondaryActive = false;
+        }
+        
+        public void OnUnitStateUpdated(UnitState state)
+        {
+            if(primaryAvailableStates.Contains(state) || secondaryAvailableStates.Contains(state))
+            {
+                gameObject.SetActive(true);
+            }
+            else
+            {
+                DisablePrimary();
+                DisableSecondary();
+                gameObject.SetActive(false);
+            }
         }
 
         protected virtual void OnEquip() { }
