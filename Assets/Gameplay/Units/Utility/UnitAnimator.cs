@@ -11,10 +11,11 @@ public enum UnitAnimatorLayer
 
 public class UnitAnimator : MonoBehaviour
 {
-    [SerializeField] private Animator body, frontArm, backArm;
-    //[SerializeField] private Transform frontArmPivot, backArmPivot;
+    public string CurrentState => lastState;
 
-    private string lastState = "Idle";
+    [SerializeField] private Animator body, frontArm, backArm;
+
+    private string lastState;
     private bool animationLocked;
 
     public void Play(string animation, bool forced = false)
@@ -27,6 +28,10 @@ public class UnitAnimator : MonoBehaviour
             onStateEnded = StartCoroutine(OnStateEndedCoroutine(animation));
             return;
         }
+
+        body.Update(0);
+        frontArm.Update(0);
+        backArm.Update(0);
 
         body.Play(animation);
         frontArm.Play(animation);
@@ -114,6 +119,12 @@ public class UnitAnimator : MonoBehaviour
     {
         body.Update(0);
         body.Update(0);
+
+        frontArm.Update(0);
+        frontArm.Update(0);
+
+        backArm.Update(0);
+        backArm.Update(0);
     }
     
 }

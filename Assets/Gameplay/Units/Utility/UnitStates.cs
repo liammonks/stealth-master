@@ -116,6 +116,7 @@ public static class UnitStates
             }
             velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
             data.rb.velocity = velocity;
+            
             if (Mathf.Abs(data.rb.velocity.x) > data.stats.runSpeed)
             {
                 UnitHelper.Instance.EmitGroundParticles(data.rb.position + (Vector2.down * data.stats.standingHalfHeight), data.rb.velocity);
@@ -139,7 +140,11 @@ public static class UnitStates
             // Push against wall
             if (FacingWall(data))
             {
-                data.animator.Play("AgainstWall");
+                if (data.animator.CurrentState != "AgainstWall")
+                {
+                    data.rb.velocity = new Vector2(data.isFacingRight ? 0.5f : -0.5f, data.rb.velocity.y);
+                    data.animator.Play("AgainstWall");
+                }
             }
             else
             {
