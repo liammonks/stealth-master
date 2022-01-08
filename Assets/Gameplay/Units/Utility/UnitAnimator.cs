@@ -12,7 +12,7 @@ public enum UnitAnimatorLayer
 public class UnitAnimator : MonoBehaviour
 {
     [SerializeField] private Animator body, frontArm, backArm;
-    [SerializeField] private Transform frontArmPivot, backArmPivot;
+    //[SerializeField] private Transform frontArmPivot, backArmPivot;
 
     private string lastState = "Idle";
     private bool animationLocked;
@@ -60,15 +60,27 @@ public class UnitAnimator : MonoBehaviour
         }
     }
     
+    public Animator GetLayer(UnitAnimatorLayer layer)
+    {
+        switch (layer)
+        {
+            case UnitAnimatorLayer.FrontArm:
+                return frontArm;
+            case UnitAnimatorLayer.BackArm:
+                return backArm;
+        }
+        return null;
+    }
+    
     public void RotateLayer(UnitAnimatorLayer layer, Quaternion rotation)
     {
         switch(layer)
         {
             case UnitAnimatorLayer.FrontArm:
-                frontArmPivot.rotation = rotation;
+                frontArm.transform.rotation = rotation;
                 break;
             case UnitAnimatorLayer.BackArm:
-                backArmPivot.rotation = rotation;
+                backArm.transform.rotation = rotation;
                 break;
         }
     }

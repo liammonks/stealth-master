@@ -47,6 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   primaryAvailableStates: 010000000200000004000000050000000600000009000000
   secondaryAvailableStates: 01000000020000000400000005000000060000000900000011000000
+  frontArmAnimatorController: {fileID: 22100000, guid: 77983bcb188a537499ada5d5feebeffa, type: 2}
+  backArmAnimatorController: {fileID: 22100000, guid: b67fc14fdee05e8439335cd46e986b23, type: 2}
 --- !u!120 &-2422917714031957665
 LineRenderer:
   m_ObjectHideFlags: 0

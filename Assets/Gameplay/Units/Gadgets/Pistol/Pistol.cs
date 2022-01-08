@@ -7,7 +7,7 @@ namespace Gadgets
     public class Pistol : BaseGadget
     {
         [SerializeField] private BulletStats stats;
-        [SerializeField] private Transform pivot, bulletSpawn;
+        [SerializeField] private Transform bulletSpawnPivot, bulletSpawn;
         
         private const float cameraOffsetDistance = 3.0f;
 
@@ -15,13 +15,13 @@ namespace Gadgets
 
         protected override void OnPrimaryEnabled()
         {
-            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - transform.position;
+            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
             BulletPool.Fire(bulletSpawn.position, direction, owner.data.rb.velocity, stats, owner is Player);
         }
         
         protected override void OnPrimaryDisabled()
         {
-
+            
         }
 
         protected override void OnSecondaryEnabled()
@@ -48,7 +48,7 @@ namespace Gadgets
         {
             if (owner == UnitHelper.Player)
             {
-                Vector2 mouseOffset = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - UnitHelper.Player.transform.position;
+                Vector2 mouseOffset = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
                 mouseOffset = Vector2.ClampMagnitude(mouseOffset, cameraOffsetDistance);
                 
                 if (aiming) {
@@ -58,7 +58,8 @@ namespace Gadgets
                 
                 Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? mouseOffset : -mouseOffset));
                 owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, rotation);
-                pivot.rotation = rotation;
+                bulletSpawnPivot.rotation = rotation;
+                bulletSpawnPivot.position = owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
             }
         }
 

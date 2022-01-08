@@ -903,7 +903,7 @@ public static class UnitStates
             data.animator.UpdateState();
             data.t = data.animator.GetState().length;
             data.rb.velocity = (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.wallJumpForce.x +
-                                Vector2.up * data.stats.wallJumpForce.y;
+                                Vector2.up * (data.rb.velocity.y >= 0 ? data.stats.wallJumpForce.y : 0.0f);
         }
 
         data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
@@ -978,6 +978,7 @@ public static class UnitStates
         if (initialise)
         {
             data.animator.Play("WallSlide");
+            data.rb.velocity = new Vector2(data.isFacingRight ? 0.5f : -0.5f, data.rb.velocity.y);
         }
 
         // Check we are still on a wall
@@ -991,23 +992,30 @@ public static class UnitStates
             data.groundSpringActive = true;
         }
 
-        // Wall Jump
-        if (data.rb.velocity.y > 0)
+        // Jump Either Direction
+        if (data.input.jumpQueued && CanStand(data, new Vector2(data.isFacingRight ? -data.stats.standingHalfWidth : data.stats.standingHalfHeight, 0)))
         {
-            if (data.input.jumpQueued && CanStand(data, new Vector2(data.isFacingRight ? -data.stats.standingHalfWidth : data.stats.standingHalfHeight, 0)))
-            {
-                return UnitState.WallJump;
-            }
-            // Jump Away Right
-            if (!data.isFacingRight && data.input.movement > 0 && CanStand(data, new Vector2(data.stats.standingHalfWidth, 0)))
-            {
-                return UnitState.WallJump;
-            }
-            // Jump Away Left
-            if (data.isFacingRight && data.input.movement < 0 && CanStand(data, new Vector2(-data.stats.standingHalfWidth, 0)))
-            {
-                return UnitState.WallJump;
-            }
+            return UnitState.WallJump;
+        }
+        // Jump Away Right
+        if (!data.isFacingRight && data.input.movement > 0 && CanStand(data, new Vector2(data.stats.standingHalfWidth, 0)))
+        {
+            return UnitState.WallJump;
+        }
+        // Jump Away Left
+        if (data.isFacingRight && data.input.movement < 0 && CanStand(data, new Vector2(-data.stats.standingHalfWidth, 0)))
+        {
+            return UnitState.WallJump;
+        }
+
+        // Allow player to push towards movement speed while in the air
+        if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
+        {
+            Vector2 velocity = data.rb.velocity;
+            float desiredSpeed = data.stats.walkSpeed * data.input.movement;
+            float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+            velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
+            data.rb.velocity = velocity;
         }
 
         if (data.isGrounded)
