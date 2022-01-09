@@ -101,7 +101,9 @@ public class Player : Unit
         Vector3 lastPosition = MousePosition;
         MousePosition = value.Get<Vector2>();
         MousePosition.z = (transform.position - mainCamera.transform.position).z;
+        
         MouseDelta = MousePosition - lastPosition;
+        SetAimOffset(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
     }
 
     private void OnInteract(InputValue value)

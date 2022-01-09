@@ -64,6 +64,11 @@ public class LevelManager : MonoBehaviour
     {
         RespawnPlayer();
     }
+    
+    private void OnPause()
+    {
+        Debug.Break();
+    }
 
     #endregion
 }

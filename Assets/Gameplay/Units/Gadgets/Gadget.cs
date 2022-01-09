@@ -10,8 +10,8 @@ namespace Gadgets
         public bool SecondaryActive { get => secondaryActive; }
 
         [SerializeField] protected List<UnitState> primaryAvailableStates, secondaryAvailableStates;
-        [SerializeField] private RuntimeAnimatorController frontArmAnimatorController;
-        [SerializeField] private RuntimeAnimatorController backArmAnimatorController;
+        [SerializeField] protected RuntimeAnimatorController frontArmAnimatorController;
+        [SerializeField] protected RuntimeAnimatorController backArmAnimatorController;
 
         protected Unit owner;
         protected bool primaryActive, secondaryActive;

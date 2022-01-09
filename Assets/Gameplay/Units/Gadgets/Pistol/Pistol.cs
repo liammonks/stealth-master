@@ -9,14 +9,25 @@ namespace Gadgets
         [SerializeField] private BulletStats stats;
         [SerializeField] private Transform bulletSpawnPivot, bulletSpawn;
         
+        [SerializeField] private RuntimeAnimatorController frontArmAnimatorControllerReversed;
+        [SerializeField] private RuntimeAnimatorController backArmAnimatorControllerReversed;
+
         private const float cameraOffsetDistance = 3.0f;
 
         private bool aiming = false;
 
+        protected override void OnEquip()
+        {
+            owner.onAimOffsetUpdated += OnAimPositionUpdated;
+        }
+        
+        private void OnDestroy() {
+            owner.onAimOffsetUpdated -= OnAimPositionUpdated;
+        }
+
         protected override void OnPrimaryEnabled()
         {
-            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
-            BulletPool.Fire(bulletSpawn.position, direction, owner.data.rb.velocity, stats, owner is Player);
+            BulletPool.Fire(bulletSpawn.position, owner.AimOffset, owner.data.rb.velocity, stats, owner is Player);
         }
         
         protected override void OnPrimaryDisabled()
@@ -44,22 +55,23 @@ namespace Gadgets
             }
         }
 
-        private void Update()
-        {
-            if (owner == UnitHelper.Player)
+        private void OnAimPositionUpdated()
+        {  
+            Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? owner.AimOffset : -owner.AimOffset));
+            owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, rotation);
+            bulletSpawnPivot.rotation = rotation;
+            bulletSpawnPivot.position = owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
+
+            bool aimingBehind = owner.AimingBehind();
+            owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, aimingBehind ? frontArmAnimatorControllerReversed : frontArmAnimatorController, aimingBehind);
+            owner.data.animator.SetLayer(UnitAnimatorLayer.BackArm, aimingBehind ? backArmAnimatorControllerReversed : backArmAnimatorController);
+        }
+        
+        private void Update() {
+            if (owner == UnitHelper.Player && aiming)
             {
-                Vector2 mouseOffset = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
-                mouseOffset = Vector2.ClampMagnitude(mouseOffset, cameraOffsetDistance);
-                
-                if (aiming) {
-                    Vector2 cameraOffset = Vector2.ClampMagnitude(mouseOffset, cameraOffsetDistance);
-                    PlayerCamera.Instance.SetOffset(cameraOffset, true);
-                }
-                
-                Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? mouseOffset : -mouseOffset));
-                owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, rotation);
-                bulletSpawnPivot.rotation = rotation;
-                bulletSpawnPivot.position = owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
+                Vector2 cameraOffset = Vector2.ClampMagnitude(owner.AimOffset, cameraOffsetDistance);
+                PlayerCamera.Instance.SetOffset(cameraOffset, true);
             }
         }
 

@@ -247,3 +247,5 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: cdc56ce4876e6644cbce2ae09e51200e, type: 2}
   bulletSpawnPivot: {fileID: 7169392390908831529}
   bulletSpawn: {fileID: 3488696330094168166}
+  frontArmAnimatorControllerReversed: {fileID: 22100000, guid: 7e535984dc7e37f4093a48244a522725, type: 2}
+  backArmAnimatorControllerReversed: {fileID: 22100000, guid: 3512976a64091b94e8dd4e02e3cd121c, type: 2}

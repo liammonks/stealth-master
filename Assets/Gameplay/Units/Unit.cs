@@ -108,15 +108,25 @@ public abstract class Unit : MonoBehaviour
     private const float colliderInterpRate = 10.0f;
     private const float groundSpringDistanceBufferStanding = 0.4f;
     private const float groundSpringDistanceBufferCrawling = 0.1f;
+    private const float impactRateThreshold = 10.0f;
 
     [Header("Interaction")]
     [SerializeField] private List<Interactable> interactables = new List<Interactable>();
     private bool lockedRB = false;
 
+    // Health
     protected HealthBar healthBar;
     protected float health;
+
+    // Gadgets
+    public Vector2 AimOffset => m_AimOffset;
+    private Vector2 m_AimOffset;
+
+    public delegate void OnAimOffsetUpdated();
+    public event OnAimOffsetUpdated onAimOffsetUpdated;
+    
     private Gadgets.BaseGadget equippedGadget;
-    private const float impactRateThreshold = 10.0f;
+
 
     protected virtual void Start()
     {
@@ -402,6 +412,19 @@ public abstract class Unit : MonoBehaviour
         }
     }
     
+    public void SetAimOffset(Vector2 offset)
+    {
+        data.animator.SetLayer(UnitAnimatorLayer.Body, AimingBehind() ? data.animator.reversedBody : data.animator.defaultBody);
+
+        m_AimOffset = offset;
+        onAimOffsetUpdated?.Invoke();
+    }
+    
+    public bool AimingBehind()
+    {
+        return (data.isFacingRight && AimOffset.x < 0) || (!data.isFacingRight && AimOffset.x > 0);
+    }
+        
     #endregion
 
     #region Interaction

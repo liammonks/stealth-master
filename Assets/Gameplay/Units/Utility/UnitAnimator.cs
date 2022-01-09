@@ -13,10 +13,25 @@ public class UnitAnimator : MonoBehaviour
 {
     public string CurrentState => lastState;
 
-    [SerializeField] private Animator body, frontArm, backArm;
+    [Header("Controllers")]
+    public RuntimeAnimatorController defaultBody;
+    public RuntimeAnimatorController reversedBody;
+    public RuntimeAnimatorController defaultFrontArm;
+    public RuntimeAnimatorController defaultBackArm;
+
+    [Header("Animators")]
+    [SerializeField] private Animator body;
+    [SerializeField] private Animator frontArm;
+    [SerializeField] private Animator backArm;
 
     private string lastState;
     private bool animationLocked;
+
+    private void Awake() {
+        //body.runtimeAnimatorController = defaultBody;
+        //frontArm.runtimeAnimatorController = defaultFrontArm;
+        //backArm.runtimeAnimatorController = defaultBackArm;
+    }
 
     public void Play(string animation, bool forced = false)
     {
@@ -49,16 +64,27 @@ public class UnitAnimator : MonoBehaviour
         Play(animation);
     }
     
-    public void SetLayer(UnitAnimatorLayer layer, RuntimeAnimatorController controller)
+    public void SetLayer(UnitAnimatorLayer layer, RuntimeAnimatorController controller, bool inverted = false)
     {
         float normalizedTime = GetState().normalizedTime;
         switch (layer)
         {
+            case UnitAnimatorLayer.Body:
+                if (body.runtimeAnimatorController == controller) break;
+                body.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
+                body.runtimeAnimatorController = controller;
+                body.Play(lastState, 0, normalizedTime);
+                //body.Update(0);
+                break;
             case UnitAnimatorLayer.FrontArm:
+                if (frontArm.runtimeAnimatorController == controller) break;
+                frontArm.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 frontArm.runtimeAnimatorController = controller;
                 frontArm.Play(lastState, 0, normalizedTime);
                 break;
             case UnitAnimatorLayer.BackArm:
+                if (backArm.runtimeAnimatorController == controller) break;
+                backArm.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 backArm.runtimeAnimatorController = controller;
                 backArm.Play(lastState, 0, normalizedTime);
                 break;
@@ -122,7 +148,7 @@ public class UnitAnimator : MonoBehaviour
 
         frontArm.Update(0);
         frontArm.Update(0);
-
+        
         backArm.Update(0);
         backArm.Update(0);
     }

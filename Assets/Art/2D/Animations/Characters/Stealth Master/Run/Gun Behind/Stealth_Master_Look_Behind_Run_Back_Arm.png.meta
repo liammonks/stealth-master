@@ -116,7 +116,49 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_0
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a17e9e62bde03942a1c10874ad6a923
+      internalID: 1343060108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e591d3b6f1e1204ebde2cb0776e70c4
+      internalID: -1561190446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_2
       rect:
         serializedVersion: 2
         x: 0
@@ -130,14 +172,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d29c02252a8c00a40b99ed2a470ad0f6
-      internalID: 987263271
+      spriteID: c4650ec43ac67a74db5743c5b047bf8b
+      internalID: -755800323
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_1
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_3
       rect:
         serializedVersion: 2
         x: 0
@@ -151,14 +193,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8b598cdb675b0d7449fd80660cd168ff
-      internalID: 1251134490
+      spriteID: 26b5840182ce0ff4aa221e68e5945250
+      internalID: 1129494622
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_2
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_4
       rect:
         serializedVersion: 2
         x: 0
@@ -172,14 +214,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5016d0799cd90db47a9f8297416260ab
-      internalID: 2101796631
+      spriteID: bdc42c45ec56e854f90edbc7c7e3b86f
+      internalID: -703338394
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_3
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_5
       rect:
         serializedVersion: 2
         x: 0
@@ -193,14 +235,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 11a8c0bd420242d458c157948412e808
-      internalID: 1028125160
+      spriteID: 39e02eba5bd038943b7f5b15548aaf01
+      internalID: 1081723408
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_4
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_6
       rect:
         serializedVersion: 2
         x: 0
@@ -214,14 +256,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e09ff6c747b511349a194264b999f920
-      internalID: -79723572
+      spriteID: 3c7264017c178ea499183559b0f37927
+      internalID: 547775726
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_5
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_7
       rect:
         serializedVersion: 2
         x: 0
@@ -235,14 +277,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b91286603d4e24045b8e5133da86dfcf
-      internalID: -859747144
+      spriteID: 4714b763788a4d74592b21ecddb93cf7
+      internalID: 933890359
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_6
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_8
       rect:
         serializedVersion: 2
         x: 0
@@ -256,14 +298,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 435185b1b9f9a8a40993688a9f0f7be1
-      internalID: -1282478914
+      spriteID: bf1b034ca9dbe0c4b8ee5d8f2146e635
+      internalID: 978695280
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_7
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_9
       rect:
         serializedVersion: 2
         x: 0
@@ -277,14 +319,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6eaff12c8f670d044945fc6f8c1a49e9
-      internalID: 839096202
+      spriteID: bcd5e7f9bd7d5cc4d9c24b4191ac24e9
+      internalID: 534940252
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_8
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_10
       rect:
         serializedVersion: 2
         x: 0
@@ -298,14 +340,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 14e361ac956ee0c4d845f03a62dac0cb
-      internalID: -1540254765
+      spriteID: a01c095625aa59049939ceddba54ed8c
+      internalID: 2084995422
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_9
+      name: Stealth_Master_Look_Behind_Run_Back_Arm_11
       rect:
         serializedVersion: 2
         x: 0
@@ -319,8 +361,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a0b9ba90a2eb27c438469ae22ed9e669
-      internalID: 301718765
+      spriteID: 6028730169fe3544d8d02d2cd96350fb
+      internalID: -1166539028
       vertices: []
       indices: 
       edges: []
@@ -336,16 +378,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Stealth_Master_Idle_Right_2: 2101796631
-      Stealth_Master_Idle_Right_6: -1282478914
-      Stealth_Master_Idle_Right_4: -79723572
-      Stealth_Master_Idle_Right_5: -859747144
-      Stealth_Master_Idle_Right_9: 301718765
-      Stealth_Master_Idle_Right_0: 987263271
-      Stealth_Master_Idle_Right_8: -1540254765
-      Stealth_Master_Idle_Right_3: 1028125160
-      Stealth_Master_Idle_Right_1: 1251134490
-      Stealth_Master_Idle_Right_7: 839096202
+      Stealth_Master_Look_Behind_Run_Back_Arm_1: -1561190446
+      Stealth_Master_Look_Behind_Run_Back_Arm_2: -755800323
+      Stealth_Master_Look_Behind_Run_Back_Arm_5: 1081723408
+      Stealth_Master_Look_Behind_Run_Back_Arm_3: 1129494622
+      Stealth_Master_Look_Behind_Run_Back_Arm_10: 2084995422
+      Stealth_Master_Look_Behind_Run_Back_Arm_4: -703338394
+      Stealth_Master_Look_Behind_Run_Back_Arm_11: -1166539028
+      Stealth_Master_Look_Behind_Run_Back_Arm_0: 1343060108
+      Stealth_Master_Look_Behind_Run_Back_Arm_9: 534940252
+      Stealth_Master_Look_Behind_Run_Back_Arm_8: 978695280
+      Stealth_Master_Look_Behind_Run_Back_Arm_6: 547775726
+      Stealth_Master_Look_Behind_Run_Back_Arm_7: 933890359
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
