@@ -147,6 +147,9 @@ public abstract class Unit : MonoBehaviour
         EquipGadget(GlobalData.DefaultGadget);
 
         health = data.stats.maxHealth;
+
+        onAimOffsetUpdated += UpdateFacing;
+        data.animator.onFacingUpdated += UpdateFacing;
     }
     
     #region Controller
@@ -414,8 +417,6 @@ public abstract class Unit : MonoBehaviour
     
     public void SetAimOffset(Vector2 offset)
     {
-        data.animator.SetLayer(UnitAnimatorLayer.Body, AimingBehind() ? data.animator.reversedBody : data.animator.defaultBody);
-
         m_AimOffset = offset;
         onAimOffsetUpdated?.Invoke();
     }
@@ -423,6 +424,11 @@ public abstract class Unit : MonoBehaviour
     public bool AimingBehind()
     {
         return (data.isFacingRight && AimOffset.x < 0) || (!data.isFacingRight && AimOffset.x > 0);
+    }
+
+    public void UpdateFacing()
+    {
+        data.animator.SetLayer(UnitAnimatorLayer.Body, AimingBehind() ? data.animator.reversedBody : data.animator.defaultBody);
     }
         
     #endregion

@@ -19,15 +19,18 @@ namespace Gadgets
         protected override void OnEquip()
         {
             owner.onAimOffsetUpdated += OnAimPositionUpdated;
+            owner.data.animator.onFacingUpdated += OnAimPositionUpdated;
         }
         
         private void OnDestroy() {
             owner.onAimOffsetUpdated -= OnAimPositionUpdated;
+            owner.data.animator.onFacingUpdated -= OnAimPositionUpdated;
         }
 
         protected override void OnPrimaryEnabled()
         {
             BulletPool.Fire(bulletSpawn.position, owner.AimOffset, owner.data.rb.velocity, stats, owner is Player);
+            owner.data.animator.Play("Shoot", false, UnitAnimatorLayer.FrontArm);
         }
         
         protected override void OnPrimaryDisabled()

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum UnitAnimatorLayer
 {
+    Null,
     Body,
     FrontArm,
     BackArm
@@ -12,6 +13,9 @@ public enum UnitAnimatorLayer
 public class UnitAnimator : MonoBehaviour
 {
     public string CurrentState => lastState;
+
+    public delegate void OnFacingUpdated();
+    public event OnFacingUpdated onFacingUpdated;
 
     [Header("Controllers")]
     public RuntimeAnimatorController defaultBody;
@@ -27,13 +31,7 @@ public class UnitAnimator : MonoBehaviour
     private string lastState;
     private bool animationLocked;
 
-    private void Awake() {
-        //body.runtimeAnimatorController = defaultBody;
-        //frontArm.runtimeAnimatorController = defaultFrontArm;
-        //backArm.runtimeAnimatorController = defaultBackArm;
-    }
-
-    public void Play(string animation, bool forced = false)
+    public void Play(string animation, bool forced = false, UnitAnimatorLayer layer = UnitAnimatorLayer.Null)
     {
         if (animation == lastState) { return; }
         
@@ -48,9 +46,9 @@ public class UnitAnimator : MonoBehaviour
         frontArm.Update(0);
         backArm.Update(0);
 
-        body.Play(animation);
-        frontArm.Play(animation);
-        backArm.Play(animation);
+        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.Body) body.Play(animation);
+        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.FrontArm) frontArm.Play(animation);
+        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.BackArm) backArm.Play(animation);
 
         lastState = animation;
         if (forced) { animationLocked = true; }
@@ -125,7 +123,9 @@ public class UnitAnimator : MonoBehaviour
 
     public void SetFacing(bool facingRight)
     {
+        Vector3 lastScale = transform.parent.localScale;
         transform.parent.localScale = facingRight ? Vector3.one : new Vector3(-1, 1, 1);
+        if(transform.parent.localScale != lastScale) onFacingUpdated?.Invoke();
     }
     
     public void SetVelocity(float velocity)
