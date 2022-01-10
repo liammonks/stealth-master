@@ -6,8 +6,10 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StealthMaster_Back_Arm_Pistol_Reversed
+  m_Name: SM_BA_PSTL_RV
   m_Controller: {fileID: 9100000, guid: 3e714138ac595eb458bc8215e3dfd0fc, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: 610b04420080ed448a29b78a972379a5, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 12c246fd0c4da014996532120c76d329, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6e01731a47bb7734888e547fa58c0c16, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 04bf12acf7db68e4a9d3ce65e23e0ad4, type: 2}

@@ -447,6 +447,7 @@ public static class UnitStates
                     data.animator.UpdateState();
                     data.t = data.animator.GetState().length;
                     data.isStanding = true;
+                    if(data.previousState == UnitState.Dive) data.LockGadget();
                 }
                 // Tick unit timer
                 if (data.t != 0.0f)
@@ -484,6 +485,7 @@ public static class UnitStates
             UnitState ledgeDrop = TryDrop(data);
             if (ledgeDrop != UnitState.Null)
             {
+                data.animator.Play("SlideToHang", true);
                 data.input.crawling = false;
                 data.input.crawlRequestTime = -1;
                 return ledgeDrop;
@@ -557,6 +559,7 @@ public static class UnitStates
                         data.animator.UpdateState();
                         data.t = data.animator.GetState().length;
                         data.isStanding = true;
+                        data.LockGadget();
                     }
                     // Tick unit timer
                     if (data.t != 0.0f)
@@ -834,7 +837,7 @@ public static class UnitStates
             );
 
             data.animator.Play(feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
-            data.t = 0.2f;
+            data.t = 0.3f;
             data.groundSpringActive = false;
             data.isStanding = true;
         }
@@ -890,6 +893,8 @@ public static class UnitStates
             // Drop
             if (data.input.crawling)
             {
+                data.input.crawling = false;
+                data.input.crawlRequestTime = -1;
                 return UnitState.WallSlide;
             }
         }
@@ -1427,16 +1432,16 @@ public static class UnitStates
 
     private static bool CanStand(UnitData data, Vector2 offset)
     {
-        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + offset, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
-        ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + offset, data.stats.standingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
+        RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + offset, data.stats.standingScale * 0.9f, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
+        ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + offset, (data.stats.standingScale * 0.9f) * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
         return !hit;
     }
 
     private static bool CanClimb(UnitData data)
     {
         Vector2 target = data.rb.position + (Vector2.up * (data.stats.standingHalfHeight + 0.1f - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
-        RaycastHit2D hit = Physics2D.BoxCast(target, data.stats.standingScale, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
-        ExtDebug.DrawBox(new ExtDebug.Box(target, data.stats.standingScale * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green, data.stats.climbDuration);
+        RaycastHit2D hit = Physics2D.BoxCast(target, (data.stats.standingScale * 0.9f), data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
+        ExtDebug.DrawBox(new ExtDebug.Box(target, (data.stats.standingScale * 0.9f) * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green, data.stats.climbDuration);
         return !hit;
     }
 

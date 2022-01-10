@@ -240,12 +240,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18c39a7abd18c6a4eb4ef751e8421aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  primaryAvailableStates: 0100000002000000
-  secondaryAvailableStates: 0100000002000000
+  rotateFrontArm: 1
+  primaryAvailableStates: 010000000200000005000000040000000600000009000000
+  secondaryAvailableStates: 010000000200000005000000040000000600000009000000
   frontArmAnimatorController: {fileID: 22100000, guid: 636379274b9f3304f86d595f8d156116, type: 2}
   backArmAnimatorController: {fileID: 22100000, guid: 3ef4c1f85310ae94ab3d15d33cb9e7d7, type: 2}
+  frontArmAnimatorControllerReversed: {fileID: 22100000, guid: 7e535984dc7e37f4093a48244a522725, type: 2}
+  backArmAnimatorControllerReversed: {fileID: 22100000, guid: 3512976a64091b94e8dd4e02e3cd121c, type: 2}
   stats: {fileID: 11400000, guid: cdc56ce4876e6644cbce2ae09e51200e, type: 2}
   bulletSpawnPivot: {fileID: 7169392390908831529}
   bulletSpawn: {fileID: 3488696330094168166}
-  frontArmAnimatorControllerReversed: {fileID: 22100000, guid: 7e535984dc7e37f4093a48244a522725, type: 2}
-  backArmAnimatorControllerReversed: {fileID: 22100000, guid: 3512976a64091b94e8dd4e02e3cd121c, type: 2}

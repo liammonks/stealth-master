@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StealthMaster_Against_Wall
+  m_Name: SM_BDY_IdleWall
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0

@@ -19,8 +19,9 @@ namespace Gadgets
             }
         }
 
+        private const float freq = 0.5f;
         private const float range = 8.0f;
-        private const float reelRate = 3.0f;
+        private const float reelRate = 2.5f;
 
         private bool attached = false;
         private List<AttachPoint> attachPoints = new List<AttachPoint>();
@@ -61,8 +62,8 @@ namespace Gadgets
                 joint.connectedAnchor = hit.point;
                 joint.enableCollision = true;
                 joint.distance = jointDistance;
-                joint.dampingRatio = 0.5f;
-                joint.frequency = 1.0f;
+                joint.dampingRatio = 0.1f;
+                joint.frequency = freq;
 
                 owner.SetState(UnitState.GrappleHookSwing);
                 attached = true;
@@ -85,12 +86,15 @@ namespace Gadgets
         private void FixedUpdate() {
             if(attached)
             {
+                joint.frequency = Mathf.Clamp((Vector2.Dot((joint.connectedAnchor - (Vector2)transform.position).normalized, Vector2.up) + 1) * freq, 0.00001f, float.MaxValue);
+                Debug.Log(joint.distance);
+                
                 // Cast towards the last attatch point
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, attachPoints[attachPoints.Count - 1].point - (Vector2)transform.position, Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point) - 0.1f, mask);
                 if(hit.collider)
                 {
                     joint.connectedAnchor = hit.point;
-                    joint.distance = Vector2.Distance(transform.position, hit.point);
+                    joint.distance = Vector2.Distance(transform.position, hit.point) - 0.2f;
                     
                     Vector3 dir = (hit.point - attachPoints[attachPoints.Count - 1].point).normalized;
                     Vector3 cross = Vector3.Cross(Vector3.forward, dir).normalized;
@@ -108,7 +112,7 @@ namespace Gadgets
                     {
                         attachPoints.RemoveAt(attachPoints.Count - 1);
                         joint.connectedAnchor = attachPoints[attachPoints.Count - 1].point;
-                        joint.distance = Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point);
+                        joint.distance = Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point) - 0.2f;
                     }
                 }
 
@@ -122,11 +126,11 @@ namespace Gadgets
                 }
                 else
                 {
-                    float jointDistance = Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point);
-                    if (jointDistance < joint.distance - 0.1f)
-                    {
-                        joint.distance = jointDistance + 0.05f;
-                    }
+                    //float jointDistance = Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point);
+                    //if (jointDistance < joint.distance - 0.1f)
+                    //{
+                    //    joint.distance = jointDistance + 0.05f;
+                    //}
                 }
                 
                 for (int i = 0; i < attachPoints.Count - 1; ++i)

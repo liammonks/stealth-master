@@ -22,6 +22,21 @@ public class UnitData
     public float t = 0.0f;
     public float stateDuration = 0.0f;
     public List<uint> hitIDs = new List<uint>();
+    
+    public delegate void OnLockGadget();
+    public event OnLockGadget lockGadget;
+    public void LockGadget()
+    {
+        lockGadget?.Invoke();
+    }
+    
+    public delegate void OnUnlockGadget();
+    public event OnUnlockGadget unlockGadget;
+    public void UnlockGadget()
+    {
+        unlockGadget?.Invoke();
+    }
+
 
     public void ApplyDrag(float drag)
     {

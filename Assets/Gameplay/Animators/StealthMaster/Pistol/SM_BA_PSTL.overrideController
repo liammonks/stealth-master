@@ -6,12 +6,10 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SM_FA_PSTL_RV
+  m_Name: SM_BA_PSTL
   m_Controller: {fileID: 9100000, guid: 3e714138ac595eb458bc8215e3dfd0fc, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: 610b04420080ed448a29b78a972379a5, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 298319a4ab7980644a30719467885328, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: e8fdf7f8cad9cc44a971e374db6fed20, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 42433bd0ec520a341846d83ee759a6a8, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b924374aab1acaa40888276b096a5267, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 6e01731a47bb7734888e547fa58c0c16, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 9325c9ef5ba48f343a7cb05c44b1a078, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 04bf12acf7db68e4a9d3ce65e23e0ad4, type: 2}

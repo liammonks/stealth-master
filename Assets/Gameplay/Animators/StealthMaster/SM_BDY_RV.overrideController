@@ -6,7 +6,7 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StealthMaster_Body_Reversed
+  m_Name: SM_BDY_RV
   m_Controller: {fileID: 9100000, guid: 3e714138ac595eb458bc8215e3dfd0fc, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: 0c040896636dfe544a0b5c145f1a3134, type: 2}
@@ -46,7 +46,7 @@ AnimatorOverrideController:
   - m_OriginalClip: {fileID: 7400000, guid: d1af8fd36dc8dea488ae3cba89bb27ba, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: a6dc01c22febbd54982a770393b784d0, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 6e01731a47bb7734888e547fa58c0c16, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: a3100c17a9b7fad4aa340558ebb6dede, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d8a395b2259b7a6489b5b9d127061e4d, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 49aa6ed61bf02424da19394e09534bdc, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 5c9bf5d8f7978d74890a914002c47ead, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: b70b3d1d4993ae04382fe53a5eff06e3, type: 2}
@@ -71,3 +71,5 @@ AnimatorOverrideController:
     m_OverrideClip: {fileID: 7400000, guid: 77e1fe07847c3a2458180dd86854e349, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: eca5eab40c4a0174f87a83f100d2c484, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 77882b3f73bccf049a7df6d9c87d28d8, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 0b94c87150696734684dcba9c0152a9c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6b711be4178b25143a6ba480276b71f4, type: 2}
