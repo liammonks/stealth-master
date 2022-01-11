@@ -21,10 +21,14 @@ namespace Gadgets
         protected bool primaryActive, secondaryActive;
         protected bool primaryLocked, secondaryLocked;
 
-        protected bool CanPrimary { get { return !primaryActive && primaryAvailableStates.Contains(owner.GetState()) && !primaryLocked; } }
-        protected bool CanSecondary { get { return !secondaryActive && secondaryAvailableStates.Contains(owner.GetState()) && !secondaryLocked; } }
+        protected bool CanPrimary { get { return !primaryActive && primaryAvailableStates.Contains(owner.GetState()) && !primaryLocked && !rotationLocked; } }
+        protected bool CanSecondary { get { return !secondaryActive && secondaryAvailableStates.Contains(owner.GetState()) && !secondaryLocked && !rotationLocked; } }
 
         private bool previouslyAimingBehind = false;
+        private List<GameObject> intersectingObjects = new List<GameObject>();
+        private bool rotationLocked = false;
+
+        private const float raycastDistance = 0.8f;
 
         public void Equip(Unit unit)
         {
@@ -90,15 +94,47 @@ namespace Gadgets
         }
 
         protected virtual void FixedUpdate() {
+            bool aimingBehind = owner.AimingBehind();
+
             if (rotateFrontArm)
             {
-                Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? owner.AimOffset : -owner.AimOffset));
-                owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, rotation);
+                Vector2 armPivot = owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
+                transform.position = armPivot;
+                transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? owner.AimOffset : -owner.AimOffset));
+
+                if (rotationLocked)
+                {
+                    if (owner.data.isStanding)
+                    {
+                        owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, Quaternion.LookRotation(Vector3.forward, owner.data.isFacingRight ? Vector3.right : Vector3.left));
+                    }
+                    else
+                    {
+                        owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, Quaternion.LookRotation(Vector3.forward, aimingBehind ? Vector3.down : Vector3.up));
+                    }
+                }
+                else
+                {
+                    owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, transform.rotation);
+                }
             }
 
-            bool aimingBehind = owner.AimingBehind();
             owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, aimingBehind ? frontArmAnimatorControllerReversed : frontArmAnimatorController, rotateFrontArm && aimingBehind);
             owner.data.animator.SetLayer(UnitAnimatorLayer.BackArm, aimingBehind ? backArmAnimatorControllerReversed : backArmAnimatorController);
+        }
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            intersectingObjects.Add(other.gameObject);
+            rotationLocked = true;
+        }
+        
+        private void OnTriggerExit2D(Collider2D other) {
+            intersectingObjects.Remove(other.gameObject);
+            if(intersectingObjects.Count == 0)
+            {
+                rotationLocked = false;
+            }
         }
         
         protected virtual void OnLocked()

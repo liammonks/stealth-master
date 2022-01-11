@@ -73,19 +73,19 @@ public class UnitAnimator : MonoBehaviour
                 if (body.runtimeAnimatorController == controller) return;
                 body.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 body.runtimeAnimatorController = controller;
-                body.Play(lastState, 0, normalizedTime);
+                body.Play(GetState().fullPathHash, 0, normalizedTime);
                 break;
             case UnitAnimatorLayer.FrontArm:
                 if (frontArm.runtimeAnimatorController == controller) return;
                 frontArm.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 frontArm.runtimeAnimatorController = controller;
-                frontArm.Play(lastState, 0, normalizedTime);
+                frontArm.Play(GetState().fullPathHash, 0, normalizedTime);
                 break;
             case UnitAnimatorLayer.BackArm:
                 if (backArm.runtimeAnimatorController == controller) return;
                 backArm.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 backArm.runtimeAnimatorController = controller;
-                backArm.Play(lastState, 0, normalizedTime);
+                backArm.Play(GetState().fullPathHash, 0, normalizedTime);
                 break;
         }
     }

@@ -29,10 +29,10 @@ public class BulletPool : MonoBehaviour
         bulletPool = new ObjectPool<Bullet>(CreateBullet, GetBullet, ReleaseBullet, DestroyBullet, collectionChecks, bulletCount);
     }
 
-    public static Bullet Fire(Vector2 position, Vector2 velocity, Vector2 parentVelocity, BulletStats stats, bool isPlayer)
+    public static Bullet Fire(Vector2 position, Vector2 direction, Vector2 parentVelocity, BulletStats stats, bool isPlayer)
     {
         Bullet bullet = bulletPool.Get();
-        bullet.Fire(position, velocity, parentVelocity, stats, isPlayer);
+        bullet.Fire(position, direction, parentVelocity, stats, isPlayer);
         return bullet;
     }
     
