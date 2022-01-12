@@ -913,7 +913,7 @@ public static class UnitStates
             data.animator.UpdateState();
             data.t = data.animator.GetState().length;
             data.rb.velocity = (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.wallJumpForce.x +
-                                Vector2.up * (data.rb.velocity.y >= 0 ? data.stats.wallJumpForce.y : 0.0f);
+                                Vector2.up * data.stats.wallJumpForce.y;
         }
 
         data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
@@ -1001,21 +1001,23 @@ public static class UnitStates
         {
             data.groundSpringActive = true;
         }
-
-        // Jump Either Direction
-        if (data.input.jumpQueued && CanStand(data, new Vector2(data.isFacingRight ? -data.stats.standingHalfWidth : data.stats.standingHalfHeight, 0)))
+        else
         {
-            return UnitState.WallJump;
-        }
-        // Jump Away Right
-        if (!data.isFacingRight && data.input.movement > 0 && CanStand(data, new Vector2(data.stats.standingHalfWidth, 0)))
-        {
-            return UnitState.WallJump;
-        }
-        // Jump Away Left
-        if (data.isFacingRight && data.input.movement < 0 && CanStand(data, new Vector2(-data.stats.standingHalfWidth, 0)))
-        {
-            return UnitState.WallJump;
+            // Jump Either Direction
+            if (data.input.jumpQueued && CanStand(data, new Vector2(data.isFacingRight ? -data.stats.standingHalfWidth : data.stats.standingHalfHeight, 0)))
+            {
+                return UnitState.WallJump;
+            }
+            // Jump Away Right
+            if (!data.isFacingRight && data.input.movement > 0 && CanStand(data, new Vector2(data.stats.standingHalfWidth, 0)))
+            {
+                return UnitState.WallJump;
+            }
+            // Jump Away Left
+            if (data.isFacingRight && data.input.movement < 0 && CanStand(data, new Vector2(-data.stats.standingHalfWidth, 0)))
+            {
+                return UnitState.WallJump;
+            }
         }
 
         // Allow player to push towards movement speed while in the air
