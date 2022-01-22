@@ -34,7 +34,7 @@ public class UnitAnimator : MonoBehaviour
     public void Play(string animation, bool forced = false, UnitAnimatorLayer layer = UnitAnimatorLayer.Null)
     {
         if (animation == lastState) { return; }
-        //Debug.Log("PLAYING - " + animation);
+        Debug.Log("PLAYING - " + animation + " - BLOCKED: " + animationLocked);
         if(animationLocked && !forced)
         {
             if (onStateEnded != null) { StopCoroutine(onStateEnded); }
@@ -42,13 +42,13 @@ public class UnitAnimator : MonoBehaviour
             return;
         }
 
-        body.Update(0);
-        frontArm.Update(0);
-        backArm.Update(0);
-
         if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.Body) body.Play(animation);
         if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.FrontArm) frontArm.Play(animation);
         if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.BackArm) backArm.Play(animation);
+
+        body.Update(0);
+        frontArm.Update(0);
+        backArm.Update(0);
 
         lastState = animation;
         if (forced) { animationLocked = true; }
@@ -73,6 +73,7 @@ public class UnitAnimator : MonoBehaviour
                 body.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 body.runtimeAnimatorController = controller;
                 body.Play(GetState().fullPathHash, 0, normalizedTime);
+                Debug.Log("LAYER UPDATE: " + GetState().fullPathHash);
                 break;
             case UnitAnimatorLayer.FrontArm:
                 if (frontArm.runtimeAnimatorController == controller) return;
