@@ -144,6 +144,7 @@ namespace Gadgets
                     backwardObj.SetActive(false);
                 }
             }
+            OnAimPositionUpdated();
         }
         
         private void OnTriggerEnter2D(Collider2D other)
