@@ -37,7 +37,6 @@ public class UnitAnimator : MonoBehaviour
         //Debug.Log("PLAYING - " + animation);
         if(animationLocked && !forced)
         {
-            Debug.Log("LOCKED");
             if (onStateEnded != null) { StopCoroutine(onStateEnded); }
             onStateEnded = StartCoroutine(OnStateEndedCoroutine(animation));
             return;

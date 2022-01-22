@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 528985907}
   - component: {fileID: 528985908}
+  - component: {fileID: 528985909}
   m_Layer: 0
   m_Name: Data
   m_TagString: Untagged
@@ -176,6 +177,18 @@ MonoBehaviour:
   missions:
   - {fileID: 11400000, guid: e13984a85e96cec45b758a4e78b56aa3, type: 2}
   - {fileID: 11400000, guid: 1b53af639e5936a4fb10120636df29a4, type: 2}
+--- !u!114 &528985909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528985906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87b700c2c14aec14cbaebf6c31a389a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1979335253
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -189,7 +202,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_Pivot.x

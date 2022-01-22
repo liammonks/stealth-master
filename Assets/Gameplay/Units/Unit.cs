@@ -142,8 +142,10 @@ public abstract class Unit : MonoBehaviour
     
     private Gadgets.BaseGadget equippedGadget;
 
+    // Networking
+    [HideInInspector] public NetworkPlayer networkPlayer;
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         ID = UnitHelper.GetUnitID();
         
@@ -373,8 +375,13 @@ public abstract class Unit : MonoBehaviour
         equippedGadget.Equip(this);
         return true;
     }
+    
+    public Gadgets.BaseGadget GetEquippedGadget()
+    {
+        return equippedGadget;
+    }
 
-    protected void GadgetPrimary(bool active)
+    public void GadgetPrimary(bool active)
     {
         if (active)
         {
@@ -402,7 +409,7 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
-    protected void GadgetSecondary(bool active)
+    public void GadgetSecondary(bool active)
     {
         if (active)
         {

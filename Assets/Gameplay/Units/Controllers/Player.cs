@@ -16,9 +16,9 @@ public class Player : Unit
 
     private Vector2 defaultCameraOffset = new Vector2(0, 0.3f);
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         healthBar = FindObjectOfType<HealthBar>();
         data.hitMask = LayerMask.GetMask("Enemy");
     }
@@ -39,11 +39,13 @@ public class Player : Unit
     private void OnMovement(InputValue value)
     {
         data.input.movement = Mathf.CeilToInt(value.Get<Vector2>().x);
+        if(networkPlayer) networkPlayer.CmdOnMovement(data.input.movement);
     }
 
     private void OnRun(InputValue value)
     {
         data.input.running = value.Get<float>() == 1.0f;
+        if (networkPlayer) networkPlayer.CmdOnRun(data.input.running);
     }
 
     private void OnJump(InputValue value)
@@ -51,6 +53,7 @@ public class Player : Unit
         if (value.Get<float>() == 1.0f)
         {
             data.input.jumpRequestTime = Time.unscaledTime;
+            if (networkPlayer) networkPlayer.CmdOnJump();
         }
     }
 
@@ -79,6 +82,7 @@ public class Player : Unit
                 enableCrawlCoroutine = null;
             }
         }
+        if (networkPlayer) networkPlayer.CmdOnCrawl(value.Get<float>() == 1.0f);
     }
     
     private IEnumerator EnableCrawlDelay(float delay)
@@ -93,6 +97,7 @@ public class Player : Unit
         if (value.Get<float>() == 1.0f)
         {
             data.input.meleeRequestTime = Time.unscaledTime;
+            if (networkPlayer) networkPlayer.CmdOnMelee();
         }
     }
 
@@ -104,6 +109,7 @@ public class Player : Unit
         
         MouseDelta = MousePosition - lastPosition;
         SetAimOffset(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
+        if (networkPlayer) networkPlayer.CmdOnMouseMove(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
     }
 
     private void OnInteract(InputValue value)
@@ -111,6 +117,7 @@ public class Player : Unit
         if (value.Get<float>() == 1.0f)
         {
             Interact();
+            if (networkPlayer) networkPlayer.CmdOnInteract();
         }
     }
 
@@ -119,11 +126,13 @@ public class Player : Unit
     private void OnGadgetPrimary(InputValue value)
     {
         GadgetPrimary(value.Get<float>() == 1.0f);
+        if (networkPlayer) networkPlayer.CmdOnGadgetPrimary(value.Get<float>() == 1.0f);
     }
 
     private void OnGadgetSecondary(InputValue value)
     {
         GadgetSecondary(value.Get<float>() == 1.0f);
+        if (networkPlayer) networkPlayer.CmdOnGadgetSecondary(value.Get<float>() == 1.0f);
     }
     
     private void OnNextGadget(InputValue value)
@@ -145,6 +154,7 @@ public class Player : Unit
             }
 
             if (!newGadgetEquipped) equippedGadgetIndex = originalGadgetIndex;
+            if (newGadgetEquipped && networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
         }
     }
 
@@ -172,6 +182,7 @@ public class Player : Unit
             }
             
             if (!newGadgetEquipped) equippedGadgetIndex = originalGadgetIndex;
+            if (newGadgetEquipped && networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
         }
     }
 
@@ -186,6 +197,7 @@ public class Player : Unit
         {
             equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[0]) ? 0 : equippedGadgetIndex;
         }
+        if (networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
     }
 
     private void OnGadget_1()
@@ -199,6 +211,7 @@ public class Player : Unit
         {
             equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[1]) ? 1 : equippedGadgetIndex;
         }
+        if (networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
     }
 
     private void OnGadget_2()
@@ -212,6 +225,7 @@ public class Player : Unit
         {
             equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[2]) ? 2 : equippedGadgetIndex;
         }
+        if (networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
     }
 
     private void OnGadget_3()
@@ -225,6 +239,7 @@ public class Player : Unit
         {
             equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[3]) ? 3 : equippedGadgetIndex;
         }
+        if (networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
     }
     
     #endregion

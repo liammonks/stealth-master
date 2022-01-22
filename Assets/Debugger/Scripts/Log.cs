@@ -5,6 +5,11 @@ using TMPro;
 using System.Text.RegularExpressions;
 
 public static class Log {
+    
+    public static void Text(string key, string text, Vector2 screenPosition, Color color, bool isPermanent = false)
+    {
+        DebugText.Instance.PrintText(key, text, screenPosition, color, isPermanent);
+    }
 
     public static void UnitState(UnitState state, float duration) {
         if (DebugWindowManager.Instance == null) { return; }

@@ -83,11 +83,11 @@ namespace Gadgets
         
         }
         
-        private void FixedUpdate() {
+        protected override void FixedUpdate() {
+            base.FixedUpdate();
             if(attached)
             {
                 joint.frequency = Mathf.Clamp((Vector2.Dot((joint.connectedAnchor - (Vector2)transform.position).normalized, Vector2.up) + 1) * freq, 0.00001f, float.MaxValue);
-                Debug.Log(joint.distance);
                 
                 // Cast towards the last attatch point
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, attachPoints[attachPoints.Count - 1].point - (Vector2)transform.position, Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point) - 0.1f, mask);

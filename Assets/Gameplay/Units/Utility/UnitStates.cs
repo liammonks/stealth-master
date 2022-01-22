@@ -1341,18 +1341,22 @@ public static class UnitStates
             );
             if (scanHit && scanHit.distance <= climbHit.distance + minLedgeThickness)
             {
-
+                
             }
             else
             {
                 Debug.DrawLine(
                     data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
                     climbHit.point,
-                    Color.green,
+                    Color.magenta,
                     data.stats.climbDuration
                 );
-                data.target = climbHit.point + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
-                return UnitState.LedgeGrab;
+                Vector2 dir = (data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f)))) - climbHit.point;
+                if(Vector2.Dot(dir, Vector2.up) >= 0.1f)
+                {
+                    data.target = climbHit.point + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
+                    return UnitState.LedgeGrab;
+                }
             }
             climbHit = scanHit;
         }

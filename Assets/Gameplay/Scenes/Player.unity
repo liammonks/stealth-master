@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67577002}
   m_LocalRotation: {x: 0.0062490236, y: 0.0062495116, z: -0.000039054863, w: 0.99996096}
-  m_LocalPosition: {x: -1, y: 2.8, z: -80}
+  m_LocalPosition: {x: -1.15625, y: 2.58125, z: -80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,7 +186,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9238477, y: 1}
+    m_SensorSize: {x: 1.9488449, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -7185,7 +7185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1324918965
 Transform:
   m_ObjectHideFlags: 0
@@ -7469,7 +7469,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518594397}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: -0.15625, y: 1.28125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7591,6 +7591,7 @@ MonoBehaviour:
   - {x: 0.75, y: -0.1}
   - {x: 0.75, y: 0.1}
   interactables: []
+  networkPlayer: {fileID: 0}
   equippedGadgetIndex: -1
   mainCamera: {fileID: 1521881367}
 --- !u!50 &1518594402
@@ -7642,7 +7643,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521881362}
   m_LocalRotation: {x: 0.0062490236, y: 0.0062495116, z: -0.000039054863, w: 0.99996096}
-  m_LocalPosition: {x: -1, y: 2.8, z: -80}
+  m_LocalPosition: {x: -1.15625, y: 2.58125, z: -80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8032,7 +8033,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9238477, y: 1}
+    m_SensorSize: {x: 1.9488449, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

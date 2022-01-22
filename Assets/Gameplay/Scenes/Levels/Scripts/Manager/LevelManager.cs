@@ -12,8 +12,10 @@ public class LevelManager : MonoBehaviour
     }
 
     public static LevelManager Instance;
+    public static string sceneName;
 
     public LevelUI UI;
+    public PlayerSpawn ActivePlayerSpawn => activePlayerSpawn;
 
     [SerializeField] private PlayerSpawn activePlayerSpawn;
     [SerializeField] private WinCondition winCondition;
@@ -26,13 +28,20 @@ public class LevelManager : MonoBehaviour
             return;
         }
         Instance = this;
-
+        sceneName = gameObject.scene.name;
+        
         if (activePlayerSpawn == null)
         {
             activePlayerSpawn = FindObjectOfType<PlayerSpawn>();
         }
 
         enemyUnits = new List<AIUnit>(FindObjectsOfType<AIUnit>()).FindAll(x => x.isEnemy);
+    }
+    
+    public void LoadLevel(string levelName)
+    {
+        SceneManager.UnloadSceneAsync(gameObject.scene);
+        SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
     }
 
     public void RespawnPlayer()

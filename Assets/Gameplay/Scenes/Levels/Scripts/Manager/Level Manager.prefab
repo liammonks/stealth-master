@@ -51,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 8854185636685449825}
   activePlayerSpawn: {fileID: 0}
+  winCondition: 0
 --- !u!114 &-8149771102376434567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,6 +67,7 @@ MonoBehaviour:
   scenes:
   - Global
   - Player
+  - Debugger
 --- !u!114 &7775018115626590177
 MonoBehaviour:
   m_ObjectHideFlags: 0
