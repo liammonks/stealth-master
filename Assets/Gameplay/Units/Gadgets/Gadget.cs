@@ -37,7 +37,7 @@ namespace Gadgets
             unit.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, frontArmAnimatorController);
             unit.data.animator.SetLayer(UnitAnimatorLayer.BackArm, backArmAnimatorController);
             owner.onAimOffsetUpdated += OnAimPositionUpdated;
-            owner.data.animator.onFacingUpdated += OnAimPositionUpdated;
+            owner.data.animator.onFacingUpdated += OnFacingUpdated;
             owner.data.lockGadget += OnLocked;
             OnEquip();
             OnUnitStateUpdated(unit.GetState());
@@ -46,7 +46,7 @@ namespace Gadgets
         private void OnDestroy()
         {
             owner.onAimOffsetUpdated -= OnAimPositionUpdated;
-            owner.data.animator.onFacingUpdated -= OnAimPositionUpdated;
+            owner.data.animator.onFacingUpdated -= OnFacingUpdated;
             owner.data.lockGadget -= OnLocked;
         }
 
@@ -103,19 +103,6 @@ namespace Gadgets
         protected virtual void OnAimPositionUpdated()
         {
             bool aimingBehind = owner.AimingBehind();
-            if (forwardObj && backwardObj)
-            {
-                if (aimingBehind)
-                {
-                    forwardObj.SetActive(false);
-                    backwardObj.SetActive(true);
-                }
-                else
-                {
-                    forwardObj.SetActive(true);
-                    backwardObj.SetActive(false);
-                }
-            }
 
             if (rotateFrontArm)
             {
@@ -139,6 +126,24 @@ namespace Gadgets
             }
             owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, aimingBehind ? frontArmAnimatorControllerReversed : frontArmAnimatorController, rotateFrontArm && aimingBehind);
             owner.data.animator.SetLayer(UnitAnimatorLayer.BackArm, aimingBehind ? backArmAnimatorControllerReversed : backArmAnimatorController);
+        }
+        
+        private void OnFacingUpdated()
+        {
+            bool aimingBehind = owner.AimingBehind();
+            if (forwardObj && backwardObj)
+            {
+                if (aimingBehind)
+                {
+                    forwardObj.SetActive(false);
+                    backwardObj.SetActive(true);
+                }
+                else
+                {
+                    forwardObj.SetActive(true);
+                    backwardObj.SetActive(false);
+                }
+            }
         }
         
         private void OnTriggerEnter2D(Collider2D other)

@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StealthMaster_Dive_Loop
+  m_Name: SM_BDY_Slide
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,9 +20,9 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 463771910335145693, guid: dbcb3781dcaf45b449f9dc1b1f485722, type: 3}
+      value: {fileID: -5581726209818864469, guid: 00977b049d5a95a4ea7816b0a9e6ae10, type: 3}
     - time: 0.083333336
-      value: {fileID: -7240242692135013019, guid: dbcb3781dcaf45b449f9dc1b1f485722, type: 3}
+      value: {fileID: -4253747668476187673, guid: 00977b049d5a95a4ea7816b0a9e6ae10, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -42,8 +42,8 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 463771910335145693, guid: dbcb3781dcaf45b449f9dc1b1f485722, type: 3}
-    - {fileID: -7240242692135013019, guid: dbcb3781dcaf45b449f9dc1b1f485722, type: 3}
+    - {fileID: -5581726209818864469, guid: 00977b049d5a95a4ea7816b0a9e6ae10, type: 3}
+    - {fileID: -4253747668476187673, guid: 00977b049d5a95a4ea7816b0a9e6ae10, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

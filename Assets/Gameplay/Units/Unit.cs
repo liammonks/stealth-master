@@ -367,9 +367,9 @@ public abstract class Unit : MonoBehaviour
             {
                 return false;
             }
+            DestroyImmediate(equippedGadget.gameObject);
             data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, Quaternion.identity);
             data.animator.RotateLayer(UnitAnimatorLayer.BackArm, Quaternion.identity);
-            Destroy(equippedGadget.gameObject);
         }
         equippedGadget = Instantiate(toEquip, transform);
         equippedGadget.Equip(this);
