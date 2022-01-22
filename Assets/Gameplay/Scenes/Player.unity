@@ -148,8 +148,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67577002}
-  m_LocalRotation: {x: 0.0062490236, y: 0.0062495116, z: -0.000039054863, w: 0.99996096}
-  m_LocalPosition: {x: -1.15625, y: 2.58125, z: -80}
+  m_LocalRotation: {x: 0.0062490236, y: 0.0062495107, z: -0.000039054863, w: 0.99996096}
+  m_LocalPosition: {x: -2.4099998, y: 2.58125, z: -80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,7 +186,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9488449, y: 1}
+    m_SensorSize: {x: 1.9238477, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -7469,7 +7469,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518594397}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.15625, y: 1.28125, z: 0}
+  m_LocalPosition: {x: -1.41, y: 1.28125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7642,8 +7642,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521881362}
-  m_LocalRotation: {x: 0.0062490236, y: 0.0062495116, z: -0.000039054863, w: 0.99996096}
-  m_LocalPosition: {x: -1.15625, y: 2.58125, z: -80}
+  m_LocalRotation: {x: 0.0062490236, y: 0.0062495107, z: -0.000039054863, w: 0.99996096}
+  m_LocalPosition: {x: -2.4099998, y: 2.58125, z: -80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7960,7 +7960,7 @@ Animator:
   m_GameObject: {fileID: 1657240029}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 636379274b9f3304f86d595f8d156116, type: 2}
+  m_Controller: {fileID: 22100000, guid: 7e535984dc7e37f4093a48244a522725, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -8033,7 +8033,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9488449, y: 1}
+    m_SensorSize: {x: 1.9238477, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -13219,7 +13219,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7060861614734345361, guid: 6e22cc13ea0980f4caf882c1189b0be6, type: 3}
+  m_Sprite: {fileID: 7997789939514820326, guid: ef26d55f46934b140bc575c210284454, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

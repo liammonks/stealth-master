@@ -16,6 +16,7 @@ namespace Gadgets
         [SerializeField] protected RuntimeAnimatorController backArmAnimatorController;
         [SerializeField] protected RuntimeAnimatorController frontArmAnimatorControllerReversed;
         [SerializeField] protected RuntimeAnimatorController backArmAnimatorControllerReversed;
+        [SerializeField] private GameObject forwardObj, backwardObj;
 
         protected Unit owner;
         protected bool primaryActive, secondaryActive;
@@ -93,13 +94,31 @@ namespace Gadgets
             }
         }
 
-        protected virtual void FixedUpdate() {
+        protected virtual void FixedUpdate()
+        {
+            Vector2 armPivot = owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
+            transform.position = armPivot;
+        }
+
+        protected virtual void OnAimPositionUpdated()
+        {
             bool aimingBehind = owner.AimingBehind();
+            if (forwardObj && backwardObj)
+            {
+                if (aimingBehind)
+                {
+                    forwardObj.SetActive(false);
+                    backwardObj.SetActive(true);
+                }
+                else
+                {
+                    forwardObj.SetActive(true);
+                    backwardObj.SetActive(false);
+                }
+            }
 
             if (rotateFrontArm)
             {
-                Vector2 armPivot = owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
-                transform.position = armPivot;
                 transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? owner.AimOffset : -owner.AimOffset));
 
                 if (rotationLocked)
@@ -118,7 +137,6 @@ namespace Gadgets
                     owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, transform.rotation);
                 }
             }
-
             owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, aimingBehind ? frontArmAnimatorControllerReversed : frontArmAnimatorController, rotateFrontArm && aimingBehind);
             owner.data.animator.SetLayer(UnitAnimatorLayer.BackArm, aimingBehind ? backArmAnimatorControllerReversed : backArmAnimatorController);
         }
@@ -154,7 +172,6 @@ namespace Gadgets
         }
 
         protected virtual void OnEquip() { }
-        protected virtual void OnAimPositionUpdated() { }
 
         protected abstract void OnPrimaryEnabled();
         protected abstract void OnPrimaryDisabled();

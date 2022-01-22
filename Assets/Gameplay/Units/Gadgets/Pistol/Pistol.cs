@@ -6,8 +6,11 @@ namespace Gadgets
 {
     public class Pistol : BaseGadget
     {
+        [Header("Pistol")]
         [SerializeField] private BulletStats stats;
-        [SerializeField] private Transform bulletSpawn;
+        [SerializeField] private Transform bulletSpawnForward, bulletSpawnBackward;
+
+        private Transform bulletSpawn => owner.AimingBehind() ? bulletSpawnBackward : bulletSpawnForward;
 
         private const float cameraOffsetDistance = 3.0f;
 
