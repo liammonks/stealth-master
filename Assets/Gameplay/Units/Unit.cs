@@ -189,10 +189,10 @@ public abstract class Unit : MonoBehaviour
             data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
         }
 
+        UpdateState();
+        
         // Apply gravity
         data.rb.gravityScale = !data.isGrounded ? 1.0f : 0.0f;
-
-        UpdateState();
 
         // Dont update collider if we are fully interped
         if (colliderInterpValue != (data.isStanding ? 1.0f : 0.0f))
@@ -205,8 +205,8 @@ public abstract class Unit : MonoBehaviour
     {
         if (data.attatchedRB != null)
         {
-            Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
-            Log.Text("GroundRB" + ID, data.attatchedRB.transform.name, pos, Color.green, 0);
+            //Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
+            //Log.Text("GroundRB" + ID, data.attatchedRB.transform.name, pos, Color.green, 0);
             data.rb.position += (data.attatchedRB.velocity * Time.deltaTime);
         }
     }

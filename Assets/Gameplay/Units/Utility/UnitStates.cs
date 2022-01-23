@@ -841,18 +841,27 @@ public static class UnitStates
                 feetHit ? Color.green : Color.red,
                 1.0f
             );
-
+            data.groundSpringActive = false;
             data.animator.Play(feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
-            data.rb.position = data.target;
             data.t = 0.25f;
             data.isStanding = true;
         }
 
         data.rb.rotation = 0.0f;
         data.rb.velocity = Vector2.zero;
+        data.isGrounded = true;
         data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
 
-        if (data.t == 0)
+        if(data.attatchedRB)
+        {
+            data.target += data.attatchedRB.velocity * Time.fixedDeltaTime;
+        }
+
+        if (data.t > 0)
+        {
+            data.rb.position = Vector2.Lerp(data.rb.position, data.target, 1.0f - (data.t / 0.25f));
+        }
+        else
         {
             // Wall Jump
             if (data.input.jumpQueued)
@@ -1316,12 +1325,12 @@ public static class UnitStates
             castDist - (boxDepth * 0.05f),
             Unit.CollisionMask
         );
-        ExtDebug.DrawBox(
-            data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * castDist * 0.5f) - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
-            new Vector2(castDist, scanHeight) * 0.5f,
-            Quaternion.identity,
-            Color.red
-        );
+        //ExtDebug.DrawBox(
+        //    data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * castDist * 0.5f) - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
+        //    new Vector2(castDist, scanHeight) * 0.5f,
+        //    Quaternion.identity,
+        //    Color.red
+        //);
 
         while (climbHit && scanHeight > (scanHeightInterval * 2))
         {
@@ -1334,25 +1343,35 @@ public static class UnitStates
                 castDist - (boxDepth * 0.05f),
                 Unit.CollisionMask
             );
+            //Debug.DrawLine(
+            //    data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
+            //    scanHit.point,
+            //    Color.red,
+            //    data.stats.climbDuration
+            //);
+            
             if (scanHit && scanHit.distance <= climbHit.distance + minLedgeThickness)
             {
                 // Continue scanning down until we do not hit
             }
             else
             {
-                Debug.DrawLine(
-                    data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
-                    climbHit.point,
-                    Color.magenta,
-                    data.stats.climbDuration
-                );
-                Vector2 dir = (data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f)))) - climbHit.point;
-                if(Vector2.Dot(dir, Vector2.up) >= 0.1f)
+                //Debug.DrawLine(
+                //    data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f))),
+                //    climbHit.point,
+                //    Color.green,
+                //    data.stats.climbDuration
+                //);
+                Vector2 normal = (data.rb.position - ((Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxClimbHeight + (scanHeight * 0.5f)))) - climbHit.point;
+                if (Vector2.Dot(normal, Vector2.up) > 0.05f)
                 {
                     data.target = climbHit.point + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
-                    data.groundSpringActive = false;
                     data.attatchedRB = climbHit.rigidbody;
                     return UnitState.LedgeGrab;
+                }
+                else
+                {
+                    return UnitState.Null;
                 }
             }
             climbHit = scanHit;
@@ -1442,7 +1461,7 @@ public static class UnitStates
 
     private static bool CanClimb(UnitData data)
     {
-        Vector2 target = data.rb.position + (Vector2.up * (data.stats.standingHalfHeight + 0.1f - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
+        Vector2 target = data.rb.position + (Vector2.up * (data.stats.standingHalfHeight + 0.05f - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
         RaycastHit2D hit = Physics2D.BoxCast(target, (data.stats.standingScale * 0.9f), data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(target, (data.stats.standingScale * 0.9f) * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green, data.stats.climbDuration);
         return !hit;
