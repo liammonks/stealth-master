@@ -116,133 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 576
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d29c02252a8c00a40b99ed2a470ad0f6
-      internalID: 987263271
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 512
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8b598cdb675b0d7449fd80660cd168ff
-      internalID: 1251134490
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 448
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5016d0799cd90db47a9f8297416260ab
-      internalID: 2101796631
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 384
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 11a8c0bd420242d458c157948412e808
-      internalID: 1028125160
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 320
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e09ff6c747b511349a194264b999f920
-      internalID: -79723572
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_5
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 256
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b91286603d4e24045b8e5133da86dfcf
-      internalID: -859747144
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_6
+      name: SM_Slide_INT_Bdy_RV_0
       rect:
         serializedVersion: 2
         x: 0
@@ -250,77 +124,77 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 435185b1b9f9a8a40993688a9f0f7be1
-      internalID: -1282478914
+      spriteID: 24af755fb6eb5584094a905fc9acd294
+      internalID: -185440107
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_7
+      name: SM_Slide_INT_Bdy_RV_1
       rect:
         serializedVersion: 2
         x: 0
         y: 128
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6eaff12c8f670d044945fc6f8c1a49e9
-      internalID: 839096202
+      spriteID: c4f10e7db8de6274ebb360ce97edc1af
+      internalID: -537382488
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_8
+      name: SM_Slide_INT_Bdy_RV_2
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 14e361ac956ee0c4d845f03a62dac0cb
-      internalID: -1540254765
+      spriteID: f0eb030f277b5104a848166bb5c87c68
+      internalID: -711237168
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Idle_Right_9
+      name: SM_Slide_INT_Bdy_RV_3
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a0b9ba90a2eb27c438469ae22ed9e669
-      internalID: 301718765
+      spriteID: 19113b0df680542439f3b92ef951e249
+      internalID: 1041304282
       vertices: []
       indices: 
       edges: []
@@ -336,16 +210,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Stealth_Master_Idle_Right_2: 2101796631
-      Stealth_Master_Idle_Right_6: -1282478914
-      Stealth_Master_Idle_Right_4: -79723572
-      Stealth_Master_Idle_Right_5: -859747144
-      Stealth_Master_Idle_Right_9: 301718765
-      Stealth_Master_Idle_Right_0: 987263271
-      Stealth_Master_Idle_Right_8: -1540254765
-      Stealth_Master_Idle_Right_3: 1028125160
-      Stealth_Master_Idle_Right_1: 1251134490
-      Stealth_Master_Idle_Right_7: 839096202
+      SM_Slide_INT_Bdy_RV_3: 1041304282
+      SM_Slide_INT_Bdy_RV_0: -185440107
+      SM_Slide_INT_Bdy_RV_2: -711237168
+      SM_Slide_INT_Bdy_RV_1: -537382488
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

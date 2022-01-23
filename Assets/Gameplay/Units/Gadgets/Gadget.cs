@@ -151,6 +151,7 @@ namespace Gadgets
         {
             intersectingObjects.Add(other.gameObject);
             rotationLocked = true;
+            OnAimPositionUpdated();
         }
         
         private void OnTriggerExit2D(Collider2D other) {

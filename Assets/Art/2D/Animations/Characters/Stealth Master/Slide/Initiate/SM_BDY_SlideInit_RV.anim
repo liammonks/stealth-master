@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StealthMaster_Slide_Init
+  m_Name: SM_BDY_SlideInit_RV
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,11 +20,11 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: -4173025655062557990, guid: ae3624563c606e54bac650536a1fe811, type: 3}
+      value: {fileID: -185440107, guid: 63100ecb69e30ff4cbd53913dc6dbbe3, type: 3}
     - time: 0.083333336
-      value: {fileID: 8131013007305822879, guid: ae3624563c606e54bac650536a1fe811, type: 3}
+      value: {fileID: -537382488, guid: 63100ecb69e30ff4cbd53913dc6dbbe3, type: 3}
     - time: 0.16666667
-      value: {fileID: 1397798735786930339, guid: ae3624563c606e54bac650536a1fe811, type: 3}
+      value: {fileID: -711237168, guid: 63100ecb69e30ff4cbd53913dc6dbbe3, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -44,9 +44,9 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: -4173025655062557990, guid: ae3624563c606e54bac650536a1fe811, type: 3}
-    - {fileID: 8131013007305822879, guid: ae3624563c606e54bac650536a1fe811, type: 3}
-    - {fileID: 1397798735786930339, guid: ae3624563c606e54bac650536a1fe811, type: 3}
+    - {fileID: -185440107, guid: 63100ecb69e30ff4cbd53913dc6dbbe3, type: 3}
+    - {fileID: -537382488, guid: 63100ecb69e30ff4cbd53913dc6dbbe3, type: 3}
+    - {fileID: -711237168, guid: 63100ecb69e30ff4cbd53913dc6dbbe3, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
