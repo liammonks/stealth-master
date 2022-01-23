@@ -20,7 +20,7 @@ public class DebugText : MonoBehaviour
         Instance = this;
     }
     
-    public void PrintText(string key, string value, Vector2 screenPosition, Color color, bool permanent = false)
+    public void PrintText(string key, string value, Vector2 screenPosition, Color color, float duration, bool permanent = false)
     {
         TextMeshProUGUI textObj;
         if (textDictionary.ContainsKey(key))
@@ -47,13 +47,13 @@ public class DebugText : MonoBehaviour
         if (!permanent)
         {
             //textObj.GetComponent<Animator>().Play("Fade");
-            textDestroyCoroutineDictionary.Add(key, StartCoroutine(DestroyText(key)));
+            textDestroyCoroutineDictionary.Add(key, StartCoroutine(DestroyText(key, duration)));
         }
     }
     
-    private IEnumerator DestroyText(string key)
+    private IEnumerator DestroyText(string key, float duration)
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(duration);
         TextMeshProUGUI text = textDictionary[key];
         textDictionary.Remove(key);
         textDestroyCoroutineDictionary.Remove(key);

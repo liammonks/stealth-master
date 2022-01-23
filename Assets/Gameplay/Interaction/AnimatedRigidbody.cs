@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class AnimatedRigidbody : MonoBehaviour
 {
-    public Vector2 velocity;
-    public float mass = 1.0f;
-
+    private Rigidbody2D rb;
     private Vector2 lastPosition;
     
     private void Awake() {
         lastPosition = transform.position;
+        rb = GetComponent<Rigidbody2D>();
     }
     
-    private void FixedUpdate() {
-        velocity = ((Vector2)transform.position - lastPosition) / Time.fixedDeltaTime;
+    private void LateUpdate() {
+        rb.velocity = ((Vector2)transform.position - lastPosition) / Time.deltaTime;
         lastPosition = transform.position;
     }
 }

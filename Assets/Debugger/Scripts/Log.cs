@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 public static class Log {
     
-    public static void Text(string key, string text, Vector2 screenPosition, Color color, bool isPermanent = false)
+    public static void Text(string key, string text, Vector2 screenPosition, Color color, float duration, bool isPermanent = false)
     {
-        DebugText.Instance.PrintText(key, text, screenPosition, color, isPermanent);
+        DebugText.Instance.PrintText(key, text, screenPosition, color, duration, isPermanent);
     }
 
     public static void UnitState(UnitState state, float duration) {

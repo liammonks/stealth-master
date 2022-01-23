@@ -620,6 +620,12 @@ public static class UnitStates
             data.isStanding = true;
             data.groundSpringActive = false;
             velocity.y = data.previousState == UnitState.LedgeGrab ? data.stats.wallJumpForce.y : data.stats.jumpForce;
+            
+            if(data.attatchedRB)
+            {
+                velocity += data.attatchedRB.velocity;
+                data.attatchedRB = null;
+            }
         }
 
         // Check Climb
@@ -837,27 +843,16 @@ public static class UnitStates
             );
 
             data.animator.Play(feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
-            data.t = 0.3f;
-            data.groundSpringActive = false;
+            data.rb.position = data.target;
+            data.t = 0.25f;
             data.isStanding = true;
         }
 
-        data.rb.rotation = 0;
-        data.t -= Time.fixedDeltaTime;
+        data.rb.rotation = 0.0f;
+        data.rb.velocity = Vector2.zero;
+        data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
 
-        if (data.t > 0.0f)
-        {
-            data.rb.velocity = (data.target - data.rb.position) / Mathf.Max(0.01f, data.t);
-        }
-
-        if (data.t <= 0.0f && data.t != -10.0f)
-        {
-            data.rb.position = data.target;
-            data.rb.velocity = Vector2.zero;
-            data.t = -10.0f;
-        }
-
-        if (data.t == -10.0f)
+        if (data.t == 0)
         {
             // Wall Jump
             if (data.input.jumpQueued)
@@ -956,28 +951,28 @@ public static class UnitStates
             data.animator.Play("Climb");
             data.t = data.stats.climbDuration;
             data.target = data.rb.position + (Vector2.up * (data.stats.standingHalfHeight - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
-            data.rb.velocity = (data.target - data.rb.position) / data.t;
+            data.target = (data.target - data.rb.position) / data.t;
             data.rb.isKinematic = true;
-            Debug.DrawLine(
-                data.rb.position,
-                data.target,
-                Color.blue,
-                data.stats.climbDuration
-            );
         }
 
         data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
         if (data.t == 0.0f)
         {
             data.rb.velocity = Vector2.zero;
-            data.rb.position = data.target;
+            //data.rb.position = data.target;
             data.rb.isKinematic = false;
             data.groundSpringActive = true;
             return UnitState.Idle;
         }
         else
         {
-            data.rb.velocity = (data.target - data.rb.position) / data.t;
+            data.rb.velocity = data.target;
+            Debug.DrawRay(
+                data.rb.position,
+                data.target,
+                Color.blue,
+                Time.fixedDeltaTime
+            );
         }
 
         return UnitState.Climb;
@@ -1341,7 +1336,7 @@ public static class UnitStates
             );
             if (scanHit && scanHit.distance <= climbHit.distance + minLedgeThickness)
             {
-                
+                // Continue scanning down until we do not hit
             }
             else
             {
@@ -1355,6 +1350,8 @@ public static class UnitStates
                 if(Vector2.Dot(dir, Vector2.up) >= 0.1f)
                 {
                     data.target = climbHit.point + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
+                    data.groundSpringActive = false;
+                    data.attatchedRB = climbHit.rigidbody;
                     return UnitState.LedgeGrab;
                 }
             }

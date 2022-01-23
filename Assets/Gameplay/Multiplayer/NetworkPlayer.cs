@@ -46,7 +46,7 @@ public class NetworkPlayer : NetworkBehaviour
             Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(activeUnit.transform.position);
             pos += Vector2.up * i * 20;
             Color textColor = activeUnit.GetEquippedGadget().GetType() == gadgets[i].GetType() ? Color.green : Color.white;
-            Log.Text("GadgetData" + i + netId, gadgets[i].name, pos, textColor);
+            Log.Text("GadgetData" + i + netId, gadgets[i].name, pos, textColor, Time.fixedDeltaTime);
         }
     }
     

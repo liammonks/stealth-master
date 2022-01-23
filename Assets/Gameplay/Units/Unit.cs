@@ -22,7 +22,8 @@ public class UnitData
     public float t = 0.0f;
     public float stateDuration = 0.0f;
     public List<uint> hitIDs = new List<uint>();
-    
+    public Rigidbody2D attatchedRB;
+
     public delegate void OnLockGadget();
     public event OnLockGadget lockGadget;
     public void LockGadget()
@@ -199,6 +200,16 @@ public abstract class Unit : MonoBehaviour
 
         //Debug.DrawRay(transform.position, data.rb.velocity * Time.fixedDeltaTime, Color.grey, 3.0f);
     }
+    
+    private void Update()
+    {
+        if (data.attatchedRB != null)
+        {
+            Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
+            Log.Text("GroundRB" + ID, data.attatchedRB.transform.name, pos, Color.green, 0);
+            data.rb.position += (data.attatchedRB.velocity * Time.deltaTime);
+        }
+    }
 
     private void UpdateState()
     {
@@ -262,6 +273,7 @@ public abstract class Unit : MonoBehaviour
             else
             {
                 data.isGrounded = springDisplacement > -0.05f;
+                data.attatchedRB = hit.rigidbody;
             }
 
             // Rotate Unit
@@ -348,8 +360,7 @@ public abstract class Unit : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        AnimatedRigidbody animatedRigidbody = other.gameObject.GetComponent<AnimatedRigidbody>();
-        Vector2 impactVelocity = animatedRigidbody ? (animatedRigidbody.velocity - data.rb.velocity) * animatedRigidbody.mass : other.relativeVelocity * (other.rigidbody ? other.rigidbody.mass : 1.0f);
+        Vector2 impactVelocity = other.relativeVelocity * (other.rigidbody ? other.rigidbody.mass : 1.0f);
         TakeDamage(impactVelocity * 0.1f);
     }
 
