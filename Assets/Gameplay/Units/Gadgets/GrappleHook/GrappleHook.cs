@@ -11,11 +11,13 @@ namespace Gadgets
         {
             public Vector2 point;
             public Vector2 wrapDirection;
-            
-            public AttachPoint(Vector2 a_point, Vector2 a_wrapDirection)
+            public Rigidbody2D attachedRB;
+
+            public AttachPoint(Vector2 a_point, Vector2 a_wrapDirection, Rigidbody2D a_attachedRB)
             {
                 point = a_point;
                 wrapDirection = a_wrapDirection;
+                attachedRB = a_attachedRB;
             }
         }
 
@@ -54,7 +56,8 @@ namespace Gadgets
             
             if(hit.collider)
             {
-                attachPoints.Add(new AttachPoint(hit.point, Vector2.zero));
+                owner.data.attatchedRB = null;
+                attachPoints.Add(new AttachPoint(hit.point, Vector2.zero, hit.rigidbody));
                 float jointDistance = Vector2.Distance(transform.position, hit.point);
                 joint = owner.gameObject.AddComponent<SpringJoint2D>();
                 joint.autoConfigureConnectedAnchor = false;
@@ -85,8 +88,16 @@ namespace Gadgets
         
         protected override void FixedUpdate() {
             base.FixedUpdate();
+            foreach(AttachPoint attachPoint in attachPoints)
+            {
+                if (attachPoint.attachedRB != null)
+                {
+                    attachPoint.point += attachPoint.attachedRB.velocity * Time.fixedDeltaTime;
+                }
+            }
             if(attached)
             {
+                joint.connectedAnchor = attachPoints[attachPoints.Count - 1].point;
                 joint.frequency = Mathf.Clamp((Vector2.Dot((joint.connectedAnchor - (Vector2)transform.position).normalized, Vector2.up) + 1) * freq, 0.00001f, float.MaxValue);
                 
                 // Cast towards the last attatch point
@@ -99,7 +110,7 @@ namespace Gadgets
                     Vector3 dir = (hit.point - attachPoints[attachPoints.Count - 1].point).normalized;
                     Vector3 cross = Vector3.Cross(Vector3.forward, dir).normalized;
                     Vector2 deltaPos = (Vector2)transform.position - lastPos;
-                    attachPoints.Add(new AttachPoint(hit.point, Vector2.Dot(deltaPos, cross) > 0 ? cross : -cross));
+                    attachPoints.Add(new AttachPoint(hit.point, Vector2.Dot(deltaPos, cross) > 0 ? cross : -cross, hit.rigidbody));
                 }
 
                 if(attachPoints.Count > 1)
