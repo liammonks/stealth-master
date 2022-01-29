@@ -128,7 +128,7 @@ public static class UnitStates
                 return UnitState.Jump;
             }
             // Execute Run
-            if (data.input.movement != 0 && Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.75f)
+            if (data.input.movement != 0 && OverRunThreshold(data))
             {
                 return UnitState.Run;
             }
@@ -460,7 +460,7 @@ public static class UnitStates
                         return UnitState.Jump;
 
                     if (data.t == 0.0f)
-                        return UnitState.Idle;
+                        return OverRunThreshold(data) ? UnitState.Run : UnitState.Idle;
                 }
             }
             else
@@ -843,25 +843,36 @@ public static class UnitStates
             );
             data.groundSpringActive = false;
             data.animator.Play(feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
-            data.t = 0.25f;
+            data.t = 1.0f;
             data.isStanding = true;
         }
 
         data.rb.rotation = 0.0f;
         data.rb.velocity = Vector2.zero;
         data.isGrounded = true;
-        data.t = Mathf.Max(0, data.t - Time.fixedDeltaTime);
 
         if(data.attatchedRB)
         {
             data.target += data.attatchedRB.velocity * Time.fixedDeltaTime;
         }
 
-        if (data.t > 0)
+        // Move player to target position
+        if (data.t != -10)
         {
-            data.rb.position = Vector2.Lerp(data.rb.position, data.target, 1.0f - (data.t / 0.25f));
+            if (data.t > 0.7f)
+            {
+                data.t -= Time.fixedDeltaTime;
+                data.rb.position = Vector2.Lerp(data.rb.position, data.target, 1.0f - (data.t / 1.0f));
+            }
+            else
+            {
+                data.rb.position = data.target;
+                data.t = -10;
+            }
         }
-        else
+        
+        // Player in position, take input
+        if(data.t == -10)
         {
             // Wall Jump
             if (data.input.jumpQueued)
@@ -1494,6 +1505,11 @@ public static class UnitStates
             );
         }
         return wallHit;
+    }
+    
+    public static bool OverRunThreshold(UnitData data)
+    {
+        return Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.75f;
     }
 
     #endregion
