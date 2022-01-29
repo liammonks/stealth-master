@@ -861,7 +861,7 @@ public static class UnitStates
         {
             if (data.t > 0.5f)
             {
-                data.t -= Time.fixedDeltaTime;
+                data.t -= Time.fixedDeltaTime * (data.previousState == UnitState.Slide ? 1.0f : 3.0f);
                 data.rb.position = Vector2.Lerp(data.rb.position, data.target, 1.0f - (data.t / 0.75f));
             }
             else
