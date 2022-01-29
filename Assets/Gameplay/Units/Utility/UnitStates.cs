@@ -629,14 +629,14 @@ public static class UnitStates
         }
 
         // Check Climb
-        if (Mathf.Abs(data.rb.velocity.x) >= 0.1f)
-        {
-            UnitState climbState = TryLedgeGrab(data);
-            if (climbState != UnitState.Null)
-            {
-                return climbState;
-            }
-        }
+        //if (Mathf.Abs(data.rb.velocity.x) >= 0.1f)
+        //{
+        //    UnitState climbState = TryLedgeGrab(data);
+        //    if (climbState != UnitState.Null)
+        //    {
+        //        return climbState;
+        //    }
+        //}
         // Check Vault (Require Momentum)
         if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
         {
@@ -1038,12 +1038,15 @@ public static class UnitStates
         {
             return UnitState.Idle;
         }
-
+        
         // Grab Ledge
-        UnitState climbState = TryLedgeGrab(data);
-        if (climbState != UnitState.Null)
+        if (data.rb.velocity.y <= 0.0f)
         {
-            return climbState;
+            UnitState climbState = TryLedgeGrab(data);
+            if (climbState != UnitState.Null)
+            {
+                return climbState;
+            }
         }
 
         return UnitState.WallSlide;
