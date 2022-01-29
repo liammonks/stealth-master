@@ -843,7 +843,7 @@ public static class UnitStates
             );
             data.groundSpringActive = false;
             data.animator.Play(feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
-            data.t = 1.0f;
+            data.t = 0.75f;
             data.isStanding = true;
         }
 
@@ -859,10 +859,10 @@ public static class UnitStates
         // Move player to target position
         if (data.t != -10)
         {
-            if (data.t > 0.7f)
+            if (data.t > 0.5f)
             {
                 data.t -= Time.fixedDeltaTime;
-                data.rb.position = Vector2.Lerp(data.rb.position, data.target, 1.0f - (data.t / 1.0f));
+                data.rb.position = Vector2.Lerp(data.rb.position, data.target, 1.0f - (data.t / 0.75f));
             }
             else
             {
