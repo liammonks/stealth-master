@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TheKiwiCoder;
 
-[RequireComponent(typeof(BehaviourTreeRunner))]
 public class AIUnit : Unit
 {
     [Header("AI")]

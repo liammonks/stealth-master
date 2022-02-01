@@ -1,8 +1,7 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-#if UNITY_EDITOR
 using UnityEditor.SceneManagement;
-#endif
 
 [ExecuteInEditMode] [RequireComponent(typeof(SceneDependencies))]
 public class SceneDependenciesEditor : MonoBehaviour
@@ -34,7 +33,6 @@ public class SceneDependenciesEditor : MonoBehaviour
     }
     
     private void Update() {
-        #if UNITY_EDITOR
         if (editingPrefab) { return; }
         foreach (string scene in gameObject.GetComponent<SceneDependencies>().scenes)
         {
@@ -43,6 +41,7 @@ public class SceneDependenciesEditor : MonoBehaviour
                 EditorSceneManager.OpenScene("Assets/Gameplay/Scenes/" + scene + ".unity", OpenSceneMode.Additive);
             }
         }
-        #endif
     }
 }
+
+#endif
