@@ -38,7 +38,6 @@ public class UnitData
         unlockGadget?.Invoke();
     }
 
-
     public void ApplyDrag(float drag)
     {
         // Apply drag
@@ -74,30 +73,6 @@ public class InputData
     }
 }
 
-public enum UnitState
-{
-    Null,
-    Idle,
-    Run,
-    Crawl,
-    Slide,
-    Dive,
-    Jump,
-    VaultOverState,
-    VaultOnState,
-    Fall,
-    CrawlIdle,
-    LedgeGrab,
-    WallJump,
-    Climb,
-    WallSlide,
-    Melee,
-    JumpMelee,
-    GrappleHookSwing,
-    HitImpact,
-    Launched
-}
-
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class Unit : MonoBehaviour
 {
@@ -110,11 +85,14 @@ public abstract class Unit : MonoBehaviour
     public delegate void OnDamageTaken();
     public event OnDamageTaken onDamageTaken;
 
+    public delegate void OnAimOffsetUpdated();
+    public event OnAimOffsetUpdated onAimOffsetUpdated;
+
     public uint ID;
 
     [Header("State Data")]
-    [SerializeField] protected UnitState state;
     public UnitData data;
+    [HideInInspector] public StateMachine stateMachine;
 
     [Header("Collider")]
     [SerializeField] private PolygonCollider2D activeCollider;
@@ -136,11 +114,7 @@ public abstract class Unit : MonoBehaviour
 
     // Gadgets
     public Vector2 AimOffset => m_AimOffset;
-    private Vector2 m_AimOffset;
-
-    public delegate void OnAimOffsetUpdated();
-    public event OnAimOffsetUpdated onAimOffsetUpdated;
-    
+    private Vector2 m_AimOffset;    
     private Gadgets.BaseGadget equippedGadget;
 
     // Networking
@@ -157,9 +131,7 @@ public abstract class Unit : MonoBehaviour
         // Init data
         data.rb = GetComponent<Rigidbody2D>();
         data.animator = GetComponentInChildren<UnitAnimator>();
-
-        // Init default state
-        UnitStates.Initialise(data, state);
+        stateMachine = GetComponent<StateMachine>();
 
         // Init gadgets
         EquipGadget(GlobalData.DefaultGadget);
@@ -188,8 +160,6 @@ public abstract class Unit : MonoBehaviour
             float rotationForce = (-(rotationDisplacement / Time.fixedDeltaTime) * (data.stats.airRotationForce)) - (data.stats.airRotationDamping);
             data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
         }
-
-        UpdateState();
         
         // Apply gravity
         data.rb.gravityScale = !data.isGrounded ? 1.0f : 0.0f;
@@ -208,26 +178,6 @@ public abstract class Unit : MonoBehaviour
             //Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
             //Log.Text("GroundRB" + ID, data.attatchedRB.transform.name, pos, Color.green, 0);
             data.rb.position += (data.attatchedRB.velocity * Time.deltaTime);
-        }
-    }
-
-    private void UpdateState()
-    {
-        // Log out current state
-        data.stateDuration += Time.fixedDeltaTime;
-
-        // Execute movement, recieve next state
-        UnitState nextState = UnitStates.Execute(data, state);
-
-        // State Updated
-        if (state != nextState)
-        {
-            data.stateDuration = 0.0f;
-            // Initialise new state
-            data.previousState = state;
-            UnitStates.Initialise(data, nextState);
-            state = nextState;
-            equippedGadget?.OnUnitStateUpdated(state);
         }
     }
 
@@ -318,7 +268,7 @@ public abstract class Unit : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health = Mathf.Max(0, health - damage);
-        state = UnitStates.Initialise(data, UnitState.HitImpact);
+        stateMachine.SetState(UnitState.HitImpact);
         if (healthBar != null)
         {
             healthBar.UpdateHealth(health, data.stats.maxHealth);
@@ -337,8 +287,7 @@ public abstract class Unit : MonoBehaviour
     {
         data.rb.velocity += impactVelocity;
         if (impactVelocity.magnitude < impactRateThreshold) { return; }
-        
-        state = UnitStates.Initialise(data, UnitState.Launched);
+        stateMachine.SetState(UnitState.Launched);
         float impactDamage = impactVelocity.magnitude * data.stats.collisionDamageMultiplier;
         health = Mathf.Max(0, health - impactDamage);
         if (healthBar != null)
@@ -356,13 +305,13 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
-    public abstract void Die();
-
     private void OnCollisionEnter2D(Collision2D other)
     {
         Vector2 impactVelocity = other.relativeVelocity * (other.rigidbody ? other.rigidbody.mass : 1.0f);
         TakeDamage(impactVelocity * 0.1f);
     }
+
+    public abstract void Die();
 
     #endregion
 
@@ -374,7 +323,7 @@ public abstract class Unit : MonoBehaviour
     {
         if (equippedGadget != null)
         {
-            if (equippedGadget.PrimaryActive || equippedGadget.SecondaryActive || state == UnitState.Null)
+            if (equippedGadget.PrimaryActive || equippedGadget.SecondaryActive || stateMachine.State == UnitState.Null)
             {
                 return false;
             }
@@ -519,14 +468,12 @@ public abstract class Unit : MonoBehaviour
 
     public UnitState GetState()
     {
-        return state;
+        return stateMachine.State;
     }
 
     public void SetState(UnitState toSet)
     {
-        data.stateDuration = 0.0f;
-        data.previousState = state;
-        state = UnitStates.Initialise(data, toSet);
+        stateMachine.SetState(toSet);
     }
     
     #endregion

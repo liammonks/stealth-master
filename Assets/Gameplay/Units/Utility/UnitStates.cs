@@ -1,5 +1,29 @@
 using UnityEngine;
 
+public enum UnitState
+{
+    Null,
+    Idle,
+    Run,
+    Crawl,
+    Slide,
+    Dive,
+    Jump,
+    VaultOverState,
+    VaultOnState,
+    Fall,
+    CrawlIdle,
+    LedgeGrab,
+    WallJump,
+    Climb,
+    WallSlide,
+    Melee,
+    JumpMelee,
+    GrappleHookSwing,
+    HitImpact,
+    Launched
+}
+
 public static class UnitStates
 {
 

@@ -6,8 +6,10 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SM_FA
+  m_Name: SM_BA_Pistol
   m_Controller: {fileID: 9100000, guid: 3e714138ac595eb458bc8215e3dfd0fc, type: 2}
   m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 610b04420080ed448a29b78a972379a5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b924374aab1acaa40888276b096a5267, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 6e01731a47bb7734888e547fa58c0c16, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 85cee3d01c4826b4083cfe4df0faf10c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 04bf12acf7db68e4a9d3ce65e23e0ad4, type: 2}
