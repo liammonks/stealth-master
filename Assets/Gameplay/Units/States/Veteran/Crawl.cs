@@ -4,17 +4,19 @@ namespace States
 {
     public class Crawl : BaseState
     {
-        bool toIdle = false;
-        float transitionDuration = 0.0f;
-        public Crawl(UnitData a_data) : base(a_data) { }
+        protected bool toIdle = false;
+        protected float transitionDuration = 0.0f;
 
+        public Crawl(UnitData a_data) : base(a_data) { }
+        
         public override UnitState Initialise()
         {
+            toIdle = false;
             data.isStanding = false;
             data.animator.Play("Crawl");
             return UnitState.Crawl;
         }
-
+        
         public override UnitState Execute()
         {
             if (toIdle)
@@ -22,8 +24,9 @@ namespace States
                 transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
                 data.ApplyDrag(data.stats.groundDrag);
                 if (transitionDuration == 0.0f) return UnitState.Idle;
+                return UnitState.Crawl;
             }
-
+            
             // Apply movement input
             if (data.isGrounded && data.rb.velocity.x < data.stats.walkSpeed)
             {
@@ -44,19 +47,7 @@ namespace States
             {
                 return UnitState.CrawlIdle;
             }
-
-            // Grab on to ledges below
-            if (!data.isGrounded)
-            {
-                UnitState ledgeDrop = StateManager.TryDrop(data);
-                if (ledgeDrop != UnitState.Null)
-                {
-                    data.input.crawling = false;
-                    data.input.crawlRequestTime = -1;
-                    return ledgeDrop;
-                }
-            }
-
+            
             // Return to Idle
             if (!data.input.crawling && data.isGrounded)
             {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace States
+namespace States.StealthMaster
 {
     public class CrawlIdle : BaseState
     {
@@ -36,7 +36,7 @@ namespace States
             }
             if (Mathf.Abs(data.rb.velocity.x) > 0.1f)
             {
-                //return UnitState.Crawl;
+                return UnitState.Crawl;
             }
 
             // Return to Idle

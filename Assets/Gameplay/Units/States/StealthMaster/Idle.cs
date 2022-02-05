@@ -1,13 +1,13 @@
 using UnityEngine;
 
-namespace States
+namespace States.StealthMaster
 {
-    public class StealthMaster_Idle : Idle
+    public class Idle : States.Idle
     {
         private bool toCrawl = false;
         private float transitionDuration = 0.0f;
 
-        public StealthMaster_Idle(UnitData a_data) : base(a_data) { }
+        public Idle(UnitData a_data) : base(a_data) { }
 
         public override UnitState Initialise()
         {

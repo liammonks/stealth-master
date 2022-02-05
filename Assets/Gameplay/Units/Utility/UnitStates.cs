@@ -9,8 +9,8 @@ public enum UnitState
     Slide,
     Dive,
     Jump,
-    VaultOverState,
-    VaultOnState,
+    VaultOver,
+    VaultOn,
     Fall,
     CrawlIdle,
     LedgeGrab,
@@ -21,7 +21,11 @@ public enum UnitState
     JumpMelee,
     GrappleHookSwing,
     HitImpact,
-    Launched
+    Launched,
+    Bite,
+    Alert,
+    Pounce,
+    Crouch
 }
 
 public static class UnitStates
@@ -58,9 +62,9 @@ public static class UnitStates
                 return JumpState(data, initialise);
             case UnitState.Fall:
                 return FallState(data, initialise);
-            case UnitState.VaultOverState:
+            case UnitState.VaultOver:
                 return VaultOverState(data, initialise);
-            case UnitState.VaultOnState:
+            case UnitState.VaultOn:
                 return VaultOnState(data, initialise);
             case UnitState.CrawlIdle:
                 return CrawlIdleState(data, initialise);
@@ -817,7 +821,7 @@ public static class UnitStates
             data.rb.bodyType = RigidbodyType2D.Dynamic;
             return UnitState.Idle;
         }
-        return UnitState.VaultOverState;
+        return UnitState.VaultOver;
     }
 
     private static UnitState VaultOnState(UnitData data, bool initialise)
@@ -845,7 +849,7 @@ public static class UnitStates
             data.rb.bodyType = RigidbodyType2D.Dynamic;
             return UnitState.Idle;
         }
-        return UnitState.VaultOnState;
+        return UnitState.VaultOn;
     }
 
     private static UnitState LedgeGrabState(UnitData data, bool initialise)
@@ -1315,7 +1319,7 @@ public static class UnitStates
                     );
                     if (!landingZoneHit)
                     {
-                        return UnitState.VaultOnState;
+                        return UnitState.VaultOn;
                     }
                 }
                 else
@@ -1340,7 +1344,7 @@ public static class UnitStates
                     );
                     if (!landingZoneHit)
                     {
-                        return UnitState.VaultOverState;
+                        return UnitState.VaultOver;
                     }
                 }
             }

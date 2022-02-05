@@ -27,11 +27,13 @@ public abstract class StateMachine : MonoBehaviour
     {
         while (currentState != previousState)
         {
+            data.previousState = previousState;
             previousState = currentState;
             currentState = states[currentState].Initialise();
             data.stateDuration = 0.0f;
             onStateUpdated.Invoke(currentState);
         }
+        data.stateDuration += Time.fixedDeltaTime;
         currentState = states[currentState].Execute();
         Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
         Log.Text("STATE", currentState.ToString(), pos, Color.green, Time.fixedDeltaTime);
