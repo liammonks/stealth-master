@@ -9,9 +9,9 @@ public class FoodVendor : Interactable
 
     public override bool Interact(Unit interactingUnit)
     {
-        if(interactingUnit is AIUnit)
+        if(interactingUnit is Enemy)
         {
-            (interactingUnit as AIUnit).aiStats.hunger += addHunger;
+            (interactingUnit as Enemy).aiStats.hunger += addHunger;
         }
         return true;
     }

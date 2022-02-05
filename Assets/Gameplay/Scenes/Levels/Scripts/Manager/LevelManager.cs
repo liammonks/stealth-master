@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private PlayerSpawn activePlayerSpawn;
     [SerializeField] private WinCondition winCondition;
 
-    private List<AIUnit> enemyUnits;
+    private List<Enemy> enemyUnits;
 
     private void Awake() {
         if(Instance != null) {
@@ -35,7 +35,7 @@ public class LevelManager : MonoBehaviour
             activePlayerSpawn = FindObjectOfType<PlayerSpawn>();
         }
 
-        enemyUnits = new List<AIUnit>(FindObjectsOfType<AIUnit>()).FindAll(x => x.isEnemy);
+        enemyUnits = new List<Enemy>(FindObjectsOfType<Enemy>()).FindAll(x => x.isEnemy);
     }
     
     public void LoadLevel(string levelName)
@@ -53,7 +53,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void OnEnemyKilled(AIUnit unit)
+    public void OnEnemyKilled(Enemy unit)
     {
         enemyUnits.Remove(unit);
         if(winCondition == WinCondition.EnemiesEliminated && enemyUnits.Count == 0)

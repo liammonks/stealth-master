@@ -12,7 +12,7 @@ namespace TheKiwiCoder {
     public class Context {
         public GameObject gameObject;
         public Transform transform;
-        public AIUnit unit;
+        public Enemy unit;
         public Animator animator;
         public Rigidbody2D rb;
 
@@ -23,7 +23,7 @@ namespace TheKiwiCoder {
             Context context = new Context();
             context.gameObject = gameObject;
             context.transform = gameObject.transform;
-            context.unit = gameObject.GetComponent<AIUnit>();
+            context.unit = gameObject.GetComponent<Enemy>();
             context.animator = gameObject.GetComponent<Animator>();
             context.rb = gameObject.GetComponent<Rigidbody2D>();
 

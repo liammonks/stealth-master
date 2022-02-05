@@ -61,7 +61,6 @@ public class PlayerUI : MonoBehaviour
         PlayerCameraState state = value.Get<float>() == 1.0f ? PlayerCameraState.Inventory : PlayerCameraState.Default;
         Cursor.lockState = value.Get<float>() == 1.0f ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = value.Get<float>() != 1.0f;
-        Inventory.active = value.Get<float>() == 1.0f;
         PlayerCamera.Instance.SetState(state);
     }
     

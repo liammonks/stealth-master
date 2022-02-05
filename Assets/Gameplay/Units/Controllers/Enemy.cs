@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TheKiwiCoder;
 
-public class AIUnit : Unit
+public class Enemy : Unit
 {
     [Header("AI")]
     public AIStats aiStats;

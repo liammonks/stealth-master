@@ -9,9 +9,9 @@ public class DrinkVendor : Interactable
 
     public override bool Interact(Unit interactingUnit)
     {
-        if(interactingUnit is AIUnit)
+        if(interactingUnit is Enemy)
         {
-            (interactingUnit as AIUnit).aiStats.thirst += addThirst;
+            (interactingUnit as Enemy).aiStats.thirst += addThirst;
         }
         return true;
     }
