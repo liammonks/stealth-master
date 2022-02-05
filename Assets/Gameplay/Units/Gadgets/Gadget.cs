@@ -48,12 +48,15 @@ namespace Gadgets
             owner = unit;
             unit.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, frontArmAnimatorController);
             unit.data.animator.SetLayer(UnitAnimatorLayer.BackArm, backArmAnimatorController);
+            
             if (rotateFrontArm)
             {
                 owner.onAimOffsetUpdated += OnAimPositionUpdated;
                 owner.data.animator.onFacingUpdated += OnAimPositionUpdated;
             }
             owner.data.lockGadget += OnLocked;
+            owner.stateMachine.onStateUpdated += OnUnitStateUpdated;
+
             OnEquip();
             OnUnitStateUpdated(unit.GetState());
         }
@@ -66,6 +69,7 @@ namespace Gadgets
                 owner.data.animator.onFacingUpdated -= OnAimPositionUpdated;
             }
             owner.data.lockGadget -= OnLocked;
+            owner.stateMachine.onStateUpdated -= OnUnitStateUpdated;
         }
 
         public void EnablePrimary()

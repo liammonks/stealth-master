@@ -12,7 +12,6 @@ public class Player : Unit
     [Header("Player")]
     [SerializeField] private int equippedGadgetIndex = -1;
     [SerializeField] private Camera mainCamera;
-    private Coroutine enableCrawlCoroutine;
 
     private Vector2 defaultCameraOffset = new Vector2(0, 0.3f);
 
@@ -21,12 +20,6 @@ public class Player : Unit
         base.Awake();
         healthBar = FindObjectOfType<HealthBar>();
         data.hitMask = LayerMask.GetMask("Enemy");
-    }
-    
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-        Log.UnitState(state, data.stateDuration);
     }
 
     public override void Die()
@@ -85,6 +78,7 @@ public class Player : Unit
         if (networkPlayer) networkPlayer.CmdOnCrawl(value.Get<float>() == 1.0f);
     }
     
+    private Coroutine enableCrawlCoroutine;
     private IEnumerator EnableCrawlDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
