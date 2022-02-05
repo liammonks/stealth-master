@@ -28,9 +28,10 @@ namespace States.StealthMaster
                 transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
                 data.ApplyDrag(data.stats.groundDrag);
                 // Execute Jump (only 100ms before returning idle)
-                if (data.t < 0.1f && data.input.jumpQueued) return UnitState.Jump;
+                if (transitionDuration < 0.1f && data.input.jumpQueued) return UnitState.Jump;
                 // Execute Run / Idle
-                if (data.t == 0.0f) return Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.5f ? UnitState.Run : UnitState.Idle;
+                if (transitionDuration == 0.0f) return Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.5f ? UnitState.Run : UnitState.Idle;
+                return UnitState.Slide;
             }
 
             // Transition Idle
@@ -44,6 +45,7 @@ namespace States.StealthMaster
                     // Update animator to transition to relevant state
                     data.animator.UpdateState();
                     transitionDuration = data.animator.GetState().length;
+                    Debug.Log(transitionDuration);
                     data.isStanding = true;
                     toIdle = true;
                 }

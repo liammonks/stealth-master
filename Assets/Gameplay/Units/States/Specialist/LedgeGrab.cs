@@ -48,7 +48,6 @@ namespace States
             if (data.stateDuration < lerpDuration)
             {
                 data.rb.position = Vector2.Lerp(data.rb.position, data.target, data.stateDuration / lerpDuration);
-                Debug.Log(1.0f - (data.stateDuration / lerpDuration));
             }
             else
             {
