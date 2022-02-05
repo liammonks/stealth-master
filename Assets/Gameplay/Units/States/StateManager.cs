@@ -68,4 +68,56 @@ public static class StateManager
         ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + offset, (data.stats.standingScale * 0.9f) * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
         return !hit;
     }
+
+    public static UnitState TryDrop(UnitData data)
+    {
+        const float boxDepth = 0.1f;
+        const float scanDepth = 0.5f;
+        const float scanDepthInterval = 0.01f;
+        float castDist = data.stats.standingScale.x;
+
+        RaycastHit2D dropHit = Physics2D.BoxCast(
+            data.rb.position,
+            new Vector2(data.stats.standingScale.x, boxDepth),
+            0,
+            Vector2.down,
+            data.stats.standingScale.y - (boxDepth * 0.05f),
+            Unit.CollisionMask
+        );
+        //ExtDebug.DrawBox(
+        //    data.rb.position + (Vector2.down * data.stats.standingScale.y * 0.5f),
+        //    data.stats.standingScale * 0.5f,
+        //    Quaternion.identity,
+        //    dropHit ? Color.green : Color.red
+        //);
+
+        if (!dropHit)
+        {
+            float depth = 0.0f;
+            while (depth <= scanDepth)
+            {
+                RaycastHit2D ledgeHit = Physics2D.Raycast(
+                    data.rb.position + (Vector2.down * (data.stats.crawlingHalfHeight + depth)),
+                    data.isFacingRight ? Vector2.left : Vector2.right,
+                    data.stats.standingScale.x,
+                    Unit.CollisionMask
+                );
+                Debug.DrawRay(
+                    data.rb.position + (Vector2.down * (data.stats.crawlingHalfHeight + depth)),
+                    (data.isFacingRight ? Vector2.left : Vector2.right) * (ledgeHit ? ledgeHit.distance : data.stats.standingScale.x),
+                    ledgeHit ? Color.green : Color.red
+                );
+                if (ledgeHit)
+                {
+                    data.target = ledgeHit.point + (data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x + Vector2.up * data.stats.climbGrabOffset.y;
+                    data.isFacingRight = !data.isFacingRight;
+                    data.animator.SetFacing(data.isFacingRight);
+                    return UnitState.LedgeGrab;
+                }
+                depth += scanDepthInterval;
+            }
+        }
+
+        return UnitState.Null;
+    }
 }
