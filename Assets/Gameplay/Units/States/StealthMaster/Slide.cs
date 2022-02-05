@@ -45,7 +45,6 @@ namespace States.StealthMaster
                     // Update animator to transition to relevant state
                     data.animator.UpdateState();
                     transitionDuration = data.animator.GetState().length;
-                    Debug.Log(transitionDuration);
                     data.isStanding = true;
                     toIdle = true;
                 }
