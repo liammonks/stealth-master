@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 02613f03f2c894a4c91c605db7d43386
+guid: eea0fa830ae746c479f28d72bfe54163
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,7 +116,28 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SM_BDY_VaultOn_RV_0
+      name: SM_BA_VaultOver_RV_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b3c6a411086f3c4bb2008ed6509bbf5
+      internalID: -1409377512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_BA_VaultOver_RV_1
       rect:
         serializedVersion: 2
         x: 0
@@ -130,14 +151,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f842917dbda928944b479d0cdf0ae2ea
-      internalID: -371566111
+      spriteID: 32d4d633fe41c5549b3112701e3b244c
+      internalID: 1315272732
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOn_RV_1
+      name: SM_BA_VaultOver_RV_2
       rect:
         serializedVersion: 2
         x: 0
@@ -151,14 +172,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7dfc6578879d1194faf4389ea92a90d3
-      internalID: 738960738
+      spriteID: 25b70949cabb7aa4ba627e7d568aa7be
+      internalID: -968953148
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOn_RV_2
+      name: SM_BA_VaultOver_RV_3
       rect:
         serializedVersion: 2
         x: 0
@@ -172,14 +193,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 958b3a1d8f294384d9c1bad7f2c52e53
-      internalID: -2141233189
+      spriteID: 5cf63956d30c5a94a8ab9659ce84bc34
+      internalID: -1263252830
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOn_RV_3
+      name: SM_BA_VaultOver_RV_4
       rect:
         serializedVersion: 2
         x: 0
@@ -193,14 +214,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ecd1ecd21f532bb4786240302ed12e54
-      internalID: -1829331762
+      spriteID: 43efa59b4dc4ebf40833196620d37420
+      internalID: -337937550
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOn_RV_4
+      name: SM_BA_VaultOver_RV_5
       rect:
         serializedVersion: 2
         x: 0
@@ -214,14 +235,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 89ff21dcee6d78244b0cec27a7a8d5d2
-      internalID: 1737374104
+      spriteID: 6aada3d29dac77a459623a1d64ce8ea1
+      internalID: -251612288
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOn_RV_5
+      name: SM_BA_VaultOver_RV_6
       rect:
         serializedVersion: 2
         x: 0
@@ -235,8 +256,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 243c22868be2052449ecfdb929de181f
-      internalID: -1866904188
+      spriteID: 0dbd21c9f2b226a488376e9bf9cd0bf6
+      internalID: 1821850208
       vertices: []
       indices: 
       edges: []
@@ -252,12 +273,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SM_BDY_VaultOn_RV_4: 1737374104
-      SM_BDY_VaultOn_RV_0: -371566111
-      SM_BDY_VaultOn_RV_5: -1866904188
-      SM_BDY_VaultOn_RV_1: 738960738
-      SM_BDY_VaultOn_RV_2: -2141233189
-      SM_BDY_VaultOn_RV_3: -1829331762
+      SM_BA_VaultOver_RV_0: -1409377512
+      SM_BA_VaultOver_RV_6: 1821850208
+      SM_BA_VaultOver_RV_4: -337937550
+      SM_BA_VaultOver_RV_3: -1263252830
+      SM_BA_VaultOver_RV_5: -251612288
+      SM_BA_VaultOver_RV_2: -968953148
+      SM_BA_VaultOver_RV_1: 1315272732
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

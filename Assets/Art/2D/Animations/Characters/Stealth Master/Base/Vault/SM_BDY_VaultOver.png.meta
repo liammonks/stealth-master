@@ -122,7 +122,28 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth_Master_Vault_WIP 1_1
+      name: SM_BDY_VaultOver_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e444913b7b4ecd6469148d0c4abbe16e
+      internalID: 101682619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_BDY_VaultOver_1
       rect:
         serializedVersion: 2
         x: 0
@@ -130,20 +151,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 88500930aa96753e0800000000000000
-      internalID: -2065065725200956024
+      spriteID: 7fdebdea439e53b4aa40c93e73f3d3c0
+      internalID: 1444009970
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Vault_WIP 1_2
+      name: SM_BDY_VaultOver_2
       rect:
         serializedVersion: 2
         x: 0
@@ -151,77 +172,77 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: af0385b5ff32caff0800000000000000
-      internalID: -23604318387556102
+      spriteID: 055fc3e4fd29fb240adc4a1a85ba2cd6
+      internalID: 1775307423
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Vault_WIP 1_3
+      name: SM_BDY_VaultOver_3
       rect:
         serializedVersion: 2
         x: 0
         y: 128
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.4}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef0a4bfdee3b00cf0800000000000000
-      internalID: -288032537614966530
+      spriteID: 98342267d13f9f445920f8809a897c55
+      internalID: 1681014032
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Vault_WIP 1_4
+      name: SM_BDY_VaultOver_4
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.6, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27c13d5711ec05cc0800000000000000
-      internalID: -3724250317448864654
+      spriteID: 1f1dc3cf54f470f488989bff1c83cadc
+      internalID: -570937327
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Vault_WIP 1_5
+      name: SM_BDY_VaultOver_5
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.6, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6021ac7365471d790800000000000000
-      internalID: -7507091190197906938
+      spriteID: 6284aa766fd259c48a97a6e0280b55a5
+      internalID: -1488663342
       vertices: []
       indices: 
       edges: []
@@ -237,11 +258,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Stealth_Master_Vault_WIP 1_1: -2065065725200956024
-      Stealth_Master_Vault_WIP 1_5: -7507091190197906938
-      Stealth_Master_Vault_WIP 1_3: -288032537614966530
-      Stealth_Master_Vault_WIP 1_4: -3724250317448864654
-      Stealth_Master_Vault_WIP 1_2: -23604318387556102
+      SM_BDY_VaultOver_2: 1775307423
+      SM_BDY_VaultOver_5: -1488663342
+      SM_BDY_VaultOver_1: 1444009970
+      SM_BDY_VaultOver_4: -570937327
+      SM_BDY_VaultOver_0: 101682619
+      SM_BDY_VaultOver_3: 1681014032
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
