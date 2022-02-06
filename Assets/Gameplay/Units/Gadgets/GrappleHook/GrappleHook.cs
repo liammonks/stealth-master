@@ -173,11 +173,11 @@ namespace Gadgets
             {
                 attachPoints[0].dist -= deltaLength;
             }
-            if (attachPoints[0].dist < 1.0f)
-            {
-                OnPrimaryDisabled();
-                return;
-            }
+            //if (attachPoints[0].dist < 1.0f)
+            //{
+            //    OnPrimaryDisabled();
+            //    return;
+            //}
 
             // Constrain movement to pivot
             Vector2 pivot = attachPoints[0].point;
