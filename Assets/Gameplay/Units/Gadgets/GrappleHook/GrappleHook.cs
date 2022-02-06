@@ -96,6 +96,7 @@ namespace Gadgets
         protected override void FixedUpdate() {
             base.FixedUpdate();
             if (!attached) return;
+            if (attachPoints.Count == 0) OnPrimaryDisabled();
 
             Dictionary<int, List<AttachPoint>> toAdd = new Dictionary<int, List<AttachPoint>>();
             List<AttachPoint> toRemove = new List<AttachPoint>();
@@ -173,7 +174,7 @@ namespace Gadgets
             if (deltaLength > 0.0f)
             {
                 attachPoints[0].dist -= deltaLength;
-                if (attachPoints[0].dist <= 1.0f)
+                if (attachPoints[0].dist <= 0.5f)
                 {
                     toRemove.Add(attachPoints[0]);
                 }
