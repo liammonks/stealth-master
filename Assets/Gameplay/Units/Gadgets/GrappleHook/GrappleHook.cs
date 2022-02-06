@@ -44,7 +44,7 @@ namespace Gadgets
             }
         }
 
-        private const float range = 18.0f;
+        private const float range = 12.0f;
         private const float minGap = 0.2f;
         private const float reelRate = 2.5f;
 
@@ -81,6 +81,7 @@ namespace Gadgets
             attached = false;
             owner.stateMachine.SetState(UnitState.Fall);
             attachPoints.Clear();
+            lineRenderer.positionCount = 0;
         }
 
         protected override void OnSecondaryEnabled()
@@ -122,14 +123,14 @@ namespace Gadgets
                 float dist = Vector2.Distance(attachPoints[i].point, nextPoint);
                 attachPoints[i].dist = dist;
                 cummulativeLength += dist;
-                Vector2 debugPos = UnityEngine.Camera.main.WorldToScreenPoint(attachPoints[i].point);
-                Log.Text("AP" + i, i + ": " + dist, debugPos, Color.green, Time.fixedDeltaTime);
+                //Vector2 debugPos = UnityEngine.Camera.main.WorldToScreenPoint(attachPoints[i].point);
+                //Log.Text("AP" + i, i + ": " + dist, debugPos, Color.green, Time.fixedDeltaTime);
 
                 // Get all hits between this attatch point and the next point
                 List<RaycastHit2D> hits = new List<RaycastHit2D>();
                 hits.AddRange(Physics2D.LinecastAll(attachPoints[i].point, nextPoint, mask));
                 hits.AddRange(Physics2D.LinecastAll(nextPoint, attachPoints[i].point, mask));
-                Debug.DrawLine(attachPoints[i].point, nextPoint, i % 2 == 0 ? Color.blue : Color.red);
+                //Debug.DrawLine(attachPoints[i].point, nextPoint, i % 2 == 0 ? Color.blue : Color.red);
                 // Add a new point if not too close to an existing point
                 foreach (RaycastHit2D hit in hits)
                 {
@@ -207,21 +208,20 @@ namespace Gadgets
                 attachPoints[0].dist += ap.dist;
             }
 
-            Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(((Vector2)transform.position + pivot) / 2);
-            Log.Text("LEN", pivotLength.ToString(), pos, Color.red, Time.fixedDeltaTime);
+            //Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(((Vector2)transform.position + pivot) / 2);
+            //Log.Text("LEN", pivotLength.ToString(), pos, Color.red, Time.fixedDeltaTime);
             UpdateLineRenderer();
         }
         
         private void UpdateLineRenderer()
         {
-            Vector3[] points = new Vector3[attachPoints.Count + 1];
+            lineRenderer.positionCount = attachPoints.Count + 1;
+            int j = attachPoints.Count;
             for (int i = 0; i < attachPoints.Count; ++i)
             {
-                points[i] = attachPoints[i].point;
+                lineRenderer.SetPosition(--j, attachPoints[i].point);
             }
-            points[attachPoints.Count] = transform.position;
-            lineRenderer.positionCount = points.Length;
-            lineRenderer.SetPositions(points);
+            lineRenderer.SetPosition(attachPoints.Count, transform.position);
         }
         
         private Vector2 GetHitNormal(Vector2 point)

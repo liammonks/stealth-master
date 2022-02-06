@@ -311,7 +311,11 @@ public abstract class Unit : MonoBehaviour
         TakeDamage(impactVelocity * 0.1f);
     }
 
-    public abstract void Die();
+    public virtual void Die()
+    {
+        GadgetPrimary(false);
+        GadgetSecondary(false);
+    }
 
     #endregion
 

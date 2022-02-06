@@ -24,6 +24,7 @@ public class Player : Unit
 
     public override void Die()
     {
+        base.Die();
         LevelManager.Instance.RespawnPlayer();
         health = data.stats.maxHealth;
         healthBar.UpdateHealth(health, data.stats.maxHealth);

@@ -31,6 +31,7 @@ public class Enemy : Unit
 
     public override void Die()
     {
+        base.Die();
         if(isEnemy)
         {
             LevelManager.Instance.OnEnemyKilled(this);

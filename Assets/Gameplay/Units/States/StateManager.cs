@@ -48,7 +48,7 @@ public static class StateManager
         const float detectionDepth = 0.1f;
         float bodyWidth = data.isStanding ? data.stats.standingHalfWidth : data.stats.crawlingHalfWidth;
         RaycastHit2D wallHit = Physics2D.BoxCast(
-            data.rb.position + (Vector2.up * data.stats.standingScale.y * 0.25f),
+            data.rb.position,// + (Vector2.up * data.stats.standingScale.y * 0.25f),
             new Vector2(detectionDepth, data.stats.standingScale.y * 0.5f),
             data.rb.rotation,
             data.isFacingRight ? data.rb.transform.right : -data.rb.transform.right,
@@ -58,7 +58,7 @@ public static class StateManager
         if (wallHit)
         {
             ExtDebug.DrawBoxCastOnHit(
-                data.rb.position + (Vector2.up * data.stats.standingScale.y * 0.25f),
+                data.rb.position,// + (Vector2.up * data.stats.standingScale.y * 0.25f),
                 new Vector2(detectionDepth, data.stats.standingScale.y * 0.5f) * 0.5f,
                 Quaternion.Euler(0, 0, data.rb.rotation),
                 data.isFacingRight ? data.rb.transform.right : -data.rb.transform.right,
