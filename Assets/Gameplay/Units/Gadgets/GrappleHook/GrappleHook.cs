@@ -30,7 +30,7 @@ namespace Gadgets
                 float ropeDot = Vector2.Dot(dir1, dir2);
                 float pivotDot = Vector2.Dot(GetNormal(dir1), dir2);
                 //Debug.DrawRay(point, hitNormal * 0.5f, (ropeDot > 0 && pivotDot > 0) ? Color.green : Color.red);
-                return !(ropeDot > 0 && pivotDot > 0);
+                return !(ropeDot > 0.01f && pivotDot > 0.01f);
             }
             
             private Vector2 GetNormal(Vector2 dir)
@@ -116,13 +116,13 @@ namespace Gadgets
                     {
                         toRemove.Add(attachPoints[i]);
                     }
-                    //Vector2 debugPos = UnityEngine.Camera.main.WorldToScreenPoint(attachPoints[i].point);
-                    //Log.Text("AP" + i, ropeDot + ": " + pivotDot, debugPos, Color.green, Time.fixedDeltaTime);
                 }
                 
                 float dist = Vector2.Distance(attachPoints[i].point, nextPoint);
                 attachPoints[i].dist = dist;
                 cummulativeLength += dist;
+                Vector2 debugPos = UnityEngine.Camera.main.WorldToScreenPoint(attachPoints[i].point);
+                Log.Text("AP" + i, i + ": " + dist, debugPos, Color.green, Time.fixedDeltaTime);
 
                 // Get all hits between this attatch point and the next point
                 List<RaycastHit2D> hits = new List<RaycastHit2D>();
@@ -166,18 +166,18 @@ namespace Gadgets
             }
 
             // Reel in
-            if (secondaryActive) ropeLength -= Time.deltaTime * reelRate;
+            if (secondaryActive && ropeLength > 1.0f) ropeLength -= Time.deltaTime * reelRate;
             float deltaLength = cummulativeLength - ropeLength;
             ropeLength = Mathf.Min(cummulativeLength, ropeLength);
+            ropeLength = Mathf.Max(1.0f, ropeLength);
             if (deltaLength > 0.0f)
             {
                 attachPoints[0].dist -= deltaLength;
+                if (attachPoints[0].dist <= 1.0f)
+                {
+                    toRemove.Add(attachPoints[0]);
+                }
             }
-            //if (attachPoints[0].dist < 1.0f)
-            //{
-            //    OnPrimaryDisabled();
-            //    return;
-            //}
 
             // Constrain movement to pivot
             Vector2 pivot = attachPoints[0].point;
@@ -188,13 +188,7 @@ namespace Gadgets
                 nextPosition = pivot + ((nextPosition - pivot).normalized * pivotLength);
                 owner.data.rb.velocity = (nextPosition - (Vector2)transform.position) / Time.fixedDeltaTime;
             }
-
-            // Remove unwrapped points
-            foreach (AttachPoint ap in toRemove)
-            {
-                attachPoints.Remove(ap);
-            }
-
+            
             // Add new intersections
             foreach (KeyValuePair<int, List<AttachPoint>> pair in toAdd)
             {
@@ -204,8 +198,16 @@ namespace Gadgets
                 }
             }
 
-            //Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(((Vector2)transform.position + pivot) / 2);
-            //Log.Text("LEN", pivotLength + "/" + ropeLength, pos, Color.green, Time.fixedDeltaTime);
+            // Remove unwrapped points
+            foreach (AttachPoint ap in toRemove)
+            {
+                attachPoints.Remove(ap);
+                if (attachPoints.Count == 0) return;
+                attachPoints[0].dist += ap.dist;
+            }
+
+            Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(((Vector2)transform.position + pivot) / 2);
+            Log.Text("LEN", pivotLength.ToString(), pos, Color.red, Time.fixedDeltaTime);
             UpdateLineRenderer();
         }
         
