@@ -148,8 +148,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67577002}
-  m_LocalRotation: {x: 0.0062490236, y: 0.006249512, z: -0.00003905487, w: 0.99996096}
-  m_LocalPosition: {x: 56.13, y: 9.320001, z: -80}
+  m_LocalRotation: {x: 0.0062490236, y: 0.0062495116, z: -0.000039054863, w: 0.99996096}
+  m_LocalPosition: {x: -1, y: 2.3, z: -80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,7 +186,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9683334, y: 1}
+    m_SensorSize: {x: 1.975, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -285,7 +285,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 987263271, guid: d4e1ef0a7392f5941bb3583cf53580fd, type: 3}
+  m_Sprite: {fileID: 1315272732, guid: eea0fa830ae746c479f28d72bfe54163, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -293,7 +293,7 @@ SpriteRenderer:
   m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &102563979
@@ -7271,7 +7271,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518594397}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.65124893, y: 1.2700005, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7456,8 +7456,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521881362}
-  m_LocalRotation: {x: 0.0062490236, y: 0.006249512, z: -0.00003905487, w: 0.99996096}
-  m_LocalPosition: {x: 56.13, y: 9.320001, z: -80}
+  m_LocalRotation: {x: 0.0062490236, y: 0.0062495116, z: -0.000039054863, w: 0.99996096}
+  m_LocalPosition: {x: -1, y: 2.3, z: -80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7763,7 +7763,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9683334, y: 1}
+    m_SensorSize: {x: 1.975, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -12831,7 +12831,7 @@ Animator:
   m_GameObject: {fileID: 1950628590}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: c3c54f03ed86cf542b1eb6da2e4cc355, type: 2}
+  m_Controller: {fileID: 22100000, guid: 4ef361af892e7664d98a11295441c088, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -12895,7 +12895,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -711237168, guid: 63100ecb69e30ff4cbd53913dc6dbbe3, type: 3}
+  m_Sprite: {fileID: -297072801, guid: fd7c47e1b5cdd354f90f37b79e07d9f1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

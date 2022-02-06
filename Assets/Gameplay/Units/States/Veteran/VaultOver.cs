@@ -32,7 +32,7 @@ namespace States
                 data.groundSpringActive = true;
                 // Enable collider
                 data.rb.bodyType = RigidbodyType2D.Dynamic;
-                return UnitState.Idle;
+                return UnitState.Run;
             }
             return UnitState.VaultOver;
         }

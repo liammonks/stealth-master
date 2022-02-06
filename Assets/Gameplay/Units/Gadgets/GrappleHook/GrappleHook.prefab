@@ -45,10 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 220992d4860190e48a2381cefa377fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotateFrontArm: 0
   primaryAvailableStates: 010000000200000004000000050000000600000009000000
-  secondaryAvailableStates: 01000000020000000400000005000000060000000900000011000000
+  secondaryAvailableStates: 00000000
   frontArmAnimatorController: {fileID: 22100000, guid: 77983bcb188a537499ada5d5feebeffa, type: 2}
+  frontArmAnimatorControllerReversed: {fileID: 0}
   backArmAnimatorController: {fileID: 22100000, guid: b67fc14fdee05e8439335cd46e986b23, type: 2}
+  backArmAnimatorControllerReversed: {fileID: 0}
+  visualsRoot: {fileID: 0}
+  forwardVisuals: {fileID: 0}
+  reverseVisuals: {fileID: 0}
+  collidersRoot: {fileID: 0}
+  forwardCollider: {fileID: 0}
+  reverseCollider: {fileID: 0}
 --- !u!120 &-2422917714031957665
 LineRenderer:
   m_ObjectHideFlags: 0

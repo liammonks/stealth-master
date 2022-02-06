@@ -79,5 +79,10 @@ public class LevelManager : MonoBehaviour
         Debug.Break();
     }
 
+    private void OnSlow()
+    {
+        Time.timeScale = Time.timeScale == 1.0f ? 0.2f : 1.0f;
+    }
+
     #endregion
 }

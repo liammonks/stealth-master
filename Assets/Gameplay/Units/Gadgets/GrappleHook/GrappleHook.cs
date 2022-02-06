@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using States;
 
 namespace Gadgets
 {
@@ -10,43 +11,54 @@ namespace Gadgets
         private class AttachPoint
         {
             public Vector2 point;
-            public Vector2 wrapDirection;
             public Rigidbody2D attachedRB;
+            public float dist;
 
-            public AttachPoint(Vector2 a_point, Vector2 a_wrapDirection, Rigidbody2D a_attachedRB)
+            private Vector2 hitNormal;
+
+            public AttachPoint(Vector2 a_point, Vector2 a_hitNormal, Rigidbody2D a_attachedRB)
             {
                 point = a_point;
-                wrapDirection = a_wrapDirection;
+                hitNormal = a_hitNormal;
                 attachedRB = a_attachedRB;
+            }
+            
+            public bool IsWrapped(Vector2 prevPoint, Vector2 nextPoint)
+            {
+                Vector2 dir1 = point - prevPoint;
+                Vector2 dir2 = nextPoint - point;
+                float ropeDot = Vector2.Dot(dir1, dir2);
+                float pivotDot = Vector2.Dot(GetNormal(dir1), dir2);
+                //Debug.DrawRay(point, hitNormal * 0.5f, (ropeDot > 0 && pivotDot > 0) ? Color.green : Color.red);
+                return !(ropeDot > 0 && pivotDot > 0);
+            }
+            
+            private Vector2 GetNormal(Vector2 dir)
+            {
+                Vector2 norm1 = Vector3.Cross(dir, Vector3.forward).normalized;
+                Vector2 norm2 = Vector3.Cross(dir, Vector3.back).normalized;
+                float dot1 = Vector2.Dot(norm1, hitNormal);
+                float dot2 = Vector2.Dot(norm2, hitNormal);
+                Debug.DrawRay(point, dot1 > dot2 ? norm1 : norm2, Color.magenta);
+                return dot1 > dot2 ? norm1 : norm2;
             }
         }
 
-        private const float freq = 0.5f;
-        private const float range = 8.0f;
+        private const float range = 18.0f;
+        private const float minGap = 0.2f;
         private const float reelRate = 2.5f;
 
         private bool attached = false;
+        private float ropeLength = 0.0f;
+        private float pivotLength = 0.0f;
         private List<AttachPoint> attachPoints = new List<AttachPoint>();
-        private SpringJoint2D joint;
         private LineRenderer lineRenderer;
         private LayerMask mask;
-        private Vector2 lastPos;
 
         protected override void OnEquip()
         {
             lineRenderer = GetComponent<LineRenderer>();
             mask = Unit.CollisionMask | (1 << (owner is Player ? 10 : 9));
-            lastPos = transform.position;
-        }
-
-        protected override void OnPrimaryDisabled()
-        {
-            Destroy(joint);
-            owner.SetState(UnitState.Idle);
-            attachPoints.Clear();
-            attached = false;
-            lineRenderer.enabled = false;
-            owner.data.groundSpringActive = true;
         }
 
         protected override void OnPrimaryEnabled()
@@ -56,24 +68,24 @@ namespace Gadgets
             
             if(hit.collider)
             {
-                owner.data.attatchedRB = null;
                 attachPoints.Add(new AttachPoint(hit.point, Vector2.zero, hit.rigidbody));
-                float jointDistance = Vector2.Distance(transform.position, hit.point);
-                joint = owner.gameObject.AddComponent<SpringJoint2D>();
-                joint.autoConfigureConnectedAnchor = false;
-                joint.autoConfigureDistance = false;
-                joint.connectedAnchor = hit.point;
-                joint.enableCollision = true;
-                joint.distance = jointDistance;
-                joint.dampingRatio = 0.1f;
-                joint.frequency = freq;
-
-                owner.SetState(UnitState.GrappleHookSwing);
+                ropeLength = hit.distance;
+                pivotLength = ropeLength;
+                owner.stateMachine.SetState(new GrappleHookState(owner.data));
                 attached = true;
-                lineRenderer.positionCount = 0;
-                lineRenderer.enabled = true;
-                owner.data.groundSpringActive = false;
             }
+        }
+
+        protected override void OnPrimaryDisabled()
+        {
+            attached = false;
+            owner.stateMachine.SetState(UnitState.Fall);
+            attachPoints.Clear();
+        }
+
+        protected override void OnSecondaryEnabled()
+        {
+
         }
 
         protected override void OnSecondaryDisabled()
@@ -81,78 +93,120 @@ namespace Gadgets
 
         }
 
-        protected override void OnSecondaryEnabled()
-        {
-        
-        }
-        
         protected override void FixedUpdate() {
             base.FixedUpdate();
-            foreach(AttachPoint attachPoint in attachPoints)
+            if (!attached) return;
+
+            Dictionary<int, List<AttachPoint>> toAdd = new Dictionary<int, List<AttachPoint>>();
+            List<AttachPoint> toRemove = new List<AttachPoint>();
+            float cummulativeLength = 0.0f;
+
+            // Update points
+            for (int i = attachPoints.Count - 1; i >= 0; --i)
             {
-                if (attachPoint.attachedRB != null)
-                {
-                    attachPoint.point += attachPoint.attachedRB.velocity * Time.fixedDeltaTime;
-                }
-            }
-            if(attached)
-            {
-                joint.connectedAnchor = attachPoints[attachPoints.Count - 1].point;
-                joint.frequency = Mathf.Clamp((Vector2.Dot((joint.connectedAnchor - (Vector2)transform.position).normalized, Vector2.up) + 1) * freq, 0.00001f, float.MaxValue);
+                // Move point with attached RB
+                if (attachPoints[i].attachedRB) attachPoints[i].point += attachPoints[i].attachedRB.velocity * Time.fixedDeltaTime;
                 
-                // Cast towards the last attatch point
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, attachPoints[attachPoints.Count - 1].point - (Vector2)transform.position, Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point) - 0.1f, mask);
-                if(hit.collider)
+                Vector2 nextPoint = i == 0 ? transform.position : attachPoints[i - 1].point;
+                // Remove point if unwrapped
+                if (i != attachPoints.Count - 1)
                 {
-                    joint.connectedAnchor = hit.point;
-                    joint.distance = Vector2.Distance(transform.position, hit.point) - 0.2f;
-                    
-                    Vector3 dir = (hit.point - attachPoints[attachPoints.Count - 1].point).normalized;
-                    Vector3 cross = Vector3.Cross(Vector3.forward, dir).normalized;
-                    Vector2 deltaPos = (Vector2)transform.position - lastPos;
-                    attachPoints.Add(new AttachPoint(hit.point, Vector2.Dot(deltaPos, cross) > 0 ? cross : -cross, hit.rigidbody));
-                }
-
-                if(attachPoints.Count > 1)
-                {
-                    //Debug.DrawRay(attatchPoints[attatchPoints.Count - 1].point, attatchPoints[attatchPoints.Count - 1].point - attatchPoints[attatchPoints.Count - 2].point, Color.magenta);
-                    //Debug.DrawRay(attatchPoints[attatchPoints.Count - 1].point, attatchPoints[attatchPoints.Count - 1].wrapDirection, Color.red);
-
-                    float dot = Vector2.Dot(((Vector2)transform.position - attachPoints[attachPoints.Count - 1].point).normalized, attachPoints[attachPoints.Count - 1].wrapDirection);
-                    if(dot <= -0.01f)
+                    Vector2 prevPoint = attachPoints[i + 1].point;
+                    if (!attachPoints[i].IsWrapped(prevPoint, nextPoint))
                     {
-                        attachPoints.RemoveAt(attachPoints.Count - 1);
-                        joint.connectedAnchor = attachPoints[attachPoints.Count - 1].point;
-                        joint.distance = Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point) - 0.2f;
+                        toRemove.Add(attachPoints[i]);
                     }
-                }
-
-                if(secondaryActive)
-                {
-                    joint.distance -= Time.fixedDeltaTime * reelRate;
-                    if(joint.distance <= 0)
-                    {
-                        DisablePrimary();
-                    }
-                }
-                else
-                {
-                    //float jointDistance = Vector2.Distance(transform.position, attachPoints[attachPoints.Count - 1].point);
-                    //if (jointDistance < joint.distance - 0.1f)
-                    //{
-                    //    joint.distance = jointDistance + 0.05f;
-                    //}
+                    //Vector2 debugPos = UnityEngine.Camera.main.WorldToScreenPoint(attachPoints[i].point);
+                    //Log.Text("AP" + i, ropeDot + ": " + pivotDot, debugPos, Color.green, Time.fixedDeltaTime);
                 }
                 
-                for (int i = 0; i < attachPoints.Count - 1; ++i)
-                {
-                    Debug.DrawLine(attachPoints[i].point, attachPoints[i + 1].point, Color.black);
-                }
-                Debug.DrawLine(attachPoints[attachPoints.Count - 1].point, transform.position, Color.black);
+                float dist = Vector2.Distance(attachPoints[i].point, nextPoint);
+                attachPoints[i].dist = dist;
+                cummulativeLength += dist;
 
-                UpdateLineRenderer();
+                // Get all hits between this attatch point and the next point
+                List<RaycastHit2D> hits = new List<RaycastHit2D>();
+                hits.AddRange(Physics2D.LinecastAll(attachPoints[i].point, nextPoint, mask));
+                hits.AddRange(Physics2D.LinecastAll(nextPoint, attachPoints[i].point, mask));
+                Debug.DrawLine(attachPoints[i].point, nextPoint, i % 2 == 0 ? Color.blue : Color.red);
+                // Add a new point if not too close to an existing point
+                foreach (RaycastHit2D hit in hits)
+                {
+                    bool addPoint = true;
+                    // Check current attachPoints
+                    foreach (AttachPoint ap in attachPoints)
+                    {
+                        if (Vector2.Distance(hit.point, ap.point) < minGap)
+                        {
+                            addPoint = false;
+                            break;
+                        }
+                    }
+                    // Check newly added points
+                    if (toAdd.ContainsKey(i))
+                    {
+                        foreach (AttachPoint ap in toAdd[i])
+                        {
+                            if (Vector2.Distance(hit.point, ap.point) < minGap)
+                            {
+                                addPoint = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (addPoint)
+                    {
+                        if (!toAdd.ContainsKey(i))
+                        {
+                            toAdd.Add(i, new List<AttachPoint>());
+                        }
+                        toAdd[i].Add(new AttachPoint(hit.point, GetHitNormal(hit.point), hit.rigidbody));
+                    }
+                }
             }
-            lastPos = transform.position;
+
+            // Reel in
+            if (secondaryActive) ropeLength -= Time.deltaTime * reelRate;
+            float deltaLength = cummulativeLength - ropeLength;
+            ropeLength = Mathf.Min(cummulativeLength, ropeLength);
+            if (deltaLength > 0.0f)
+            {
+                attachPoints[0].dist -= deltaLength;
+            }
+            if (attachPoints[0].dist < 1.0f)
+            {
+                OnPrimaryDisabled();
+                return;
+            }
+
+            // Constrain movement to pivot
+            Vector2 pivot = attachPoints[0].point;
+            pivotLength = attachPoints[0].dist;
+            Vector2 nextPosition = (Vector2)transform.position + (owner.data.rb.velocity * Time.fixedDeltaTime);
+            if (Vector2.Distance(nextPosition, pivot) > pivotLength)
+            {
+                nextPosition = pivot + ((nextPosition - pivot).normalized * pivotLength);
+                owner.data.rb.velocity = (nextPosition - (Vector2)transform.position) / Time.fixedDeltaTime;
+            }
+
+            // Remove unwrapped points
+            foreach (AttachPoint ap in toRemove)
+            {
+                attachPoints.Remove(ap);
+            }
+
+            // Add new intersections
+            foreach (KeyValuePair<int, List<AttachPoint>> pair in toAdd)
+            {
+                foreach (AttachPoint ap in pair.Value)
+                {
+                    attachPoints.Insert(pair.Key, ap);
+                }
+            }
+
+            //Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(((Vector2)transform.position + pivot) / 2);
+            //Log.Text("LEN", pivotLength + "/" + ropeLength, pos, Color.green, Time.fixedDeltaTime);
+            UpdateLineRenderer();
         }
         
         private void UpdateLineRenderer()
@@ -166,5 +220,54 @@ namespace Gadgets
             lineRenderer.positionCount = points.Length;
             lineRenderer.SetPositions(points);
         }
+        
+        private Vector2 GetHitNormal(Vector2 point)
+        {
+            const float dist = 0.1f;
+            Vector2 tl = new Vector2(point.x - dist, point.y + dist);
+            Vector2 tr = new Vector2(point.x + dist, point.y + dist);
+            Vector2 bl = new Vector2(point.x - dist, point.y - dist);
+            Vector2 br = new Vector2(point.x + dist, point.y - dist);
+            Vector2 avg = Vector2.zero;
+
+            RaycastHit2D tltr = Physics2D.Linecast(tl, tr, mask);
+            if (tltr.collider && tltr.point != tl) avg += Vector2.left;
+            RaycastHit2D trtl = Physics2D.Linecast(tr, tl, mask);
+            if (trtl.collider && trtl.point != tr) avg += Vector2.right;
+            RaycastHit2D trbr = Physics2D.Linecast(tr, br, mask);
+            if (trbr.collider && trbr.point != tr) avg += Vector2.up;
+            RaycastHit2D brtr = Physics2D.Linecast(br, tr, mask);
+            if (brtr.collider && brtr.point != br) avg += Vector2.down;
+            RaycastHit2D brbl = Physics2D.Linecast(br, bl, mask);
+            if (brbl.collider && brbl.point != br) avg += Vector2.right;
+            RaycastHit2D blbr = Physics2D.Linecast(bl, br, mask);
+            if (blbr.collider && blbr.point != bl) avg += Vector2.left;
+            RaycastHit2D bltl = Physics2D.Linecast(bl, tl, mask);
+            if (bltl.collider && bltl.point != bl) avg += Vector2.down;
+            RaycastHit2D tlbl = Physics2D.Linecast(tl, bl, mask);
+            if (tlbl.collider && tlbl.point != tl) avg += Vector2.up;
+
+            return avg.normalized;
+        }
+    }
+
+    public class GrappleHookState : BaseState
+    {
+        public GrappleHookState(UnitData a_data) : base(a_data) { }
+
+        public override UnitState Initialise()
+        {
+            data.animator.Play("Fall");
+            return UnitState.Null;
+        }
+        
+        public override UnitState Execute()
+        {
+            Vector2 velocity = data.rb.velocity;
+            velocity.x += data.input.movement * data.stats.walkSpeed * data.stats.airAcceleration;
+            data.rb.velocity = velocity;
+            return UnitState.Null;
+        }
+
     }
 }

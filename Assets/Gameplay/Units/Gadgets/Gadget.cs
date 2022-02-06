@@ -48,12 +48,9 @@ namespace Gadgets
             owner = unit;
             unit.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, frontArmAnimatorController);
             unit.data.animator.SetLayer(UnitAnimatorLayer.BackArm, backArmAnimatorController);
-            
-            if (rotateFrontArm)
-            {
-                owner.onAimOffsetUpdated += OnAimPositionUpdated;
-                owner.data.animator.onFacingUpdated += OnAimPositionUpdated;
-            }
+
+            owner.onAimOffsetUpdated += OnAimPositionUpdated;
+            owner.data.animator.onFacingUpdated += OnAimPositionUpdated;
             owner.data.lockGadget += OnLocked;
             owner.stateMachine.onStateUpdated += OnUnitStateUpdated;
 
@@ -63,11 +60,8 @@ namespace Gadgets
 
         private void OnDestroy()
         {
-            if (rotateFrontArm)
-            {
-                owner.onAimOffsetUpdated -= OnAimPositionUpdated;
-                owner.data.animator.onFacingUpdated -= OnAimPositionUpdated;
-            }
+            owner.onAimOffsetUpdated -= OnAimPositionUpdated;
+            owner.data.animator.onFacingUpdated -= OnAimPositionUpdated;
             owner.data.lockGadget -= OnLocked;
             owner.stateMachine.onStateUpdated -= OnUnitStateUpdated;
         }
@@ -125,14 +119,15 @@ namespace Gadgets
         protected virtual void OnAimPositionUpdated()
         {
             bool aimingBehind = owner.AimingBehind();
-
+            owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, aimingBehind ? frontArmAnimatorControllerReversed : frontArmAnimatorController, rotateFrontArm && aimingBehind);
+            owner.data.animator.SetLayer(UnitAnimatorLayer.BackArm, aimingBehind ? backArmAnimatorControllerReversed : backArmAnimatorController);
+            if (!rotateFrontArm) return;
+            
             forwardVisuals.gameObject.SetActive(!aimingBehind);
             forwardCollider.gameObject.SetActive(!aimingBehind);
             reverseVisuals.gameObject.SetActive(aimingBehind);
             reverseCollider.gameObject.SetActive(aimingBehind);
-
             collidersRoot.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? owner.AimOffset : -owner.AimOffset));
-            
             if (rotationLocked)
             {
                 if (owner.data.isStanding)
@@ -150,11 +145,7 @@ namespace Gadgets
             {
                 visualsRoot.rotation = collidersRoot.rotation;
             }
-            
             owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, visualsRoot.rotation);
-                
-            owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, aimingBehind ? frontArmAnimatorControllerReversed : frontArmAnimatorController, rotateFrontArm && aimingBehind);
-            owner.data.animator.SetLayer(UnitAnimatorLayer.BackArm, aimingBehind ? backArmAnimatorControllerReversed : backArmAnimatorController);
         }
         
         private void OnTriggerEnter2D(Collider2D other)

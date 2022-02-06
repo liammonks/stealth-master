@@ -16,7 +16,9 @@ public abstract class StateMachine : MonoBehaviour
     protected UnitState currentState = UnitState.Idle;
     protected UnitState previousState = UnitState.Null;
     protected Dictionary<UnitState, BaseState> states = new Dictionary<UnitState, BaseState>();
-    
+
+    private BaseState overrideState;
+
     protected virtual void Awake()
     {
         unit = GetComponent<Unit>();
@@ -25,6 +27,14 @@ public abstract class StateMachine : MonoBehaviour
     
     private void FixedUpdate()
     {
+        if (overrideState != null)
+        {
+            currentState = overrideState.Execute();
+            if (currentState == UnitState.Null) return;
+            previousState = currentState;
+            currentState = states[currentState].Initialise();
+        }
+        
         while (currentState != previousState)
         {
             data.previousState = previousState;
@@ -35,13 +45,21 @@ public abstract class StateMachine : MonoBehaviour
         }
         data.stateDuration += Time.fixedDeltaTime;
         currentState = states[currentState].Execute();
-        Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
+        Vector2 pos = Camera.main.WorldToScreenPoint(transform.position + Vector3.up);
         Log.Text("STATE", currentState.ToString(), pos, Color.green, Time.fixedDeltaTime);
     }
     
     public void SetState(UnitState state)
     {
         if (!states.ContainsKey(state)) return;
+        overrideState = null;
         currentState = state;
+    }
+    
+    public void SetState(BaseState state)
+    {
+        overrideState = state;
+        if(overrideState == null) return;
+        overrideState.Initialise();
     }
 }
