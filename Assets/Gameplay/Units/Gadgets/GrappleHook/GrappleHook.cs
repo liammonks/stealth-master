@@ -48,12 +48,16 @@ namespace Gadgets
         private const float minGap = 0.2f;
         private const float reelRate = 2.5f;
 
+        [SerializeField] private Transform bulletSpawnForward, bulletSpawnBackward;
+        private Transform bulletSpawn => aimingBehind ? bulletSpawnBackward : bulletSpawnForward;
+
         private bool attached = false;
         private float ropeLength = 0.0f;
         private float pivotLength = 0.0f;
         private List<AttachPoint> attachPoints = new List<AttachPoint>();
         private LineRenderer lineRenderer;
         private LayerMask mask;
+        private bool aimingBehind;
 
         protected override void OnEquip()
         {
@@ -63,8 +67,8 @@ namespace Gadgets
 
         protected override void OnPrimaryEnabled()
         {
-            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - transform.position;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, range, mask);
+            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - owner.transform.position;
+            RaycastHit2D hit = Physics2D.Raycast(owner.transform.position, direction, range, mask);
             
             if(hit.collider)
             {
@@ -73,15 +77,20 @@ namespace Gadgets
                 pivotLength = ropeLength;
                 owner.stateMachine.SetState(new GrappleHookState(owner.data));
                 attached = true;
+                rotateFrontArm = false;
+                owner.data.groundSpringActive = false;
             }
         }
 
         protected override void OnPrimaryDisabled()
         {
+            if (!attached) return;
             attached = false;
             owner.stateMachine.SetState(UnitState.Fall);
             attachPoints.Clear();
             lineRenderer.positionCount = 0;
+            rotateFrontArm = true;
+            owner.data.groundSpringActive = true;
         }
 
         protected override void OnSecondaryEnabled()
@@ -109,7 +118,7 @@ namespace Gadgets
                 // Move point with attached RB
                 if (attachPoints[i].attachedRB) attachPoints[i].point += attachPoints[i].attachedRB.velocity * Time.fixedDeltaTime;
                 
-                Vector2 nextPoint = i == 0 ? transform.position : attachPoints[i - 1].point;
+                Vector2 nextPoint = i == 0 ? owner.transform.position : attachPoints[i - 1].point;
                 // Remove point if unwrapped
                 if (i != attachPoints.Count - 1)
                 {
@@ -184,11 +193,11 @@ namespace Gadgets
             // Constrain movement to pivot
             Vector2 pivot = attachPoints[0].point;
             pivotLength = attachPoints[0].dist;
-            Vector2 nextPosition = (Vector2)transform.position + (owner.data.rb.velocity * Time.fixedDeltaTime);
+            Vector2 nextPosition = (Vector2)owner.transform.position + (owner.data.rb.velocity * Time.fixedDeltaTime);
             if (Vector2.Distance(nextPosition, pivot) > pivotLength)
             {
                 nextPosition = pivot + ((nextPosition - pivot).normalized * pivotLength);
-                owner.data.rb.velocity = (nextPosition - (Vector2)transform.position) / Time.fixedDeltaTime;
+                owner.data.rb.velocity = (nextPosition - (Vector2)owner.transform.position) / Time.fixedDeltaTime;
             }
             
             // Add new intersections
@@ -210,7 +219,15 @@ namespace Gadgets
 
             //Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(((Vector2)transform.position + pivot) / 2);
             //Log.Text("LEN", pivotLength.ToString(), pos, Color.red, Time.fixedDeltaTime);
+            
+            // Update Visuals
             UpdateLineRenderer();
+            Vector2 pivotDirection = attachPoints[0].point - (Vector2)owner.transform.position;
+            //aimingBehind = (owner.data.isFacingRight && pivotDirection.x < 0) || (!owner.data.isFacingRight && pivotDirection.x > 0);
+            //forwardVisuals.gameObject.SetActive(!owner.data.isFacingRight);
+            //reverseVisuals.gameObject.SetActive(owner.data.isFacingRight);
+            visualsRoot.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? pivotDirection : -pivotDirection));
+            owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, visualsRoot.rotation);
         }
         
         private void UpdateLineRenderer()
@@ -221,7 +238,7 @@ namespace Gadgets
             {
                 lineRenderer.SetPosition(--j, attachPoints[i].point);
             }
-            lineRenderer.SetPosition(attachPoints.Count, transform.position);
+            lineRenderer.SetPosition(attachPoints.Count, bulletSpawn.position);
         }
         
         private Vector2 GetHitNormal(Vector2 point)
@@ -252,15 +269,18 @@ namespace Gadgets
 
             return avg.normalized;
         }
+
     }
 
     public class GrappleHookState : BaseState
     {
+        private int swingDirection = 0;
+        
         public GrappleHookState(UnitData a_data) : base(a_data) { }
 
         public override UnitState Initialise()
         {
-            data.animator.Play("Fall");
+            swingDirection = 0;
             return UnitState.Null;
         }
         
@@ -269,6 +289,25 @@ namespace Gadgets
             Vector2 velocity = data.rb.velocity;
             velocity.x += data.input.movement * data.stats.walkSpeed * data.stats.airAcceleration;
             data.rb.velocity = velocity;
+
+            string state = string.Empty;
+            const float groundCheckDist = 0.1f;
+            RaycastHit2D groundHit = Physics2D.Raycast(data.rb.position, -data.rb.transform.up, data.stats.standingHalfHeight + groundCheckDist, Unit.CollisionMask);
+            Debug.DrawRay(data.rb.position, -data.rb.transform.up * (data.stats.standingHalfHeight + groundCheckDist), groundHit.collider ? Color.green : Color.red);
+            if (groundHit.collider)
+            {
+                state = Mathf.Abs(velocity.x) > data.stats.walkSpeed * 0.5f ? "Run" : "Idle";
+            }
+            else
+            {
+                if (data.input.movement == 0) state = "SwingIdle";
+                if (data.input.movement == 1) state = data.isFacingRight ? "SwingForward" : "SwingBackward";
+                if (data.input.movement == -1) state = data.isFacingRight ? "SwingBackward" : "SwingForward";
+            }
+            data.animator.Play(state);
+
+
+            StateManager.UpdateFacing(data);
             return UnitState.Null;
         }
 

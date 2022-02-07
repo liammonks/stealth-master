@@ -21,7 +21,6 @@ public enum UnitState
     WallSlide,
     Melee,
     JumpMelee,
-    GrappleHookSwing,
     HitImpact,
     Launched,
     Bite,

@@ -168,7 +168,7 @@ public abstract class Unit : MonoBehaviour
         if (colliderInterpValue != (data.isStanding ? 1.0f : 0.0f))
             UpdateCollider();
 
-        //Debug.DrawRay(transform.position, data.rb.velocity * Time.fixedDeltaTime, Color.grey, 3.0f);
+        Debug.DrawRay(transform.position, data.rb.velocity * Time.fixedDeltaTime, Color.grey, 3.0f);
     }
     
     private void Update()

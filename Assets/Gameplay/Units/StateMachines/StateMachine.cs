@@ -59,6 +59,7 @@ public abstract class StateMachine : MonoBehaviour
     public void SetState(BaseState state)
     {
         overrideState = state;
+        previousState = UnitState.Null;
         if(overrideState == null) return;
         overrideState.Initialise();
     }

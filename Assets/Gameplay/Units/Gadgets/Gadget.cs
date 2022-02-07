@@ -21,14 +21,14 @@ namespace Gadgets
         [SerializeField] protected RuntimeAnimatorController backArmAnimatorControllerReversed;
 
         [Header("Visuals")]
-        [SerializeField] private Transform visualsRoot;
-        [SerializeField] private Transform forwardVisuals;
-        [SerializeField] private Transform reverseVisuals;
+        [SerializeField] protected Transform visualsRoot;
+        [SerializeField] protected Transform forwardVisuals;
+        [SerializeField] protected Transform reverseVisuals;
 
         [Header("Colliders")]
-        [SerializeField] private Transform collidersRoot;
-        [SerializeField] private Transform forwardCollider;
-        [SerializeField] private Transform reverseCollider;
+        [SerializeField] protected Transform collidersRoot;
+        [SerializeField] protected Transform forwardCollider;
+        [SerializeField] protected Transform reverseCollider;
 
         protected Unit owner;
         protected bool primaryActive, secondaryActive;
