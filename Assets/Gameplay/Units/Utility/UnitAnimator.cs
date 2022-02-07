@@ -41,9 +41,10 @@ public class UnitAnimator : MonoBehaviour
             return;
         }
 
-        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.Body) body.Play(animation);
-        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.FrontArm) frontArm.Play(animation);
-        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.BackArm) backArm.Play(animation);
+        int id = Animator.StringToHash(animation);
+        if((layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.Body) && body.HasState(0, id)) body.Play(animation);
+        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.FrontArm && frontArm.HasState(0, id)) frontArm.Play(animation);
+        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.BackArm && backArm.HasState(0, id)) backArm.Play(animation);
 
         body.Update(0);
         frontArm.Update(0);
