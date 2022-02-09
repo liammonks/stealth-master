@@ -33,14 +33,14 @@ namespace Gadgets
         protected Unit owner;
         protected bool primaryActive, secondaryActive;
         protected bool primaryLocked, secondaryLocked;
-        private bool holstered = false;
+        protected bool rotationLocked = false;
+        protected bool holstered = false;
 
         protected bool CanPrimary { get { return !holstered && !primaryActive && primaryAvailableStates.Contains(owner.GetState()) && !primaryLocked && !rotationLocked; } }
         protected bool CanSecondary { get { return !holstered && !secondaryActive && secondaryAvailableStates.Contains(owner.GetState()) && !secondaryLocked && !rotationLocked; } }
 
         private bool previouslyAimingBehind = false;
         private List<GameObject> intersectingObjects = new List<GameObject>();
-        private bool rotationLocked = false;
 
         private const float raycastDistance = 0.8f;
 
