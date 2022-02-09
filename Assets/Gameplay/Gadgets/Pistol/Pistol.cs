@@ -16,9 +16,9 @@ namespace Gadgets
 
         private bool aiming = false;
 
-        protected override void OnUnlocked()
+        protected override void Unholster()
         {
-            base.OnUnlocked();
+            base.Unholster();
             OnAimPositionUpdated();
         }
 
@@ -51,8 +51,7 @@ namespace Gadgets
             }
         }
         
-        protected override void FixedUpdate() {
-            base.FixedUpdate();
+        private void FixedUpdate() {
             if (owner == UnitHelper.Player && aiming)
             {
                 Vector2 cameraOffset = Vector2.ClampMagnitude(owner.AimOffset, cameraOffsetDistance);

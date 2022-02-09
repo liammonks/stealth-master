@@ -78,7 +78,7 @@ namespace States.StealthMaster
                     if (StateManager.CanStand(data, offset))
                     {
                         // Execute animation transition
-                        data.animator.Play(Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed ? "DiveFlip" : "CrawlToStand");
+                        data.animator.Play(Mathf.Abs(data.rb.velocity.x) > data.stats.runSpeed ? "DiveFlip" : "CrawlToStand");
                         // Update animator to transition to relevant state
                         data.animator.UpdateState();
                         transitionDuration = data.animator.GetState().length;
@@ -90,7 +90,7 @@ namespace States.StealthMaster
                 else
                 {
                     // Landed but still crawling
-                    if (data.rb.velocity.x > data.stats.walkSpeed)
+                    if (Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
                     {
                         // Execute Slide
                         data.animator.Play("BellySlide");

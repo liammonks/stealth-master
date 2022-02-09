@@ -103,8 +103,7 @@ namespace Gadgets
 
         }
 
-        protected override void FixedUpdate() {
-            base.FixedUpdate();
+        private void FixedUpdate() {
             if (!attached) return;
             if (attachPoints.Count == 0) OnPrimaryDisabled();
 
@@ -288,14 +287,20 @@ namespace Gadgets
         {
             Vector2 velocity = data.rb.velocity;
             velocity.x += data.input.movement * data.stats.walkSpeed * data.stats.airAcceleration;
-            data.rb.velocity = velocity;
 
             string state = string.Empty;
             const float groundCheckDist = 0.1f;
             RaycastHit2D groundHit = Physics2D.Raycast(data.rb.position, -data.rb.transform.up, data.stats.standingHalfHeight + groundCheckDist, Unit.CollisionMask);
-            Debug.DrawRay(data.rb.position, -data.rb.transform.up * (data.stats.standingHalfHeight + groundCheckDist), groundHit.collider ? Color.green : Color.red);
+            Debug.DrawRay(data.rb.position, -data.rb.transform.up * (data.stats.standingHalfHeight + groundCheckDist), Color.red);
             if (groundHit.collider)
             {
+                Debug.DrawRay(data.rb.position, -data.rb.transform.up * groundHit.distance, Color.green);
+                float groundInset = Mathf.Max(0.0f, -(groundHit.distance - data.stats.standingHalfHeight));
+                if (groundInset > 0.0f)
+                {
+                    data.rb.position += (Vector2)data.rb.transform.up * groundInset;
+                    velocity.y = Mathf.Max(0.0f, velocity.y);
+                }
                 state = Mathf.Abs(velocity.x) > data.stats.walkSpeed * 0.5f ? "Run" : "Idle";
             }
             else
@@ -305,7 +310,7 @@ namespace Gadgets
                 if (data.input.movement == -1) state = data.isFacingRight ? "SwingBackward" : "SwingForward";
             }
             data.animator.Play(state);
-
+            data.rb.velocity = velocity;
 
             StateManager.UpdateFacing(data);
             return UnitState.Null;

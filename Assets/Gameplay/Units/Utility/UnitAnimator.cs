@@ -16,12 +16,16 @@ public class UnitAnimator : MonoBehaviour
 
     public delegate void OnFacingUpdated();
     public event OnFacingUpdated onFacingUpdated;
+    
+    public bool reversed = false;
 
     [Header("Controllers")]
     public RuntimeAnimatorController defaultBody;
     public RuntimeAnimatorController reversedBody;
+    
+    [Header("Defaults")]
     public RuntimeAnimatorController defaultFrontArm;
-    public RuntimeAnimatorController defaultBackArm;
+    public RuntimeAnimatorController reversedFrontArm;
 
     [Header("Animators")]
     [SerializeField] private Animator body;
@@ -63,26 +67,23 @@ public class UnitAnimator : MonoBehaviour
         Play(animation);
     }
     
-    public void SetLayer(UnitAnimatorLayer layer, RuntimeAnimatorController controller, bool inverted = false)
+    public void SetLayer(UnitAnimatorLayer layer, RuntimeAnimatorController controller)
     {
         float normalizedTime = GetState().normalizedTime;
         switch (layer)
         {
             case UnitAnimatorLayer.Body:
                 if (body.runtimeAnimatorController == controller) return;
-                body.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 body.runtimeAnimatorController = controller;
                 body.Play(GetState().fullPathHash, 0, normalizedTime);
                 break;
             case UnitAnimatorLayer.FrontArm:
                 if (frontArm.runtimeAnimatorController == controller) return;
-                frontArm.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 frontArm.runtimeAnimatorController = controller;
                 frontArm.Play(GetState().fullPathHash, 0, normalizedTime);
                 break;
             case UnitAnimatorLayer.BackArm:
                 if (backArm.runtimeAnimatorController == controller) return;
-                backArm.transform.localScale = inverted ? new Vector3(-1.0f, -1.0f, 1.0f) : Vector3.one;
                 backArm.runtimeAnimatorController = controller;
                 backArm.Play(GetState().fullPathHash, 0, normalizedTime);
                 break;

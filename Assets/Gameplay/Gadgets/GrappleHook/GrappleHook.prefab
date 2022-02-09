@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1081105709165145749}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6724, y: -0.10959995, z: 0}
+  m_LocalPosition: {x: 0.6724, y: -0.14084995, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -207,7 +207,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.578125, y: -0.12500006}
+  m_Offset: {x: 0.546875, y: -0.15625006}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -271,8 +271,8 @@ MonoBehaviour:
   rotateFrontArm: 1
   primaryAvailableStates: 0100000002000000040000000500000006000000090000000c0000000e000000
   secondaryAvailableStates: 00000000
-  frontArmAnimatorController: {fileID: 9100000, guid: e59f4c019f3008046956aef147a44ada, type: 2}
-  frontArmAnimatorControllerReversed: {fileID: 9100000, guid: 4c5260a4da0f85546bf2a7921d4d94c4, type: 2}
+  frontArmAnimatorController: {fileID: 22100000, guid: b91d547cbdeec9a43a908e60f9c7d8f7, type: 2}
+  frontArmAnimatorControllerReversed: {fileID: 22100000, guid: 8edae6d04f71e684caae7a338830fca0, type: 2}
   visualsRoot: {fileID: 2698691776936040659}
   forwardVisuals: {fileID: 4823762633903433411}
   reverseVisuals: {fileID: 3718170646042742492}
@@ -482,7 +482,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2212203475009052115}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.57865, y: -0.07834995, z: 0}
+  m_LocalPosition: {x: 0.5474, y: -0.10959995, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

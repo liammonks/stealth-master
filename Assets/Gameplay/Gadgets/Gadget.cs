@@ -33,9 +33,10 @@ namespace Gadgets
         protected Unit owner;
         protected bool primaryActive, secondaryActive;
         protected bool primaryLocked, secondaryLocked;
+        private bool holstered = false;
 
-        protected bool CanPrimary { get { return !primaryActive && primaryAvailableStates.Contains(owner.GetState()) && !primaryLocked && !rotationLocked; } }
-        protected bool CanSecondary { get { return !secondaryActive && secondaryAvailableStates.Contains(owner.GetState()) && !secondaryLocked && !rotationLocked; } }
+        protected bool CanPrimary { get { return !holstered && !primaryActive && primaryAvailableStates.Contains(owner.GetState()) && !primaryLocked && !rotationLocked; } }
+        protected bool CanSecondary { get { return !holstered && !secondaryActive && secondaryAvailableStates.Contains(owner.GetState()) && !secondaryLocked && !rotationLocked; } }
 
         private bool previouslyAimingBehind = false;
         private List<GameObject> intersectingObjects = new List<GameObject>();
@@ -46,23 +47,22 @@ namespace Gadgets
         public void Equip(Unit unit)
         {
             owner = unit;
-            unit.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, frontArmAnimatorController);
-            //unit.data.animator.SetLayer(UnitAnimatorLayer.BackArm, backArmAnimatorController);
 
             owner.onAimOffsetUpdated += OnAimPositionUpdated;
             owner.data.animator.onFacingUpdated += OnAimPositionUpdated;
-            owner.data.lockGadget += OnLocked;
+            owner.data.lockGadget += Holster;
             owner.stateMachine.onStateUpdated += OnUnitStateUpdated;
-
+            
             OnEquip();
             OnUnitStateUpdated(unit.GetState());
+            OnAimPositionUpdated();
         }
 
         private void OnDestroy()
         {
             owner.onAimOffsetUpdated -= OnAimPositionUpdated;
             owner.data.animator.onFacingUpdated -= OnAimPositionUpdated;
-            owner.data.lockGadget -= OnLocked;
+            owner.data.lockGadget -= Holster;
             owner.stateMachine.onStateUpdated -= OnUnitStateUpdated;
         }
 
@@ -102,24 +102,24 @@ namespace Gadgets
         {
             if(primaryAvailableStates.Contains(state) || secondaryAvailableStates.Contains(state))
             {
-                OnUnlocked();
+                Unholster();
             }
             else
             {
-                OnLocked();
+                Holster();
             }
         }
 
-        protected virtual void FixedUpdate()
+        private void Update()
         {
-            Vector2 armPivot = owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
-            transform.position = armPivot;
+            transform.position = owner.data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position;
         }
 
         protected virtual void OnAimPositionUpdated()
         {
+            if (holstered) return;
             bool aimingBehind = owner.AimingBehind();
-            owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, aimingBehind ? frontArmAnimatorControllerReversed : frontArmAnimatorController, rotateFrontArm && aimingBehind);
+            owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, aimingBehind ? frontArmAnimatorControllerReversed : frontArmAnimatorController);
             //owner.data.animator.SetLayer(UnitAnimatorLayer.BackArm, aimingBehind ? backArmAnimatorControllerReversed : backArmAnimatorController);
             if (!rotateFrontArm) return;
             
@@ -163,20 +163,20 @@ namespace Gadgets
             }
         }
         
-        protected virtual void OnLocked()
+        protected virtual void Holster()
         {
-            primaryLocked = true;
-            secondaryLocked = true;
+            holstered = true;
             DisablePrimary();
             DisableSecondary();
             gameObject.SetActive(false);
+            owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, owner.AimingBehind() ? owner.data.animator.reversedFrontArm : owner.data.animator.defaultFrontArm);
         }
 
-        protected virtual void OnUnlocked()
+        protected virtual void Unholster()
         {
-            primaryLocked = false;
-            secondaryLocked = false;
+            holstered = false;
             gameObject.SetActive(true);
+            owner.data.animator.SetLayer(UnitAnimatorLayer.FrontArm, owner.AimingBehind() ? frontArmAnimatorControllerReversed : frontArmAnimatorController);
         }
 
         protected virtual void OnEquip() { }
