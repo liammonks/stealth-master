@@ -15,6 +15,8 @@ public class UnitData
     public UnitStats stats;
     public Vector2 target;
     public bool isGrounded = false;
+    public float lastGroundedTime = 0.0f;
+    public bool canJump => (Time.unscaledTime - lastGroundedTime) <= 0.2f;
     public bool isStanding = true;
     public bool isFacingRight = true;
     public bool isSlipping = false;
@@ -153,7 +155,7 @@ public abstract class Unit : MonoBehaviour
         }
         else
         {
-            data.isGrounded = false;
+            SetGrounded(false);
             // Rotate to default
             float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
             if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
@@ -218,11 +220,11 @@ public abstract class Unit : MonoBehaviour
                     data.input.crawlRequestTime = Time.unscaledTime;
                     data.isSlipping = true;
                 }
-                data.isGrounded = false;
+                SetGrounded(false);
             }
             else
             {
-                data.isGrounded = springDisplacement > -0.05f;
+                SetGrounded(springDisplacement > -0.05f);
                 data.attatchedRB = hit.rigidbody;
             }
 
@@ -236,7 +238,7 @@ public abstract class Unit : MonoBehaviour
         else
         {
             ExtDebug.DrawBoxCastOnHit(transform.position, springSize * 0.5f, transform.rotation, -transform.up, springDistance - (springSize.y * 0.5f) + groundSpringDistanceBuffer, data.groundSpringActive ? Color.red : Color.gray);
-            data.isGrounded = false;
+            SetGrounded(false);
 
             // Rotate to default
             float rotationDisplacement = transform.eulerAngles.z; // 0 to 360
@@ -259,6 +261,12 @@ public abstract class Unit : MonoBehaviour
             points[i] = Vector2.Lerp(crawlingPoints[i], standingPoints[i], colliderInterpValue);
         }
         activeCollider.points = points;
+    }
+    
+    private void SetGrounded(bool grounded)
+    {
+        if (data.isGrounded && !grounded) data.lastGroundedTime = Time.unscaledTime;
+        data.isGrounded = grounded;
     }
 
     #endregion

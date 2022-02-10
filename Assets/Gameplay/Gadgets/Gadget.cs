@@ -39,7 +39,6 @@ namespace Gadgets
         protected bool CanPrimary { get { return !holstered && !primaryActive && primaryAvailableStates.Contains(owner.GetState()) && !primaryLocked && !rotationLocked; } }
         protected bool CanSecondary { get { return !holstered && !secondaryActive && secondaryAvailableStates.Contains(owner.GetState()) && !secondaryLocked && !rotationLocked; } }
 
-        private bool previouslyAimingBehind = false;
         private List<GameObject> intersectingObjects = new List<GameObject>();
 
         private const float raycastDistance = 0.8f;
@@ -150,12 +149,14 @@ namespace Gadgets
         
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (other.isTrigger) return;
             intersectingObjects.Add(other.gameObject);
             rotationLocked = true;
             OnAimPositionUpdated();
         }
         
         private void OnTriggerExit2D(Collider2D other) {
+            if (other.isTrigger) return;
             intersectingObjects.Remove(other.gameObject);
             if(intersectingObjects.Count == 0)
             {

@@ -47,12 +47,12 @@ public class UnitAnimator : MonoBehaviour
 
         int id = Animator.StringToHash(animation);
         if((layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.Body) && body.HasState(0, id)) body.Play(animation);
-        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.FrontArm && frontArm.HasState(0, id)) frontArm.Play(animation);
-        if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.BackArm && backArm.HasState(0, id)) backArm.Play(animation);
+        if((layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.FrontArm) && frontArm.HasState(0, id)) frontArm.Play(animation);
+        //if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.BackArm && backArm.HasState(0, id)) backArm.Play(animation);
 
         body.Update(0);
         frontArm.Update(0);
-        backArm.Update(0);
+        //backArm.Update(0);
 
         lastState = animation;
         if (forced) { animationLocked = true; }
@@ -70,22 +70,25 @@ public class UnitAnimator : MonoBehaviour
     public void SetLayer(UnitAnimatorLayer layer, RuntimeAnimatorController controller)
     {
         float normalizedTime = GetState().normalizedTime;
+        int state;
         switch (layer)
         {
             case UnitAnimatorLayer.Body:
                 if (body.runtimeAnimatorController == controller) return;
+                state = body.GetCurrentAnimatorStateInfo(0).fullPathHash;
                 body.runtimeAnimatorController = controller;
-                body.Play(GetState().fullPathHash, 0, normalizedTime);
+                body.Play(body.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, normalizedTime);
                 break;
             case UnitAnimatorLayer.FrontArm:
                 if (frontArm.runtimeAnimatorController == controller) return;
+                state = frontArm.GetCurrentAnimatorStateInfo(0).fullPathHash;
                 frontArm.runtimeAnimatorController = controller;
-                frontArm.Play(GetState().fullPathHash, 0, normalizedTime);
+                if (frontArm.HasState(0, state)) frontArm.Play(state, 0, normalizedTime);
                 break;
             case UnitAnimatorLayer.BackArm:
-                if (backArm.runtimeAnimatorController == controller) return;
-                backArm.runtimeAnimatorController = controller;
-                backArm.Play(GetState().fullPathHash, 0, normalizedTime);
+                //if (backArm.runtimeAnimatorController == controller) return;
+                //backArm.runtimeAnimatorController = controller;
+                //backArm.Play(GetState().fullPathHash, 0, normalizedTime);
                 break;
         }
     }
@@ -110,7 +113,7 @@ public class UnitAnimator : MonoBehaviour
                 frontArm.transform.rotation = rotation;
                 break;
             case UnitAnimatorLayer.BackArm:
-                backArm.transform.rotation = rotation;
+                //backArm.transform.rotation = rotation;
                 break;
         }
     }
@@ -119,7 +122,7 @@ public class UnitAnimator : MonoBehaviour
     {
         body.gameObject.SetActive(isVisible);
         frontArm.gameObject.SetActive(isVisible);
-        backArm.gameObject.SetActive(isVisible);
+        //backArm.gameObject.SetActive(isVisible);
     }
 
     public void SetFacing(bool facingRight)
@@ -133,8 +136,8 @@ public class UnitAnimator : MonoBehaviour
     {
         velocity = Mathf.Abs(velocity);
         body.SetFloat("VelocityX", velocity);
-        frontArm.SetFloat("VelocityX", velocity);
-        backArm.SetFloat("VelocityX", velocity);
+        //frontArm.SetFloat("VelocityX", velocity);
+        //backArm.SetFloat("VelocityX", velocity);
     }
 
     public AnimatorStateInfo GetState()
@@ -150,8 +153,8 @@ public class UnitAnimator : MonoBehaviour
         frontArm.Update(0);
         frontArm.Update(0);
         
-        backArm.Update(0);
-        backArm.Update(0);
+        //backArm.Update(0);
+        //backArm.Update(0);
     }
     
 }

@@ -70,7 +70,7 @@ namespace Gadgets
             Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - owner.transform.position;
             RaycastHit2D hit = Physics2D.Raycast(owner.transform.position, direction, range, mask);
             
-            if(hit.collider)
+            if(hit.collider && hit.collider.tag == "CanGrapple")
             {
                 attachPoints.Add(new AttachPoint(hit.point, Vector2.zero, hit.rigidbody));
                 ropeLength = hit.distance;
@@ -278,13 +278,11 @@ namespace Gadgets
 
     public class GrappleHookState : BaseState
     {
-        private int swingDirection = 0;
         
         public GrappleHookState(UnitData a_data) : base(a_data) { }
 
         public override UnitState Initialise()
         {
-            swingDirection = 0;
             return UnitState.Null;
         }
         

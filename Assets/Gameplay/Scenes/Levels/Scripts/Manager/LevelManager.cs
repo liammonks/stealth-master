@@ -4,13 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-
-    private enum WinCondition
-    {
-        Null,
-        EnemiesEliminated
-    }
-
     public static LevelManager Instance;
     public static string sceneName;
 
@@ -18,9 +11,7 @@ public class LevelManager : MonoBehaviour
     public PlayerSpawn ActivePlayerSpawn => activePlayerSpawn;
 
     [SerializeField] private PlayerSpawn activePlayerSpawn;
-    [SerializeField] private WinCondition winCondition;
-
-    private List<Enemy> enemyUnits;
+    [SerializeField] private List<WinCondition> winConditions;
 
     private void Awake() {
         if(Instance != null) {
@@ -34,8 +25,20 @@ public class LevelManager : MonoBehaviour
         {
             activePlayerSpawn = FindObjectOfType<PlayerSpawn>();
         }
-
-        enemyUnits = new List<Enemy>(FindObjectsOfType<Enemy>()).FindAll(x => x.isEnemy);
+        
+        // Initialise WinConditions
+        foreach (WinCondition winCondition in winConditions)
+        {
+            winCondition.onComplete += OnConditionComplete;
+        }
+    }
+    
+    private void OnDisable()
+    {
+        foreach (WinCondition winCondition in winConditions)
+        {
+            winCondition.onComplete -= OnConditionComplete;
+        }
     }
     
     public void LoadLevel(string levelName)
@@ -53,18 +56,18 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void OnEnemyKilled(Enemy unit)
+    public void OnConditionComplete()
     {
-        enemyUnits.Remove(unit);
-        if(winCondition == WinCondition.EnemiesEliminated && enemyUnits.Count == 0)
+        foreach (WinCondition winCondition in winConditions)
         {
-            LevelComplete();
+            if (!winCondition.IsComplete) return;
         }
+        LevelComplete();
     }
 
     public void LevelComplete()
     {
-        SceneManager.LoadScene("Planning");
+        GlobalEvents.MissionComplete();
     }
 
     #region Input

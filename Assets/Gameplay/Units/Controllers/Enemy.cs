@@ -8,8 +8,6 @@ public class Enemy : Unit
     [Header("AI")]
     public AIStats aiStats;
 
-    [HideInInspector] public bool isEnemy = true;
-
     private const float statsUpdateInterval = 1.0f;
     private Vector2 healthBarOffset = new Vector2(0, 1);
 
@@ -19,8 +17,7 @@ public class Enemy : Unit
         aiStats = aiStats.CloneVariation(1.0f);
         StartCoroutine(UpdateStats());
         // Init layer masks
-        isEnemy = gameObject.layer == 10;
-        data.hitMask = isEnemy ? LayerMask.GetMask("Player") : LayerMask.GetMask("Enemy");
+        data.hitMask = LayerMask.GetMask("Player");
         healthBar = LevelManager.Instance.UI.HealthBarPool.Get();
     }
 
@@ -32,10 +29,7 @@ public class Enemy : Unit
     public override void Die()
     {
         base.Die();
-        if(isEnemy)
-        {
-            LevelManager.Instance.OnEnemyKilled(this);
-        }
+        GlobalEvents.EnemyKilled();
         LevelManager.Instance.UI.HealthBarPool.Release(healthBar);
         Destroy(gameObject);
     }

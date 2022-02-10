@@ -36,6 +36,12 @@ namespace States
                 return Mathf.Abs(data.rb.velocity.x) > 0.1f ? UnitState.Run : UnitState.Idle;
             }
             
+            // Jump (Kyote Time)
+            if (data.input.jumpQueued && data.canJump)
+            {
+                return UnitState.Jump;
+            }
+            
             StateManager.UpdateFacing(data);
             return UnitState.Fall;
         }
