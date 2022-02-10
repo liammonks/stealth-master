@@ -44,13 +44,19 @@ namespace Gadgets
             }
         }
 
-        private const float range = 12.0f;
-        private const float minGap = 0.2f;
-        private const float reelRate = 2.5f;
-
+        [Header("GrapplingHook")]
         [SerializeField] private Transform bulletSpawnForward, bulletSpawnBackward;
         private Transform bulletSpawn => aimingBehind ? bulletSpawnBackward : bulletSpawnForward;
 
+        // MODABLE
+        [HideInInspector] public float reelRate = 2.5f;
+        [HideInInspector] public List<string> hitTags;
+        [HideInInspector] public BulletStats bulletStats;
+
+        // CONSTS
+        private const float minGap = 0.2f;
+
+        // MEMBERS
         private bool attached = false;
         private float ropeLength = 0.0f;
         private float pivotLength = 0.0f;
@@ -58,9 +64,12 @@ namespace Gadgets
         private LineRenderer lineRenderer;
         private LayerMask mask;
         private bool aimingBehind;
+        private Bullet projectile;
 
         protected override void OnEquip()
         {
+            hitTags = new List<string>() { "CanGrapple" };
+            bulletStats = BulletStats.Create(100, 10, 0);
             lineRenderer = GetComponent<LineRenderer>();
             mask = Unit.CollisionMask | (1 << (owner is Player ? 10 : 9));
         }
@@ -68,22 +77,15 @@ namespace Gadgets
         protected override void OnPrimaryEnabled()
         {
             Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - owner.transform.position;
-            RaycastHit2D hit = Physics2D.Raycast(owner.transform.position, direction, range, mask);
-            
-            if(hit.collider && hit.collider.tag == "CanGrapple")
-            {
-                attachPoints.Add(new AttachPoint(hit.point, Vector2.zero, hit.rigidbody));
-                ropeLength = hit.distance;
-                pivotLength = ropeLength;
-                owner.stateMachine.SetState(new GrappleHookState(owner.data));
-                attached = true;
-                rotateFrontArm = false;
-                owner.data.groundSpringActive = false;
-            }
+            projectile = BulletPool.Fire(bulletSpawn.position, owner.AimOffset, owner.data.rb.velocity, bulletStats, true);
+            Debug.DrawRay(bulletSpawn.position, owner.AimOffset.normalized * bulletStats.range, Color.red, 1.0f);
+            projectile.onHit += OnProjectileHit;
+            projectile.onLost += OnProjectileLost;
         }
 
         protected override void OnPrimaryDisabled()
         {
+            if (projectile != null) { projectile.onHit -= OnProjectileHit; }
             if (!attached) return;
             attached = false;
             owner.stateMachine.SetState(UnitState.Fall);
@@ -102,8 +104,37 @@ namespace Gadgets
         {
 
         }
+        
+        private void OnProjectileHit(RaycastHit2D hit)
+        {
+            projectile = null;
+            if (hitTags.Contains(hit.collider.tag))
+            {
+                float dist = Vector2.Distance(owner.transform.position, hit.point);
+                attachPoints.Add(new AttachPoint(hit.point, Vector2.zero, hit.rigidbody));
+                ropeLength = dist;
+                pivotLength = dist;
+                owner.stateMachine.SetState(new GrappleHookState(owner.data));
+                attached = true;
+                rotateFrontArm = false;
+                owner.data.groundSpringActive = false;
+            }
+        }
+
+        private void OnProjectileLost()
+        {
+            projectile = null;
+            lineRenderer.positionCount = 0;
+        }
 
         private void FixedUpdate() {
+            if (projectile != null)
+            {
+                lineRenderer.positionCount = 2;
+                lineRenderer.SetPosition(0, bulletSpawn.position);
+                lineRenderer.SetPosition(1, projectile.transform.position);
+            }
+            
             if (!attached) return;
             if (attachPoints.Count == 0)
             {
