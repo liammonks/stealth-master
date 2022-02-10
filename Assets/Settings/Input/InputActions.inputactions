@@ -529,6 +529,17 @@
                 },
                 {
                     "name": "",
+                    "id": "51a74a26-ecf4-4803-a160-87789f3f559c",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Respawn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "bb6e6b46-6f35-4d5d-9aae-3ee3ae0c3452",
                     "path": "<Keyboard>/q",
                     "interactions": "",

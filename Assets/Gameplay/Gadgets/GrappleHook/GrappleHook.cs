@@ -136,13 +136,13 @@ namespace Gadgets
                 float dist = Vector2.Distance(attachPoints[i].point, nextPoint);
                 attachPoints[i].dist = dist;
                 cummulativeLength += dist;
-                Vector2 debugPos = UnityEngine.Camera.main.WorldToScreenPoint(attachPoints[i].point);
-                Log.Text("AP" + i, i + ": " + dist, debugPos, Color.green, Time.fixedDeltaTime);
+                //Vector2 debugPos = UnityEngine.Camera.main.WorldToScreenPoint(attachPoints[i].point);
+                //Log.Text("AP" + i, i + ": " + dist, debugPos, Color.green, Time.fixedDeltaTime);
 
                 // Get all hits between this attatch point and the next point
                 List<RaycastHit2D> hits = new List<RaycastHit2D>(Physics2D.LinecastAll(nextPoint, attachPoints[i].point, mask));
                 hits.Reverse();
-                Debug.DrawLine(attachPoints[i].point, nextPoint, i % 2 == 0 ? Color.blue : Color.red);
+                //Debug.DrawLine(attachPoints[i].point, nextPoint, i % 2 == 0 ? Color.blue : Color.red);
                 // Add a new point if not too close to an existing point
                 foreach (RaycastHit2D hit in hits)
                 {
@@ -225,7 +225,7 @@ namespace Gadgets
             //Log.Text("LEN", pivotLength.ToString(), pos, Color.red, Time.fixedDeltaTime);
             
             // Update Visuals
-            //UpdateLineRenderer();
+            UpdateLineRenderer();
             Vector2 pivotDirection = attachPoints[0].point - (Vector2)owner.transform.position;
             //aimingBehind = (owner.data.isFacingRight && pivotDirection.x < 0) || (!owner.data.isFacingRight && pivotDirection.x > 0);
             //forwardVisuals.gameObject.SetActive(!owner.data.isFacingRight);

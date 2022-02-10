@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67577002}
   m_LocalRotation: {x: 0.008331019, y: 0.008332176, z: -0.00006942034, w: 0.9999306}
-  m_LocalPosition: {x: 289, y: 29.3, z: -60}
+  m_LocalPosition: {x: 72.25, y: -5.8875, z: -60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7161,6 +7161,7 @@ MonoBehaviour:
     stats: {fileID: 11400000, guid: 1eefa2d4a2182b1408ec35a899cb5d10, type: 2}
     target: {x: 0, y: 0}
     isGrounded: 0
+    lastGroundedTime: 0
     isStanding: 1
     isFacingRight: 1
     isSlipping: 0
@@ -7254,7 +7255,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521881362}
   m_LocalRotation: {x: 0.008331019, y: 0.008332176, z: -0.00006942034, w: 0.9999306}
-  m_LocalPosition: {x: 289, y: 29.3, z: -60}
+  m_LocalPosition: {x: 72.25, y: -5.8875, z: -60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

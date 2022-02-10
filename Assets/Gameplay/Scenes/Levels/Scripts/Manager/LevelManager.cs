@@ -49,6 +49,7 @@ public class LevelManager : MonoBehaviour
 
     public void RespawnPlayer()
     {
+        GlobalEvents.MissionRestart();
         if (activePlayerSpawn != null)
         {
             UnitHelper.Player.data.rb.velocity = Vector2.zero;

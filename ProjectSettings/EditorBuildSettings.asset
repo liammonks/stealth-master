@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Gameplay/Scenes/Planning.unity
     guid: 0259df6fef8ce51468c97a1ea80710ac
+  - enabled: 1
+    path: Assets/Gameplay/Scenes/Levels/Level_Parkour/Level_Parkour.unity
+    guid: cbb8393634873e74c8e09649ab813c05
   - enabled: 1
     path: Assets/Gameplay/Scenes/Global.unity
     guid: 770e182bdff9fb34a80d4c284d43f843
@@ -17,10 +20,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Gameplay/Scenes/Debugger.unity
     guid: e8099ff2f872cb94b83e7fccd9a8745d
-  - enabled: 1
-    path: Assets/Gameplay/Scenes/Levels/Level_Parkour/Level_Parkour.unity
-    guid: cbb8393634873e74c8e09649ab813c05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Gameplay/Scenes/Levels/Level_00/Level_00.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}

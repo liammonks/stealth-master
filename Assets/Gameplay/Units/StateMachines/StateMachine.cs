@@ -46,7 +46,7 @@ public abstract class StateMachine : MonoBehaviour
         data.stateDuration += Time.fixedDeltaTime;
         currentState = states[currentState].Execute();
         Vector2 pos = Camera.main.WorldToScreenPoint(transform.position + Vector3.up);
-        Log.Text("STATE", currentState.ToString(), pos, Color.green, Time.fixedDeltaTime);
+        //Log.Text("STATE", currentState.ToString(), pos, Color.green, Time.fixedDeltaTime);
     }
     
     public void SetState(UnitState state)

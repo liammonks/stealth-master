@@ -12,13 +12,21 @@ public class MissionTimer : MonoBehaviour
     private void OnEnable()
     {
         GlobalEvents.onMissionComplete += MissionComplete;
+        GlobalEvents.onMissionRestart += MissionRestart;
     }
     private void OnDisable()
     {
         GlobalEvents.onMissionComplete -= MissionComplete;
+        GlobalEvents.onMissionRestart -= MissionRestart;
     }
 
     private void MissionComplete() => active = false;
+    
+    private void MissionRestart()
+    {
+        missionTimer = 0.0f;
+        active = true;
+    }
 
     private void Update()
     {

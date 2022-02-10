@@ -8,6 +8,10 @@ public static class GlobalEvents
     public delegate void OnMissionComplete();
     public static event OnMissionComplete onMissionComplete;
     public static void MissionComplete() => onMissionComplete?.Invoke();
+
+    public delegate void OnMissionRestart();
+    public static event OnMissionRestart onMissionRestart;
+    public static void MissionRestart() => onMissionRestart?.Invoke();
     
     public delegate void OnEnemyKilled();
     public static event OnEnemyKilled onEnemyKilled;
