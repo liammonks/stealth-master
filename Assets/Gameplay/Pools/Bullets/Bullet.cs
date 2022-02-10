@@ -53,6 +53,7 @@ public class Bullet : MonoBehaviour
         {
             Debug.DrawLine(transform.position, hit.point, Color.green, 2.0f);
             BulletHit(hit);
+            BulletPool.Release(this);
             return;
         }
         else
@@ -67,6 +68,5 @@ public class Bullet : MonoBehaviour
         Unit unit = hit.collider.attachedRigidbody?.GetComponent<Unit>();
         if (unit != null) { unit.TakeDamage(m_Stats.damage); }
         onHit?.Invoke(hit);
-        BulletPool.Release(this);
     }
 }
