@@ -30,6 +30,9 @@ namespace Gadgets
         [SerializeField] protected Transform forwardCollider;
         [SerializeField] protected Transform reverseCollider;
 
+        [Header("Mods")]
+        [SerializeField] private List<GadgetMod> mods;
+
         protected Unit owner;
         protected bool primaryActive, secondaryActive;
         protected bool primaryLocked, secondaryLocked;
@@ -55,6 +58,11 @@ namespace Gadgets
             OnEquip();
             OnUnitStateUpdated(unit.GetState());
             OnAimPositionUpdated();
+
+            foreach (GadgetMod mod in mods)
+            {
+                mod.Activate(this);
+            }
         }
 
         private void OnDestroy()
