@@ -15,7 +15,7 @@ namespace States
         
         public override UnitState Execute()
         {
-            if (data.rb.velocity.y < 0)
+            if (data.rb.velocity.y <= 0)
             {
                 data.groundSpringActive = true;
             }

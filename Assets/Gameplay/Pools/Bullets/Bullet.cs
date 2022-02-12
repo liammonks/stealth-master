@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour
     {
         if(distanceTraveled >= m_Stats.range)
         {
-            onLost.Invoke();
+            onLost?.Invoke();
             BulletPool.Release(this);
             return;
         }

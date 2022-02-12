@@ -55,6 +55,7 @@ namespace Gadgets
 
         // CONSTS
         private const float minGap = 0.2f;
+        private const float bodyRotationRate = 10.0f;
 
         // MEMBERS
         private bool attached = false;
@@ -68,7 +69,7 @@ namespace Gadgets
 
         protected override void OnEquip()
         {
-            hitTags = new List<string>() { "CanGrapple" };
+            hitTags = new List<string>() { "CanGrapple", "Untagged" };
             bulletStats = BulletStats.Create(100, 10, 0);
             lineRenderer = GetComponent<LineRenderer>();
             mask = Unit.CollisionMask | (1 << (owner is Player ? 10 : 9));
@@ -76,23 +77,21 @@ namespace Gadgets
 
         protected override void OnPrimaryEnabled()
         {
-            Vector2 direction = UnityEngine.Camera.main.ScreenToWorldPoint(Player.MousePosition) - owner.transform.position;
             projectile = BulletPool.Fire(bulletSpawn.position, owner.AimOffset, owner.data.rb.velocity, bulletStats, true);
-            Debug.DrawRay(bulletSpawn.position, owner.AimOffset.normalized * bulletStats.range, Color.red, 1.0f);
+            //Debug.DrawRay(bulletSpawn.position, owner.AimOffset.normalized * bulletStats.range, Color.red, 1.0f);
             projectile.onHit += OnProjectileHit;
             projectile.onLost += OnProjectileLost;
         }
 
         protected override void OnPrimaryDisabled()
         {
-            if (projectile != null) { projectile.onHit -= OnProjectileHit; }
+            if (projectile != null) { OnProjectileLost(); }
             if (!attached) return;
             attached = false;
             owner.stateMachine.SetState(UnitState.Fall);
             attachPoints.Clear();
             lineRenderer.positionCount = 0;
             rotateFrontArm = true;
-            owner.data.groundSpringActive = true;
         }
 
         protected override void OnSecondaryEnabled()
@@ -107,7 +106,7 @@ namespace Gadgets
         
         private void OnProjectileHit(RaycastHit2D hit)
         {
-            projectile = null;
+            if (projectile != null) { OnProjectileLost(); }
             if (hitTags.Contains(hit.collider.tag))
             {
                 float dist = Vector2.Distance(owner.transform.position, hit.point);
@@ -118,11 +117,17 @@ namespace Gadgets
                 attached = true;
                 rotateFrontArm = false;
                 owner.data.groundSpringActive = false;
+
+                Vector2 awayFromPivot = (hit.point - (Vector2)owner.transform.position).normalized;
+                Vector2 velocityAwayFromPivot = awayFromPivot * Vector2.Dot(owner.data.rb.velocity, awayFromPivot);
+                owner.data.rb.velocity -= velocityAwayFromPivot;
             }
         }
 
         private void OnProjectileLost()
         {
+            projectile.onHit -= OnProjectileHit;
+            projectile.onLost -= OnProjectileLost;
             projectile = null;
             lineRenderer.positionCount = 0;
         }
@@ -227,12 +232,17 @@ namespace Gadgets
 
             // Constrain movement to pivot
             Vector2 pivot = attachPoints[0].point;
+            Vector2 pivotDirection = pivot - (Vector2)owner.transform.position;
             pivotLength = attachPoints[0].dist;
             Vector2 nextPosition = (Vector2)owner.transform.position + (owner.data.rb.velocity * Time.fixedDeltaTime);
-            if (Vector2.Distance(nextPosition, pivot) > pivotLength)
+            float pivotDist = Vector2.Distance(nextPosition, pivot);
+            if (pivotDist > pivotLength)
             {
                 nextPosition = pivot + ((nextPosition - pivot).normalized * pivotLength);
-                owner.data.rb.velocity = (nextPosition - (Vector2)owner.transform.position) / Time.fixedDeltaTime;
+                owner.data.rb.velocity = ((nextPosition - (Vector2)owner.transform.position) / Time.fixedDeltaTime);
+                Vector2 centrifugal = -pivotDirection.normalized * 0.5f;
+                //Debug.DrawRay(owner.transform.position, centrifugal, Color.magenta);
+                owner.data.rb.AddForce(centrifugal, ForceMode2D.Impulse);
             }
             
             // Add new intersections
@@ -252,17 +262,19 @@ namespace Gadgets
                 attachPoints[0].dist += ap.dist;
             }
 
-            //Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(((Vector2)transform.position + pivot) / 2);
-            //Log.Text("LEN", pivotLength.ToString(), pos, Color.red, Time.fixedDeltaTime);
+            //Vector2 pos = UnityEngine.Camera.main.WorldToScreenPoint(owner.transform.position);
+            //Log.Text("LEN", deltaLength.ToString(), pos, deltaLength > 0.0f ? Color.green : Color.red, Time.fixedDeltaTime);
             
             // Update Visuals
             UpdateLineRenderer();
-            Vector2 pivotDirection = attachPoints[0].point - (Vector2)owner.transform.position;
-            //aimingBehind = (owner.data.isFacingRight && pivotDirection.x < 0) || (!owner.data.isFacingRight && pivotDirection.x > 0);
-            //forwardVisuals.gameObject.SetActive(!owner.data.isFacingRight);
-            //reverseVisuals.gameObject.SetActive(owner.data.isFacingRight);
             visualsRoot.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, owner.data.isFacingRight ? pivotDirection : -pivotDirection));
             owner.data.animator.RotateLayer(UnitAnimatorLayer.FrontArm, visualsRoot.rotation);
+            // Rotate Body
+            if (owner.data.rb.velocity.magnitude > 0.5f)
+            {
+                Vector2 swingCross = Vector2.Perpendicular(owner.data.rb.velocity.x >= 0 ? owner.data.rb.velocity : -owner.data.rb.velocity).normalized;
+                owner.transform.rotation = Quaternion.Lerp(owner.transform.rotation, Quaternion.LookRotation(Vector3.forward, pivotDirection), bodyRotationRate * Time.fixedDeltaTime);
+            }
         }
         
         private void UpdateLineRenderer()
@@ -320,22 +332,22 @@ namespace Gadgets
         public override UnitState Execute()
         {
             Vector2 velocity = data.rb.velocity;
-            velocity.x += data.input.movement * data.stats.walkSpeed * data.stats.airAcceleration;
+            velocity.x += data.input.movement * data.stats.runSpeed * data.stats.airAcceleration;
 
             string state = string.Empty;
             const float groundCheckDist = 0.1f;
             RaycastHit2D groundHit = Physics2D.Raycast(data.rb.position, -data.rb.transform.up, data.stats.standingHalfHeight + groundCheckDist, Unit.CollisionMask);
-            Debug.DrawRay(data.rb.position, -data.rb.transform.up * (data.stats.standingHalfHeight + groundCheckDist), Color.red);
-            if (groundHit.collider)
+            //Debug.DrawRay(data.rb.position, -data.rb.transform.up * (data.stats.standingHalfHeight + groundCheckDist), Color.red);
+            if (groundHit.collider && Vector2.Dot(groundHit.normal, Vector2.up) >= 0.5f)
             {
-                Debug.DrawRay(data.rb.position, -data.rb.transform.up * groundHit.distance, Color.green);
+                //Debug.DrawRay(data.rb.position, -data.rb.transform.up * groundHit.distance, Color.green);
                 float groundInset = Mathf.Max(0.0f, -(groundHit.distance - data.stats.standingHalfHeight));
                 if (groundInset > 0.0f)
                 {
                     data.rb.position += (Vector2)data.rb.transform.up * groundInset;
-                    velocity.y = Mathf.Max(0.0f, velocity.y);
                 }
-                state = Mathf.Abs(velocity.x) > data.stats.walkSpeed * 0.5f ? "Run" : "Idle";
+                state = velocity.magnitude > data.stats.walkSpeed * 0.5f ? "Run" : "Idle";
+                data.rb.transform.rotation = Quaternion.LookRotation(Vector3.forward, groundHit.normal);
             }
             else
             {
@@ -345,7 +357,6 @@ namespace Gadgets
             }
             data.animator.Play(state);
             data.rb.velocity = velocity;
-
             StateManager.UpdateFacing(data);
             return UnitState.Null;
         }

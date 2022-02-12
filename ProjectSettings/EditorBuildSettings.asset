@@ -23,4 +23,5 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Gameplay/Missions/Levels/Level_00/Level_00.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 726a2d12068768c499654db2e7e51f58, type: 2}

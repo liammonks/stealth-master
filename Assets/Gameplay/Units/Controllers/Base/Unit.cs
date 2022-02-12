@@ -52,7 +52,7 @@ public class InputData
 {
     public static readonly float tolerance = 0.1f;
 
-    public int movement;
+    public float movement;
     public bool running;
 
     public bool jumpQueued { get { return Time.unscaledTime - jumpRequestTime < tolerance; } }

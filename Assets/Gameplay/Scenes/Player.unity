@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67577002}
   m_LocalRotation: {x: 0.008331019, y: 0.008332176, z: -0.00006942034, w: 0.9999306}
-  m_LocalPosition: {x: -1, y: 3.3, z: -60}
+  m_LocalPosition: {x: 137.46875, y: -13.7, z: -60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,7 +186,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9238477, y: 1}
+    m_SensorSize: {x: 1.805, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -7166,7 +7166,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521881362}
   m_LocalRotation: {x: 0.008331019, y: 0.008332176, z: -0.00006942034, w: 0.9999306}
-  m_LocalPosition: {x: -1, y: 3.3, z: -60}
+  m_LocalPosition: {x: 137.46875, y: -13.7, z: -60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7473,7 +7473,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9238477, y: 1}
+    m_SensorSize: {x: 1.805, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -12515,7 +12515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fbee442b43179c40b23a8fc91e86308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationRate: 10
+  rotationRate: 1
 --- !u!212 &1950628595
 SpriteRenderer:
   m_ObjectHideFlags: 0

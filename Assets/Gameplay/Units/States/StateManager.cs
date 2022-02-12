@@ -33,7 +33,7 @@ public static class StateManager
 {
     public static void UpdateFacing(UnitData data)
     {
-        data.animator.SetVelocity(data.rb.velocity.x);
+        data.animator.SetVelocity(data.rb.velocity.magnitude * Mathf.Sign(data.rb.velocity.x));
 
         if (data.rb.velocity.x > 0.1f) { data.isFacingRight = true; }
         else if (data.rb.velocity.x < -0.1f) { data.isFacingRight = false; }

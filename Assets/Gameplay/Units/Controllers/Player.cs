@@ -20,6 +20,7 @@ public class Player : Unit
         base.Awake();
         healthBar = FindObjectOfType<HealthBar>();
         data.hitMask = LayerMask.GetMask("Enemy");
+        Application.targetFrameRate = 300;
     }
 
     public override void Die()
@@ -32,8 +33,16 @@ public class Player : Unit
 
     private void OnMovement(InputValue value)
     {
-        data.input.movement = Mathf.CeilToInt(value.Get<Vector2>().x);
-        if(networkPlayer) networkPlayer.CmdOnMovement(data.input.movement);
+        data.input.movement = value.Get<float>();
+
+        // Controller
+        float abs = Mathf.Abs(data.input.movement);
+        if (abs > 1.0f)
+        {
+            data.input.movement = Mathf.Clamp(data.input.movement, -1.0f, 1.0f);
+            data.input.running = abs > 4.0f;
+        }
+        //if(networkPlayer) networkPlayer.CmdOnMovement(data.input.movement);
     }
 
     private void OnRun(InputValue value)
@@ -105,6 +114,14 @@ public class Player : Unit
         MouseDelta = MousePosition - lastPosition;
         SetAimOffset(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
         if (networkPlayer) networkPlayer.CmdOnMouseMove(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
+    }
+
+    private void OnStickMove(InputValue value)
+    {
+        Vector2 dir = value.Get<Vector2>();
+        if (dir.sqrMagnitude == 0) { return; }
+        SetAimOffset(dir);
+        //if (networkPlayer) networkPlayer.CmdOnMouseMove(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
     }
 
     private void OnInteract(InputValue value)
