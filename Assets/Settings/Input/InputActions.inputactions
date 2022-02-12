@@ -72,7 +72,7 @@
                     "name": "GadgetPrimary",
                     "type": "Value",
                     "id": "f33cb182-6eef-434c-84c7-c1998a5a882b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
