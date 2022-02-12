@@ -16,15 +16,6 @@ namespace States.StealthMaster
             UnitState state = base.Execute();
             if (state != UnitState.Fall) return state;
 
-            // Check Vault
-            if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
-            {
-                UnitState vaultState = StateManager.TryVault(data);
-                if (vaultState != UnitState.Null)
-                {
-                    return vaultState;
-                }
-            }
             // Check Climb
             UnitState climbState = StateManager.TryLedgeGrab(data);
             if (climbState != UnitState.Null)

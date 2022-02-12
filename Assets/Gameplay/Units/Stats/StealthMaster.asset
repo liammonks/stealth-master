@@ -33,10 +33,10 @@ MonoBehaviour:
   airRotationForce: 5
   airRotationDamping: 1
   groundedMaxAngle: 25
-  vaultGrabDistance: 1
+  vaultGrabDistance: 0.8
   vaultMoveDistance: 1.75
   maxVaultHeight: 0.8
-  minVaultHeight: 0.4
+  minVaultHeight: 0.6
   vaultDuration: 0.4
   climbGrabDistance: 0.4
   climbMoveDistance: 1.75
