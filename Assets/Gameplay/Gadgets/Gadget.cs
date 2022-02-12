@@ -161,6 +161,7 @@ namespace Gadgets
             if(intersectingObjects.Count == 0)
             {
                 rotationLocked = false;
+                OnAimPositionUpdated();
             }
         }
         

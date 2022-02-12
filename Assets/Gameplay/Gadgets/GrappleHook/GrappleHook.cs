@@ -118,8 +118,8 @@ namespace Gadgets
                 rotateFrontArm = false;
                 owner.data.groundSpringActive = false;
 
-                Vector2 awayFromPivot = (hit.point - (Vector2)owner.transform.position).normalized;
-                Vector2 velocityAwayFromPivot = awayFromPivot * Vector2.Dot(owner.data.rb.velocity, awayFromPivot);
+                Vector2 awayFromPivot = ((Vector2)owner.transform.position - hit.point).normalized;
+                Vector2 velocityAwayFromPivot = awayFromPivot * Mathf.Max(0.0f, Vector2.Dot(owner.data.rb.velocity, awayFromPivot));
                 owner.data.rb.velocity -= velocityAwayFromPivot;
             }
         }
@@ -338,7 +338,7 @@ namespace Gadgets
             const float groundCheckDist = 0.1f;
             RaycastHit2D groundHit = Physics2D.Raycast(data.rb.position, -data.rb.transform.up, data.stats.standingHalfHeight + groundCheckDist, Unit.CollisionMask);
             //Debug.DrawRay(data.rb.position, -data.rb.transform.up * (data.stats.standingHalfHeight + groundCheckDist), Color.red);
-            if (groundHit.collider && Vector2.Dot(groundHit.normal, Vector2.up) >= 0.5f)
+            if (groundHit.collider)
             {
                 //Debug.DrawRay(data.rb.position, -data.rb.transform.up * groundHit.distance, Color.green);
                 float groundInset = Mathf.Max(0.0f, -(groundHit.distance - data.stats.standingHalfHeight));
