@@ -279,10 +279,7 @@ MonoBehaviour:
   collidersRoot: {fileID: 1315068551243937306}
   forwardCollider: {fileID: 5990269121012843551}
   reverseCollider: {fileID: 5631942755841254731}
-  mods:
-  - {fileID: 11400000, guid: af8eef015498bb94eb5161e011e39b05, type: 2}
-  - {fileID: 11400000, guid: 4d7f2ba123ccca4418b13754fea22bb5, type: 2}
-  - {fileID: 11400000, guid: ebe2dd902fe3b684c9eae6a1ef71a3a3, type: 2}
+  mods: []
   bulletSpawnForward: {fileID: 6253304943062449234}
   bulletSpawnBackward: {fileID: 6975416528537978315}
   reelRate: 2.5
