@@ -17,7 +17,6 @@ public class LevelUI : MonoBehaviour
         m_HealthBarPool = new ObjectPool<HealthBar>(CreateHealthBar, GetHealthBar, ReleaseHealthBar, DestroyHealthBar, collectionChecks, healthbarCount);
     }
 
-
     private HealthBar CreateHealthBar()
     {
         return Instantiate(healthBarPrefab, transform);
@@ -28,7 +27,6 @@ public class LevelUI : MonoBehaviour
     {
         healthBar.gameObject.SetActive(true);
     }
-
 
     // Called when an item is returned to the pool using Release
     void ReleaseHealthBar(HealthBar healthBar)

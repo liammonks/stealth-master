@@ -16,9 +16,6 @@ namespace Gadgets
         [Header("Front Arm")]
         [SerializeField] protected RuntimeAnimatorController frontArmAnimatorController;
         [SerializeField] protected RuntimeAnimatorController frontArmAnimatorControllerReversed;
-        [Header("Back Arm")]
-        //[SerializeField] protected RuntimeAnimatorController backArmAnimatorController;
-        //[SerializeField] protected RuntimeAnimatorController backArmAnimatorControllerReversed;
 
         [Header("Visuals")]
         [SerializeField] protected Transform visualsRoot;
