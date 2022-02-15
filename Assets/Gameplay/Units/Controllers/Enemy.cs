@@ -5,17 +5,11 @@ using TheKiwiCoder;
 
 public class Enemy : Unit
 {
-    [Header("AI")]
-    public AIStats aiStats;
-
     private const float statsUpdateInterval = 1.0f;
     private Vector2 healthBarOffset = new Vector2(0, 1);
 
     protected override void Awake() {
         base.Awake();
-        // Init stats
-        aiStats = aiStats.CloneVariation(1.0f);
-        StartCoroutine(UpdateStats());
         // Init layer masks
         data.hitMask = LayerMask.GetMask("Player");
         healthBar = LevelManager.Instance.UI.HealthBarPool.Get();
@@ -33,12 +27,5 @@ public class Enemy : Unit
         LevelManager.Instance.UI.HealthBarPool.Release(healthBar);
         Destroy(gameObject);
     }
-    
-    private IEnumerator UpdateStats()
-    {
-        yield return new WaitForSeconds(statsUpdateInterval);
-        aiStats.thirst -= statsUpdateInterval;
-        aiStats.hunger -= statsUpdateInterval;
-        StartCoroutine(UpdateStats());
-    }
+
 }

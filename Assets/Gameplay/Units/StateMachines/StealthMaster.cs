@@ -1,4 +1,5 @@
 using States.StealthMaster;
+using AI;
 
 public class StealthMaster : StateMachine
 {
@@ -18,6 +19,12 @@ public class StealthMaster : StateMachine
         states.Add(UnitState.WallJump,  new WallJump(data));
         states.Add(UnitState.Climb,     new States.Climb(data));
         states.Add(UnitState.VaultOver, new States.VaultOver(data));
-        states.Add(UnitState.VaultOn, new States.VaultOn(data));
+        states.Add(UnitState.VaultOn,   new States.VaultOn(data));
+
+        AIController ai = GetComponent<AIController>();
+        if (ai)
+        {
+            ai.states.Add(AIState.Default, new AI.States.Default(data, ai.data));
+        }
     }
 }
