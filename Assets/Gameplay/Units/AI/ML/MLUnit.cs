@@ -8,8 +8,6 @@ using Unity.MLAgents.Policies;
 
 public class MLUnit : Agent
 {
-    [SerializeField] private Vector2[] startPositionRange;
-    [SerializeField] private Transform[] targetTransforms;
     [SerializeField] private Player inputPlayer;
     [SerializeField] private RenderTexture baseRenderTexture;
 
@@ -34,19 +32,10 @@ public class MLUnit : Agent
         GetComponent<RenderTextureSensorComponent>().RenderTexture = rt;
     }
 
-    private Vector2 GetStartPosition()
-    {
-        Vector2 offset = startPositionRange[1] - startPositionRange[0];
-        return startPositionRange[0] + (offset * Random.Range(0.0f, 1.0f));
-    }
-
     public override void OnEpisodeBegin()
     {
-        return;
-        Debug.Log(GetComponent<BehaviorParameters>().Model.name + ": FAILS(" + failCount + "), AVG(" + avgTime + ")");
-        transform.position = GetStartPosition();
+        //Debug.Log(GetComponent<BehaviorParameters>().Model.name + ": FAILS(" + failCount + "), AVG(" + avgTime + ")");
         targetIndex = 0;
-        target = targetTransforms[0].position;
         timer = timeToCheckpoint;
         totalTime = 0.0f;
         unit.data.rb.velocity = Vector2.zero;
@@ -55,7 +44,7 @@ public class MLUnit : Agent
     }
     
     private void Update() {
-        Log.Text("ML" + unit.ID, GetComponent<BehaviorParameters>().Model.name, Camera.main.WorldToScreenPoint(transform.position), Color.green, Time.deltaTime);
+        //Log.Text("ML" + unit.ID, GetComponent<BehaviorParameters>().Model.name, Camera.main.WorldToScreenPoint(transform.position), Color.green, Time.deltaTime);
         Debug.DrawLine(transform.position, target, Color.blue);
         timer -= Time.deltaTime;
         totalTime += Time.deltaTime;
@@ -99,21 +88,7 @@ public class MLUnit : Agent
     }
     
     private void OnTriggerEnter2D(Collider2D other) {
-        if (other.transform == targetTransforms[targetIndex])
-        {
-            //AddReward(1);
-            targetIndex++;
-            timer = timeToCheckpoint;
-            if (targetIndex == targetTransforms.Length)
-            {
-                winCount++;
-                avgTime += totalTime / winCount;
-                SetReward(30 - totalTime);
-                EndEpisode();
-                return;
-            }
-            target = targetTransforms[targetIndex].position;
-        }
+
     }
     
 }

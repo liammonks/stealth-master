@@ -14,8 +14,8 @@ public class Enemy : Unit
     protected override void Awake() {
         base.Awake();
         // Init stats
-        aiStats = aiStats.CloneVariation(1.0f);
-        StartCoroutine(UpdateStats());
+        //aiStats = aiStats.CloneVariation(1.0f);
+        //StartCoroutine(UpdateStats());
         // Init layer masks
         data.hitMask = LayerMask.GetMask("Player");
         //healthBar = LevelManager.Instance.UI.HealthBarPool.Get();
