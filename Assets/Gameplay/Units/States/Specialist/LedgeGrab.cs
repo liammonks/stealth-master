@@ -4,7 +4,7 @@ namespace States
 {
     public class LedgeGrab : BaseState
     {
-        protected const float inputLockDuration = 0.25f;
+        protected const float inputLockDuration = 0.2f;
         protected const float slideLerpDuration = 0.5f;
         protected const float standardLerpDuration = 0.2f;
         protected float lerpDuration;

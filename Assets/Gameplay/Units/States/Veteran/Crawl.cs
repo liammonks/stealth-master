@@ -23,7 +23,7 @@ namespace States
             {
                 transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
                 data.ApplyDrag(data.stats.groundDrag);
-                if (transitionDuration == 0.0f) return UnitState.Idle;
+                if (transitionDuration == 0.0f) return Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.5f ? UnitState.Run : UnitState.Idle;
                 return UnitState.Crawl;
             }
             

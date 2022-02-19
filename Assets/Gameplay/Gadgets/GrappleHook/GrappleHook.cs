@@ -77,6 +77,7 @@ namespace Gadgets
 
         protected override void OnPrimaryEnabled()
         {
+            owner.data.animator.Play("Shoot", false, UnitAnimatorLayer.FrontArm);
             projectile = BulletPool.Fire(bulletSpawn.position, owner.AimOffset, owner.data.rb.velocity, bulletStats, true);
             //Debug.DrawRay(bulletSpawn.position, owner.AimOffset.normalized * bulletStats.range, Color.red, 1.0f);
             projectile.onHit += OnProjectileHit;
@@ -272,7 +273,7 @@ namespace Gadgets
             // Rotate Body
             if (owner.data.rb.velocity.magnitude > 0.5f)
             {
-                Vector2 swingCross = Vector2.Perpendicular(owner.data.rb.velocity.x >= 0 ? owner.data.rb.velocity : -owner.data.rb.velocity).normalized;
+                pivotDirection.y = Mathf.Abs(pivotDirection.y);
                 owner.transform.rotation = Quaternion.Lerp(owner.transform.rotation, Quaternion.LookRotation(Vector3.forward, pivotDirection), bodyRotationRate * Time.fixedDeltaTime);
             }
         }
@@ -321,18 +322,20 @@ namespace Gadgets
 
     public class GrappleHookState : BaseState
     {
-        
+
+        private Vector2 standForce = Vector2.zero;
+
         public GrappleHookState(UnitData a_data) : base(a_data) { }
 
         public override UnitState Initialise()
         {
+            data.animator.Play("Swing", false, UnitAnimatorLayer.FrontArm);
             return UnitState.Null;
         }
         
         public override UnitState Execute()
         {
             Vector2 velocity = data.rb.velocity;
-            velocity.x += data.input.movement * data.stats.runSpeed * data.stats.airAcceleration;
 
             string state = string.Empty;
             const float groundCheckDist = 0.1f;
@@ -341,16 +344,43 @@ namespace Gadgets
             if (groundHit.collider)
             {
                 //Debug.DrawRay(data.rb.position, -data.rb.transform.up * groundHit.distance, Color.green);
-                float groundInset = Mathf.Max(0.0f, -(groundHit.distance - data.stats.standingHalfHeight));
+                float groundInset = -(groundHit.distance - data.stats.standingHalfHeight);
                 if (groundInset > 0.0f)
                 {
-                    data.rb.position += (Vector2)data.rb.transform.up * groundInset;
+                    data.rb.position += groundHit.normal * groundInset;
+                    Vector2 normalVelocity = groundHit.normal * Vector2.Dot(velocity, groundHit.normal);
+                    velocity -= normalVelocity;
                 }
+                //Debug.DrawRay(data.rb.position, normalVelocity, Color.magenta);
+
+                // Ground Movement
+                if (Mathf.Abs(data.rb.velocity.x) < data.stats.runSpeed)
+                {
+                    float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
+                    float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+                    // Increase acceleration when trying to move in opposite direction of travel
+                    if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+                    {
+                        deltaSpeedRequired *= 2.0f;
+                    }
+                    velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
+                    data.rb.velocity = velocity;
+                }
+                else
+                {
+                    // Apply drag when faster than run speed
+                    data.ApplyDrag(data.stats.groundDrag);
+                }
+
+                // 0 if upright, 1 if sideways or upsidedown
+                //float gravityScalar = Mathf.Clamp(Vector2.Dot(Vector2.down, groundHit.normal) + 1, 0.0f, 1.0f);
+                //data.rb.gravityScale = gravityScalar;
                 state = velocity.magnitude > data.stats.walkSpeed * 0.5f ? "Run" : "Idle";
                 data.rb.transform.rotation = Quaternion.LookRotation(Vector3.forward, groundHit.normal);
             }
             else
             {
+                velocity.x += data.input.movement * data.stats.runSpeed * data.stats.airAcceleration;
                 if (data.input.movement == 0) state = "SwingIdle";
                 if (data.input.movement == 1) state = data.isFacingRight ? "SwingForward" : "SwingBackward";
                 if (data.input.movement == -1) state = data.isFacingRight ? "SwingBackward" : "SwingForward";
