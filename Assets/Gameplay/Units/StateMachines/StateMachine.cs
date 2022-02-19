@@ -25,6 +25,23 @@ public abstract class StateMachine : MonoBehaviour
         data = unit.data;
     }
     
+    public void Reset()
+    {
+        currentState = UnitState.Idle;
+        previousState = UnitState.Null;
+        
+        data.target = Vector2.zero;
+        data.previousState = UnitState.Null;
+        data.t = 0.0f;
+        data.stateDuration = 0.0f;
+        data.groundSpringActive = true;
+        data.isSlipping = false;
+        data.isStanding = true;
+        data.rb.isKinematic = false;
+        data.rb.gravityScale = 1.0f;
+        data.rb.simulated = true;
+    }
+    
     private void FixedUpdate()
     {
         if (overrideState != null)

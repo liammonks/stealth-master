@@ -321,6 +321,7 @@ public abstract class Unit : MonoBehaviour
 
     public virtual void Die()
     {
+        stateMachine.Reset();
         GadgetPrimary(false);
         GadgetSecondary(false);
     }

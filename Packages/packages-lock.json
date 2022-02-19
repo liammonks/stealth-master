@@ -152,11 +152,19 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ml-agents": {
+<<<<<<< Updated upstream
       "version": "2.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.barracuda": "2.0.0",
+=======
+      "version": "2.1.0-exp.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.barracuda": "2.0.0-pre.3",
+>>>>>>> Stashed changes
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       },

@@ -172,7 +172,8 @@ public static class StateManager
         RaycastHit2D vaultHit = Physics2D.Raycast(
             data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * data.stats.vaultGrabDistance) + (-(Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxVaultHeight)),
             -(Vector2)data.rb.transform.up,
-            data.stats.maxVaultHeight - data.stats.minVaultHeight
+            data.stats.maxVaultHeight - data.stats.minVaultHeight,
+            Unit.CollisionMask
         );
         Debug.DrawRay(
             data.rb.position + ((data.isFacingRight ? (Vector2)data.rb.transform.right : -(Vector2)data.rb.transform.right) * data.stats.vaultGrabDistance) + (-(Vector2)data.rb.transform.up * (data.stats.standingHalfHeight - data.stats.maxVaultHeight)),
@@ -200,7 +201,8 @@ public static class StateManager
                 RaycastHit2D landingZoneHit = Physics2D.Raycast(
                     data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.down * (data.stats.standingHalfHeight - data.stats.maxVaultHeight)),
                     Vector2.down,
-                    data.stats.maxVaultHeight - data.stats.minVaultHeight
+                    data.stats.maxVaultHeight - data.stats.minVaultHeight,
+                    Unit.CollisionMask
                 );
                 Debug.DrawRay(
                     data.rb.position + ((data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.vaultMoveDistance) + (Vector2.down * (data.stats.standingHalfHeight - data.stats.maxVaultHeight)),

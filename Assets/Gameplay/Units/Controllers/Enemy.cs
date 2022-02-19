@@ -18,17 +18,18 @@ public class Enemy : Unit
         StartCoroutine(UpdateStats());
         // Init layer masks
         data.hitMask = LayerMask.GetMask("Player");
-        healthBar = LevelManager.Instance.UI.HealthBarPool.Get();
+        //healthBar = LevelManager.Instance.UI.HealthBarPool.Get();
     }
 
     private void Update() {
         Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position + (Vector3)healthBarOffset);
-        healthBar.GetComponent<RectTransform>().position = screenPosition;
+        //healthBar.GetComponent<RectTransform>().position = screenPosition;
     }
 
     public override void Die()
     {
         base.Die();
+        return;
         GlobalEvents.EnemyKilled();
         LevelManager.Instance.UI.HealthBarPool.Release(healthBar);
         Destroy(gameObject);
