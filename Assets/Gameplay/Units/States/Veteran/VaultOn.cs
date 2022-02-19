@@ -10,7 +10,7 @@ namespace States
         
         public override UnitState Initialise()
         {
-            data.animator.Play("VaultOn");
+            data.animator.Play(UnitAnimatorLayer.Body, "VaultOn");
             transitionDuration = data.stats.vaultDuration;
             data.isStanding = true;
             data.groundSpringActive = false;

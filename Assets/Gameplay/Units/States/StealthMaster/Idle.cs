@@ -35,12 +35,12 @@ namespace States.StealthMaster
                 if (data.animator.CurrentState != "AgainstWall")
                 {
                     data.rb.velocity = new Vector2(data.isFacingRight ? 0.5f : -0.5f, data.rb.velocity.y);
-                    data.animator.Play("AgainstWall");
+                    data.animator.Play(UnitAnimatorLayer.Body, "AgainstWall");
                 }
             }
             else
             {
-                data.animator.Play("Idle");
+                data.animator.Play(UnitAnimatorLayer.Body, "Idle");
             }
             // Execute Melee
             if (data.input.meleeQueued)
@@ -51,7 +51,7 @@ namespace States.StealthMaster
             if (data.input.crawling && StateManager.CanCrawl(data))
             {
                 // Play stand to crawl, wait before entering state
-                data.animator.Play("StandToCrawl");
+                data.animator.Play(UnitAnimatorLayer.Body, "StandToCrawl");
                 data.animator.UpdateState();
                 transitionDuration = data.animator.GetState().length;
                 data.isStanding = false;

@@ -23,7 +23,7 @@ namespace Gadgets
         private IEnumerator Punch()
         {
             owner.SetState(UnitState.Null);
-            owner.data.animator.Play("Punch");
+            owner.data.animator.Play(UnitAnimatorLayer.Body, "Punch");
             owner.data.animator.UpdateState();
             float duration = owner.data.animator.GetState().length;
             owner.data.rb.velocity = Vector2.zero;
@@ -63,14 +63,14 @@ namespace Gadgets
         protected override void OnSecondaryEnabled()
         {
             owner.SetState(UnitState.Null);
-            owner.data.animator.Play("Block");
+            owner.data.animator.Play(UnitAnimatorLayer.Body, "Block");
             owner.data.rb.velocity = Vector2.zero;
             owner.onDamageTaken += OnDamageTaken;
         }
         
         private void OnDamageTaken()
         {
-            owner.data.animator.Play("Block_Impact", true);
+            owner.data.animator.Play(UnitAnimatorLayer.Body, "Block_Impact", true);
         }
 
         protected override void OnSecondaryDisabled()

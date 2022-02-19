@@ -13,7 +13,7 @@ namespace States
         {
             toIdle = false;
             data.isStanding = false;
-            data.animator.Play("Crawl");
+            data.animator.Play(UnitAnimatorLayer.Body, "Crawl");
             return UnitState.Crawl;
         }
         
@@ -55,7 +55,7 @@ namespace States
                 if (StateManager.CanStand(data, offset))
                 {
                     // Execute animation transition
-                    data.animator.Play("CrawlToStand");
+                    data.animator.Play(UnitAnimatorLayer.Body, "CrawlToStand");
                     // Update animator to transition to relevant state
                     data.animator.UpdateState();
                     transitionDuration = data.animator.GetState().length;

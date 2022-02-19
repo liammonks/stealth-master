@@ -41,7 +41,7 @@ namespace States.StealthMaster
                 if (StateManager.CanStand(data, offset))
                 {
                     // Execute animation transition
-                    data.animator.Play(data.previousState == UnitState.Dive ? "DiveFlip" : "SlideExit");
+                    data.animator.Play(UnitAnimatorLayer.Body, data.previousState == UnitState.Dive ? "DiveFlip" : "SlideExit");
                     // Update animator to transition to relevant state
                     data.animator.UpdateState();
                     transitionDuration = data.animator.GetState().length;
@@ -56,7 +56,7 @@ namespace States.StealthMaster
                 // Execute Crawl
                 if (data.rb.velocity.magnitude < data.stats.walkSpeed)
                 {
-                    data.animator.Play("Crawl_Idle");
+                    data.animator.Play(UnitAnimatorLayer.Body, "Crawl_Idle");
                     return UnitState.Crawl;
                 }
             }
@@ -71,7 +71,7 @@ namespace States.StealthMaster
                 UnitState ledgeDrop = StateManager.TryDrop(data);
                 if (ledgeDrop != UnitState.Null)
                 {
-                    data.animator.Play("SlideToHang", true);
+                    data.animator.Play(UnitAnimatorLayer.Body, "SlideToHang", true);
                     data.input.crawling = false;
                     data.input.crawlRequestTime = -1;
                     return ledgeDrop;

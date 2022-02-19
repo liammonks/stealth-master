@@ -13,7 +13,7 @@ namespace States.StealthMaster
             // Flip facing
             data.isFacingRight = !data.isFacingRight;
             data.animator.SetFacing(data.isFacingRight);
-            data.animator.Play("WallJump");
+            data.animator.Play(UnitAnimatorLayer.Body, "WallJump");
             data.animator.UpdateState();
             transitionDuration = data.animator.GetState().length;
             data.rb.velocity = (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.wallJumpForce.x +
@@ -28,7 +28,7 @@ namespace States.StealthMaster
             // Execute Fall
             if (transitionDuration == 0.0f && data.rb.velocity.y < 0)
             {
-                data.animator.Play("WallJumpFall");
+                data.animator.Play(UnitAnimatorLayer.Body, "WallJumpFall");
                 data.groundSpringActive = true;
                 return UnitState.Fall;
             }

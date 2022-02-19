@@ -49,11 +49,11 @@ namespace States.StealthMaster
             // Face Wall
             if (StateManager.FacingWall(data))
             {
-                data.animator.Play("AgainstWall");
+                data.animator.Play(UnitAnimatorLayer.Body, "AgainstWall");
             }
             else
             {
-                data.animator.Play("Run");
+                data.animator.Play(UnitAnimatorLayer.Body, "Run");
             }
             // Execute Melee
             if (data.input.meleeQueued)
@@ -67,13 +67,13 @@ namespace States.StealthMaster
                 if (Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
                 {
                     // Execute Slide
-                    data.animator.Play("Slide");
+                    data.animator.Play(UnitAnimatorLayer.Body, "Slide");
                     return UnitState.Slide;
                 }
                 else
                 {
                     // Play stand to crawl, wait before entering state
-                    data.animator.Play("StandToCrawl");
+                    data.animator.Play(UnitAnimatorLayer.Body, "StandToCrawl");
                     data.animator.UpdateState();
                     transitionDuration = data.animator.GetState().length;
                     data.isStanding = false;

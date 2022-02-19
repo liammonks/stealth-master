@@ -20,6 +20,8 @@ public class StealthMaster : StateMachine
         states.Add(UnitState.Climb,     new States.Climb(data));
         states.Add(UnitState.VaultOver, new States.VaultOver(data));
         states.Add(UnitState.VaultOn,   new States.VaultOn(data));
+        states.Add(UnitState.Melee,     new States.Melee(data));
+        states.Add(UnitState.JumpMelee, new States.JumpMelee(data));
 
         AIController ai = GetComponent<AIController>();
         if (ai)

@@ -25,7 +25,7 @@ namespace Gadgets
         protected override void OnPrimaryEnabled()
         {
             BulletPool.Fire(bulletSpawn.position, owner.data.isFacingRight ? bulletSpawn.right : -bulletSpawn.right, owner.data.rb.velocity, stats, owner is Player);
-            owner.data.animator.Play("Shoot", false, UnitAnimatorLayer.FrontArm);
+            owner.data.animator.Play(UnitAnimatorLayer.FrontArm, "Shoot");
         }
         
         protected override void OnPrimaryDisabled()

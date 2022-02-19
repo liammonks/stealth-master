@@ -14,7 +14,7 @@ namespace States
             Vector2 velocity = data.rb.velocity;
             // Reset jump input
             data.input.jumpRequestTime = -1;
-            data.animator.Play("Jump");
+            data.animator.Play(UnitAnimatorLayer.Body, "Jump");
             data.animator.UpdateState();
             data.t = data.animator.GetState().length;
             data.isStanding = true;

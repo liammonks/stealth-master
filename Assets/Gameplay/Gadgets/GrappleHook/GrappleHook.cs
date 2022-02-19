@@ -77,7 +77,7 @@ namespace Gadgets
 
         protected override void OnPrimaryEnabled()
         {
-            owner.data.animator.Play("Shoot", false, UnitAnimatorLayer.FrontArm);
+            owner.data.animator.Play(UnitAnimatorLayer.FrontArm, "Shoot");
             projectile = BulletPool.Fire(bulletSpawn.position, owner.AimOffset, owner.data.rb.velocity, bulletStats, true);
             //Debug.DrawRay(bulletSpawn.position, owner.AimOffset.normalized * bulletStats.range, Color.red, 1.0f);
             projectile.onHit += OnProjectileHit;
@@ -329,7 +329,7 @@ namespace Gadgets
 
         public override UnitState Initialise()
         {
-            data.animator.Play("Swing", false, UnitAnimatorLayer.FrontArm);
+            data.animator.Play(UnitAnimatorLayer.FrontArm, "Swing");
             return UnitState.Null;
         }
         
@@ -385,7 +385,7 @@ namespace Gadgets
                 if (data.input.movement == 1) state = data.isFacingRight ? "SwingForward" : "SwingBackward";
                 if (data.input.movement == -1) state = data.isFacingRight ? "SwingBackward" : "SwingForward";
             }
-            data.animator.Play(state);
+            data.animator.Play(UnitAnimatorLayer.Body, state);
             data.rb.velocity = velocity;
             StateManager.UpdateFacing(data);
             return UnitState.Null;

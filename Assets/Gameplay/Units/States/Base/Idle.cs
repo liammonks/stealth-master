@@ -8,7 +8,7 @@ namespace States
 
         public override UnitState Initialise()
         {
-            data.animator.Play("Idle");
+            data.animator.Play(UnitAnimatorLayer.Body, "Idle");
             data.isStanding = true;
             return UnitState.Idle;
         }

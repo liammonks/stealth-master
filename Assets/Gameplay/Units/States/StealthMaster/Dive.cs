@@ -13,7 +13,7 @@ namespace States.StealthMaster
         public override UnitState Initialise()
         {
             toStand = false;
-            data.animator.Play("Dive");
+            data.animator.Play(UnitAnimatorLayer.Body, "Dive");
             data.isStanding = false;
             // Boost when diving from jump
             if (data.previousState == UnitState.Jump || data.previousState == UnitState.WallJump)
@@ -78,7 +78,7 @@ namespace States.StealthMaster
                     if (StateManager.CanStand(data, offset))
                     {
                         // Execute animation transition
-                        data.animator.Play(Mathf.Abs(data.rb.velocity.x) > data.stats.runSpeed ? "DiveFlip" : "CrawlToStand");
+                        data.animator.Play(UnitAnimatorLayer.Body, Mathf.Abs(data.rb.velocity.x) > data.stats.runSpeed ? "DiveFlip" : "CrawlToStand");
                         // Update animator to transition to relevant state
                         data.animator.UpdateState();
                         transitionDuration = data.animator.GetState().length;
@@ -93,13 +93,13 @@ namespace States.StealthMaster
                     if (Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
                     {
                         // Execute Slide
-                        data.animator.Play("BellySlide");
+                        data.animator.Play(UnitAnimatorLayer.Body, "BellySlide");
                         return UnitState.Slide;
                     }
                     else
                     {
                         // Execute Crawl
-                        data.animator.Play("Crawl_Idle");
+                        data.animator.Play(UnitAnimatorLayer.Body, "Crawl_Idle");
                         return UnitState.Crawl;
                     }
                 }

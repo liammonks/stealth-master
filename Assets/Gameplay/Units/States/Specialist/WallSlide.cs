@@ -8,7 +8,7 @@ namespace States
         
         public override UnitState Initialise()
         {
-            data.animator.Play("WallSlide");
+            data.animator.Play(UnitAnimatorLayer.Body, "WallSlide");
             data.rb.velocity = new Vector2(data.isFacingRight ? 0.5f : -0.5f, data.rb.velocity.y);
             return UnitState.WallSlide;
         }

@@ -6,8 +6,7 @@ public enum UnitAnimatorLayer
 {
     Null,
     Body,
-    FrontArm,
-    BackArm
+    FrontArm
 }
 
 public class UnitAnimator : MonoBehaviour
@@ -19,88 +18,77 @@ public class UnitAnimator : MonoBehaviour
     
     public bool reversed = false;
 
-    [Header("Controllers")]
+    [Header("Body")]
+    [SerializeField] private Animator body;
     public RuntimeAnimatorController defaultBody;
     public RuntimeAnimatorController reversedBody;
     
-    [Header("Defaults")]
+    [Header("Front Arm")]
+    [SerializeField] private Animator frontArm;
     public RuntimeAnimatorController defaultFrontArm;
     public RuntimeAnimatorController reversedFrontArm;
-
-    [Header("Animators")]
-    [SerializeField] private Animator body;
-    [SerializeField] private Animator frontArm;
-    [SerializeField] private Animator backArm;
 
     private string lastState;
     private bool animationLocked;
 
-    public void Play(string animation, bool forced = false, UnitAnimatorLayer layer = UnitAnimatorLayer.Null)
+    public void Play(UnitAnimatorLayer layer, string animation, bool forced = false)
     {
         if (animation == lastState) { return; }
         if(animationLocked && !forced)
         {
             if (onStateEnded != null) { StopCoroutine(onStateEnded); }
-            onStateEnded = StartCoroutine(OnStateEndedCoroutine(animation));
+            onStateEnded = StartCoroutine(OnStateEndedCoroutine(layer, animation));
             return;
         }
 
         int id = Animator.StringToHash(animation);
-        if((layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.Body) && body.HasState(0, id)) body.Play(animation);
-        if((layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.FrontArm) && frontArm.HasState(0, id)) frontArm.Play(animation);
-        //if(layer == UnitAnimatorLayer.Null || layer == UnitAnimatorLayer.BackArm && backArm.HasState(0, id)) backArm.Play(animation);
+        if (layer == UnitAnimatorLayer.Body)
+        {
+            body.Play(animation);
+            lastState = animation;
+            if (frontArm.runtimeAnimatorController == defaultFrontArm || frontArm.runtimeAnimatorController == reversedFrontArm)
+            {
+                frontArm.Play(animation);
+            }
+        }
+        else if (layer == UnitAnimatorLayer.FrontArm)
+        {
+            frontArm.Play(animation);
+        }
 
         body.Update(0);
         frontArm.Update(0);
-        //backArm.Update(0);
 
-        lastState = animation;
         if (forced) { animationLocked = true; }
     }
 
     private Coroutine onStateEnded;
-    private IEnumerator OnStateEndedCoroutine(string animation)
+    private IEnumerator OnStateEndedCoroutine(UnitAnimatorLayer layer, string animation)
     {
         UpdateState();
         yield return new WaitForSeconds(Mathf.Lerp(GetState().length, 0, GetState().normalizedTime));
         animationLocked = false;
-        Play(animation);
+        Play(layer, animation);
     }
     
     public void SetLayer(UnitAnimatorLayer layer, RuntimeAnimatorController controller)
     {
-        float normalizedTime = GetState().normalizedTime;
-        int state;
-        switch (layer)
-        {
-            case UnitAnimatorLayer.Body:
-                if (body.runtimeAnimatorController == controller) return;
-                state = body.GetCurrentAnimatorStateInfo(0).fullPathHash;
-                body.runtimeAnimatorController = controller;
-                body.Play(body.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, normalizedTime);
-                break;
-            case UnitAnimatorLayer.FrontArm:
-                if (frontArm.runtimeAnimatorController == controller) return;
-                state = frontArm.GetCurrentAnimatorStateInfo(0).fullPathHash;
-                frontArm.runtimeAnimatorController = controller;
-                if (frontArm.HasState(0, state)) frontArm.Play(state, 0, normalizedTime);
-                break;
-            case UnitAnimatorLayer.BackArm:
-                //if (backArm.runtimeAnimatorController == controller) return;
-                //backArm.runtimeAnimatorController = controller;
-                //backArm.Play(GetState().fullPathHash, 0, normalizedTime);
-                break;
-        }
+        Animator animator = GetLayer(layer);
+        if (animator.runtimeAnimatorController == controller) return;
+        int state = animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
+        float normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        animator.runtimeAnimatorController = controller;
+        if (animator.HasState(0, state)) animator.Play(state, 0, normalizedTime);
     }
     
     public Animator GetLayer(UnitAnimatorLayer layer)
     {
         switch (layer)
         {
+            case UnitAnimatorLayer.Body:
+                return body;
             case UnitAnimatorLayer.FrontArm:
                 return frontArm;
-            case UnitAnimatorLayer.BackArm:
-                return backArm;
         }
         return null;
     }
@@ -109,11 +97,11 @@ public class UnitAnimator : MonoBehaviour
     {
         switch(layer)
         {
+            case UnitAnimatorLayer.Body:
+                body.transform.rotation = rotation;
+                break;
             case UnitAnimatorLayer.FrontArm:
                 frontArm.transform.rotation = rotation;
-                break;
-            case UnitAnimatorLayer.BackArm:
-                //backArm.transform.rotation = rotation;
                 break;
         }
     }
@@ -122,7 +110,6 @@ public class UnitAnimator : MonoBehaviour
     {
         body.gameObject.SetActive(isVisible);
         frontArm.gameObject.SetActive(isVisible);
-        //backArm.gameObject.SetActive(isVisible);
     }
 
     public void SetFacing(bool facingRight)
@@ -136,8 +123,6 @@ public class UnitAnimator : MonoBehaviour
     {
         velocity = Mathf.Abs(velocity);
         body.SetFloat("VelocityX", velocity);
-        //frontArm.SetFloat("VelocityX", velocity);
-        //backArm.SetFloat("VelocityX", velocity);
     }
 
     public AnimatorStateInfo GetState()
@@ -152,9 +137,6 @@ public class UnitAnimator : MonoBehaviour
 
         frontArm.Update(0);
         frontArm.Update(0);
-        
-        //backArm.Update(0);
-        //backArm.Update(0);
     }
     
 }

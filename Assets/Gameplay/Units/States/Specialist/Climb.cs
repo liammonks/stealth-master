@@ -11,7 +11,7 @@ namespace States
         public override UnitState Initialise()
         {
             climbDuration = 0.0f;
-            data.animator.Play("Climb");
+            data.animator.Play(UnitAnimatorLayer.Body, "Climb");
             climbDuration = data.stats.climbDuration;
             data.target = data.rb.position + (Vector2.up * (data.stats.standingHalfHeight - data.stats.climbGrabOffset.y)) + ((data.isFacingRight ? Vector2.left : Vector2.right) * data.stats.climbGrabOffset.x);
             data.target = (data.target - data.rb.position) / climbDuration;

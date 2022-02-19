@@ -14,7 +14,7 @@ namespace States.StealthMaster
             toIdle = false;
             transitionDuration = 0.0f;
             data.isStanding = false;
-            data.animator.Play("Crawl_Idle");
+            data.animator.Play(UnitAnimatorLayer.Body, "Crawl_Idle");
             return UnitState.CrawlIdle;
         }
         
@@ -52,7 +52,7 @@ namespace States.StealthMaster
                 if (StateManager.CanStand(data, standOffset))
                 {
                     // Execute animation transition
-                    data.animator.Play("CrawlToStand");
+                    data.animator.Play(UnitAnimatorLayer.Body, "CrawlToStand");
                     // Update animator to transition to relevant state
                     data.animator.UpdateState();
                     transitionDuration = data.animator.GetState().length;

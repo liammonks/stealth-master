@@ -25,7 +25,7 @@ namespace States
                 if (StateManager.CanStand(data, standOffset))
                 {
                     // Play stand to crawl, wait before entering state
-                    data.animator.Play("StandToCrawl");
+                    data.animator.Play(UnitAnimatorLayer.Body, "StandToCrawl");
                     data.animator.UpdateState();
                     transitionDuration = data.animator.GetState().length;
                     data.isStanding = false;

@@ -40,7 +40,7 @@ namespace States
                 if (StateManager.CanStand(data, offset))
                 {
                     // Execute animation transition
-                    data.animator.Play("SlideExit");
+                    data.animator.Play(UnitAnimatorLayer.Body, "SlideExit");
                     // Update animator to transition to relevant state
                     data.animator.UpdateState();
                     transitionDuration = data.animator.GetState().length;
@@ -55,7 +55,7 @@ namespace States
                 // Execute Crawl
                 if (data.rb.velocity.magnitude < data.stats.walkSpeed)
                 {
-                    data.animator.Play("Crawl_Idle");
+                    data.animator.Play(UnitAnimatorLayer.Body, "Crawl_Idle");
                     return UnitState.Crawl;
                 }
             }

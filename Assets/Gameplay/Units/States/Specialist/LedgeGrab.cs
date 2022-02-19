@@ -27,7 +27,7 @@ namespace States
                 1.0f
             );
             data.groundSpringActive = false;
-            data.animator.Play(feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
+            data.animator.Play(UnitAnimatorLayer.Body, feetHit ? "LedgeGrab" : "LedgeGrab_Hang");
             lerpDuration = data.previousState == UnitState.Slide ? slideLerpDuration : standardLerpDuration;
             data.isStanding = true;
             return UnitState.LedgeGrab;
