@@ -8,20 +8,17 @@ using Unity.MLAgents.Policies;
 
 public class MLUnit : Agent
 {
+    [SerializeField] private Transform routesParent;
     [SerializeField] private Player inputPlayer;
     [SerializeField] private RenderTexture baseRenderTexture;
 
     private Unit unit;
+    private MLRoute[] routes;
     private Vector2 target;
-    private int targetIndex = 0;
+    private int routeIndex = 0;
 
-    private const float timeToCheckpoint = 2.0f;
+    private const float timeToCheckpoint = 5.0f;
     private float timer = 0.0f;
-    private float totalTime = 0.0f;
-
-    private float avgTime = 0.0f;
-    private int failCount = 0;
-    private int winCount = 0;
 
     private void Awake() {
         unit = GetComponent<Unit>();
@@ -30,14 +27,15 @@ public class MLUnit : Agent
         GetComponentInChildren<Camera>().targetTexture = rt;
         GetComponentInChildren<Camera>().enabled = true;
         GetComponent<RenderTextureSensorComponent>().RenderTexture = rt;
+        routes = routesParent.GetComponentsInChildren<MLRoute>();
     }
 
     public override void OnEpisodeBegin()
     {
         //Debug.Log(GetComponent<BehaviorParameters>().Model.name + ": FAILS(" + failCount + "), AVG(" + avgTime + ")");
-        targetIndex = 0;
-        timer = timeToCheckpoint;
-        totalTime = 0.0f;
+        transform.position = routes[routeIndex].GetStart();
+        target = routes[routeIndex].GetEnd();
+        timer = 0.0f;
         unit.data.rb.velocity = Vector2.zero;
         unit.stateMachine.Reset();
         unit.data.input.running = true;
@@ -46,11 +44,19 @@ public class MLUnit : Agent
     private void Update() {
         //Log.Text("ML" + unit.ID, GetComponent<BehaviorParameters>().Model.name, Camera.main.WorldToScreenPoint(transform.position), Color.green, Time.deltaTime);
         Debug.DrawLine(transform.position, target, Color.blue);
-        timer -= Time.deltaTime;
-        totalTime += Time.deltaTime;
-        if (timer <= 0.0f)
+        
+        if (Vector2.Distance(transform.position, target) <= 0.5f)
         {
-            failCount++;
+            routeIndex++;
+            if (routeIndex == routes.Length) routeIndex = 0;
+            SetReward(2);
+            EndEpisode();
+            return;
+        }
+        
+        timer += Time.deltaTime;
+        if (timer >= timeToCheckpoint)
+        {
             SetReward(-2);
             EndEpisode();
         }
@@ -60,6 +66,7 @@ public class MLUnit : Agent
     {
         sensor.AddObservation(target - (Vector2)transform.position);
         sensor.AddObservation(unit.data.rb.velocity);
+        sensor.AddObservation((int)unit.stateMachine.State);
         //sensor.AddObservation(target);
     }
 
@@ -85,10 +92,6 @@ public class MLUnit : Agent
         discreteActions[0] = Mathf.RoundToInt(inputPlayer.data.input.movement) + 1;
         discreteActions[1] = inputPlayer.data.input.jumpQueued ? 1 : 0;
         discreteActions[2] = inputPlayer.data.input.crawling ? 1 : 0;
-    }
-    
-    private void OnTriggerEnter2D(Collider2D other) {
-
     }
     
 }

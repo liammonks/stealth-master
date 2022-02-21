@@ -78,9 +78,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startTransform: {fileID: 5524519910141793865}
-  startRange: 4
+  startRange: 0
   endTransform: {fileID: 5524519911750257417}
-  endRange: 2
+  endRange: 0
 --- !u!1 &5524519911750257416
 GameObject:
   m_ObjectHideFlags: 0
