@@ -16,6 +16,7 @@ public class MLUnit : Agent
     private MLRoute[] routes;
     private Vector2 target;
     private int routeIndex = 0;
+    private float initialDistance = 0.0f;
 
     private const float timeToCheckpoint = 5.0f;
     private float timer = 0.0f;
@@ -33,8 +34,10 @@ public class MLUnit : Agent
     public override void OnEpisodeBegin()
     {
         //Debug.Log(GetComponent<BehaviorParameters>().Model.name + ": FAILS(" + failCount + "), AVG(" + avgTime + ")");
+        routeIndex = Random.Range(0, routes.Length);
         transform.position = routes[routeIndex].GetStart();
         target = routes[routeIndex].GetEnd();
+        initialDistance = Vector2.Distance(transform.position, target);
         timer = 0.0f;
         unit.data.rb.velocity = Vector2.zero;
         unit.stateMachine.Reset();
@@ -47,9 +50,9 @@ public class MLUnit : Agent
         
         if (Vector2.Distance(transform.position, target) <= 0.5f)
         {
-            routeIndex++;
-            if (routeIndex == routes.Length) routeIndex = 0;
-            SetReward(2);
+            //routeIndex++;
+            //if (routeIndex == routes.Length) routeIndex = 0;
+            SetReward(initialDistance);
             EndEpisode();
             return;
         }
@@ -57,7 +60,7 @@ public class MLUnit : Agent
         timer += Time.deltaTime;
         if (timer >= timeToCheckpoint)
         {
-            SetReward(-2);
+            SetReward(initialDistance - Vector2.Distance(transform.position, target));
             EndEpisode();
         }
     }
@@ -65,9 +68,6 @@ public class MLUnit : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         sensor.AddObservation(target - (Vector2)transform.position);
-        sensor.AddObservation(unit.data.rb.velocity);
-        sensor.AddObservation((int)unit.stateMachine.State);
-        //sensor.AddObservation(target);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)

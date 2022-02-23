@@ -21,10 +21,10 @@ public class Enemy : Unit
         //healthBar = LevelManager.Instance.UI.HealthBarPool.Get();
     }
 
-    private void Update() {
-        Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position + (Vector3)healthBarOffset);
-        //healthBar.GetComponent<RectTransform>().position = screenPosition;
-    }
+    //private void Update() {
+    //    Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position + (Vector3)healthBarOffset);
+    //    healthBar.GetComponent<RectTransform>().position = screenPosition;
+    //}
 
     public override void Die()
     {
