@@ -166,13 +166,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reversed: 0
+  body: {fileID: 2340033860977752119}
   defaultBody: {fileID: 22100000, guid: c3c54f03ed86cf542b1eb6da2e4cc355, type: 2}
   reversedBody: {fileID: 22100000, guid: 4ef361af892e7664d98a11295441c088, type: 2}
+  frontArm: {fileID: 2340033862147561925}
   defaultFrontArm: {fileID: 22100000, guid: 25c8ef957bd38d946a133e6206083447, type: 2}
   reversedFrontArm: {fileID: 22100000, guid: 8a2f7ae2df0e353468b7b721856314ca, type: 2}
-  body: {fileID: 2340033860977752119}
-  frontArm: {fileID: 2340033862147561925}
-  backArm: {fileID: 0}
 --- !u!1 &2340033861057290501
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +553,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2340033862345166603}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.09375, y: 0.25, z: 0}
+  m_LocalPosition: {x: -0.03125, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
