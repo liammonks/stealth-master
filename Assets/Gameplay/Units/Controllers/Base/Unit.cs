@@ -25,6 +25,7 @@ public class UnitData
     public float stateDuration = 0.0f;
     public List<uint> hitIDs = new List<uint>();
     public Rigidbody2D attatchedRB;
+    public List<Interactable> interactables = new List<Interactable>();
 
     public delegate void OnLockGadget();
     public event OnLockGadget lockGadget;
@@ -105,9 +106,6 @@ public abstract class Unit : MonoBehaviour
     private const float groundSpringDistanceBufferStanding = 0.4f;
     private const float groundSpringDistanceBufferCrawling = 0.1f;
     private const float impactRateThreshold = 10.0f;
-
-    [Header("Interaction")]
-    [SerializeField] private List<Interactable> interactables = new List<Interactable>();
     private bool lockedRB = false;
 
     // Health
@@ -430,12 +428,12 @@ public abstract class Unit : MonoBehaviour
 
     public void AddInteractable(Interactable interactable)
     {
-        interactables.Add(interactable);
+        data.interactables.Add(interactable);
     }
 
     public void RemoveInteractable(Interactable interactable)
     {
-        interactables.Remove(interactable);
+        data.interactables.Remove(interactable);
     }
 
     public bool Interact()
@@ -443,7 +441,7 @@ public abstract class Unit : MonoBehaviour
         // Interact with the nearest available interactable
         float nearestInteractableDistance = Mathf.Infinity;
         Interactable nearestInteractable = null;
-        foreach (Interactable interactable in interactables)
+        foreach (Interactable interactable in data.interactables)
         {
             float dist = (interactable.transform.position - transform.position).sqrMagnitude;
             if (dist < nearestInteractableDistance)

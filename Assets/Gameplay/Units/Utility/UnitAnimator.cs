@@ -123,6 +123,7 @@ public class UnitAnimator : MonoBehaviour
     {
         velocity = Mathf.Abs(velocity);
         body.SetFloat("VelocityX", velocity);
+        frontArm.SetFloat("VelocityX", velocity);
     }
 
     public AnimatorStateInfo GetState()

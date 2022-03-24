@@ -26,10 +26,11 @@ namespace AI
     [RequireComponent(typeof(Unit))]
     public class AIController : MonoBehaviour
     {
+        public static float tickInterval = 0.1f;
+        
         public Dictionary<AIState, BaseState> states = new Dictionary<AIState, BaseState>();
         public AIData data = new AIData();
 
-        private const float tickInterval = 0.1f;
         private AIState currentState = AIState.Default;
         private AIState previousState = AIState.Null;
 

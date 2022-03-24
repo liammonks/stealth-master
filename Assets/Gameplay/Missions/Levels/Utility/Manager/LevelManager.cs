@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
+    public static FoodVendor[] FoodVendors;
     public static string sceneName;
 
     public LevelUI UI;
@@ -31,6 +32,8 @@ public class LevelManager : MonoBehaviour
         {
             winCondition.onComplete += OnConditionComplete;
         }
+
+        FoodVendors = FindObjectsOfType<FoodVendor>();
     }
     
     private void OnDisable()
