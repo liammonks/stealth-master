@@ -56,13 +56,5 @@ namespace AI
             StartCoroutine(Tick());
         }
 
-        private void Update()
-        {
-            for (int i = 0; i < data.patrolPoints.Count - 1; ++i)
-            {
-                Debug.DrawLine(data.patrolPoints[i], data.patrolPoints[i + 1], Color.gray);
-            }
-        }
-
     }
 }

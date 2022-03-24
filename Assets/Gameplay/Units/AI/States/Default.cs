@@ -8,6 +8,8 @@ namespace AI.States
     {
         public Default(UnitData a_UnitData, AIData a_AIData) : base(a_UnitData, a_AIData) { }
 
+        private AITask currentTask;
+
         public override AIState Initialise()
         {
             return AIState.Default;
@@ -15,6 +17,11 @@ namespace AI.States
 
         public override AIState Execute()
         {
+            if (currentTask != null)
+            {
+                return AIState.Default;
+            }
+
             // Check hunger, interact with vending machines
             if (m_AIData.hunger >= 5.0f && LevelManager.FoodVendors.Length > 0)
             {
@@ -27,14 +34,27 @@ namespace AI.States
                 FoodVendor vendor = AvailableVendor();
                 if (vendor != null)
                 {
-                    //vendor.Interact();
+                    m_AIData.hunger = 0;
                 }
                 return AIState.Default;
             }
+
             // Complete tasks
-            
+            foreach (AITask task in m_AIData.tasks)
+            {
+                // Find available task
+                if (task.IsAvailable())
+                {
+                    // Move to task
+
+                    // Execute task
+                        currentTask = task;
+                        currentTask.onTaskComplete += TaskComplete;
+                }
+            }
+
             // Move between patrol points
-            
+
             return AIState.Default;
         }
 
@@ -68,5 +88,10 @@ namespace AI.States
             return null;
         }
 
+        private void TaskComplete()
+        {
+            currentTask.onTaskComplete -= TaskComplete;
+            currentTask = null;
+        }
     }
 }

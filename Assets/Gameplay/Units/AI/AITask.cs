@@ -4,21 +4,31 @@ using UnityEngine;
 
 public class AITask : MonoBehaviour
 {
-    public bool Cooldown => m_Cooldown;
+    public delegate void OnTaskComplete();
+    public event OnTaskComplete onTaskComplete;
+
     private bool m_Cooldown = false;
     
     [SerializeField] private float executeCooldown = 60.0f;
     [SerializeField] private float executeDuration = 5.0f;
 
-    public float Execute()
+    public bool IsAvailable()
     {
-        StartCoroutine(CooldownCoroutine());
-        return executeDuration;
+        return !m_Cooldown;
+    }
+
+    public void Execute()
+    {
+        StartCoroutine(ExecuteCoroutine());
     }
     
-    private IEnumerator CooldownCoroutine()
+    private IEnumerator ExecuteCoroutine()
     {
+        m_Cooldown = true;
+        yield return new WaitForSeconds(executeDuration);
+        onTaskComplete.Invoke();
         yield return new WaitForSeconds(executeCooldown);
         m_Cooldown = false;
     }
+
 }
