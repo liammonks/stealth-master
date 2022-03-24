@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e7430f17d33216e4f9a6f7ff2ba4d87e
+guid: e4b909c75a2bcba41b521c2f2d7d6903
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,11 +116,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SM_Vault_Onto_0
+      name: SM_Vault_Over_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 320
+        y: 384
         width: 64
         height: 64
       alignment: 9
@@ -130,39 +130,39 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a489b9432ca2bd043af38f2f2d219211
-      internalID: -809255659
+      spriteID: d16288f4685cf3e4783973cf97a597be
+      internalID: -960840291
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_Vault_Onto_1
+      name: SM_Vault_Over_1
       rect:
         serializedVersion: 2
         x: 0
-        y: 256
+        y: 320
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.53125, y: 0.75}
+      pivot: {x: 0.515625, y: 0.75}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 99a4ade0fe1d51f4a9c05986c885b277
-      internalID: -930571436
+      spriteID: 1de28122d1a8be54a9dc933c192e8576
+      internalID: 940246339
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_Vault_Onto_2
+      name: SM_Vault_Over_2
       rect:
         serializedVersion: 2
         x: 0
-        y: 192
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -172,14 +172,35 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5e24cde6b841b1c4e84c411118dd6bdb
-      internalID: -466034243
+      spriteID: 2422ce243fc7944408dcca533e93100f
+      internalID: -388635662
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_Vault_Onto_3
+      name: SM_Vault_Over_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.640625, y: 0.6875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c6722c297a378849944c60bea2f9e26
+      internalID: 713601092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_Vault_Over_4
       rect:
         serializedVersion: 2
         x: 0
@@ -187,20 +208,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.640625, y: 0.65625}
+      pivot: {x: 0.65625, y: 0.640625}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 977ede89119e79942966604086d79f3e
-      internalID: 570461014
+      spriteID: 165b759bdb9133c4c95de4f7997293b3
+      internalID: 44035077
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_Vault_Onto_4
+      name: SM_Vault_Over_5
       rect:
         serializedVersion: 2
         x: 0
@@ -208,20 +229,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.5625, y: 0.734375}
+      pivot: {x: 0.546875, y: 0.609375}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a81c6620f826f6240a0353b24645baf3
-      internalID: 1343909009
+      spriteID: 7e74eecdf403e5d40b33e7049d16726b
+      internalID: 642140317
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_Vault_Onto_5
+      name: SM_Vault_Over_6
       rect:
         serializedVersion: 2
         x: 0
@@ -229,14 +250,14 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.46875, y: 0.71875}
+      pivot: {x: 0.484375, y: 0.65625}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8a78fbab727379a468c110d465ac579c
-      internalID: -1259636617
+      spriteID: bc9f2b6860a5de54e8a64fade5903df4
+      internalID: 1805503521
       vertices: []
       indices: 
       edges: []
@@ -252,12 +273,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SM_Vault_Onto_5: -1259636617
-      SM_Vault_Onto_0: -809255659
-      SM_Vault_Onto_4: 1343909009
-      SM_Vault_Onto_2: -466034243
-      SM_Vault_Onto_1: -930571436
-      SM_Vault_Onto_3: 570461014
+      SM_Vault_Over_1: 940246339
+      SM_Vault_Over_0: -960840291
+      SM_Vault_Over_6: 1805503521
+      SM_Vault_Over_4: 44035077
+      SM_Vault_Over_2: -388635662
+      SM_Vault_Over_5: 642140317
+      SM_Vault_Over_3: 713601092
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
