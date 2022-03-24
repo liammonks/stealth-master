@@ -1,22 +1,7 @@
 fileFormatVersion: 2
-guid: c31fbd148b34fc64f8421005bcb96ebe
+guid: 255eba2ab27364440bd9d19aabbc3aa6
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -2614101377745038599
-    second: Stealth_Master_Climb_Up_Right_WIP_0
-  - first:
-      213: -7268409970634151636
-    second: Stealth_Master_Climb_Up_Right_WIP_1
-  - first:
-      213: -2978998824858644976
-    second: Stealth_Master_Climb_Up_Right_WIP_2
-  - first:
-      213: 907479776517888514
-    second: Stealth_Master_Climb_Up_Right_WIP_3
-  - first:
-      213: -7994884269840064653
-    second: Stealth_Master_Climb_Up_Right_WIP_4
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -53,7 +38,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 0
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -64,7 +49,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -85,8 +70,8 @@ TextureImporter:
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
@@ -95,22 +80,34 @@ TextureImporter:
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 1
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 512
+    resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Server
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
@@ -119,106 +116,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth_Master_Climb_Up_Right_WIP_0
+      name: SM_FA_Crawl2Stand_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a37858a7c93371241b582ff7e0fa7786
+      internalID: -1891363979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_FA_Crawl2Stand_1
       rect:
         serializedVersion: 2
         x: 0
         y: 256
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9f2d5a4a5a8d8bbd0800000000000000
-      internalID: -2614101377745038599
+      spriteID: 40ea07d441c85d149a20190d706a7559
+      internalID: -227585294
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Climb_Up_Right_WIP_1
+      name: SM_FA_Crawl2Stand_2
       rect:
         serializedVersion: 2
         x: 0
         y: 192
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.55, y: 0.4}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c29a17234ab612b90800000000000000
-      internalID: -7268409970634151636
+      spriteID: aa5412bac290d1d42b9a7a87b1a72fb6
+      internalID: -311036241
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Climb_Up_Right_WIP_2
+      name: SM_FA_Crawl2Stand_3
       rect:
         serializedVersion: 2
         x: 0
         y: 128
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.7, y: 0.35}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 01e8ef92a5878a6d0800000000000000
-      internalID: -2978998824858644976
+      spriteID: 138ad7184ae01f242a821d4fe5cdc0ed
+      internalID: 1728851365
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Climb_Up_Right_WIP_3
+      name: SM_FA_Crawl2Stand_4
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.7, y: 0.3}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 20a13387c04089c00800000000000000
-      internalID: 907479776517888514
+      spriteID: 08624b917ded12647b4d7fd0a5dc15c8
+      internalID: 1810323446
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Climb_Up_Right_WIP_4
+      name: SM_FA_Crawl2Stand_5
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.75, y: 0.49}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 37f13d38d177c0190800000000000000
-      internalID: -7994884269840064653
+      spriteID: 601644050b212ff4aa80b4ea20473b84
+      internalID: 2036986590
       vertices: []
       indices: 
       edges: []
@@ -226,7 +244,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 6f758c0d44d0f964d9a6f542b9dd3cb6
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -234,11 +252,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Stealth_Master_Climb_Up_Right_WIP_4: -7994884269840064653
-      Stealth_Master_Climb_Up_Right_WIP_2: -2978998824858644976
-      Stealth_Master_Climb_Up_Right_WIP_0: -2614101377745038599
-      Stealth_Master_Climb_Up_Right_WIP_3: 907479776517888514
-      Stealth_Master_Climb_Up_Right_WIP_1: -7268409970634151636
+      SM_FA_Crawl2Stand_5: 2036986590
+      SM_FA_Crawl2Stand_2: -311036241
+      SM_FA_Crawl2Stand_1: -227585294
+      SM_FA_Crawl2Stand_3: 1728851365
+      SM_FA_Crawl2Stand_4: 1810323446
+      SM_FA_Crawl2Stand_0: -1891363979
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
