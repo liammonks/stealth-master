@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: efa231911ed7f0643a1561de3d06097e
+guid: 210fb260212f3b94896f368d87269109
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,43 +116,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SM_Hang_No_Wall_0
+      name: SM_FA_Crawl_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95e2593a568c7d948a8df1e5cb44154f
+      internalID: -1111578860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_FA_Crawl_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f52e7cc0cd2fd3b439787418637bb469
+      internalID: -1654239194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_FA_Crawl_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa06cb68d55bf2d4c946429355773fae
+      internalID: 668793078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_FA_Crawl_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59e44079e0b4b0348b84fbfec0abb7db
+      internalID: 207514915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_FA_Crawl_4
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.640625}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3b5224b0ea28a1e43a83c62023a2a011
-      internalID: 183749948
+      spriteID: 83a75a0ef6e73e148af15dec344d85a8
+      internalID: 2050143172
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_Hang_No_Wall_1
+      name: SM_FA_Crawl_5
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.640625}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb0e9fbcfd23bee46930c8ffb0bb42b0
-      internalID: -1738358756
+      spriteID: 57af1878cb1058e459eb7c745887f40d
+      internalID: 2047896009
       vertices: []
       indices: 
       edges: []
@@ -168,8 +252,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SM_Hang_No_Wall_1: -1738358756
-      SM_Hang_No_Wall_0: 183749948
+      SM_FA_Crawl_5: 2047896009
+      SM_FA_Crawl_0: -1111578860
+      SM_FA_Crawl_1: -1654239194
+      SM_FA_Crawl_3: 207514915
+      SM_FA_Crawl_4: 2050143172
+      SM_FA_Crawl_2: 668793078
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

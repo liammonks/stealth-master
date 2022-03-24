@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: efa231911ed7f0643a1561de3d06097e
+guid: eb3a71acaf87f4c44878123df1d14d3e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,43 +116,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SM_Hang_No_Wall_0
+      name: SM_FA_Stand2Crawl_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dee05647b7fb9de42b0306b80afcc73e
+      internalID: -836048328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_FA_Stand2Crawl_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ab506fe117981f4880d06992eb3e7a5
+      internalID: -1718953874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SM_FA_Stand2Crawl_2
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.640625}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3b5224b0ea28a1e43a83c62023a2a011
-      internalID: 183749948
+      spriteID: 06f966e39ed00c24f820978a0ebaf649
+      internalID: -599118382
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_Hang_No_Wall_1
+      name: SM_FA_Stand2Crawl_3
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.640625}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb0e9fbcfd23bee46930c8ffb0bb42b0
-      internalID: -1738358756
+      spriteID: ea413af57e0b748408529b1643e4831a
+      internalID: 189740269
       vertices: []
       indices: 
       edges: []
@@ -168,8 +210,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SM_Hang_No_Wall_1: -1738358756
-      SM_Hang_No_Wall_0: 183749948
+      SM_FA_Stand2Crawl_2: -599118382
+      SM_FA_Stand2Crawl_3: 189740269
+      SM_FA_Stand2Crawl_1: -1718953874
+      SM_FA_Stand2Crawl_0: -836048328
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
