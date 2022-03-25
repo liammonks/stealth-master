@@ -12086,7 +12086,7 @@ PrefabInstance:
     - target: {fileID: 1340281495369077302, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 22100000, guid: 4ef361af892e7664d98a11295441c088, type: 2}
+      objectReference: {fileID: 22100000, guid: c3c54f03ed86cf542b1eb6da2e4cc355, type: 2}
     - target: {fileID: 1340281496133313801, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.03125
@@ -12102,14 +12102,14 @@ PrefabInstance:
     - target: {fileID: 1340281496212534212, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 22100000, guid: 7fff26cb089251f41b90874000323b46, type: 2}
+      objectReference: {fileID: 22100000, guid: 25c8ef957bd38d946a133e6206083447, type: 2}
     - target: {fileID: 1340281496212534213, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_Size.x
-      value: 0.01
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1340281496212534213, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_Size.y
-      value: 0.01
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1340281496212534213, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_Sprite
@@ -12117,7 +12117,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1340281496212534213, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7982474189140233211, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: mainCamera
