@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fd7c47e1b5cdd354f90f37b79e07d9f1
+guid: 02613f03f2c894a4c91c605db7d43386
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,28 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SM_BDY_VaultOver_RV_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 384
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: dfa788f8ce887624cb566e4b678a64c0
-      internalID: -297072801
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SM_BDY_VaultOver_RV_1
+      name: SM_BDY_VaultOn_RV_0
       rect:
         serializedVersion: 2
         x: 0
@@ -145,119 +124,119 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 291f53cee87b0eb47a8d2d69cc2d9766
-      internalID: 293805787
+      spriteID: f842917dbda928944b479d0cdf0ae2ea
+      internalID: -371566111
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOver_RV_2
+      name: SM_BDY_VaultOn_RV_1
       rect:
         serializedVersion: 2
         x: 0
         y: 256
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a1cfb063bb6d1c143a29c5af7f0303f3
-      internalID: 573688457
+      spriteID: 7dfc6578879d1194faf4389ea92a90d3
+      internalID: 738960738
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOver_RV_3
+      name: SM_BDY_VaultOn_RV_2
       rect:
         serializedVersion: 2
         x: 0
         y: 192
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4375}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 991e44470c313604686d81abf34c51cd
-      internalID: 352502180
+      spriteID: 958b3a1d8f294384d9c1bad7f2c52e53
+      internalID: -2141233189
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOver_RV_4
+      name: SM_BDY_VaultOn_RV_3
       rect:
         serializedVersion: 2
         x: 0
         y: 128
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.390625}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a687a6b7167b9ba4c8f555eb0d70b248
-      internalID: -161867393
+      spriteID: ecd1ecd21f532bb4786240302ed12e54
+      internalID: -1829331762
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOver_RV_5
+      name: SM_BDY_VaultOn_RV_4
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4375}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aa9fb393fa7da0b40ad440cbde2c5427
-      internalID: -37644136
+      spriteID: 89ff21dcee6d78244b0cec27a7a8d5d2
+      internalID: 1737374104
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_VaultOver_RV_6
+      name: SM_BDY_VaultOn_RV_5
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f9aad4b8579741148aba0a18a49e26f1
-      internalID: 699683332
+      spriteID: 243c22868be2052449ecfdb929de181f
+      internalID: -1866904188
       vertices: []
       indices: 
       edges: []
@@ -273,13 +252,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SM_BDY_VaultOver_RV_3: 352502180
-      SM_BDY_VaultOver_RV_4: -161867393
-      SM_BDY_VaultOver_RV_5: -37644136
-      SM_BDY_VaultOver_RV_6: 699683332
-      SM_BDY_VaultOver_RV_2: 573688457
-      SM_BDY_VaultOver_RV_1: 293805787
-      SM_BDY_VaultOver_RV_0: -297072801
+      SM_BDY_VaultOn_RV_4: 1737374104
+      SM_BDY_VaultOn_RV_0: -371566111
+      SM_BDY_VaultOn_RV_5: -1866904188
+      SM_BDY_VaultOn_RV_1: 738960738
+      SM_BDY_VaultOn_RV_2: -2141233189
+      SM_BDY_VaultOn_RV_3: -1829331762
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

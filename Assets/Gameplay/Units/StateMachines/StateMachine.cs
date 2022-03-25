@@ -11,10 +11,13 @@ public abstract class StateMachine : MonoBehaviour
     public delegate void OnStateUpdated(UnitState state);
     public event OnStateUpdated onStateUpdated;
 
+    [SerializeField]
+    protected UnitState currentState = UnitState.Idle;
+    [SerializeField]
+    protected UnitState previousState = UnitState.Null;
+
     protected Unit unit;
     protected UnitData data;
-    protected UnitState currentState = UnitState.Idle;
-    protected UnitState previousState = UnitState.Null;
     protected Dictionary<UnitState, BaseState> states = new Dictionary<UnitState, BaseState>();
 
     private BaseState overrideState;
@@ -27,6 +30,8 @@ public abstract class StateMachine : MonoBehaviour
     
     private void FixedUpdate()
     {
+        if (currentState == UnitState.Null) return;
+
         if (overrideState != null)
         {
             currentState = overrideState.Execute();
@@ -51,7 +56,7 @@ public abstract class StateMachine : MonoBehaviour
     
     public void SetState(UnitState state)
     {
-        if (!states.ContainsKey(state)) return;
+        if (!states.ContainsKey(state) && state != UnitState.Null) return;
         overrideState = null;
         currentState = state;
     }

@@ -10,6 +10,8 @@ namespace Gadgets
         [SerializeField] private Vector2 hitScale = new Vector2(0.5f, 0.5f);
         [SerializeField] private Vector2 hitOffset = new Vector2(0.5f, 0.4f);
 
+        private const float spamDelay = 0.1f;
+
         protected override void OnPrimaryEnabled()
         {
             StartCoroutine(Punch());
@@ -22,6 +24,7 @@ namespace Gadgets
 
         private IEnumerator Punch()
         {
+            primaryLocked = true;
             owner.SetState(UnitState.Null);
             owner.data.animator.Play(UnitAnimatorLayer.Body, "Punch");
             owner.data.animator.UpdateState();
@@ -56,8 +59,10 @@ namespace Gadgets
 
             yield return new WaitForSeconds(duration * 0.5f);
             owner.SetState(UnitState.Idle);
+            yield return new WaitForSeconds(spamDelay);
+            primaryLocked = false;
         }
-        
+
         #region Block
 
         protected override void OnSecondaryEnabled()
