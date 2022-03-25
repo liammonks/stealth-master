@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 80fe019172a6ea040aecbddaf069ad4e
+guid: 9c757e88af6f99e4d9fe7169bfb89cf6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,7 +116,70 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SM_BDY_Jump_RV_0
+      name: Stealth_Master_Idle_Right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d29c02252a8c00a40b99ed2a470ad0f6
+      internalID: 987263271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Idle_Right_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b598cdb675b0d7449fd80660cd168ff
+      internalID: 1251134490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Idle_Right_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5016d0799cd90db47a9f8297416260ab
+      internalID: 2101796631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Idle_Right_3
       rect:
         serializedVersion: 2
         x: 0
@@ -130,14 +193,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0897384d476ce1046a49c826f267f3b4
-      internalID: -900374027
+      spriteID: 11a8c0bd420242d458c157948412e808
+      internalID: 1028125160
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_Jump_RV_1
+      name: Stealth_Master_Idle_Right_4
       rect:
         serializedVersion: 2
         x: 0
@@ -151,14 +214,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fc20ab5c20696504db79f6a0f1f1965e
-      internalID: 1084570735
+      spriteID: e09ff6c747b511349a194264b999f920
+      internalID: -79723572
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_Jump_RV_2
+      name: Stealth_Master_Idle_Right_5
       rect:
         serializedVersion: 2
         x: 0
@@ -172,14 +235,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8ebbca9b43c9a674b8b83a999e2154b3
-      internalID: 258086898
+      spriteID: b91286603d4e24045b8e5133da86dfcf
+      internalID: -859747144
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_Jump_RV_3
+      name: Stealth_Master_Idle_Right_6
       rect:
         serializedVersion: 2
         x: 0
@@ -193,14 +256,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2d0a8a4169fca9e41828080c71d56bd4
-      internalID: -1840845122
+      spriteID: 435185b1b9f9a8a40993688a9f0f7be1
+      internalID: -1282478914
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_Jump_RV_4
+      name: Stealth_Master_Idle_Right_7
       rect:
         serializedVersion: 2
         x: 0
@@ -214,14 +277,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 64642a152a5b80847ab8f49ad3f245a3
-      internalID: 1105060706
+      spriteID: 6eaff12c8f670d044945fc6f8c1a49e9
+      internalID: 839096202
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_Jump_RV_5
+      name: Stealth_Master_Idle_Right_8
       rect:
         serializedVersion: 2
         x: 0
@@ -235,14 +298,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 413284eee27e09c4e9505e08b271b019
-      internalID: -224434777
+      spriteID: 14e361ac956ee0c4d845f03a62dac0cb
+      internalID: -1540254765
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SM_BDY_Jump_RV_6
+      name: Stealth_Master_Idle_Right_9
       rect:
         serializedVersion: 2
         x: 0
@@ -256,8 +319,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a5bc39ec9287e8b46bdbd7429ab9ef17
-      internalID: -19659620
+      spriteID: a0b9ba90a2eb27c438469ae22ed9e669
+      internalID: 301718765
       vertices: []
       indices: 
       edges: []
@@ -273,13 +336,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SM_BDY_Jump_RV_0: -900374027
-      SM_BDY_Jump_RV_1: 1084570735
-      SM_BDY_Jump_RV_2: 258086898
-      SM_BDY_Jump_RV_6: -19659620
-      SM_BDY_Jump_RV_4: 1105060706
-      SM_BDY_Jump_RV_3: -1840845122
-      SM_BDY_Jump_RV_5: -224434777
+      Stealth_Master_Idle_Right_2: 2101796631
+      Stealth_Master_Idle_Right_6: -1282478914
+      Stealth_Master_Idle_Right_4: -79723572
+      Stealth_Master_Idle_Right_5: -859747144
+      Stealth_Master_Idle_Right_9: 301718765
+      Stealth_Master_Idle_Right_0: 987263271
+      Stealth_Master_Idle_Right_8: -1540254765
+      Stealth_Master_Idle_Right_3: 1028125160
+      Stealth_Master_Idle_Right_1: 1251134490
+      Stealth_Master_Idle_Right_7: 839096202
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
