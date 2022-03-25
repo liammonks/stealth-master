@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67577002}
   m_LocalRotation: {x: 0.008331019, y: 0.008332176, z: -0.00006942034, w: 0.9999306}
-  m_LocalPosition: {x: 54.62, y: -1.3800001, z: -60}
+  m_LocalPosition: {x: -5.417, y: 2.891, z: -60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,7 +186,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9216666, y: 1}
+    m_SensorSize: {x: 1.9358108, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -6525,7 +6525,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521881362}
   m_LocalRotation: {x: 0.008331019, y: 0.008332176, z: -0.00006942034, w: 0.9999306}
-  m_LocalPosition: {x: 54.62, y: -1.3800001, z: -60}
+  m_LocalPosition: {x: -5.417, y: 2.891, z: -60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6714,7 +6714,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9216666, y: 1}
+    m_SensorSize: {x: 1.9358108, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -12090,6 +12090,18 @@ PrefabInstance:
     - target: {fileID: 1340281496133313802, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1340281496212534212, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 25c8ef957bd38d946a133e6206083447, type: 2}
+    - target: {fileID: 1340281496212534213, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
+      propertyPath: m_Size.x
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1340281496212534213, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
+      propertyPath: m_Size.y
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 1340281496212534213, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_Sprite

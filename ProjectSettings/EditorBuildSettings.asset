@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Gameplay/Scenes/Planning.unity
     guid: 0259df6fef8ce51468c97a1ea80710ac
   - enabled: 1
@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Gameplay/Scenes/Debugger.unity
     guid: e8099ff2f872cb94b83e7fccd9a8745d
-  - enabled: 0
+  - enabled: 1
     path: Assets/Gameplay/Missions/Levels/Level_00/Level_00.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects:

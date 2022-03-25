@@ -75,10 +75,21 @@ public class UnitAnimator : MonoBehaviour
     {
         Animator animator = GetLayer(layer);
         if (animator.runtimeAnimatorController == controller) return;
-        int state = animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
         float normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        // Try continue animation from this layer
+        int state = animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
         animator.runtimeAnimatorController = controller;
-        if (animator.HasState(0, state)) animator.Play(state, 0, normalizedTime);
+        if (animator.HasState(0, state))
+        {
+            animator.Play(state, 0, normalizedTime);
+        }
+        else
+        {
+            // This layers new controller does not continue its previously playing animation, try to continue from the body instead
+            state = body.GetCurrentAnimatorStateInfo(0).fullPathHash;
+            if (animator.HasState(0, state)) animator.Play(state, 0, normalizedTime);
+        }
+        
     }
     
     public Animator GetLayer(UnitAnimatorLayer layer)
