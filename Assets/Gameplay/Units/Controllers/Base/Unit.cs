@@ -420,6 +420,7 @@ public abstract class Unit : MonoBehaviour, ITakeDamage
     public void UpdateFacing()
     {
         data.animator.SetLayer(UnitAnimatorLayer.Body, AimingBehind() ? data.animator.reversedBody : data.animator.defaultBody);
+        data.animator.SetLayer(UnitAnimatorLayer.FrontArm, AimingBehind() ? data.animator.reversedFrontArm : data.animator.defaultFrontArm);
     }
         
     #endregion

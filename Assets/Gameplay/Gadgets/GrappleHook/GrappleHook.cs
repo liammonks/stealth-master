@@ -336,8 +336,6 @@ namespace Gadgets
         
         public override UnitState Execute()
         {
-            Debug.Log(data.input.movement);
-
             Vector2 velocity = data.rb.velocity;
 
             string state = string.Empty;
