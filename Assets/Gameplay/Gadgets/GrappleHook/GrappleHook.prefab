@@ -127,7 +127,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0, b: 0, a: 0.39215687}
+      key0: {r: 1, g: 0.8478994, b: 0, a: 0.39215687}
       key1: {r: 1, g: 0, b: 0, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateFrontArm: 1
-  primaryAvailableStates: 0100000002000000040000000500000006000000090000000c0000000e000000
+  primaryAvailableStates: 0100000002000000040000000500000006000000090000000e000000
   secondaryAvailableStates: 00000000
   frontArmAnimatorController: {fileID: 22100000, guid: b91d547cbdeec9a43a908e60f9c7d8f7, type: 2}
   frontArmAnimatorControllerReversed: {fileID: 22100000, guid: 8edae6d04f71e684caae7a338830fca0, type: 2}
@@ -557,7 +557,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0, b: 0, a: 0.39215687}
+      key0: {r: 1, g: 0.8478994, b: 0, a: 0.39215687}
       key1: {r: 1, g: 0, b: 0, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
