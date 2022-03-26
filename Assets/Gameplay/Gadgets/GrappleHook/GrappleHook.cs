@@ -329,12 +329,15 @@ namespace Gadgets
 
         public override UnitState Initialise()
         {
+            data.isStanding = true;
             data.animator.Play(UnitAnimatorLayer.FrontArm, "Swing");
             return UnitState.Null;
         }
         
         public override UnitState Execute()
         {
+            Debug.Log(data.input.movement);
+
             Vector2 velocity = data.rb.velocity;
 
             string state = string.Empty;

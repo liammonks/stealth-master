@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace States
 {
     public class Melee : BaseState
     {
-        float duration = 0.0f;
+        private float duration = 0.0f;
+        private List<ITakeDamage> alreadyDamaged = new List<ITakeDamage>();
 
         public Melee(UnitData a_data) : base(a_data) { }
         
@@ -39,12 +41,15 @@ namespace States
                 );
                 foreach (RaycastHit2D hit in hits)
                 {
-                    Unit unit = hit.rigidbody?.GetComponent<Unit>();
-                    if (unit && !data.hitIDs.Contains(unit.ID))
-                    {
+                    GameObject targetObject;
+                    if (hit.collider.attachedRigidbody != null) targetObject = hit.collider.attachedRigidbody.gameObject;
+                    else targetObject = hit.collider.gameObject;
+
+                    ITakeDamage target = targetObject.GetComponent(typeof(ITakeDamage)) as ITakeDamage;
+                    if (target != null && !alreadyDamaged.Contains(target)) {
                         Vector2 impact = data.rb.velocity + (data.isFacingRight ? Vector2.right : Vector2.left) * data.stats.meleeKnockback * data.stats.knockbackMultiplier;
-                        unit.TakeDamage(impact * data.stats.meleeDamage);
-                        data.hitIDs.Add(unit.ID);
+                        target.TakeDamage(impact * data.stats.meleeDamage);
+                        alreadyDamaged.Add(target);
                     }
                 }
             }

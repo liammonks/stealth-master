@@ -65,8 +65,12 @@ public class Bullet : MonoBehaviour
     
     private void BulletHit(RaycastHit2D hit)
     {
-        Unit unit = hit.collider.attachedRigidbody?.GetComponent<Unit>();
-        if (unit != null) { unit.TakeDamage(m_Stats.damage); }
+        GameObject targetObject;
+        if (hit.collider.attachedRigidbody != null) targetObject = hit.collider.attachedRigidbody.gameObject;
+        else targetObject = hit.collider.gameObject;
+
+        ITakeDamage target = targetObject.GetComponent(typeof(ITakeDamage)) as ITakeDamage;
+        if (target != null) { target.TakeDamage(m_Stats.damage); }
         onHit?.Invoke(hit);
     }
 }

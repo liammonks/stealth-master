@@ -49,11 +49,15 @@ namespace Gadgets
             );
             foreach (RaycastHit2D hit in hits)
             {
-                Unit unit = hit.rigidbody?.GetComponent<Unit>();
-                if (unit)
+                GameObject targetObject;
+                if (hit.collider.attachedRigidbody != null) targetObject = hit.collider.attachedRigidbody.gameObject;
+                else targetObject = hit.collider.gameObject;
+
+                ITakeDamage target = targetObject.GetComponent(typeof(ITakeDamage)) as ITakeDamage;
+                if (target != null)
                 {
                     Vector2 impact = owner.data.rb.velocity + ((owner.data.isFacingRight ? Vector2.right : Vector2.left) * owner.data.stats.knockbackMultiplier);
-                    unit.TakeDamage(impact * power);
+                    target.TakeDamage(impact * power);
                 }
             }
 

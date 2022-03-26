@@ -77,7 +77,7 @@ public class InputData
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
-public abstract class Unit : MonoBehaviour
+public abstract class Unit : MonoBehaviour, ITakeDamage
 {
     public static LayerMask CollisionMask => m_CollisionMask;
     private static LayerMask m_CollisionMask;

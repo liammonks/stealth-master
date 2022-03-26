@@ -30,8 +30,6 @@ public abstract class StateMachine : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (currentState == UnitState.Null) return;
-
         if (overrideState != null)
         {
             currentState = overrideState.Execute();
@@ -39,7 +37,9 @@ public abstract class StateMachine : MonoBehaviour
             previousState = currentState;
             currentState = states[currentState].Initialise();
         }
-        
+
+        if (currentState == UnitState.Null) return;
+
         while (currentState != previousState)
         {
             data.previousState = previousState;
