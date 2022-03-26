@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SM_FA_Slide_Loop
+  m_Name: SM_FA_Jump_Loop_RV
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,9 +20,9 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: -1875910797, guid: 8773ff43af49e4848a1198223f4b0360, type: 3}
+      value: {fileID: -1319163979, guid: 60a93cd07a1d88546967177752808be9, type: 3}
     - time: 0.083333336
-      value: {fileID: -79292812, guid: 8773ff43af49e4848a1198223f4b0360, type: 3}
+      value: {fileID: -221004681, guid: 60a93cd07a1d88546967177752808be9, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -42,8 +42,8 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: -1875910797, guid: 8773ff43af49e4848a1198223f4b0360, type: 3}
-    - {fileID: -79292812, guid: 8773ff43af49e4848a1198223f4b0360, type: 3}
+    - {fileID: -1319163979, guid: 60a93cd07a1d88546967177752808be9, type: 3}
+    - {fileID: -221004681, guid: 60a93cd07a1d88546967177752808be9, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
