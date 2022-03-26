@@ -27,7 +27,11 @@ public class PracticeTarget : MonoBehaviour, ITakeDamage
     public void TakeDamage(float damage)
     {
         health -= damage;
-        if (health <= 0) gameObject.SetActive(false);
+        if (health <= 0)
+        {
+            gameObject.SetActive(false);
+            GlobalEvents.EnemyKilled();
+        }
     }
 
     public void TakeDamage(Vector2 impact)
