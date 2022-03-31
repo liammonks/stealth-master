@@ -1,28 +1,7 @@
 fileFormatVersion: 2
-guid: 1bb1661b00a525f4f97c3f858a280bd9
+guid: 4a76e7427fa38c34e8f08154629f88fe
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -7769227224012987047
-    second: Stealth_Master_Dive_Exit_WIP_0
-  - first:
-      213: -1558658515536570184
-    second: Stealth_Master_Dive_Exit_WIP_1
-  - first:
-      213: 8891888371241930204
-    second: Stealth_Master_Dive_Exit_WIP_2
-  - first:
-      213: 5454947918167215439
-    second: Stealth_Master_Dive_Exit_WIP_3
-  - first:
-      213: 2644358429956758273
-    second: Stealth_Master_Dive_Exit_WIP_4
-  - first:
-      213: 1556604253867198161
-    second: Stealth_Master_Dive_Exit_WIP_5
-  - first:
-      213: -8286360107561581541
-    second: Stealth_Master_Dive_Exit_WIP_6
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -87,7 +66,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -99,9 +78,9 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
+    textureFormat: 4
     textureCompression: 0
     compressionQuality: 100
     crunchedCompression: 1
@@ -121,11 +100,86 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 1
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stealth_Master_Dive_Exit_WIP_0
+      name: Stealth_Master_Idle_Right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d29c02252a8c00a40b99ed2a470ad0f6
+      internalID: 987263271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Idle_Right_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b598cdb675b0d7449fd80660cd168ff
+      internalID: 1251134490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Idle_Right_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5016d0799cd90db47a9f8297416260ab
+      internalID: 2101796631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stealth_Master_Idle_Right_3
       rect:
         serializedVersion: 2
         x: 0
@@ -133,20 +187,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 955696db0092e2490800000000000000
-      internalID: -7769227224012987047
+      spriteID: 11a8c0bd420242d458c157948412e808
+      internalID: 1028125160
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Dive_Exit_WIP_1
+      name: Stealth_Master_Idle_Right_4
       rect:
         serializedVersion: 2
         x: 0
@@ -154,83 +208,83 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8b81e4796588e5ae0800000000000000
-      internalID: -1558658515536570184
+      spriteID: e09ff6c747b511349a194264b999f920
+      internalID: -79723572
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Dive_Exit_WIP_2
+      name: Stealth_Master_Idle_Right_5
       rect:
         serializedVersion: 2
         x: 0
         y: 256
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.4}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cdd4d46cc55566b70800000000000000
-      internalID: 8891888371241930204
+      spriteID: b91286603d4e24045b8e5133da86dfcf
+      internalID: -859747144
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Dive_Exit_WIP_3
+      name: Stealth_Master_Idle_Right_6
       rect:
         serializedVersion: 2
         x: 0
         y: 192
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.45}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f4d0d92ea3ed3bb40800000000000000
-      internalID: 5454947918167215439
+      spriteID: 435185b1b9f9a8a40993688a9f0f7be1
+      internalID: -1282478914
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Dive_Exit_WIP_4
+      name: Stealth_Master_Idle_Right_7
       rect:
         serializedVersion: 2
         x: 0
         y: 128
         width: 64
         height: 64
-      alignment: 9
-      pivot: {x: 0.6, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 10bd16c4bf5a2b420800000000000000
-      internalID: 2644358429956758273
+      spriteID: 6eaff12c8f670d044945fc6f8c1a49e9
+      internalID: 839096202
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Dive_Exit_WIP_5
+      name: Stealth_Master_Idle_Right_8
       rect:
         serializedVersion: 2
         x: 0
@@ -238,20 +292,20 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1d6cd97525b2a9510800000000000000
-      internalID: 1556604253867198161
+      spriteID: 14e361ac956ee0c4d845f03a62dac0cb
+      internalID: -1540254765
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stealth_Master_Dive_Exit_WIP_6
+      name: Stealth_Master_Idle_Right_9
       rect:
         serializedVersion: 2
         x: 0
@@ -259,14 +313,14 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b1403db926fe00d80800000000000000
-      internalID: -8286360107561581541
+      spriteID: a0b9ba90a2eb27c438469ae22ed9e669
+      internalID: 301718765
       vertices: []
       indices: 
       edges: []
@@ -282,13 +336,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Stealth_Master_Dive_Exit_WIP_5: 1556604253867198161
-      Stealth_Master_Dive_Exit_WIP_2: 8891888371241930204
-      Stealth_Master_Dive_Exit_WIP_4: 2644358429956758273
-      Stealth_Master_Dive_Exit_WIP_1: -1558658515536570184
-      Stealth_Master_Dive_Exit_WIP_3: 5454947918167215439
-      Stealth_Master_Dive_Exit_WIP_6: -8286360107561581541
-      Stealth_Master_Dive_Exit_WIP_0: -7769227224012987047
+      Stealth_Master_Idle_Right_2: 2101796631
+      Stealth_Master_Idle_Right_6: -1282478914
+      Stealth_Master_Idle_Right_4: -79723572
+      Stealth_Master_Idle_Right_5: -859747144
+      Stealth_Master_Idle_Right_9: 301718765
+      Stealth_Master_Idle_Right_0: 987263271
+      Stealth_Master_Idle_Right_8: -1540254765
+      Stealth_Master_Idle_Right_3: 1028125160
+      Stealth_Master_Idle_Right_1: 1251134490
+      Stealth_Master_Idle_Right_7: 839096202
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
