@@ -1,35 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : Unit
 {
-    [SerializeField] private Unit playerUnit;
+    public static Vector3 MousePosition;
+    public static Vector2 MouseDelta;
 
-    private InputData unitInputData;
-    private Coroutine enableCrawlCoroutine;
+    [Header("Player")]
+    [SerializeField] private int equippedGadgetIndex = -1;
+    [SerializeField] private Camera mainCamera;
 
-    private void Awake()
+    private Vector2 defaultCameraOffset = new Vector2(0, 0.3f);
+
+    protected override void Awake()
     {
-        unitInputData = playerUnit.GetInputData();
+        base.Awake();
+        healthBar = FindObjectOfType<HealthBar>();
+        data.hitMask = LayerMask.GetMask("Enemy");
+        Application.targetFrameRate = 300;
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        LevelManager.Instance.RespawnPlayer();
+        health = data.stats.maxHealth;
+        healthBar.UpdateHealth(health, data.stats.maxHealth);
     }
 
     private void OnMovement(InputValue value)
     {
-        unitInputData.movement = Mathf.CeilToInt(value.Get<Vector2>().x);
+        data.input.movement = value.Get<float>();
+
+        // Controller
+        float abs = Mathf.Abs(data.input.movement);
+        if (abs > 1.0f)
+        {
+            data.input.movement = Mathf.Clamp(data.input.movement, -1.0f, 1.0f);
+            data.input.running = abs > 4.0f;
+        }
+        //if(networkPlayer) networkPlayer.CmdOnMovement(data.input.movement);
     }
 
     private void OnRun(InputValue value)
     {
-        unitInputData.running = value.Get<float>() == 1.0f;
+        data.input.running = value.Get<float>() == 1.0f;
+        if (networkPlayer) networkPlayer.CmdOnRun(data.input.running);
     }
 
     private void OnJump(InputValue value)
     {
         if (value.Get<float>() == 1.0f)
         {
-            unitInputData.jumpRequestTime = Time.unscaledTime;
+            data.input.jumpRequestTime = Time.unscaledTime;
+            if (networkPlayer) networkPlayer.CmdOnJump();
         }
     }
 
@@ -38,70 +65,194 @@ public class Player : MonoBehaviour
         if (value.Get<float>() == 1.0f)
         {
             // Set crawling
-            if (Time.unscaledTime - unitInputData.crawlRequestTime > 0.6f)
+            if (Time.unscaledTime - data.input.crawlRequestTime > 0.6f)
             {
-                unitInputData.crawling = true;
-                unitInputData.crawlRequestTime = Time.unscaledTime;
+                data.input.crawling = true;
+                data.input.crawlRequestTime = Time.unscaledTime;
             }
             else
             {
                 // We tried crawling too quickly after the last crawl input
-                enableCrawlCoroutine = StartCoroutine(EnableCrawlDelay(Time.unscaledTime - unitInputData.crawlRequestTime));
+                enableCrawlCoroutine = StartCoroutine(EnableCrawlDelay(Time.unscaledTime - data.input.crawlRequestTime));
             }
         }
         else
         {
-            unitInputData.crawling = false;
+            data.input.crawling = false;
             if(enableCrawlCoroutine != null)
             {
                 StopCoroutine(enableCrawlCoroutine);
                 enableCrawlCoroutine = null;
             }
         }
+        if (networkPlayer) networkPlayer.CmdOnCrawl(value.Get<float>() == 1.0f);
     }
     
+    private Coroutine enableCrawlCoroutine;
     private IEnumerator EnableCrawlDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        unitInputData.crawling = true;
-        unitInputData.crawlRequestTime = Time.unscaledTime;
-    }
-
-    private void OnGadgetPrimary(InputValue value) 
-    {
-        if (value.Get<float>() == 1.0f)
-        {
-            playerUnit.GadgetPrimary();
-        }
-    }
-
-    private void OnGadgetSecondary(InputValue value)
-    {
-        if (value.Get<float>() == 1.0f)
-        {
-            playerUnit.GadgetSecondary();
-        }
+        data.input.crawling = true;
+        data.input.crawlRequestTime = Time.unscaledTime;
     }
     
     private void OnMelee(InputValue value)
     {
         if (value.Get<float>() == 1.0f)
         {
-            unitInputData.meleeRequestTime = Time.unscaledTime;
+            data.input.meleeRequestTime = Time.unscaledTime;
+            if (networkPlayer) networkPlayer.CmdOnMelee();
         }
     }
 
     private void OnMouseMove(InputValue value)
     {
+        Vector3 lastPosition = MousePosition;
+        MousePosition = value.Get<Vector2>();
+        MousePosition.z = (transform.position - mainCamera.transform.position).z;
+        
+        MouseDelta = MousePosition - lastPosition;
+        SetAimOffset(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
+        if (networkPlayer) networkPlayer.CmdOnMouseMove(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
+    }
 
+    private void OnStickMove(InputValue value)
+    {
+        Vector2 dir = value.Get<Vector2>();
+        if (dir.sqrMagnitude == 0) { return; }
+        SetAimOffset(dir);
+        //if (networkPlayer) networkPlayer.CmdOnMouseMove(UnityEngine.Camera.main.ScreenToWorldPoint(MousePosition) - data.animator.GetLayer(UnitAnimatorLayer.FrontArm).transform.position);
     }
 
     private void OnInteract(InputValue value)
     {
         if (value.Get<float>() == 1.0f)
         {
-            playerUnit.Interact();
+            Interact();
+            if (networkPlayer) networkPlayer.CmdOnInteract();
         }
     }
+
+    #region Gadgets
+
+    private void OnGadgetPrimary(InputValue value)
+    {
+        GadgetPrimary(value.Get<float>() == 1.0f);
+        if (networkPlayer) networkPlayer.CmdOnGadgetPrimary(value.Get<float>() == 1.0f);
+    }
+
+    private void OnGadgetSecondary(InputValue value)
+    {
+        GadgetSecondary(value.Get<float>() == 1.0f);
+        if (networkPlayer) networkPlayer.CmdOnGadgetSecondary(value.Get<float>() == 1.0f);
+    }
     
+    private void OnNextGadget(InputValue value)
+    {
+        if(value.Get<float>() > 0)
+        {
+            int originalGadgetIndex = equippedGadgetIndex;
+            bool newGadgetEquipped = false;
+            equippedGadgetIndex++;
+            
+            if (equippedGadgetIndex == GlobalData.playerGadgets.Count)
+            { 
+                equippedGadgetIndex = -1;
+                newGadgetEquipped = EquipGadget(GlobalData.DefaultGadget);
+            }
+            else
+            {
+                newGadgetEquipped = EquipGadget(GlobalData.playerGadgets[equippedGadgetIndex]);
+            }
+
+            if (!newGadgetEquipped) equippedGadgetIndex = originalGadgetIndex;
+            if (newGadgetEquipped && networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
+        }
+    }
+
+    private void OnPreviousGadget(InputValue value)
+    {
+        if (value.Get<float>() < 0)
+        {
+            int originalGadgetIndex = equippedGadgetIndex;
+            bool newGadgetEquipped = false;
+            equippedGadgetIndex--;
+            
+            switch (equippedGadgetIndex)
+            {
+                case -2:
+                    equippedGadgetIndex = GlobalData.playerGadgets.Count - 1;
+                    if (equippedGadgetIndex != -1)
+                        newGadgetEquipped = EquipGadget(GlobalData.playerGadgets[equippedGadgetIndex]);
+                    break;
+                case -1:
+                    newGadgetEquipped = EquipGadget(GlobalData.DefaultGadget);
+                    break;
+                default:
+                    newGadgetEquipped = EquipGadget(GlobalData.playerGadgets[equippedGadgetIndex]);
+                    break;
+            }
+            
+            if (!newGadgetEquipped) equippedGadgetIndex = originalGadgetIndex;
+            if (newGadgetEquipped && networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
+        }
+    }
+
+    private void OnGadget_0()
+    {
+        if(GlobalData.playerGadgets.Count <= 0) { return; }
+        if(equippedGadgetIndex == 0)
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 0;
+        }
+        else
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[0]) ? 0 : equippedGadgetIndex;
+        }
+        if (networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
+    }
+
+    private void OnGadget_1()
+    {
+        if(GlobalData.playerGadgets.Count <= 1) { return; }
+        if(equippedGadgetIndex == 1)
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 1;
+        }
+        else
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[1]) ? 1 : equippedGadgetIndex;
+        }
+        if (networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
+    }
+
+    private void OnGadget_2()
+    {
+        if(GlobalData.playerGadgets.Count <= 2) { return; }
+        if(equippedGadgetIndex == 2)
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 2;
+        }
+        else
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[2]) ? 2 : equippedGadgetIndex;
+        }
+        if (networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
+    }
+
+    private void OnGadget_3()
+    {
+        if(GlobalData.playerGadgets.Count <= 3) { return; }
+        if(equippedGadgetIndex == 3)
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.DefaultGadget) ? -1 : 3;
+        }
+        else
+        {
+            equippedGadgetIndex = EquipGadget(GlobalData.playerGadgets[3]) ? 3 : equippedGadgetIndex;
+        }
+        if (networkPlayer) networkPlayer.CmdEquipGadget(equippedGadgetIndex);
+    }
+    
+    #endregion
 }

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SM_FA_GrapplingHook
+  m_Controller: {fileID: 9100000, guid: dfaac48e0091a94418237b6ab87a0054, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 0d64aac4b6b20bd4497d07aee30ae714, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: dc303267e4c7f524ba60420198ba8115, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ace51a5af06da1c4aa4c457cc6e600b6, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6d36462ec1502844397ab1a07ce6e4c8, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 630c273b77d08a54fa418c98608ced24, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ef367292777297248a8757355385bef5, type: 2}

@@ -11,7 +11,10 @@ public abstract class Interactable : MonoBehaviour
         if (unit != null)
         {
             unit.AddInteractable(this);
-            GameplayUI.Instance.EnableInteractPopup(transform);
+            if (unit is Player)
+            {
+                PlayerUI.Instance.EnableInteractPopup(transform);
+            }
         }
     }
     
@@ -20,7 +23,10 @@ public abstract class Interactable : MonoBehaviour
         if (unit != null)
         {
             unit.RemoveInteractable(this);
-            GameplayUI.Instance.DisableInteractPopup();
+            if (unit is Player)
+            {
+                PlayerUI.Instance.DisableInteractPopup();
+            }
         }
     }
 }

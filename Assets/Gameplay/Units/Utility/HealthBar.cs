@@ -8,7 +8,7 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private Image currentHealthImage, lerpedHealthImage;
     private const float lerpDuration = 5.0f;
     private Coroutine lerpCoroutine;
-
+    
     public void UpdateHealth(float currentHealth, float maxHealth) {
         //float percentage = currentHealth / maxHealth;
         //currentHealthImage.fillAmount = percentage;
