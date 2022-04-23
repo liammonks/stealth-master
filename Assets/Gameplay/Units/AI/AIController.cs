@@ -10,8 +10,7 @@ namespace AI
     {
         Null,
         Default,
-        Alert,
-        Pursuit
+        Aggressive
     }
 
     [System.Serializable]

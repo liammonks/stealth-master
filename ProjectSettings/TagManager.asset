@@ -9,7 +9,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - UnitCollider
+  - Environment
   - Water
   - UI
   - Interactable

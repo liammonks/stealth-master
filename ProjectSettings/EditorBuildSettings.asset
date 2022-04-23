@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Gameplay/Scenes/Planning.unity
     guid: 0259df6fef8ce51468c97a1ea80710ac
   - enabled: 1
-    path: Assets/Gameplay/Missions/Levels/Level_Parkour/Level_Parkour.unity
+    path: Assets/Gameplay/Missions/Scenes/Level_Parkour/Level_Parkour.unity
     guid: cbb8393634873e74c8e09649ab813c05
   - enabled: 1
     path: Assets/Gameplay/Scenes/Global.unity
@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Gameplay/Scenes/Debugger.unity
     guid: e8099ff2f872cb94b83e7fccd9a8745d
   - enabled: 1
-    path: Assets/Gameplay/Missions/Levels/Level_00/Level_00.unity
+    path: Assets/Gameplay/Missions/Scenes/Level_00/Level_00.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 726a2d12068768c499654db2e7e51f58, type: 2}

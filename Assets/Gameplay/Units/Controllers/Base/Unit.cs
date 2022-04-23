@@ -125,7 +125,7 @@ public abstract class Unit : MonoBehaviour, ITakeDamage
         ID = UnitHelper.GetUnitID();
         
         // Init layer masks
-        m_CollisionMask = LayerMask.GetMask("UnitCollider");
+        m_CollisionMask = LayerMask.GetMask("Environment");
         m_InteractionMask = LayerMask.GetMask("Interactable");
         
         // Init data

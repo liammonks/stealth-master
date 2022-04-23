@@ -27,6 +27,7 @@ public class StealthMaster : StateMachine
         if (ai)
         {
             ai.states.Add(AIState.Default, new AI.States.Default(data, ai.data));
+            ai.states.Add(AIState.Aggressive, new AI.States.Aggressive(data, ai.data));
         }
     }
 }
