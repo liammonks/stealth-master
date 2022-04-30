@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67577002}
   m_LocalRotation: {x: 0.008331019, y: 0.008332176, z: -0.00006942034, w: 0.9999306}
-  m_LocalPosition: {x: -1, y: 3, z: -60}
+  m_LocalPosition: {x: -48.937912, y: 52.09, z: -56.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,7 +186,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9358108, y: 1}
+    m_SensorSize: {x: 1.7765452, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -6525,7 +6525,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521881362}
   m_LocalRotation: {x: 0.008331019, y: 0.008332176, z: -0.00006942034, w: 0.9999306}
-  m_LocalPosition: {x: -1, y: 3, z: -60}
+  m_LocalPosition: {x: -48.937912, y: 52.09, z: -56.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6714,7 +6714,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9358108, y: 1}
+    m_SensorSize: {x: 1.7765452, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -12029,15 +12029,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1340281494593536409, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -47.937912
       objectReference: {fileID: 0}
     - target: {fileID: 1340281494593536409, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 51.09
       objectReference: {fileID: 0}
     - target: {fileID: 1340281494593536409, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 3.1
       objectReference: {fileID: 0}
     - target: {fileID: 1340281494593536409, guid: 762a13edcd4d95c4f84210634a2cba02, type: 3}
       propertyPath: m_LocalRotation.w
