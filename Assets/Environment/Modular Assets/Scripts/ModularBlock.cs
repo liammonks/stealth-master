@@ -63,7 +63,18 @@ public class ModularBlock : MonoBehaviour
         if (m_RootPiece != null)
         {
             // Spawn new root object
-            Instantiate(m_RootPiece.BaseObject, transform);
+            GameObject rootObject = Instantiate(m_RootPiece.BaseObject, transform);
+            // Remove child mesh from root
+            foreach (Transform child in rootObject.transform)
+            {
+                foreach (Component component in child.GetComponents<Component>())
+                {
+                    if (!(component is Transform))
+                    {
+                        DestroyImmediate(component);
+                    }
+                }
+            }
             UpdateOptions();
         }
     }

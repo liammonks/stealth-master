@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class ModularEditor : MonoBehaviour
+public class ModularEditor : EditorWindow
 {
-    // Start is called before the first frame update
-    void Start()
+    [MenuItem("StealthMaster/ModularBlock")]
+    public static void CreateModularBlock()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameObject modularBlock = new GameObject("ModularBlock", typeof(ModularBlock));
+        modularBlock.transform.SetParent(Selection.activeTransform);
+        modularBlock.transform.localPosition = Vector3.zero;
+        modularBlock.transform.localRotation = Quaternion.identity;
+        modularBlock.transform.localScale = Vector3.one;
     }
 }

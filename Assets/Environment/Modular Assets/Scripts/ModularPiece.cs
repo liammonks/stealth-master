@@ -21,7 +21,7 @@ public class ModularSocket
 [CreateAssetMenu(fileName = "NewModularPiece", menuName = "StealthMaster/ModularPiece")]
 public class ModularPiece : SerializedScriptableObject
 {
-    [OnValueChanged("OnRootChanged")]
+    [OnValueChanged("OnRootChanged")] [OnInspectorInit("OnInspectorInit")]
     public GameObject BaseObject;
 
     [ListDrawerSettings(Expanded = true, ListElementLabelName = "@Name", IsReadOnly = true)] [Space(20)]
@@ -39,6 +39,14 @@ public class ModularPiece : SerializedScriptableObject
         else
         {
             ResetSockets();
+        }
+    }
+
+    private void OnInspectorInit()
+    {
+        if (BaseObject == null)
+        {
+            Options.Clear();
         }
     }
 
