@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e450da0d524bc44bacb67e13f810f08, type: 3}
+  m_Name: Main_Building
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  BaseObject: {fileID: 2483123268514210937, guid: 37ed3844eae713547bf944675e6a09d5, type: 3}
+  Options:
+  - Name: Wall_Middle
+    Index: 0
+    Options:
+    - {fileID: 6275795623057542672, guid: 29e2861f13862c340935a438ad32cd7d, type: 3}
+    - {fileID: 357061194251729295, guid: f1cdfd5057864674598414678ab204ac, type: 3}
+    - {fileID: 5897245033436499042, guid: 4ac73ca9d6e73d146bead1290a5c959a, type: 3}
+    - {fileID: 2011381001764066966, guid: 0dfb39fa5a7449642b546eae2d8fb566, type: 3}
+    - {fileID: 973291610282123225, guid: 5e2df81f28ab6d34fbf693ab8e4e9208, type: 3}
+    - {fileID: 3294837322685598069, guid: 61a6cbfd89ffcf44a9ef8f2249fce3cf, type: 3}
+    - {fileID: 4253429647205766502, guid: 431d0c62a92b30342a6176d77afaa80e, type: 3}
+    - {fileID: 8546279459695223803, guid: f86b4569641baa740bcfb479828f726f, type: 3}
+    - {fileID: 1299064373632314717, guid: e21213551b622444f81827c4420a08ec, type: 3}
+    - {fileID: 33767847871503988, guid: 423a6fd0afb9f364dad57145600ecef7, type: 3}
+    - {fileID: 6504607747992529997, guid: af037084b6bfaab489fb22b63b29ee97, type: 3}
+    - {fileID: 7772923350261997137, guid: 32d0ffe61fc482949835df98eae54eb1, type: 3}
+    - {fileID: 4934034103178195602, guid: 3960a4cfccfe9c641a60273db8f5de0a, type: 3}
+  - Name: Wall_Left
+    Index: 1
+    Options:
+    - {fileID: 6275795623057542672, guid: 29e2861f13862c340935a438ad32cd7d, type: 3}
+    - {fileID: 357061194251729295, guid: f1cdfd5057864674598414678ab204ac, type: 3}
+    - {fileID: 5897245033436499042, guid: 4ac73ca9d6e73d146bead1290a5c959a, type: 3}
+    - {fileID: 2011381001764066966, guid: 0dfb39fa5a7449642b546eae2d8fb566, type: 3}
+    - {fileID: 973291610282123225, guid: 5e2df81f28ab6d34fbf693ab8e4e9208, type: 3}
+    - {fileID: 3294837322685598069, guid: 61a6cbfd89ffcf44a9ef8f2249fce3cf, type: 3}
+    - {fileID: 4253429647205766502, guid: 431d0c62a92b30342a6176d77afaa80e, type: 3}
+    - {fileID: 8546279459695223803, guid: f86b4569641baa740bcfb479828f726f, type: 3}
+    - {fileID: 1299064373632314717, guid: e21213551b622444f81827c4420a08ec, type: 3}
+    - {fileID: 33767847871503988, guid: 423a6fd0afb9f364dad57145600ecef7, type: 3}
+    - {fileID: 6504607747992529997, guid: af037084b6bfaab489fb22b63b29ee97, type: 3}
+    - {fileID: 7772923350261997137, guid: 32d0ffe61fc482949835df98eae54eb1, type: 3}
+    - {fileID: 4934034103178195602, guid: 3960a4cfccfe9c641a60273db8f5de0a, type: 3}
+  - Name: Wall_Right
+    Index: 2
+    Options:
+    - {fileID: 6275795623057542672, guid: 29e2861f13862c340935a438ad32cd7d, type: 3}
+    - {fileID: 357061194251729295, guid: f1cdfd5057864674598414678ab204ac, type: 3}
+    - {fileID: 5897245033436499042, guid: 4ac73ca9d6e73d146bead1290a5c959a, type: 3}
+    - {fileID: 2011381001764066966, guid: 0dfb39fa5a7449642b546eae2d8fb566, type: 3}
+    - {fileID: 973291610282123225, guid: 5e2df81f28ab6d34fbf693ab8e4e9208, type: 3}
+    - {fileID: 3294837322685598069, guid: 61a6cbfd89ffcf44a9ef8f2249fce3cf, type: 3}
+    - {fileID: 4253429647205766502, guid: 431d0c62a92b30342a6176d77afaa80e, type: 3}
+    - {fileID: 8546279459695223803, guid: f86b4569641baa740bcfb479828f726f, type: 3}
+    - {fileID: 1299064373632314717, guid: e21213551b622444f81827c4420a08ec, type: 3}
+    - {fileID: 33767847871503988, guid: 423a6fd0afb9f364dad57145600ecef7, type: 3}
+    - {fileID: 6504607747992529997, guid: af037084b6bfaab489fb22b63b29ee97, type: 3}
+    - {fileID: 7772923350261997137, guid: 32d0ffe61fc482949835df98eae54eb1, type: 3}
+    - {fileID: 4934034103178195602, guid: 3960a4cfccfe9c641a60273db8f5de0a, type: 3}
+  - Name: Roof
+    Index: 3
+    Options:
+    - {fileID: 8316813204698791889, guid: 9b3bf4e8e66e4fd4ba92920efba04f55, type: 3}
+  - Name: Floor
+    Index: 4
+    Options:
+    - {fileID: 7476854630780215672, guid: dd848d23c32d57141aa8be3660411f62, type: 3}

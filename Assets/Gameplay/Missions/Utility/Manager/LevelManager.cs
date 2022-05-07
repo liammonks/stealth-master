@@ -35,7 +35,12 @@ public class LevelManager : MonoBehaviour
 
         FoodVendors = FindObjectsOfType<FoodVendor>();
     }
-    
+
+    private void Start()
+    {
+        RespawnPlayer();
+    }
+
     private void OnDisable()
     {
         foreach (WinCondition winCondition in winConditions)

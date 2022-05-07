@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Gameplay/Scenes/Planning.unity
     guid: 0259df6fef8ce51468c97a1ea80710ac
   - enabled: 1
-    path: Assets/Gameplay/Missions/Scenes/Level_Parkour/Level_Parkour.unity
+    path: Assets/Gameplay/Missions/Scenes/Parkour/Level_Parkour.unity
     guid: cbb8393634873e74c8e09649ab813c05
   - enabled: 1
     path: Assets/Gameplay/Scenes/Global.unity

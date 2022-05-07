@@ -336,7 +336,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 0
-  state: 1
   data:
     rb: {fileID: 0}
     previousState: 0
@@ -353,6 +352,7 @@ MonoBehaviour:
     stats: {fileID: 11400000, guid: 1eefa2d4a2182b1408ec35a899cb5d10, type: 2}
     target: {x: 0, y: 0}
     isGrounded: 0
+    lastGroundedTime: 0
     isStanding: 1
     isFacingRight: 1
     isSlipping: 0
@@ -360,6 +360,9 @@ MonoBehaviour:
     t: 0
     stateDuration: 0
     hitIDs: 
+    attatchedRB: {fileID: 0}
+    interactables: []
+  stateMachine: {fileID: 0}
   activeCollider: {fileID: 8410702403723811805}
   standingPoints:
   - {x: 0.1, y: 0.8}
@@ -379,7 +382,6 @@ MonoBehaviour:
   - {x: 0.5, y: -0.2}
   - {x: 0.75, y: -0.1}
   - {x: 0.75, y: 0.1}
-  interactables: []
   networkPlayer: {fileID: 0}
 --- !u!50 &8410702403178779001
 Rigidbody2D:
@@ -529,7 +531,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8410702403432939512}
-  - component: {fileID: 8410702403432939519}
   m_Layer: 9
   m_Name: Inventory
   m_TagString: Untagged
@@ -556,24 +557,6 @@ Transform:
   m_Father: {fileID: 8410702403178778949}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8410702403432939519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8410702403432939513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fb9e665b6fadd94a8f4c833433fb1c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  items:
-  - {fileID: 8410702404285031190}
-  - {fileID: 8410702403126721413}
-  - {fileID: 8410702402881466385}
-  focusPoint: {fileID: 8410702404204033328}
-  interpolatedDelta: {x: 0, y: 0}
 --- !u!1 &8410702403534914293
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,7 +660,7 @@ SpriteRenderer:
   m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &8410702403534914281
@@ -807,13 +790,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5fe6af577f59f64eac6ab44e5bcf8cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reversed: 0
+  body: {fileID: 8410702403534914282}
   defaultBody: {fileID: 22100000, guid: c3c54f03ed86cf542b1eb6da2e4cc355, type: 2}
   reversedBody: {fileID: 22100000, guid: 4ef361af892e7664d98a11295441c088, type: 2}
-  defaultFrontArm: {fileID: 22100000, guid: 25c8ef957bd38d946a133e6206083447, type: 2}
-  defaultBackArm: {fileID: 22100000, guid: 480b869b6f676024fa9b99c2b44ead7e, type: 2}
-  body: {fileID: 8410702403534914282}
   frontArm: {fileID: 8410702403308503492}
-  backArm: {fileID: 8410702402835288237}
+  defaultFrontArm: {fileID: 22100000, guid: 25c8ef957bd38d946a133e6206083447, type: 2}
+  reversedFrontArm: {fileID: 0}
 --- !u!1 &8410702403772364944
 GameObject:
   m_ObjectHideFlags: 0
@@ -926,7 +909,7 @@ SpriteRenderer:
   m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8410702404141498446
@@ -1010,7 +993,7 @@ SpriteRenderer:
   m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8410702404204033329
