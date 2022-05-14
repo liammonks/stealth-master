@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class Lightning : MonoBehaviour
     private const float angleMin = -30.0f, angleMax = 30.0f;
     private const int sectionCount = 10;
     private const float forkChance = 1.0f;
-    
+
     private struct LightningSection
     {
         public GameObject obj;
@@ -43,23 +44,32 @@ public class Lightning : MonoBehaviour
     }
     
     [SerializeField] private GameObject lightningPrefab;
-    [SerializeField] private GameObject directionalLight;
 
+    [Space(20)]
+    [SerializeField, MinMaxSlider(0, 30)]
+    private Vector2 frequency = new Vector2(6.0f, 12.0f);
+
+    [Space(20)]
+    [SerializeField, MinMaxSlider(50, 100)]
+    private Vector2 depth = new Vector2(75.0f, 100.0f);
+
+    private GameObject directionalLight;
     private List<LightningSection> mainSections = new List<LightningSection>();
     private List<LightningSection> forkedSections = new List<LightningSection>();
     
     void Start()
     {
+        directionalLight = GetComponentInChildren<Light>(true).gameObject;
         StartCoroutine(Storm());
     }
     
     private IEnumerator Storm()
     {
-        Vector3 spawnPosition = rootPosition + (Vector3.right * Random.Range(-30.0f, 30.0f)) + (Vector3.right * Camera.main.transform.position.x);
+        Vector3 spawnPosition = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(-1f, 2f), 1, Random.Range(depth.x, depth.y)));
         StartCoroutine(Strike(spawnPosition));
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(Random.Range(0.1f, 0.2f));
         StartCoroutine(Strike(spawnPosition));
-        yield return new WaitForSeconds(Random.Range(6.0f, 12.0f));
+        yield return new WaitForSeconds(Random.Range(frequency.x, frequency.y));
         StartCoroutine(Storm());
     }
 
