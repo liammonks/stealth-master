@@ -3,57 +3,81 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [System.Serializable]
-public class ModularOptions
+public class ModularOption
 {
     [HideInInspector] public string Name;
     [HideInInspector] public int Index;
 
-    [ValueDropdown("m_AvailableObjects")] [HideLabel] [InlineButton("RemoveSelection", "Remove")] [OnValueChanged("OnSelectionUpdated")]
+    [ValueDropdown("AvailableObjects")] [HideLabel] [InlineButton("ClearSelection", "Remove")] [OnValueChanged("@OnSelectionUpdated?.Invoke(this)")]
     public GameObject SelectedObject;
+    public IEnumerable<GameObject> AvailableObjects;
+    public Action<ModularOption> OnSelectionUpdated;
 
-    private IEnumerable<GameObject> m_AvailableObjects;
-    private ModularBlock m_Block;
-
-    public ModularOptions(ModularBlock block, string name, int index, IEnumerable<GameObject> availableObjects)
+    public ModularOption(string name, int index, IEnumerable<GameObject> availableObjects)
     {
-        m_Block = block;
         Name = name;
         Index = index;
-        m_AvailableObjects = availableObjects;
+        AvailableObjects = availableObjects;
     }
 
-    public void UpdateBlock(ModularBlock block)
+    public void SetSelection(GameObject selection)
     {
-        m_Block = block;
+        SelectedObject = selection;
+        OnSelectionUpdated?.Invoke(this);
     }
 
-    public void UpdateOptions(IEnumerable<GameObject> availableObjects)
-    {
-        m_AvailableObjects = availableObjects;
-    }
-
-    private void OnSelectionUpdated()
-    {
-        m_Block.OnSelectionUpdated(this);
-    }
-
-    private void RemoveSelection()
+    private void ClearSelection()
     {
         SelectedObject = null;
-        OnSelectionUpdated();
+        OnSelectionUpdated?.Invoke(this);
     }
+
 }
 
 [ExecuteInEditMode]
 public class ModularBlock : MonoBehaviour
 {
-    [OnValueChanged("OnRootChanged"), OnInspectorInit("OnInspectorInit"), AssetList(Path = "Assets/Environment/Modular")]
-    [SerializeField] private ModularSettings m_Root;
+    public Transform ModularRoot => transform.childCount > 0 ? transform.GetChild(0) : null;
+
+    [OnInspectorInit("OnInspectorInit"), OnValueChanged("OnRootChanged"), AssetList(Path = "Assets/Environment/Modular")]
+    [SerializeField] private ModularSettings m_ModularSettings;
 
     [ListDrawerSettings(Expanded = true, ListElementLabelName = "@Name", IsReadOnly = true)]
-    [SerializeField] private List<ModularOptions> m_Options = new List<ModularOptions>();
+    [SerializeField] private List<ModularOption> m_Options = new List<ModularOption>();
+
+    private void OnInspectorInit()
+    {
+        if (m_ModularSettings == null || ModularRoot == null) { return; }
+
+        // Ensure options are setup correctly
+        foreach (ModularSocket socket in m_ModularSettings.Sockets)
+        {
+            ModularOption existingOption = m_Options.Find(x => x.Name == socket.Name);
+            ModularOption newOption = new ModularOption(socket.Name, socket.Index, socket.Options);
+            newOption.OnSelectionUpdated += OptionSelectionUpdated;
+
+            // If an option for this socket already exists, fetch its currently selected object
+            if (existingOption != null)
+            {
+                newOption.SetSelection(existingOption.SelectedObject);
+                m_Options.Remove(existingOption);
+            }
+            else
+            {
+                // Check if an object already exists in the socket
+                Transform socketTransform = ModularRoot.GetChild(socket.Index);
+                if (socketTransform.childCount > 0)
+                {
+                    GameObject foundObject = socket.Options.Find(x => x.name == socketTransform.GetChild(0).name);
+                    newOption.SetSelection(foundObject);
+                }
+            }
+            m_Options.Add(newOption);
+        }
+    }
 
     private void OnRootChanged()
     {
@@ -65,10 +89,10 @@ public class ModularBlock : MonoBehaviour
             DestroyImmediate(child.gameObject);
         }
 
-        if (m_Root != null)
+        if (m_ModularSettings != null)
         {
             // Spawn new root object
-            GameObject rootObject = Instantiate(m_Root.BaseObject, transform);
+            GameObject rootObject = Instantiate(m_ModularSettings.BaseObject, transform);
             // Remove child mesh from root
             foreach (Transform child in rootObject.transform)
             {
@@ -80,56 +104,24 @@ public class ModularBlock : MonoBehaviour
                     }
                 }
             }
-            UpdateOptions();
         }
     }
 
-    private void OnInspectorInit()
+    private void OptionSelectionUpdated(ModularOption option)
     {
-        foreach (ModularOptions options in m_Options)
-        {
-            options.UpdateBlock(this);
-        }
-        UpdateOptions();
-    }
-
-    private void UpdateOptions()
-    {
-        if (m_Root == null) { return; }
-
-        foreach (ModularSocket socket in m_Root.Options)
-        {
-            ModularOptions existingOptions = m_Options.Find(x => x.Name == socket.Name);
-            if (existingOptions != null)
-            {
-                // Update existing options
-                existingOptions.UpdateOptions(socket.Options);
-            }
-            else
-            {
-                // Create new options
-                m_Options.Add(new ModularOptions(this, socket.Name, socket.Index, socket.Options));
-            }
-        }
-    }
-
-    public void OnSelectionUpdated(ModularOptions options)
-    {
-        // Get relevant child
-        Transform socket = transform.GetChild(0).GetChild(options.Index);
-        // Clear previously socketed modules
+        Transform socket = ModularRoot.GetChild(option.Index);
+        // Clear previous children
         foreach (Transform child in socket)
         {
             DestroyImmediate(child.gameObject);
         }
 
-        if (options.SelectedObject != null)
-        {
-            GameObject obj = Instantiate(options.SelectedObject, socket);
-            obj.transform.localPosition = Vector3.zero;
-            obj.transform.localRotation = Quaternion.identity;
-            obj.transform.localScale = Vector3.one;
-        }
+        if (option.SelectedObject == null) return;
+
+        GameObject modularPiece = Instantiate(option.SelectedObject, socket);
+        modularPiece.transform.localPosition = Vector3.zero;
+        modularPiece.transform.localRotation = Quaternion.identity;
+        modularPiece.transform.localScale = Vector3.one;
     }
 
 }

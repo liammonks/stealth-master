@@ -9,6 +9,7 @@ public class ModularSocket
 {
     [HideInInspector] public string Name;
     [HideInInspector] public int Index;
+
     [ListDrawerSettings(Expanded = false, DraggableItems = false)]
     public List<GameObject> Options = new List<GameObject>();
 
@@ -26,7 +27,7 @@ public class ModularSettings : SerializedScriptableObject
     public GameObject BaseObject;
 
     [ListDrawerSettings(Expanded = true, DraggableItems = false, ListElementLabelName = "@Name", IsReadOnly = true)] [Space(20)]
-    public List<ModularSocket> Options;
+    public List<ModularSocket> Sockets;
 
     private bool m_ConfirmationRequired = false;
 
@@ -34,7 +35,7 @@ public class ModularSettings : SerializedScriptableObject
     {
         if (BaseObject == null)
         {
-            Options.Clear();
+            Sockets.Clear();
             m_ConfirmationRequired = false;
         }
         else
@@ -47,17 +48,17 @@ public class ModularSettings : SerializedScriptableObject
     {
         if (BaseObject == null)
         {
-            Options.Clear();
+            Sockets.Clear();
         }
     }
 
     private void ResetSockets()
     {
-        Options.Clear();
+        Sockets.Clear();
         foreach (Transform child in BaseObject.transform)
         {
             ModularSocket socket = new ModularSocket(child.name, child.GetSiblingIndex());
-            Options.Add(socket);
+            Sockets.Add(socket);
         }
     }
 

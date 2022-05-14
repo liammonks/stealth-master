@@ -107,6 +107,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_MLDR_Window_002 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a473d3d71f659b240be9d92259530b35, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a473d3d71f659b240be9d92259530b35, type: 3}
 --- !u!1 &6504607747992529997 stripped
