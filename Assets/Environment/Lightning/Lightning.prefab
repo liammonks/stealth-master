@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightningPrefab: {fileID: 2395026832067271307, guid: bd8a596548aedc047ac6929aa4523c30, type: 3}
-  directionalLight: {fileID: 1196334280055525586}
+  frequency: {x: 20.040958, y: 30}
+  depth: {x: 75.210175, y: 100}
 --- !u!1 &1196334280055525586
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,7 +65,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1196334280055525589
 Transform:
   m_ObjectHideFlags: 0
