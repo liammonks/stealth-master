@@ -105,6 +105,7 @@ public class ModularBlock : MonoBehaviour
                 }
             }
         }
+        OnInspectorInit();
     }
 
     private void OptionSelectionUpdated(ModularOption option)
