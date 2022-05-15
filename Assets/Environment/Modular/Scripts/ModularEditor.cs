@@ -1,17 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Unity.Jobs;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class ModularEditor : EditorWindow
 {
+    [SerializeField]
+    private GameObject ModularBlockPrefab;
+    private static ModularEditor instance;
+
     [MenuItem("StealthMaster/ModularBlock")]
     public static void CreateModularBlock()
     {
-        GameObject modularBlock = new GameObject("ModularBlock", typeof(ModularBlock));
-        modularBlock.transform.SetParent(Selection.activeTransform);
-        modularBlock.transform.localPosition = Vector3.zero;
-        modularBlock.transform.localRotation = Quaternion.identity;
-        modularBlock.transform.localScale = Vector3.one;
+        AsyncOperationHandle<GameObject> handle = Addressables.InstantiateAsync("ModularBlock", Selection.activeTransform);
+        handle.Completed += delegate
+        {
+            handle.Result.transform.localPosition = Vector3.zero;
+            handle.Result.transform.localRotation = Quaternion.identity;
+            handle.Result.transform.localScale = Vector3.one;
+            handle.Result.transform.name = "ModularBlock";
+        };
+        handle.WaitForCompletion();
     }
+
 }

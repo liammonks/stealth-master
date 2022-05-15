@@ -37,18 +37,44 @@ public class ModularOption
 
 }
 
-[ExecuteInEditMode]
+[ExecuteInEditMode, SelectionBase]
 public class ModularBlock : MonoBehaviour
 {
     public Transform ModularRoot => transform.childCount > 0 ? transform.GetChild(0) : null;
 
-    [OnInspectorInit("OnInspectorInit"), OnValueChanged("OnRootChanged"), AssetList(Path = "Assets/Environment/Modular")]
+    [OnInspectorInit("FetchOptions"), OnValueChanged("OnRootChanged"), AssetList(Path = "Assets/Environment/Modular")]
     [SerializeField] private ModularSettings m_ModularSettings;
 
     [ListDrawerSettings(Expanded = true, ListElementLabelName = "@Name", IsReadOnly = true)]
     [SerializeField] private List<ModularOption> m_Options = new List<ModularOption>();
 
-    private void OnInspectorInit()
+    private void OnRootChanged()
+    {
+        m_Options.Clear();
+        Build();
+    }
+
+    [Button("Rebuild")]
+    private void Build()
+    {
+        ClearChildren();
+
+        if (m_ModularSettings == null) return;
+
+        // Spawn new root object
+        GameObject rootObject = Instantiate(m_ModularSettings.BaseObject, transform);
+        rootObject.transform.localPosition = m_ModularSettings.RootOffset;
+        rootObject.hideFlags = HideFlags.HideInHierarchy;
+        transform.name = m_ModularSettings.name;
+
+        // Update sockets
+        foreach (ModularOption option in m_Options)
+        {
+            OptionSelectionUpdated(option);
+        }
+    }
+
+    private void FetchOptions()
     {
         if (m_ModularSettings == null || ModularRoot == null) { return; }
 
@@ -79,39 +105,11 @@ public class ModularBlock : MonoBehaviour
         }
     }
 
-    private void OnRootChanged()
-    {
-        m_Options.Clear();
-
-        // Clear previous objects
-        foreach (Transform child in transform)
-        {
-            DestroyImmediate(child.gameObject);
-        }
-
-        if (m_ModularSettings != null)
-        {
-            // Spawn new root object
-            GameObject rootObject = Instantiate(m_ModularSettings.BaseObject, transform);
-            // Remove child mesh from root
-            foreach (Transform child in rootObject.transform)
-            {
-                foreach (Component component in child.GetComponents<Component>())
-                {
-                    if (!(component is Transform))
-                    {
-                        DestroyImmediate(component);
-                    }
-                }
-            }
-        }
-        OnInspectorInit();
-    }
-
     private void OptionSelectionUpdated(ModularOption option)
     {
         Transform socket = ModularRoot.GetChild(option.Index);
-        // Clear previous children
+
+        // Clear previously socketed items
         foreach (Transform child in socket)
         {
             DestroyImmediate(child.gameObject);
@@ -123,6 +121,15 @@ public class ModularBlock : MonoBehaviour
         modularPiece.transform.localPosition = Vector3.zero;
         modularPiece.transform.localRotation = Quaternion.identity;
         modularPiece.transform.localScale = Vector3.one;
+        modularPiece.hideFlags = HideFlags.HideInHierarchy;
+    }
+
+    private void ClearChildren()
+    {
+        foreach (Transform child in transform)
+        {
+            DestroyImmediate(child.gameObject);
+        }
     }
 
 }

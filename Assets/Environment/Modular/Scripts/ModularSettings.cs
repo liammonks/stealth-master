@@ -26,6 +26,8 @@ public class ModularSettings : SerializedScriptableObject
     [OnValueChanged("OnRootChanged")] [OnInspectorInit("OnInspectorInit")]
     public GameObject BaseObject;
 
+    public Vector3 RootOffset;
+
     [ListDrawerSettings(Expanded = true, DraggableItems = false, ListElementLabelName = "@Name", IsReadOnly = true)] [Space(20)]
     public List<ModularSocket> Sockets;
 

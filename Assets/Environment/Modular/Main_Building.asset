@@ -22,6 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   BaseObject: {fileID: 2483123268514210937, guid: 37ed3844eae713547bf944675e6a09d5, type: 3}
+  RootOffset: {x: 0, y: 0, z: -2}
   Sockets:
   - Name: Wall_Middle
     Index: 0
