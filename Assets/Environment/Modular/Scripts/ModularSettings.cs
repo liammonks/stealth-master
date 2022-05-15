@@ -23,13 +23,17 @@ public class ModularSocket
 [CreateAssetMenu(fileName = "NewModularSettings", menuName = "Environment/ModularSettings")]
 public class ModularSettings : SerializedScriptableObject
 {
-    [OnValueChanged("OnRootChanged")] [OnInspectorInit("OnInspectorInit")]
-    public GameObject BaseObject;
+    [SerializeField, OnValueChanged("OnRootChanged"), OnInspectorInit("OnInspectorInit")]
+    private GameObject m_BaseObject;
+    public GameObject BaseObject => m_BaseObject;
 
-    public Vector3 RootOffset;
+    [SerializeField]
+    private Vector3 m_RootOffset;
+    public Vector3 RootOffset => m_RootOffset;
 
-    [ListDrawerSettings(Expanded = true, DraggableItems = false, ListElementLabelName = "@Name", IsReadOnly = true)] [Space(20)]
-    public List<ModularSocket> Sockets;
+    [Space(20), SerializeField, ListDrawerSettings(Expanded = true, DraggableItems = false, ListElementLabelName = "@Name", IsReadOnly = true)]
+    private List<ModularSocket> m_Sockets;
+    public List<ModularSocket> Sockets => m_Sockets;
 
     private bool m_ConfirmationRequired = false;
 

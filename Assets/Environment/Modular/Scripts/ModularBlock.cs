@@ -2,6 +2,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -52,6 +53,7 @@ public class ModularBlock : MonoBehaviour
     {
         m_Options.Clear();
         Build();
+        FetchOptions();
     }
 
     [Button("Rebuild")]
@@ -107,6 +109,8 @@ public class ModularBlock : MonoBehaviour
 
     private void OptionSelectionUpdated(ModularOption option)
     {
+        if (ModularRoot == null || option == null || ModularRoot.childCount < option.Index) return;
+
         Transform socket = ModularRoot.GetChild(option.Index);
 
         // Clear previously socketed items
