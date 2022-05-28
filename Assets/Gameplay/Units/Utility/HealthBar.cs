@@ -10,6 +10,7 @@ public class HealthBar : MonoBehaviour
     private Coroutine lerpCoroutine;
     
     public void UpdateHealth(float currentHealth, float maxHealth) {
+        if (!gameObject.activeInHierarchy) { return; }
         float percentage = currentHealth / maxHealth;
         currentHealthImage.fillAmount = percentage;
         if (lerpCoroutine != null) { StopCoroutine(lerpCoroutine); }

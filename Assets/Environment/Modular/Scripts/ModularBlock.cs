@@ -43,7 +43,7 @@ public class ModularBlock : MonoBehaviour
 {
     public Transform ModularRoot => transform.childCount > 0 ? transform.GetChild(0) : null;
 
-    [OnInspectorInit("FetchOptions"), OnValueChanged("OnRootChanged"), AssetList(Path = "Assets/Environment/Modular")]
+    [OnInspectorInit("FetchOptions"), OnValueChanged("OnRootChanged"), AssetList(Path = "Environment/Modular")]
     [SerializeField] private ModularSettings m_ModularSettings;
 
     [ListDrawerSettings(Expanded = true, ListElementLabelName = "@Name", IsReadOnly = true)]

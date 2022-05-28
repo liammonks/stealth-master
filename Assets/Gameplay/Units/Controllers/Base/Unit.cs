@@ -117,9 +117,6 @@ public abstract class Unit : MonoBehaviour, ITakeDamage
     private Vector2 m_AimOffset;    
     private Gadgets.BaseGadget equippedGadget;
 
-    // Networking
-    [HideInInspector] public NetworkPlayer networkPlayer;
-
     protected virtual void Awake()
     {
         ID = UnitHelper.GetUnitID();
