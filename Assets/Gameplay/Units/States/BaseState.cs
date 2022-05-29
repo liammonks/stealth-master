@@ -6,14 +6,15 @@ namespace States
 {
     public abstract class BaseState
     {
-        protected UnitData data;
+        protected Unit owner;
         
-        public BaseState(UnitData a_data)
+        public BaseState(Unit a_owner)
         {
-            data = a_data;
+            owner = a_owner;
         }
         
         public abstract UnitState Initialise();
         public abstract UnitState Execute();
+        public abstract UnitState Deinitialise();
     }
 }

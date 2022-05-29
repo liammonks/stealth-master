@@ -31,18 +31,17 @@ public enum UnitState
 
 public static class StateManager
 {
-    public static void UpdateFacing(UnitData data)
+    public static void UpdateFacing(Unit unit)
     {
-        data.animator.SetVelocity(data.rb.velocity.magnitude * Mathf.Sign(data.rb.velocity.x));
+        unit.animator.SetVelocity(data.rb.velocity.magnitude * Mathf.Sign(data.rb.velocity.x));
 
-        if (data.rb.velocity.x > 0.1f) { data.isFacingRight = true; }
-        else if (data.rb.velocity.x < -0.1f) { data.isFacingRight = false; }
-        else if (data.input.movement > 0.0f) { data.isFacingRight = true; }
-        else if (data.input.movement < 0.0f) { data.isFacingRight = false; }
-        data.animator.SetFacing(data.isFacingRight);
+        if (unit.rb.velocity.x > 0.1f) { unit.animator.SetFacing(true); }
+        else if (unit.rb.velocity.x < -0.1f) { unit.animator.SetFacing(false); }
+        else if (unit.input.movement > 0.0f) { unit.animator.SetFacing(true); }
+        else if (unit.input.movement < 0.0f) { unit.animator.SetFacing(false); }
     }
 
-    public static bool FacingWall(UnitData data)
+    public static bool FacingWall(Unit unit)
     {
         const float detectionDepth = 0.1f;
         float bodyWidth = data.isStanding ? data.stats.standingHalfWidth : data.stats.crawlingHalfWidth;
@@ -89,14 +88,14 @@ public static class StateManager
         return !hit;
     }
 
-    public static bool CanStand(UnitData data, Vector2 offset)
+    public static bool CanStand(Unit unit, Vector2 offset)
     {
         RaycastHit2D hit = Physics2D.BoxCast(data.rb.position + offset, data.stats.standingScale * 0.9f, data.rb.rotation, Vector2.zero, 0, Unit.CollisionMask);
         ExtDebug.DrawBox(new ExtDebug.Box(data.rb.position + offset, (data.stats.standingScale * 0.9f) * 0.5f, Quaternion.Euler(0, 0, data.rb.rotation)), hit ? Color.red : Color.green);
         return !hit;
     }
 
-    public static UnitState TryDrop(UnitData data)
+    public static UnitState TryDrop(Unit unit)
     {
         const float boxDepth = 0.1f;
         const float scanDepth = 0.5f;
