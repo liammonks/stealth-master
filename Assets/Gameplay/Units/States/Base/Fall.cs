@@ -46,5 +46,9 @@ namespace States
             return UnitState.Fall;
         }
 
+        public override UnitState Deinitialise()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
