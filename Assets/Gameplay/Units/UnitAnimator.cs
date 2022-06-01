@@ -35,6 +35,12 @@ public class UnitAnimator : MonoBehaviour
         GetAnimator(layer).runtimeAnimatorController = controller;
     }
 
+    public void SetVelocity(float velocity)
+    {
+        m_Body.SetFloat(0, velocity);
+        m_Arm.SetFloat(0, velocity);
+    }
+
     private Animator GetAnimator(UnitLayer layer)
     {
         switch(layer)
