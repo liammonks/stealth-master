@@ -7,7 +7,7 @@ namespace States.StealthMaster
         protected bool toCrawl = false;
         protected float transitionDuration = 0.0f;
 
-        public Run(UnitData a_data) : base(a_data) { }
+        public Run(Unit a_unit) : base(a_unit) { }
         
         public override UnitState Initialise()
         {
@@ -20,63 +20,55 @@ namespace States.StealthMaster
         {
             if (toCrawl)
             {
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
                 if (transitionDuration == 0.0f) return UnitState.Crawl;
                 return UnitState.Run;
             }
             
             UnitState state = base.Execute();
             if (state != UnitState.Run) return state;
+            Vector2 velocity = unit.Physics.Velocity;
 
             // Check Climb
-            if (Mathf.Abs(data.rb.velocity.x) >= data.stats.walkSpeed * 0.75f)
+            if (Mathf.Abs(velocity.x) >= unit.Settings.walkSpeed * 0.75f)
             {
-                UnitState climbState = StateManager.TryLedgeGrab(data);
-                if (climbState != UnitState.Null)
-                {
-                    return climbState;
-                }
+                //UnitState climbState = StateManager.TryLedgeGrab(data);
+                //if (climbState != UnitState.Null)
+                //{
+                //    return climbState;
+                //}
             }
             // Check Vault
-            if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.75f)
+            if (Mathf.Abs(velocity.x) >= unit.Settings.runSpeed * 0.75f)
             {
-                UnitState vaultState = StateManager.TryVault(data);
-                if (vaultState != UnitState.Null)
-                {
-                    return vaultState;
-                }
-            }
-            // Face Wall
-            if (StateManager.FacingWall(data))
-            {
-                data.animator.Play(UnitAnimatorLayer.Body, "AgainstWall");
-            }
-            else
-            {
-                data.animator.Play(UnitAnimatorLayer.Body, "Run");
+                unit.StateMachine.CanVaultOver();
+                //UnitState vaultState = StateManager.TryVault(data);
+                //if (vaultState != UnitState.Null)
+                //{
+                //    return vaultState;
+                //}
             }
             // Execute Melee
-            if (data.input.meleeQueued)
+            if (unit.Input.Melee)
             {
                 return UnitState.Melee;
             }
 
             // Crawl / Slide
-            if (data.input.crawling && StateManager.CanCrawl(data))
+            if (unit.Input.Crawling && unit.StateMachine.CanCrawl())
             {
-                if (Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
+                if (Mathf.Abs(velocity.x) > unit.Settings.walkSpeed)
                 {
                     // Execute Slide
-                    data.animator.Play(UnitAnimatorLayer.Body, "Slide");
+                    unit.Animator.Play(UnitAnimationState.Slide);
                     return UnitState.Slide;
                 }
                 else
                 {
                     // Play stand to crawl, wait before entering state
-                    data.animator.Play(UnitAnimatorLayer.Body, "StandToCrawl");
-                    data.animator.UpdateState();
-                    transitionDuration = data.animator.GetState().length;
-                    data.isStanding = false;
+                    unit.Animator.Play(UnitAnimationState.StandToCrawl);
+                    transitionDuration = unit.Animator.CurrentStateLength;
+                    unit.SetBodyState(BodyState.Crawling, transitionDuration);
                     toCrawl = true;
                 }
             }

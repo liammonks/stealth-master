@@ -41,8 +41,4 @@ public class PlayerCamera : MonoBehaviour
         currentState = state;
     }
 
-    public void SetOffset(Vector2 offset, bool playerRelative)
-    {
-        dynamicCameraTarget.position = playerRelative ? UnitHelper.Player.transform.position + (Vector3)offset : offset;
-    }
 }

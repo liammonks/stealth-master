@@ -4,55 +4,57 @@ namespace States
 {
     public class Run : BaseState
     {
-        public Run(UnitData a_data) : base(a_data) { }
+        public Run(Unit a_unit) : base(a_unit) { }
 
         public override UnitState Initialise()
         {
-            data.animator.Play(UnitAnimatorLayer.Body, "Run");
-            data.isStanding = true;
+            unit.Animator.Play(UnitAnimationState.Run);
             return UnitState.Run;
         }
         
         public override UnitState Execute()
         {
-            if (Mathf.Abs(data.rb.velocity.x) < data.stats.runSpeed)
+            Vector2 velocity = unit.Physics.Velocity;
+
+            if (unit.Input.Movement != 0 && Mathf.Abs(velocity.x) < unit.Settings.runSpeed)
             {
-                Vector2 velocity = data.rb.velocity;
-                float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
-                float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+                float desiredSpeed = (unit.Input.Running ? unit.Settings.runSpeed : unit.Settings.walkSpeed) * unit.Input.Movement;
+                float deltaSpeedRequired = desiredSpeed - velocity.x;
                 // Increase acceleration when trying to move in opposite direction of travel
                 if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
                 {
                     deltaSpeedRequired *= 2.0f;
                 }
-                velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
-                data.rb.velocity = velocity;
+                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
+                unit.Physics.SetVelocity(velocity);
             }
             else
             {
-                // Apply drag when faster than run speed
-                data.ApplyDrag(data.stats.groundDrag);
+                unit.Physics.ApplyDrag(unit.Settings.groundDrag);
             }
             
             // Execute Jump
-            if (data.input.jumpQueued)
+            if (unit.Input.Jumping)
             {
                 return UnitState.Jump;
             }
             // Execute Fall
-            if (!data.isGrounded)
+            if (!unit.GroundSpring.Grounded)
             {
                 return UnitState.Fall;
             }
             // Return to Idle when below walk speed
-            if (Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed * 0.5f)
+            if (Mathf.Abs(velocity.x) < unit.Settings.walkSpeed * 0.5f)
             {
                 return UnitState.Idle;
             }
             
-            StateManager.UpdateFacing(data);
             return UnitState.Run;
         }
 
+        public override void Deinitialise()
+        {
+            
+        }
     }
 }

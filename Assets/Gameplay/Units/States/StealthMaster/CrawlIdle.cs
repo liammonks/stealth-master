@@ -7,67 +7,70 @@ namespace States.StealthMaster
         private bool toIdle = false;
         private float transitionDuration = 0.0f;
 
-        public CrawlIdle(UnitData a_data) : base(a_data) { }
+        public CrawlIdle(Unit a_unit) : base(a_unit) { }
         
         public override UnitState Initialise()
         {
             toIdle = false;
             transitionDuration = 0.0f;
-            data.isStanding = false;
-            data.animator.Play(UnitAnimatorLayer.Body, "Crawl_Idle");
+            unit.Animator.Play(UnitAnimationState.Crawl_Idle);
             return UnitState.CrawlIdle;
         }
         
         public override UnitState Execute()
         {
             // Apply movement input
-            if (data.isGrounded && data.rb.velocity.x < data.stats.walkSpeed)
+            if (unit.Input.Movement != 0)
             {
-                Vector2 velocity = data.rb.velocity;
-                float desiredSpeed = data.stats.walkSpeed * data.input.movement;
-                float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
+                Vector2 velocity = unit.Physics.Velocity;
+                float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
+                float deltaSpeedRequired = desiredSpeed - velocity.x;
                 // Increase acceleration when trying to move in opposite direction of travel
                 if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
                 {
                     deltaSpeedRequired *= 2.0f;
                 }
-                velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
-                data.rb.velocity = velocity;
+                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
+                unit.Physics.SetVelocity(velocity);
             }
-            if (Mathf.Abs(data.rb.velocity.x) > 0.1f)
+            else
+            {
+                unit.Physics.ApplyDrag(unit.Settings.groundDrag);
+            }
+
+            // Execute Crawl
+            if (Mathf.Abs(unit.Physics.Velocity.x) > unit.Settings.walkSpeed * 0.5f)
             {
                 return UnitState.Crawl;
             }
 
-            // Return to Idle
+            // Transition to Idle
             if (toIdle)
             {
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
-                data.ApplyDrag(data.stats.groundDrag);
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
                 if (transitionDuration == 0.0f) return UnitState.Idle;
             }
-            else if (!data.input.crawling && data.isGrounded)
+            else if (!unit.Input.Crawling && unit.StateMachine.CanStand())
             {
-                Vector2 standOffset = data.rb.transform.up * (-data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f);
-                if (StateManager.CanStand(data, standOffset))
-                {
-                    // Execute animation transition
-                    data.animator.Play(UnitAnimatorLayer.Body, "CrawlToStand");
-                    // Update animator to transition to relevant state
-                    data.animator.UpdateState();
-                    transitionDuration = data.animator.GetState().length;
-                    data.isStanding = true;
-                    toIdle = true;
-                }
+                unit.Animator.Play(UnitAnimationState.CrawlToStand);
+                transitionDuration = unit.Animator.CurrentStateLength;
+                unit.SetBodyState(BodyState.Standing, transitionDuration);
+                toIdle = true;
             }
-            
-            if (!data.isGrounded)
+
+            // Execute Dive when falling
+            if (!unit.GroundSpring.Grounded)
             {
                 return UnitState.Dive;
             }
             
-            StateManager.UpdateFacing(data);
             return UnitState.CrawlIdle;
         }
+
+        public override void Deinitialise()
+        {
+            
+        }
+
     }
 }

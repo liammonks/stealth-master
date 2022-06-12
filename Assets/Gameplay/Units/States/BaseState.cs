@@ -6,15 +6,20 @@ namespace States
 {
     public abstract class BaseState
     {
-        protected Unit owner;
+        public float DeltaTime => tickRate == 0 ? Time.deltaTime : tickRate;
+
+        protected Unit unit;
+
+        private float tickRate;
         
-        public BaseState(Unit a_owner)
+        public BaseState(Unit a_unit)
         {
-            owner = a_owner;
+            unit = a_unit;
+            tickRate = unit.StateMachine.TickRate;
         }
         
         public abstract UnitState Initialise();
         public abstract UnitState Execute();
-        public abstract UnitState Deinitialise();
+        public abstract void Deinitialise();
     }
 }

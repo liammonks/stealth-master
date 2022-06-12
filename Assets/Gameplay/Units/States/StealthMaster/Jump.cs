@@ -4,47 +4,47 @@ namespace States.StealthMaster
 {
     public class Jump : States.Jump
     {
-        public Jump(UnitData a_data) : base(a_data) { }
-        
+        public Jump(Unit a_unit) : base(a_unit) { }
+
         public override UnitState Initialise()
         {
             return base.Initialise();
         }
-        
+
         public override UnitState Execute()
         {
             UnitState state = base.Execute();
             if (state != UnitState.Jump) return state;
+            Vector2 velocity = unit.Physics.Velocity;
 
             // Check Vault (Require Momentum)
-            if (Mathf.Abs(data.rb.velocity.x) >= data.stats.runSpeed * 0.9f)
+            if (Mathf.Abs(velocity.x) >= unit.Settings.runSpeed * 0.9f)
             {
-                UnitState vaultState = StateManager.TryVault(data);
-                if (vaultState != UnitState.Null)
-                {
-                    return vaultState;
-                }
+                //UnitState vaultState = StateManager.TryVault(data);
+                //if (vaultState != UnitState.Null)
+                //{
+                //    return vaultState;
+                //}
             }
             // Wall Slide
-            if (Mathf.Abs(data.rb.velocity.x) > 0.1f && StateManager.FacingWall(data))
+            if (Mathf.Abs(velocity.x) > 0.1f && unit.StateMachine.AgainstWall())
             {
-                return UnitState.WallSlide;
+                //return UnitState.WallSlide;
             }
             // Execute Dive
-            if (!data.isGrounded || !data.groundSpringActive)
+            if (unit.Input.Crawling && !unit.GroundSpring.enabled && unit.StateMachine.CanCrawl())
             {
-                if (data.input.crawling && StateManager.CanCrawl(data))
-                {
-                    return UnitState.Dive;
-                }
+                return UnitState.Dive;
             }
             // Melee
-            if (data.input.meleeQueued)
+            if (unit.Input.Melee)
             {
                 return UnitState.JumpMelee;
             }
-            
+
             return UnitState.Jump;
         }
+
+
     }
 }

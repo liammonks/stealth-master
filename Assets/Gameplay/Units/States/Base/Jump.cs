@@ -7,53 +7,65 @@ namespace States
 {
     public class Jump : BaseState
     {
-        public Jump(UnitData a_data) : base(a_data) { }
+        private float jumpDuration = 0;
+
+        public Jump(Unit a_unit) : base(a_unit) { }
 
         public override UnitState Initialise()
         {
-            Vector2 velocity = data.rb.velocity;
             // Reset jump input
-            data.input.jumpRequestTime = -1;
-            data.animator.Play(UnitAnimatorLayer.Body, "Jump");
-            data.animator.UpdateState();
-            data.t = data.animator.GetState().length;
-            data.isStanding = true;
-            data.groundSpringActive = false;
-            velocity.y = data.previousState == UnitState.LedgeGrab ? data.stats.wallJumpForce.y : data.stats.jumpForce;
+            unit.Input.Jumping = false;
+            unit.Animator.Play(UnitAnimationState.Jump);
+            jumpDuration = unit.Animator.CurrentStateLength;
+            unit.GroundSpring.enabled = false;
 
-            if (data.attatchedRB)
+            Vector2 velocity = unit.Physics.Velocity;
+            velocity.y = unit.StateMachine.PreviousState == UnitState.LedgeGrab ? unit.Settings.wallJumpForce.y : unit.Settings.jumpForce;
+
+            if (unit.GroundSpring.attachedObject)
             {
-                velocity += data.attatchedRB.velocity;
-                data.attatchedRB = null;
+                velocity += unit.GroundSpring.attachedObject.Velocity;
+                unit.GroundSpring.attachedObject = null;
             }
-            data.rb.velocity = velocity;
+
+            unit.Physics.SetVelocity(velocity);
             return UnitState.Jump;
         }
         
         public override UnitState Execute()
         {
-            Vector2 velocity = data.rb.velocity;
-            data.t = Mathf.Max(0.0f, data.t - Time.fixedDeltaTime);
+            jumpDuration = Mathf.Max(0.0f, jumpDuration - DeltaTime);
 
             // Allow player to push towards movement speed while in the air
-            if (Mathf.Abs(data.rb.velocity.x) < data.stats.runSpeed)
+            if (unit.Input.Movement != 0)
             {
-                float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
-                float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
-                velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
+                Vector2 velocity = unit.Physics.Velocity;
+                if (Mathf.Abs(velocity.x) < unit.Settings.runSpeed)
+                {
+                    float desiredSpeed = (unit.Input.Running ? unit.Settings.runSpeed : unit.Settings.walkSpeed) * unit.Input.Movement;
+                    float deltaSpeedRequired = desiredSpeed - velocity.x;
+                    velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
+                    unit.Physics.SetVelocity(velocity);
+                }
+            }
+            else
+            {
+                unit.Physics.ApplyDrag(unit.Settings.airDrag);
             }
 
             // End of jump animation
-            if (data.t == 0.0f)
+            if (jumpDuration == 0.0f)
             {
-                data.groundSpringActive = true;
-                return data.isGrounded ? UnitState.Idle : UnitState.Fall;
+                unit.GroundSpring.enabled = true;
+                return unit.GroundSpring.Grounded ? UnitState.Idle : UnitState.Fall;
             }
 
-            data.rb.velocity = velocity;
-            StateManager.UpdateFacing(data);
             return UnitState.Jump;
         }
 
+        public override void Deinitialise()
+        {
+            
+        }
     }
 }

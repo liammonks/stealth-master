@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: StealthMaster_Collisions
+  m_Controller: {fileID: 9100000, guid: 7da9c3cd03757ba4a84b2ef4a04dc601, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 131022a843bc80c418cd9588d135799f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 048e84bf5291cf8458c925d3061668e5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 7742d659f660ac14f9d9b1c97f6acf61, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: cfb73597ed148ac4a88ae4b486cdd883, type: 2}

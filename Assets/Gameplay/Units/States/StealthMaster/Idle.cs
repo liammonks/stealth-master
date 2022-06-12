@@ -7,7 +7,7 @@ namespace States.StealthMaster
         private bool toCrawl = false;
         private float transitionDuration = 0.0f;
 
-        public Idle(UnitData a_data) : base(a_data) { }
+        public Idle(Unit a_unit) : base(a_unit) { }
 
         public override UnitState Initialise()
         {
@@ -21,44 +21,45 @@ namespace States.StealthMaster
             if (toCrawl)
             {
                 // Waiting to enter crawl state
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
                 if (transitionDuration == 0.0f) return UnitState.CrawlIdle;
                 return UnitState.Idle;
             }
-            
+
             UnitState state = base.Execute();
             if (state != UnitState.Idle) return state;
 
             // Push against wall
-            if (StateManager.FacingWall(data))
+            if (unit.StateMachine.AgainstWall())
             {
-                if (data.animator.CurrentState != "AgainstWall")
+                if (unit.Animator.CurrentState != UnitAnimationState.AgainstWall)
                 {
-                    data.rb.velocity = new Vector2(data.isFacingRight ? 0.5f : -0.5f, data.rb.velocity.y);
-                    data.animator.Play(UnitAnimatorLayer.Body, "AgainstWall");
+                    unit.Physics.SetVelocity(new Vector2(unit.FacingRight ? 0.5f : -0.5f, unit.Physics.Velocity.y));
+                    unit.Animator.Play(UnitAnimationState.AgainstWall);
                 }
             }
             else
             {
-                data.animator.Play(UnitAnimatorLayer.Body, "Idle");
+                unit.Animator.Play(UnitAnimationState.Idle);
             }
             // Execute Melee
-            if (data.input.meleeQueued)
+            if (unit.Input.Melee)
             {
                 return UnitState.Melee;
             }
             // Execute Crawl
-            if (data.input.crawling && StateManager.CanCrawl(data))
+            if (unit.Input.Crawling && unit.StateMachine.CanCrawl())
             {
                 // Play stand to crawl, wait before entering state
-                data.animator.Play(UnitAnimatorLayer.Body, "StandToCrawl");
-                data.animator.UpdateState();
-                transitionDuration = data.animator.GetState().length;
-                data.isStanding = false;
+                unit.Animator.Play(UnitAnimationState.StandToCrawl);
+                transitionDuration = unit.Animator.CurrentStateLength;
+                unit.SetBodyState(BodyState.Crawling, transitionDuration);
                 toCrawl = true;
             }
-            
+
             return UnitState.Idle;
         }
+
     }
+
 }

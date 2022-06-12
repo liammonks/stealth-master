@@ -8,24 +8,24 @@ namespace States.StealthMaster
         protected float groundSpringPrevention = 0.0f;
         protected float transitionDuration = 0.0f;
 
-        public Dive(UnitData a_data) : base(a_data) { }
+        public Dive(Unit a_unit) : base(a_unit) { }
         
         public override UnitState Initialise()
         {
             toStand = false;
-            data.animator.Play(UnitAnimatorLayer.Body, "Dive");
-            data.isStanding = false;
+            unit.Animator.Play(UnitAnimationState.Dive);
+            unit.SetBodyState(BodyState.Crawling, unit.Animator.CurrentStateLength);
             // Boost when diving from jump
-            if (data.previousState == UnitState.Jump || data.previousState == UnitState.WallJump)
+            if (unit.StateMachine.PreviousState == UnitState.Jump || unit.StateMachine.PreviousState == UnitState.WallJump)
             {
                 //data.rb.velocity *= data.stats.diveVelocityMultiplier;
-                Vector2 velocity = data.rb.velocity;
-                velocity.x += 5 * Mathf.Sign(data.rb.velocity.x);
-                velocity.y += 2 * Mathf.Sign(data.rb.velocity.y);
-                data.rb.velocity = velocity;
+                Vector2 velocity = unit.Physics.Velocity;
+                velocity.x += 5 * Mathf.Sign(velocity.x);
+                velocity.y += 2 * Mathf.Sign(velocity.y);
+                unit.Physics.SetVelocity(velocity);
             }
             // Set timer to stop ground spring
-            data.groundSpringActive = false;
+            unit.GroundSpring.enabled = false;
             groundSpringPrevention = 0.2f;
             return UnitState.Dive;
         }
@@ -34,80 +34,87 @@ namespace States.StealthMaster
         {
             if (toStand)
             {
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
-                // Execute Jump (only 100ms before returning idle)
-                if (transitionDuration < 0.1f && data.input.jumpQueued && data.isGrounded)
-                {
-                    return UnitState.Jump;
-                }
+                unit.Physics.ApplyDrag(unit.Settings.slideDrag);
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
                 // Execute Idle
                 if (transitionDuration == 0.0f)
                 {
                     return UnitState.Idle;
                 }
-                data.ApplyDrag(data.stats.groundDrag);
                 return UnitState.Dive;
             }
             
             // Allow player to push towards movement speed while in the air
-            if (!data.isSlipping && Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
+            Vector2 velocity = unit.Physics.Velocity;
+            if (unit.Input.Movement != 0 && !unit.GroundSpring.Slipping && Mathf.Abs(velocity.x) < unit.Settings.walkSpeed)
             {
-                Vector2 velocity = data.rb.velocity;
-                float desiredSpeed = data.stats.walkSpeed * data.input.movement;
-                float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
-                velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
-                data.rb.velocity = velocity;
+                float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
+                float deltaSpeedRequired = desiredSpeed - velocity.x;
+                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
+                unit.Physics.SetVelocity(velocity);
+            }
+            else
+            {
+                unit.Physics.ApplyDrag(unit.Settings.airDrag);
             }
             
             // Re-enable ground spring after delay
-            if (!data.groundSpringActive)
+            if (!unit.GroundSpring.enabled)
             {
-                groundSpringPrevention = Mathf.Max(0.0f, groundSpringPrevention - Time.fixedDeltaTime);
+                groundSpringPrevention = Mathf.Max(0.0f, groundSpringPrevention - DeltaTime);
                 if (groundSpringPrevention == 0.0f)
                 {
-                    data.groundSpringActive = true;
+                    unit.GroundSpring.enabled = true;
                 }
             }
             // Check Landed
-            else if (data.isGrounded)
+            else if (unit.GroundSpring.Grounded)
             {
                 // Not crawling, stand up
-                if (!data.input.crawling)
+                if (!unit.Input.Crawling)
                 {
-                    Vector2 offset = data.rb.transform.up * (-data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f);
-                    if (StateManager.CanStand(data, offset))
+                    if (unit.StateMachine.CanStand())
                     {
-                        // Execute animation transition
-                        data.animator.Play(UnitAnimatorLayer.Body, Mathf.Abs(data.rb.velocity.x) > data.stats.runSpeed ? "DiveFlip" : "CrawlToStand");
-                        // Update animator to transition to relevant state
-                        data.animator.UpdateState();
-                        transitionDuration = data.animator.GetState().length;
-                        data.isStanding = true;
-                        data.LockGadget();
+                        if (Mathf.Abs(velocity.x) > unit.Settings.runSpeed)
+                        {
+                            unit.Animator.Play(UnitAnimationState.DiveFlip);
+                            transitionDuration = unit.Animator.CurrentStateLength;                            
+                            unit.SetBodyState(BodyState.Standing, transitionDuration * 0.5f);
+                        }
+                        else
+                        {
+                            unit.Animator.Play(UnitAnimationState.CrawlToStand);
+                            transitionDuration = unit.Animator.CurrentStateLength;
+                            unit.SetBodyState(BodyState.Standing, transitionDuration);
+                        }
+                        //data.LockGadget();
                         toStand = true;
                     }
                 }
                 else
                 {
                     // Landed but still crawling
-                    if (Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed)
+                    if (Mathf.Abs(velocity.x) > unit.Settings.walkSpeed)
                     {
                         // Execute Slide
-                        data.animator.Play(UnitAnimatorLayer.Body, "BellySlide");
+                        unit.Animator.Play(UnitAnimationState.BellySlide);
                         return UnitState.Slide;
                     }
                     else
                     {
                         // Execute Crawl
-                        data.animator.Play(UnitAnimatorLayer.Body, "Crawl_Idle");
+                        unit.Animator.Play(UnitAnimationState.Crawl_Idle);
                         return UnitState.Crawl;
                     }
                 }
             }
             
-            data.ApplyDrag(data.stats.airDrag);
-            StateManager.UpdateFacing(data);
             return UnitState.Dive;
+        }
+
+        public override void Deinitialise()
+        {
+
         }
     }
 }

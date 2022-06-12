@@ -3,8 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - CanGrapple
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -12,14 +11,14 @@ TagManager:
   - Environment
   - Water
   - UI
-  - Interactable
-  - Post-processing
-  - Rain Collider
-  - Player
-  - Enemy
-  - World Overlay
-  - Gadget
-  - CanGrapple
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

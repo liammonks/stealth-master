@@ -4,50 +4,59 @@ namespace States
 {
     public class Idle : BaseState
     {
-        public Idle(UnitData a_data) : base(a_data) { }
+        public Idle(Unit a_unit) : base(a_unit) { }
 
         public override UnitState Initialise()
         {
-            data.animator.Play(UnitAnimatorLayer.Body, "Idle");
-            data.isStanding = true;
+            unit.Animator.Play(UnitAnimationState.Idle);
             return UnitState.Idle;
         }
         
         public override UnitState Execute()
         {
-            data.ApplyDrag(data.stats.groundDrag);
-            
             // Move to desired speed
-            Vector2 velocity = data.rb.velocity;
-            float desiredSpeed = (data.input.running ? data.stats.runSpeed : data.stats.walkSpeed) * data.input.movement;
-            float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
-            // Increase acceleration when trying to move in opposite direction of travel
-            if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+            Vector2 velocity = unit.Physics.Velocity;
+
+            if (unit.Input.Movement != 0)
             {
-                deltaSpeedRequired *= 2.0f;
+                float desiredSpeed = (unit.Input.Running ? unit.Settings.runSpeed : unit.Settings.walkSpeed) * unit.Input.Movement;
+                float deltaSpeedRequired = desiredSpeed - velocity.x;
+                // Increase acceleration when trying to move in opposite direction of travel
+                if ((desiredSpeed < -0.1f && velocity.x > 0.1f) || (desiredSpeed > 0.1f && velocity.x < -0.1f))
+                {
+                    deltaSpeedRequired *= 2.0f;
+                }
+                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
+                unit.Physics.SetVelocity(velocity);
+
+                // Execute Run
+                if (Mathf.Abs(velocity.x) > unit.Settings.walkSpeed * 0.5f)
+                {
+                    return UnitState.Run;
+                }
             }
-            velocity.x += deltaSpeedRequired * data.stats.groundAcceleration;
-            data.rb.velocity = velocity;
-            
-            // Execute Run
-            if (data.input.movement != 0 && Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.5f)
+            else
             {
-                return UnitState.Run;
+                unit.Physics.ApplyDrag(unit.Settings.groundDrag);
             }
+
             // Execute Jump
-            if (data.input.jumpQueued)
+            if (unit.Input.Jumping)
             {
                 return UnitState.Jump;
             }
             // Execute Fall
-            if (!data.isGrounded)
+            if (!unit.GroundSpring.Grounded)
             {
                 return UnitState.Fall;
             }
 
-            StateManager.UpdateFacing(data);
             return UnitState.Idle;
         }
 
+        public override void Deinitialise()
+        {
+
+        }
     }
 }

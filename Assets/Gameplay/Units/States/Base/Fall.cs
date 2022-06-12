@@ -4,51 +4,57 @@ namespace States
 {
     public class Fall : BaseState
     {
-        public Fall(UnitData a_data) : base(a_data) { }
+        private float stateDuration;
+
+        public Fall(Unit a_unit) : base(a_unit) { }
         
         public override UnitState Initialise()
         {
-            data.animator.Play(UnitAnimatorLayer.Body, "Fall");
-            data.isStanding = true;
+            unit.Animator.Play(UnitAnimationState.Fall);
+            stateDuration = 0.0f;
             return UnitState.Fall;
         }
         
         public override UnitState Execute()
         {
-            if (data.rb.velocity.y <= 0)
+            stateDuration += DeltaTime;
+            Vector2 velocity = unit.Physics.Velocity;
+            if (velocity.y <= 0)
             {
-                data.groundSpringActive = true;
+                unit.GroundSpring.enabled = true;
             }
 
             // Allow player to push towards movement speed while in the air
-            if (!data.isSlipping && Mathf.Abs(data.rb.velocity.x) < data.stats.walkSpeed)
+            if (unit.Input.Movement != 0 && !unit.GroundSpring.Slipping && Mathf.Abs(velocity.x) < unit.Settings.walkSpeed)
             {
-                Vector2 velocity = data.rb.velocity;
-                float desiredSpeed = data.stats.walkSpeed * data.input.movement;
-                float deltaSpeedRequired = desiredSpeed - data.rb.velocity.x;
-                velocity.x += deltaSpeedRequired * data.stats.airAcceleration;
-                data.rb.velocity = velocity;
+                float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
+                float deltaSpeedRequired = desiredSpeed - velocity.x;
+                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration;
+                unit.Physics.SetVelocity(velocity);
+            }
+            else
+            {
+                unit.Physics.ApplyDrag(unit.Settings.airDrag);
             }
 
             // Return to ground
-            if (data.isGrounded)
+            if (unit.GroundSpring.Grounded)
             {
-                return Mathf.Abs(data.rb.velocity.x) > 0.1f ? UnitState.Run : UnitState.Idle;
+                return Mathf.Abs(velocity.x) > (unit.Settings.walkSpeed * 0.5f) ? UnitState.Run : UnitState.Idle;
             }
             
             // Jump (Kyote Time)
-            if (data.input.jumpQueued && data.canJump)
+            if (unit.Input.Jumping && stateDuration <= UnitInput.KyoteTime)
             {
                 return UnitState.Jump;
             }
             
-            StateManager.UpdateFacing(data);
             return UnitState.Fall;
         }
 
-        public override UnitState Deinitialise()
+        public override void Deinitialise()
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

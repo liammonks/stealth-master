@@ -7,16 +7,16 @@ namespace States
         protected bool toIdle = false;
         protected float transitionDuration = 0.0f;
 
-        public Slide(UnitData a_data) : base(a_data) { }
+        public Slide(Unit a_unit) : base(a_unit) { }
         
         public override UnitState Initialise()
         {
             toIdle = false;
             transitionDuration = 0.0f;
-            data.isStanding = false;
-            if (data.previousState != UnitState.Dive)
+            unit.SetBodyState(BodyState.Crawling, unit.Animator.CurrentStateLength);
+            if (unit.StateMachine.PreviousState != UnitState.Dive)
             {
-                data.rb.velocity *= data.stats.slideVelocityMultiplier;
+                unit.Physics.SetVelocity(unit.Physics.Velocity * unit.Settings.slideVelocityMultiplier);
             }
             return UnitState.Slide;
         }
@@ -25,47 +25,47 @@ namespace States
         {
             if (toIdle)
             {
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
-                data.ApplyDrag(data.stats.groundDrag);
-                // Execute Jump (only 100ms before returning idle)
-                if (data.t < 0.1f && data.input.jumpQueued) return UnitState.Jump;
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
+                unit.Physics.ApplyDrag(unit.Settings.slideDrag);
                 // Execute Run / Idle
-                if (data.t == 0.0f) return Mathf.Abs(data.rb.velocity.x) > data.stats.walkSpeed * 0.5f ? UnitState.Run : UnitState.Idle;
+                if (transitionDuration == 0.0f) return Mathf.Abs(unit.Physics.Velocity.x) > unit.Settings.walkSpeed * 0.5f ? UnitState.Run : UnitState.Idle;
+                return UnitState.Slide;
             }
             
             // Transition Idle
-            if (!data.input.crawling && data.isGrounded)
+            if (!unit.Input.Crawling && unit.GroundSpring.Grounded)
             {
-                Vector2 offset = data.rb.transform.up * (-data.stats.crawlingHalfHeight + data.stats.standingHalfHeight + 0.01f);
-                if (StateManager.CanStand(data, offset))
+                if (unit.StateMachine.CanStand())
                 {
                     // Execute animation transition
-                    data.animator.Play(UnitAnimatorLayer.Body, "SlideExit");
-                    // Update animator to transition to relevant state
-                    data.animator.UpdateState();
-                    transitionDuration = data.animator.GetState().length;
-                    data.isStanding = true;
+                    unit.Animator.Play(unit.Animator.CurrentState == UnitAnimationState.BellySlide ? UnitAnimationState.CrawlToStand : UnitAnimationState.SlideExit);
+                    transitionDuration = unit.Animator.CurrentStateLength;
+                    unit.SetBodyState(BodyState.Standing, transitionDuration);
                     toIdle = true;
                 }
             }
             
-            if (data.isGrounded)
+            if (unit.GroundSpring.Grounded)
             {
-                data.ApplyDrag(data.stats.slideDrag);
+                unit.Physics.ApplyDrag(unit.Settings.slideDrag);
                 // Execute Crawl
-                if (data.rb.velocity.magnitude < data.stats.walkSpeed)
+                if (unit.Physics.Velocity.magnitude < unit.Settings.walkSpeed)
                 {
-                    data.animator.Play(UnitAnimatorLayer.Body, "Crawl_Idle");
+                    unit.Animator.Play(UnitAnimationState.Crawl_Idle);
                     return UnitState.Crawl;
                 }
             }
             else
             {
-                data.ApplyDrag(data.stats.airDrag);
+                unit.Physics.ApplyDrag(unit.Settings.airDrag);
             }
             
-            StateManager.UpdateFacing(data);
             return UnitState.Slide;
+        }
+
+        public override void Deinitialise()
+        {
+            
         }
     }
 }
