@@ -68,6 +68,7 @@ public class Unit : MonoBehaviour
 
     public void SetBodyState(BodyState state, float duration)
     {
+        if (m_BodyState == state) { return; }
         m_BodyState = state;
         OnBodyStateChanged.Invoke(state, duration);
     }

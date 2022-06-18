@@ -7,6 +7,7 @@ using UnityEngine;
 public class UnitCollider : MonoBehaviour
 {
     public Dictionary<BodyState, UnitColliderInfo> Info => m_TemplateInfo;
+    public Action OnHit;
 
     private Unit m_Unit;
     private Animator m_Animator;
@@ -89,7 +90,7 @@ public class UnitCollider : MonoBehaviour
     public bool Overlap(BodyState state, Vector2 localOffset, bool debug = false)
     {
         Transform template = m_Templates[state];
-        template.localPosition = localOffset;
+        template.position = m_Unit.transform.position + (Vector3)localOffset;
         template.localScale = Vector3.one;
         template.gameObject.SetActive(true);
 
@@ -140,6 +141,11 @@ public class UnitCollider : MonoBehaviour
 
         template.gameObject.SetActive(false);
         return false;
+    }
+
+    public void OnPhysicsHit()
+    {
+        OnHit.Invoke();
     }
 
 }

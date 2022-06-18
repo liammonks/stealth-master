@@ -29,25 +29,20 @@ namespace States.StealthMaster
             if (state != UnitState.Run) return state;
             Vector2 velocity = unit.Physics.Velocity;
 
-            // Check Climb
-            if (Mathf.Abs(velocity.x) >= unit.Settings.walkSpeed * 0.75f)
+            // Vault / Climb
+            if (unit.StateMachine.TryVaultOver())
             {
-                //UnitState climbState = StateManager.TryLedgeGrab(data);
-                //if (climbState != UnitState.Null)
-                //{
-                //    return climbState;
-                //}
+                return UnitState.VaultOver;
             }
-            // Check Vault
-            if (Mathf.Abs(velocity.x) >= unit.Settings.runSpeed * 0.75f)
+            if (unit.StateMachine.TryVaultOn())
             {
-                unit.StateMachine.CanVaultOver();
-                //UnitState vaultState = StateManager.TryVault(data);
-                //if (vaultState != UnitState.Null)
-                //{
-                //    return vaultState;
-                //}
+                return UnitState.VaultOn;
             }
+            if (unit.StateMachine.CanClimb())
+            {
+                return UnitState.Climb;
+            }
+
             // Execute Melee
             if (unit.Input.Melee)
             {

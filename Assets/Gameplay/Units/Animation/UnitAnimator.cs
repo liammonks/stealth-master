@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class UnitAnimator : MonoBehaviour
 
     public UnitAnimationState CurrentState => m_CurrentState;
     public float CurrentStateLength => m_Body.GetCurrentAnimatorStateInfo(0).length;
+    public Action OnTranslationEnded;
 
     [SerializeField] private UnitAnimations m_Animations;
 
@@ -57,13 +59,17 @@ public class UnitAnimator : MonoBehaviour
     private UnitLayerControllers m_BodyControllers;
     private UnitLayerControllers m_ArmControllers;
 
+    private Unit m_Unit;
     private bool m_AimingForward = false;
     private UnitAnimationState m_CurrentState = UnitAnimationState.Idle;
+    private Coroutine m_AnimatePositionCoroutine;
+    private Action m_TranslationCancelAction;
 
     private void Awake()
     {
         m_BodyControllers = m_Animations.Body;
         m_ArmControllers = m_Animations.Arm.Unarmed;
+        m_Unit = GetComponentInParent<Unit>();
     }
 
     public void Play(UnitAnimationState state, float time = -1.0f)
@@ -111,6 +117,50 @@ public class UnitAnimator : MonoBehaviour
             normalizedTime = m_Arm.GetCurrentAnimatorStateInfo(0).normalizedTime;
             m_Arm.runtimeAnimatorController = m_AimingForward ? m_ArmControllers.Default : m_ArmControllers.Reversed;
             m_Arm.Play(stateNameHash, 0, normalizedTime);
+        }
+    }
+
+    public void Translate(Vector2 position, float duration, Action cancelAction)
+    {
+        if (m_AnimatePositionCoroutine != null) { StopCoroutine(m_AnimatePositionCoroutine); }
+        m_AnimatePositionCoroutine = StartCoroutine(AnimateEnumerator(position, duration));
+
+        if (m_TranslationCancelAction != null) { m_TranslationCancelAction -= CancelAnimation; }
+        m_TranslationCancelAction = cancelAction;
+        m_TranslationCancelAction += CancelAnimation;
+
+
+        IEnumerator AnimateEnumerator(Vector2 position, float duration)
+        {
+            m_Unit.Physics.enabled = false;
+            m_Unit.GroundSpring.enabled = false;
+
+            Vector2 initialPosition = m_Unit.transform.position;
+            float t = 0.0f;
+            while (t != 1.0f)
+            {
+                t = Mathf.Min(t + (Time.deltaTime / duration), 1.0f);
+                m_Unit.transform.position = Vector2.Lerp(initialPosition, position, t);
+                yield return new WaitForEndOfFrame();
+            }
+
+            m_AnimatePositionCoroutine = null;
+            m_TranslationCancelAction -= CancelAnimation;
+            m_TranslationCancelAction = null;
+            m_Unit.Physics.enabled = true;
+            m_Unit.GroundSpring.enabled = true;
+            OnTranslationEnded?.Invoke();
+        }
+
+        void CancelAnimation()
+        {
+            StopCoroutine(m_AnimatePositionCoroutine);
+            m_AnimatePositionCoroutine = null;
+            m_TranslationCancelAction -= CancelAnimation;
+            m_TranslationCancelAction = null;
+            m_Unit.Physics.enabled = true;
+            m_Unit.GroundSpring.enabled = true;
+            OnTranslationEnded?.Invoke();
         }
     }
 

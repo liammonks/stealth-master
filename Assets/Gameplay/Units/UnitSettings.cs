@@ -26,6 +26,11 @@ public class UnitSettings : ScriptableObject
     public float vaultMaxHeight;
     public float vaultOverDistance;
 
+    [Header("Climbing")]
+    public float climbGrabDistance;
+    public float climbMinHeight;
+    public float climbMaxHeight;
+
     [Header("Drag")]
     public float groundDrag;
     public float airDrag;

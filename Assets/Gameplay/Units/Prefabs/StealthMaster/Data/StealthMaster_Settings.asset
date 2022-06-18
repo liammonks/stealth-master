@@ -23,6 +23,9 @@ MonoBehaviour:
   vaultMinHeight: 0.5
   vaultMaxHeight: 1
   vaultOverDistance: 1
+  climbGrabDistance: 0.2
+  climbMinHeight: 1.5
+  climbMaxHeight: 2
   groundDrag: 10
   airDrag: 0.1
   slideDrag: 1

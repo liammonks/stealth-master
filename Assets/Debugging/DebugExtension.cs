@@ -21,9 +21,7 @@ public static class DebugExtension
 			if (colliders[i] is BoxCollider2D)
 			{
 				BoxCollider2D collider = (BoxCollider2D)colliders[i];
-				//Bounds bounds = new Bounds(collider.bounds.center + (Vector3)positionOffset, collider.size);
-				//DebugBounds(bounds, color, duration);
-				DebugLocalCube(collider.transform, collider.size, color, positionOffset);
+				DebugLocalCube(collider.transform, collider.size, color, positionOffset, duration);
 				continue;
 			}
 			if (colliders[i] is CircleCollider2D)

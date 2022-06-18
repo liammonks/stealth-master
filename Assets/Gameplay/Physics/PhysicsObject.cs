@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +26,7 @@ public class PhysicsObject : MonoBehaviour
     private LayerMask m_SelfMask;
     private float m_TempDrag = 0.0f;
     private List<Collider2D> m_Colliders = new List<Collider2D>();
+    private UnitCollider m_UnitCollider;
     #endregion
 
     #region Methods
@@ -103,7 +103,7 @@ public class PhysicsObject : MonoBehaviour
         EvaluateIntersections();
         ApplyVelocity();
         ApplyDrag();
-        DebugExtension.DebugColliders(m_Colliders, Vector2.zero, Color.white);
+        //DebugExtension.DebugColliders(m_Colliders, Vector2.zero, Color.white);
     }
 
     private void ApplyGravity()
@@ -255,6 +255,11 @@ public class PhysicsObject : MonoBehaviour
             Vector2 momentum = m_Velocity * m_Mass;
             Vector2 otherMomentum = pair.Key.Velocity * pair.Key.Mass;
             m_Velocity = ((momentum + otherMomentum) / (m_Mass + pair.Key.Mass)) * 0.5f;
+        }
+
+        if (impactDictionary.Count != 0 && m_UnitCollider != null)
+        {
+            m_UnitCollider.OnPhysicsHit();
         }
 
         SetCollidersActive(true);
