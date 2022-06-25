@@ -9,7 +9,9 @@ public class UnitAnimator : MonoBehaviour
 
     public UnitAnimationState CurrentState => m_CurrentState;
     public float CurrentStateLength => m_Body.GetCurrentAnimatorStateInfo(0).length;
+
     public Action OnTranslationEnded;
+    public Action<UnitAnimationState> OnAnimationEnded;
 
     [SerializeField] private UnitAnimations m_Animations;
 
@@ -62,6 +64,7 @@ public class UnitAnimator : MonoBehaviour
     private Unit m_Unit;
     private bool m_AimingForward = false;
     private UnitAnimationState m_CurrentState = UnitAnimationState.Idle;
+    private Coroutine m_AnimationEndedCoroutine;
     private Coroutine m_AnimatePositionCoroutine;
     private Action m_TranslationCancelAction;
 
@@ -74,6 +77,15 @@ public class UnitAnimator : MonoBehaviour
 
     public void Play(UnitAnimationState state, float time = -1.0f)
     {
+        // If a coroutine is still running to call AnimationEnded for the last state, call it now
+        if (m_AnimationEndedCoroutine != null)
+        {
+            StopCoroutine(m_AnimationEndedCoroutine);
+            OnAnimationEnded?.Invoke(m_CurrentState);
+            m_AnimationEndedCoroutine = null;
+        }
+
+        // Play body animation
         m_CurrentState = state;
         if (time == -1.0f) m_Body.Play(state.ToString());
         else m_Body.Play(state.ToString(), 0, time);
@@ -85,6 +97,15 @@ public class UnitAnimator : MonoBehaviour
             if (time == -1.0f) m_Arm.Play(state.ToString());
             else m_Arm.Play(state.ToString(), 0, time);
             m_Arm.Update(0);
+        }
+
+        // Start a courinte to fire AnimationEnded event after the current animations duration
+        m_AnimationEndedCoroutine = StartCoroutine(AnimationEndedEnumerator(state));
+        IEnumerator AnimationEndedEnumerator(UnitAnimationState state)
+        {
+            yield return new WaitForSeconds(CurrentStateLength);
+            OnAnimationEnded?.Invoke(state);
+            m_AnimationEndedCoroutine = null;
         }
     }
 
@@ -132,9 +153,6 @@ public class UnitAnimator : MonoBehaviour
 
         IEnumerator AnimateEnumerator(Vector2 position, float duration)
         {
-            m_Unit.Physics.enabled = false;
-            m_Unit.GroundSpring.enabled = false;
-
             Vector2 initialPosition = m_Unit.transform.position;
             float t = 0.0f;
             while (t != 1.0f)
@@ -147,8 +165,6 @@ public class UnitAnimator : MonoBehaviour
             m_AnimatePositionCoroutine = null;
             m_TranslationCancelAction -= CancelAnimation;
             m_TranslationCancelAction = null;
-            m_Unit.Physics.enabled = true;
-            m_Unit.GroundSpring.enabled = true;
             OnTranslationEnded?.Invoke();
         }
 
@@ -158,8 +174,6 @@ public class UnitAnimator : MonoBehaviour
             m_AnimatePositionCoroutine = null;
             m_TranslationCancelAction -= CancelAnimation;
             m_TranslationCancelAction = null;
-            m_Unit.Physics.enabled = true;
-            m_Unit.GroundSpring.enabled = true;
             OnTranslationEnded?.Invoke();
         }
     }

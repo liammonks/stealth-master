@@ -19,13 +19,14 @@ MonoBehaviour:
   jumpForce: 4
   wallJumpForce: {x: 0, y: 8}
   slideVelocityMultiplier: 2
-  vaultGrabDistance: 0.4
-  vaultMinHeight: 0.5
-  vaultMaxHeight: 1
+  vaultCheckDistance: 0.3
+  vaultCheckMinHeight: 0.75
+  vaultCheckMaxHeight: 1
   vaultOverDistance: 1
-  climbGrabDistance: 0.2
-  climbMinHeight: 1.5
-  climbMaxHeight: 2
+  climbGrabOffset: {x: 0.325, y: 1}
+  climbCheckDistance: 0.3
+  climbCheckMinHeight: 1.5
+  climbCheckMaxHeight: 1.75
   groundDrag: 10
   airDrag: 0.1
   slideDrag: 1

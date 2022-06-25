@@ -27,7 +27,7 @@ namespace States.StealthMaster
                 //}
             }
             // Wall Slide
-            if (Mathf.Abs(velocity.x) > 0.1f && unit.StateMachine.AgainstWall())
+            if (Mathf.Abs(velocity.x) > 0.1f && unit.StateMachine.FacingWall())
             {
                 //return UnitState.WallSlide;
             }

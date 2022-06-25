@@ -4,7 +4,7 @@ namespace States.StealthMaster
 {
     public class Fall : States.Fall
     {
-        public Fall(UnitData a_data) : base(a_data) { }
+        public Fall(Unit a_unit) : base(a_unit) { }
         
         public override UnitState Initialise()
         {
@@ -16,19 +16,18 @@ namespace States.StealthMaster
             UnitState state = base.Execute();
             if (state != UnitState.Fall) return state;
 
-            // Check Climb
-            UnitState climbState = StateManager.TryLedgeGrab(data);
-            if (climbState != UnitState.Null)
+            // Check Ledge
+            if (unit.StateMachine.TryLedgeGrab())
             {
-                return climbState;
+                return UnitState.LedgeGrab;
             }
             // Wall Slide
-            if (StateManager.FacingWall(data))
+            if (unit.StateMachine.FacingWall())
             {
                 return UnitState.WallSlide;
             }
             // Execute Dive
-            if (data.input.crawling && data.previousState != UnitState.WallSlide && StateManager.CanCrawl(data))
+            if (unit.Input.Crawling && unit.StateMachine.CanCrawl())
             {
                 return UnitState.Dive;
             }

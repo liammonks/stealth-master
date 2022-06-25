@@ -58,7 +58,7 @@ MonoBehaviour:
       Data: 0.55
     - Name: groundReach
       Entry: 4
-      Data: 0.3
+      Data: 0.25
     - Name: size
       Entry: 7
       Data: UnityEngine.Vector2, UnityEngine.CoreModule

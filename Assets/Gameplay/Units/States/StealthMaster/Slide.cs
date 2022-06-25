@@ -26,8 +26,6 @@ namespace States.StealthMaster
             {
                 if (unit.StateMachine.TryDrop())
                 {
-                    unit.Animator.Play(UnitAnimationState.SlideToHang);
-                    unit.SetBodyState(BodyState.Standing, unit.Animator.CurrentStateLength);
                     return UnitState.LedgeGrab;
                 }
             }

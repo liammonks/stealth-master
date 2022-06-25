@@ -38,9 +38,9 @@ namespace States.StealthMaster
             {
                 return UnitState.VaultOn;
             }
-            if (unit.StateMachine.CanClimb())
+            if (unit.StateMachine.TryLedgeGrab())
             {
-                return UnitState.Climb;
+                return UnitState.LedgeGrab;
             }
 
             // Execute Melee

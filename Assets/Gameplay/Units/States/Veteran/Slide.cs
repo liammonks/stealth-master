@@ -65,7 +65,7 @@ namespace States
 
         public override void Deinitialise()
         {
-            
+            unit.Input.Crawling = false;
         }
     }
 }

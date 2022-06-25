@@ -26,6 +26,8 @@ namespace States
 
         public override void Deinitialise()
         {
+            unit.Physics.enabled = true;
+            unit.GroundSpring.enabled = true;
             unit.Animator.OnTranslationEnded -= OnClimbEnded;
         }
 

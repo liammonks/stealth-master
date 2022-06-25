@@ -16,9 +16,9 @@ public class Unit : MonoBehaviour
     public StateMachine StateMachine => m_StateMachine;
     public UnitCollider Collider => m_Collider;
     public BodyState BodyState => m_BodyState;
-    public bool FacingRight => m_FacingRight;
     public Vector2 Center => Physics.WorldCenterOfMass;
 
+    public bool FacingRight { get { return m_FacingRight; } set { m_FacingRight = value; } }
     public Action<BodyState, float> OnBodyStateChanged;
 
     #region Components
@@ -48,21 +48,31 @@ public class Unit : MonoBehaviour
 
     private void Update()
     {
-        UpdateFacing();
+        if (StateMachine.GetStateClass(StateMachine.CurrentState).UpdateFacing)
+        {
+            UpdateFacing();
+        }
+        UpdateAiming();
+        UpdateAnimator();
     }
 
     private void UpdateFacing()
     {
-        m_Animator.SetVelocity(m_Physics.Velocity);
-
         if (m_Physics.Velocity.x > 0.1f) { m_FacingRight = true; }
         else if (m_Physics.Velocity.x < -0.1f) { m_FacingRight = false; }
         else if (m_Input.Movement > 0.0f) { m_FacingRight = true; }
         else if (m_Input.Movement < 0.0f) { m_FacingRight = false; }
+    }
 
+    private void UpdateAiming()
+    {
         if (m_Input.MouseOffset.x > 0.0f) { m_AimingRight = true; }
         else if (m_Input.MouseOffset.x < 0.0f) { m_AimingRight = false; }
+    }
 
+    private void UpdateAnimator()
+    {
+        m_Animator.SetVelocity(m_Physics.Velocity);
         m_Animator.SetFacing(m_FacingRight, m_AimingRight);
     }
 

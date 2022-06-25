@@ -10,7 +10,16 @@ namespace States
         
         public override UnitState Initialise()
         {
-            unit.Animator.Play(UnitAnimationState.Fall);
+            switch (unit.StateMachine.PreviousState)
+            {
+                case UnitState.WallJump:
+                    unit.Animator.Play(UnitAnimationState.WallJumpFall);
+                    break;
+                default:
+                    unit.Animator.Play(UnitAnimationState.Fall);
+                    break;
+            }
+
             stateDuration = 0.0f;
             return UnitState.Fall;
         }

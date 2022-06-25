@@ -21,15 +21,16 @@ public class UnitSettings : ScriptableObject
     public float slideVelocityMultiplier;
 
     [Header("Vaulting")]
-    public float vaultGrabDistance;
-    public float vaultMinHeight;
-    public float vaultMaxHeight;
+    public float vaultCheckDistance;
+    public float vaultCheckMinHeight;
+    public float vaultCheckMaxHeight;
     public float vaultOverDistance;
 
     [Header("Climbing")]
-    public float climbGrabDistance;
-    public float climbMinHeight;
-    public float climbMaxHeight;
+    public Vector2 climbGrabOffset;
+    public float climbCheckDistance;
+    public float climbCheckMinHeight;
+    public float climbCheckMaxHeight;
 
     [Header("Drag")]
     public float groundDrag;

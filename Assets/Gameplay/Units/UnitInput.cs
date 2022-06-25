@@ -16,7 +16,7 @@ public class UnitInput : MonoBehaviour
     public bool Running => m_Running;
     public Vector2 MouseOffset => Camera.main.ScreenToWorldPoint(new Vector3(m_MousePosition.x, m_MousePosition.y, 33)) - transform.position;
     public bool Jumping { get { return m_JumpRequestTime >= (Time.unscaledTime - ActivationDuration); } set { if (value == false) { m_JumpRequestTime = -1.0f; } } }
-    public bool Crawling => m_Crawling;
+    public bool Crawling { get { return m_CrawlRequestTime >= (Time.unscaledTime - ActivationDuration); } set { if (value == false) { m_CrawlRequestTime = -1.0f; } } }
     public bool Melee => m_MeleeRequestTime >= (Time.unscaledTime - ActivationDuration);
     public bool GadgetPrimary => m_GadgetPrimary;
     public bool GadgetSecondary => m_GadgetSecondary;

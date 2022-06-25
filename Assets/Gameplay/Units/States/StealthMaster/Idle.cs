@@ -30,7 +30,7 @@ namespace States.StealthMaster
             if (state != UnitState.Idle) return state;
 
             // Push against wall
-            if (unit.StateMachine.AgainstWall())
+            if (unit.StateMachine.FacingWall())
             {
                 if (unit.Animator.CurrentState != UnitAnimationState.AgainstWall)
                 {
