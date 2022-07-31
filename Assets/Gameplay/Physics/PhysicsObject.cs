@@ -201,6 +201,9 @@ public class PhysicsObject : MonoBehaviour
 
         void HandleIntersection(Collider2D collider, Vector2 selfHitPoint, Vector2 otherHitPoint, Vector2 hitDirection)
         {
+            DebugExtension.DebugPoint(selfHitPoint, Color.yellow, 0.01f);
+            DebugExtension.DebugPoint(otherHitPoint, Color.red, 0.01f);
+
             Vector2 localOtherHitPoint = otherHitPoint - (Vector2)collider.bounds.center;
             Vector2 overlap = Vector2.zero;
             if (collider is BoxCollider2D)
@@ -231,8 +234,6 @@ public class PhysicsObject : MonoBehaviour
             }
             if (collider is CircleCollider2D)
             {
-                DebugExtension.DebugPoint(selfHitPoint, Color.yellow, 0.01f);
-                DebugExtension.DebugPoint(otherHitPoint, Color.red, 0.01f);
                 CircleCollider2D circleCollider = (CircleCollider2D)collider;
                 float overlapDistance = (circleCollider.radius - localOtherHitPoint.magnitude);
                 Vector2 offset = Vector2.zero;
@@ -245,7 +246,7 @@ public class PhysicsObject : MonoBehaviour
                     offset = otherHitPoint - selfHitPoint;
                 }
                 transform.position += (Vector3)offset;
-                m_Velocity -= hitDirection * Vector2.Dot(m_Velocity, hitDirection);
+                m_Velocity -= (hitDirection * Vector2.Dot(m_Velocity, hitDirection)) * 0.9f;
             }
         }
 

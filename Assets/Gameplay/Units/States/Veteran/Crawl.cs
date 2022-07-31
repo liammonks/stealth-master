@@ -29,7 +29,7 @@ namespace States
             }
             
             // Apply movement input
-            if (unit.GroundSpring.Grounded && velocity.x < unit.Settings.walkSpeed)
+            if (unit.GroundSpring.Intersecting && velocity.x < unit.Settings.walkSpeed)
             {
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
@@ -51,12 +51,19 @@ namespace States
             // Return to Idle
             if (!unit.Input.Crawling && CanStand())
             {
+                
                 unit.Animator.Play(UnitAnimationState.CrawlToStand);
                 transitionDuration = unit.Animator.CurrentStateLength;
                 unit.SetBodyState(BodyState.Standing, transitionDuration);
                 toIdle = true;
             }
-            
+
+            // Execute Dive when falling
+            if (!unit.GroundSpring.Intersecting)
+            {
+                return UnitState.Dive;
+            }
+
             return UnitState.Crawl;
         }
 
@@ -68,9 +75,9 @@ namespace States
         private bool CanStand()
         {
             const float edgeBuffer = 0.02f;
-            if (!unit.GroundSpring.Grounded) return false;
+            if (!unit.GroundSpring.Intersecting) return false;
             float xOffset = (unit.Collider.Info[BodyState.Standing].Width * 0.5f);
-            float yOffset = (unit.Collider.Info[BodyState.Standing].Height * 0.5f) - unit.GroundSpring.GroundDistance + edgeBuffer;
+            float yOffset = (unit.Collider.Info[BodyState.Standing].Height * 0.5f) - unit.GroundSpring.HitDistance + edgeBuffer;
             //if (!unit.Collider.Overlap(BodyState.Standing, new Vector2(0, yOffset), true)) { return true; }
             if (!unit.Collider.Overlap(BodyState.Standing, new Vector2(xOffset, yOffset), true)) { return true; }
             //if (!unit.Collider.Overlap(BodyState.Standing, new Vector2(-xOffset, yOffset), true)) { return true; }

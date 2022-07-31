@@ -4,13 +4,11 @@ namespace States.StealthMaster
 {
     public class Slide : States.Slide
     {
-        private float stateDuration = 0.0f;
 
         public Slide(Unit a_unit) : base(a_unit) { }
         
         public override UnitState Initialise()
         {
-            stateDuration = 0.0f;
             return base.Initialise();
         }
         

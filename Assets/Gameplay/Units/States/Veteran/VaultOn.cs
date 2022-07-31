@@ -12,6 +12,7 @@ namespace States
         {
             vaultEnded = false;
             unit.Animator.OnTranslationEnded += OnVaultEnded;
+            unit.WallSpring.enabled = false;
             return UnitState.VaultOn;
         }
         
@@ -27,6 +28,8 @@ namespace States
         public override void Deinitialise()
         {
             unit.Animator.OnTranslationEnded -= OnVaultEnded;
+            unit.WallSpring.enabled = true;
+            unit.Physics.SetVelocity(Vector2.zero);
         }
 
         private void OnVaultEnded()

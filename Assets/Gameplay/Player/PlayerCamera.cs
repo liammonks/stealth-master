@@ -5,39 +5,41 @@ using UnityEngine;
 
 public enum PlayerCameraState
 {
-    Default,
-    Inventory,
-    Aiming
+    Player
 }
 
 public class PlayerCamera : MonoBehaviour
 {
 
-    public static PlayerCamera Instance;
+    [SerializeField]
+    private Transform m_CinemachineTarget;
 
-    public PlayerCameraState CurrentState => currentState;
+    [SerializeField]
+    private Animator m_StateAnimator;
 
-    [SerializeField] private Transform dynamicCameraTarget;
-
-    private Animator cameraAnimator;
+    private Transform m_Target;
     private PlayerCameraState currentState;
 
     private void Awake()
     {
-        if(Instance != null)
-        {
-            Debug.LogError("Two Instances of PlayerCamera Found");
-            return;
-        }
-        Instance = this;
+        SetState(PlayerCameraState.Player);
+    }
 
-        cameraAnimator = GetComponent<Animator>();
-        SetState(PlayerCameraState.Default);
+    private void Update()
+    {
+        if (m_Target == null) { return; }
+        m_CinemachineTarget.position = m_Target.position;
+    }
+
+    public void SetTarget(Transform target)
+    {
+        m_Target = target;
     }
 
     public void SetState(PlayerCameraState state)
     {
-        cameraAnimator.Play(state.ToString());
+        if (currentState == state) { return; }
+        m_StateAnimator.Play(state.ToString());
         currentState = state;
     }
 

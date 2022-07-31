@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5db8d9a03b1cf3a4490bce9c833c2595, type: 3}
+  m_Name: SM_Settings
+  m_EditorClassIdentifier: 
+  runSpeed: 5
+  walkSpeed: 3
+  groundAcceleration: 10
+  airAcceleration: 0.5
+  jumpForce: 4
+  wallJumpForce: {x: 5, y: 5}
+  slideVelocityMultiplier: 2
+  vaultCheckDistance: 0.3
+  vaultCheckMinHeight: 0.75
+  vaultCheckMaxHeight: 1
+  vaultOverDistance: 1
+  climbGrabOffset: {x: 0.325, y: 1}
+  climbRequiredInset: {x: 0.2, y: 0.02}
+  climbCheckMinHeight: 1.75
+  climbCheckMaxHeight: 2
+  groundDrag: 10
+  airDrag: 0.1
+  slideDrag: 1
+  animations: {fileID: 11400000, guid: 98e423f95ed9bde48a3bb6a7cc016179, type: 2}
+  spring: {fileID: 11400000, guid: 363553a18c493fc4fbffc4a560abdd25, type: 2}

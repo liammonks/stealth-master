@@ -14,24 +14,34 @@ public class UnitInput : MonoBehaviour
 
     public float Movement => m_Movement;
     public bool Running => m_Running;
-    public Vector2 MouseOffset => Camera.main.ScreenToWorldPoint(new Vector3(m_MousePosition.x, m_MousePosition.y, 33)) - transform.position;
-    public bool Jumping { get { return m_JumpRequestTime >= (Time.unscaledTime - ActivationDuration); } set { if (value == false) { m_JumpRequestTime = -1.0f; } } }
-    public bool Crawling { get { return m_CrawlRequestTime >= (Time.unscaledTime - ActivationDuration); } set { if (value == false) { m_CrawlRequestTime = -1.0f; } } }
+    public Vector2 MouseWorldPosition => m_MouseWorldPosition;
     public bool Melee => m_MeleeRequestTime >= (Time.unscaledTime - ActivationDuration);
     public bool GadgetPrimary => m_GadgetPrimary;
     public bool GadgetSecondary => m_GadgetSecondary;
+    public bool Crawling => m_Crawling;
+    public bool Jumping
+    {
+        get
+        {
+            return m_JumpRequestTime >= (Time.unscaledTime - ActivationDuration);
+        }
+        set
+        {
+            if (value == false) { m_JumpRequestTime = -1.0f; }
+        }
+    }
 
     private float m_Movement;
     private bool m_Running;
     private bool m_Crawling;
-    private float m_CrawlRequestTime = -1;
-    private float m_JumpRequestTime = -1;
-    private float m_MeleeRequestTime = -1;
-    private Vector3 m_MousePosition;
+    private float m_JumpRequestTime = -1.0f;
+    private float m_MeleeRequestTime = -1.0f;
+    private Vector3 m_MouseScreenPosition;
+    private Vector3 m_MouseWorldPosition;
     private bool m_GadgetPrimary;
     private bool m_GadgetSecondary;
 
-    private void Awake()
+    private void Start()
     {
         SetPlayerControl(m_PlayerControlled);
     }
@@ -89,42 +99,9 @@ public class UnitInput : MonoBehaviour
         }
     }
 
-    private Coroutine enableCrawlCoroutine;
     private void OnCrawl(InputValue value)
     {
-        const float crawlRequestInterval = 0.6f;
-
-        if (value.Get<float>() == 1.0f)
-        {
-            // Set crawling
-            if (Time.unscaledTime - m_CrawlRequestTime > crawlRequestInterval)
-            {
-                m_CrawlRequestTime = Time.unscaledTime;
-                m_Crawling = true;
-            }
-            else
-            {
-                // We tried crawling too quickly after the last crawl input
-                enableCrawlCoroutine = StartCoroutine(EnableCrawlDelay(Time.unscaledTime - m_CrawlRequestTime));
-            }
-        }
-        else
-        {
-            m_CrawlRequestTime = -1.0f;
-            m_Crawling = false;
-            if (enableCrawlCoroutine != null)
-            {
-                StopCoroutine(enableCrawlCoroutine);
-                enableCrawlCoroutine = null;
-            }
-        }
-
-        IEnumerator EnableCrawlDelay(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            m_CrawlRequestTime = Time.unscaledTime;
-            m_Crawling = true;
-        }
+        m_Crawling = value.Get<float>() == 1.0f;
     }
 
     private void OnMelee(InputValue value)
@@ -137,15 +114,25 @@ public class UnitInput : MonoBehaviour
 
     private void OnMouseMove(InputValue value)
     {
-        m_MousePosition = value.Get<Vector2>();
-        m_MousePosition.z = transform.position.z - Camera.main.transform.position.z;
+        m_MouseScreenPosition = value.Get<Vector2>();
+        m_MouseScreenPosition.z = 1.0f;
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(m_MouseScreenPosition);
+        Vector3 direction = (worldPos - Camera.main.transform.position).normalized;
+
+        Ray ray = Camera.main.ScreenPointToRay(m_MouseScreenPosition);
+        Plane plane = new Plane(Vector3.forward, new Vector3(0, 0, 0.25f));
+        if (plane.Raycast(ray, out float distance))
+        {
+            m_MouseWorldPosition = Camera.main.transform.position + (direction * distance);
+        }
     }
 
     private void OnStickMove(InputValue value)
     {
-        Vector2 dir = value.Get<Vector2>();
-        if (dir.sqrMagnitude == 0) { return; }
-        m_MousePosition = (Vector2)Camera.main.WorldToScreenPoint(transform.position) + dir;
+        //Vector2 dir = value.Get<Vector2>();
+        //if (dir.sqrMagnitude == 0) { return; }
+        //m_MouseScreenPosition = (Vector2)Camera.main.WorldToScreenPoint(transform.position) + dir;
     }
 
     private void OnInteract(InputValue value)

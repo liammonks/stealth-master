@@ -38,7 +38,7 @@ namespace States
             {
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
-                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration;
+                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
                 unit.Physics.SetVelocity(velocity);
             }
             else
@@ -47,7 +47,7 @@ namespace States
             }
 
             // Return to ground
-            if (unit.GroundSpring.Grounded)
+            if (unit.GroundSpring.Intersecting)
             {
                 return Mathf.Abs(velocity.x) > (unit.Settings.walkSpeed * 0.5f) ? UnitState.Run : UnitState.Idle;
             }
@@ -55,7 +55,10 @@ namespace States
             // Jump (Kyote Time)
             if (unit.Input.Jumping && stateDuration <= UnitInput.KyoteTime)
             {
-                return UnitState.Jump;
+                if (unit.StateMachine.PreviousState == UnitState.Idle || unit.StateMachine.PreviousState == UnitState.Run)
+                {
+                    return UnitState.Jump;
+                }
             }
             
             return UnitState.Fall;

@@ -4,28 +4,41 @@ namespace States
 {
     public class LedgeGrab : BaseState
     {
+        protected const float inputLockDuration = 0.2f;
+
         protected bool againstWall = false;
         protected bool animationEnded = false;
+        protected float stateDuration = 0.0f;
 
-        public LedgeGrab(Unit a_unit) : base(a_unit) 
-        {
-            updateFacing = false;
-        }
+        public LedgeGrab(Unit a_unit) : base(a_unit) { }
         
         public override UnitState Initialise()
         {
             animationEnded = false;
-            unit.Physics.enabled = false;
+            stateDuration = 0.0f;
+            unit.UpdateFacing = false;
+            unit.WallSpring.enabled = false;
             unit.GroundSpring.enabled = false;
+
             unit.Physics.SetVelocity(Vector2.zero);
-            if (unit.StateMachine.PreviousState == UnitState.Slide) { unit.FacingRight = !unit.FacingRight; }
-            unit.Animator.OnAnimationEnded += OnAnimationEnded;
+            if (unit.StateMachine.PreviousState == UnitState.Slide)
+            {
+                unit.FacingRight = !unit.FacingRight;
+                unit.Animator.Play(UnitAnimationState.SlideToHang);
+                unit.Animator.OnTranslationEnded += OnTranslationEnded;
+            }
+            else
+            {
+                //unit.Animator.Play()
+                OnTranslationEnded();
+            }
             return UnitState.LedgeGrab;
         }
         
         public override UnitState Execute()
         {
-            if (!animationEnded) { return UnitState.LedgeGrab; }
+            stateDuration += DeltaTime;
+            if (!animationEnded || stateDuration < inputLockDuration) { return UnitState.LedgeGrab; }
 
             if (unit.FacingRight)
             {
@@ -47,7 +60,6 @@ namespace States
             // Drop
             if (unit.Input.Crawling)
             {
-                unit.Input.Crawling = false;
                 return againstWall ? UnitState.WallSlide : UnitState.Fall;
             }
 
@@ -56,13 +68,15 @@ namespace States
 
         public override void Deinitialise()
         {
-
+            unit.UpdateFacing = true;
+            unit.WallSpring.enabled = true;
+            unit.GroundSpring.enabled = true;
         }
 
-        private void OnAnimationEnded(UnitAnimationState state)
+        private void OnTranslationEnded()
         {
             const float wallCheckBuffer = 0.01f;
-            unit.Animator.OnAnimationEnded -= OnAnimationEnded;
+            unit.Animator.OnTranslationEnded -= OnTranslationEnded;
 
             // Check if the ledge wall extends down to feet
             RaycastHit2D feetHit = Physics2D.Raycast(
@@ -78,7 +92,7 @@ namespace States
             );
             againstWall = feetHit;
             unit.Animator.Play(againstWall ? UnitAnimationState.LedgeGrab : UnitAnimationState.LedgeGrab_Hang);
-
+            unit.Physics.enabled = false;
             animationEnded = true;
         }
     }

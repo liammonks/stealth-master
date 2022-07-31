@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2f734f687c085946a02690a3a4d1ef9, type: 3}
+  m_Name: SM_Animations
+  m_EditorClassIdentifier: 
+  Body:
+    Default: {fileID: 22100000, guid: c3c54f03ed86cf542b1eb6da2e4cc355, type: 2}
+    Reversed: {fileID: 22100000, guid: 4ef361af892e7664d98a11295441c088, type: 2}
+  Arm:
+    Unarmed:
+      Default: {fileID: 22100000, guid: 25c8ef957bd38d946a133e6206083447, type: 2}
+      Reversed: {fileID: 22100000, guid: 8a2f7ae2df0e353468b7b721856314ca, type: 2}
+    Pistol:
+      Default: {fileID: 22100000, guid: 636379274b9f3304f86d595f8d156116, type: 2}
+      Reversed: {fileID: 22100000, guid: 7fff26cb089251f41b90874000323b46, type: 2}
+    GrapplingHook:
+      Default: {fileID: 22100000, guid: b91d547cbdeec9a43a908e60f9c7d8f7, type: 2}
+      Reversed: {fileID: 22100000, guid: 8edae6d04f71e684caae7a338830fca0, type: 2}

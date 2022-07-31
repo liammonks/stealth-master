@@ -201,10 +201,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2340033861057290498, guid: 31fb451838cbf4c4aac974fe7affb4e2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.15
-      objectReference: {fileID: 0}
     - target: {fileID: 2340033861057290501, guid: 31fb451838cbf4c4aac974fe7affb4e2, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -321,7 +317,8 @@ PrefabInstance:
       propertyPath: m_Settings
       value: 
       objectReference: {fileID: 11400000, guid: 363553a18c493fc4fbffc4a560abdd25, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8665950801422978108, guid: 31fb451838cbf4c4aac974fe7affb4e2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 31fb451838cbf4c4aac974fe7affb4e2, type: 3}
 --- !u!1 &6925769450969489532 stripped
 GameObject:

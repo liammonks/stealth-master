@@ -12,11 +12,10 @@ namespace States
         {
             unit.Physics.enabled = true;
             unit.GroundSpring.enabled = false;
-
+            unit.WallSpring.enabled = true;
             stateDuration = 0.0f;
 
             unit.Animator.Play(UnitAnimationState.WallSlide);
-            unit.Physics.SetVelocity(new Vector2(unit.FacingRight ? 5f : -5f, unit.Physics.Velocity.y));
             return UnitState.WallSlide;
         }
         
@@ -24,32 +23,36 @@ namespace States
         {
             stateDuration += DeltaTime;
             Vector2 velocity = unit.Physics.Velocity;
-            // Allow player to push towards movement speed while in the air
+
             if (Mathf.Abs(velocity.x) < unit.Settings.walkSpeed)
             {
+                // Allow player to push towards movement speed while in the air
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
-                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration;
+                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
                 unit.Physics.SetVelocity(velocity);
             }
             // Execute Idle
-            if (unit.GroundSpring.Grounded)
+            if (unit.GroundSpring.Intersecting)
             {
                 return UnitState.Idle;
             }
             // Execute Fall
-            if (stateDuration >= 0.5f && !unit.StateMachine.FacingWall())
+            if (stateDuration >= 0.5f && !unit.WallSpring.Intersecting)
             {
                 return UnitState.Fall;
             }
             // Grab Ledge
-            if (velocity.y <= 0.0f)
+            if (velocity.y <= 0.0f && unit.StateMachine.GetLastExecutionTime(UnitState.LedgeGrab) >= 0.2f)
             {
                 unit.GroundSpring.enabled = true;
 
-                if (unit.StateMachine.TryLedgeGrab())
+                if (unit.StateMachine.PreviousState != UnitState.LedgeGrab || stateDuration >= 0.2f)
                 {
-                    return UnitState.LedgeGrab;
+                    if (unit.StateMachine.TryLedgeGrab())
+                    {
+                        return UnitState.LedgeGrab;
+                    }
                 }
             }
 

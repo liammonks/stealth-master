@@ -27,9 +27,9 @@ namespace States.StealthMaster
                 //}
             }
             // Wall Slide
-            if (Mathf.Abs(velocity.x) > 0.1f && unit.StateMachine.FacingWall())
+            if (unit.WallSpring.Intersecting)
             {
-                //return UnitState.WallSlide;
+                return UnitState.WallSlide;
             }
             // Execute Dive
             if (unit.Input.Crawling && !unit.GroundSpring.enabled && unit.StateMachine.CanCrawl())

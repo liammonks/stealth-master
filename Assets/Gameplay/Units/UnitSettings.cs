@@ -1,39 +1,46 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "stealth-master/UnitSettings")]
+[CreateAssetMenu(menuName = "stealth-master/Unit/Settings")]
 public class UnitSettings : ScriptableObject
 {
     [Header("Speed")]
-    public float runSpeed;
-    public float walkSpeed;
+    [TabGroup("Stats")] public float runSpeed;
+    [TabGroup("Stats")] public float walkSpeed;
 
     [Header("Acceleration")]
-    public float groundAcceleration;
-    public float airAcceleration;
+    [TabGroup("Stats")] public float groundAcceleration;
+    [TabGroup("Stats")] public float airAcceleration;
 
     [Header("Jumping")]
-    public float jumpForce;
-    public Vector2 wallJumpForce;
+    [TabGroup("Stats")] public float jumpForce;
+    [TabGroup("Stats")] public Vector2 wallJumpForce;
 
     [Header("Sliding")]
-    public float slideVelocityMultiplier;
+    [TabGroup("Stats")] public float slideVelocityMultiplier;
 
     [Header("Vaulting")]
-    public float vaultCheckDistance;
-    public float vaultCheckMinHeight;
-    public float vaultCheckMaxHeight;
-    public float vaultOverDistance;
+    [TabGroup("Stats")] public float vaultCheckDistance;
+    [TabGroup("Stats")] public float vaultCheckMinHeight;
+    [TabGroup("Stats")] public float vaultCheckMaxHeight;
+    [TabGroup("Stats")] public float vaultOverDistance;
 
     [Header("Climbing")]
-    public Vector2 climbGrabOffset;
-    public float climbCheckDistance;
-    public float climbCheckMinHeight;
-    public float climbCheckMaxHeight;
+    [TabGroup("Stats")] public Vector2 climbGrabOffset;
+    [TabGroup("Stats")] public Vector2 climbRequiredInset;
+    [TabGroup("Stats")] public float climbCheckMinHeight;
+    [TabGroup("Stats")] public float climbCheckMaxHeight;
 
     [Header("Drag")]
-    public float groundDrag;
-    public float airDrag;
-    public float slideDrag;
+    [TabGroup("Stats")] public float groundDrag;
+    [TabGroup("Stats")] public float airDrag;
+    [TabGroup("Stats")] public float slideDrag;
+
+    [Header("Animation")]
+    [TabGroup("Components")] public UnitAnimations animations;
+
+    [Header("Springs")]
+    [TabGroup("Components")] public UnitSpringSettings spring;
 }

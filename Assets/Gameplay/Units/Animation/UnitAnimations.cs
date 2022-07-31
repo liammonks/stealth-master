@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "stealth-master/UnitAnimations")]
+[CreateAssetMenu(menuName = "stealth-master/Unit/Animations")]
 public class UnitAnimations : ScriptableObject
 {
     public UnitLayerControllers Body;

@@ -46,7 +46,7 @@ namespace States
                 return UnitState.Jump;
             }
             // Execute Fall
-            if (!unit.GroundSpring.Grounded)
+            if (!unit.GroundSpring.Intersecting)
             {
                 return UnitState.Fall;
             }

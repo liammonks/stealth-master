@@ -30,7 +30,7 @@ namespace States.StealthMaster
             if (state != UnitState.Idle) return state;
 
             // Push against wall
-            if (unit.StateMachine.FacingWall())
+            if (unit.WallSpring.Intersecting)
             {
                 if (unit.Animator.CurrentState != UnitAnimationState.AgainstWall)
                 {
@@ -48,18 +48,24 @@ namespace States.StealthMaster
                 return UnitState.Melee;
             }
             // Execute Crawl
-            if (unit.Input.Crawling && unit.StateMachine.CanCrawl())
-            {
-                // Play stand to crawl, wait before entering state
-                unit.Animator.Play(UnitAnimationState.StandToCrawl);
-                transitionDuration = unit.Animator.CurrentStateLength;
-                unit.SetBodyState(BodyState.Crawling, transitionDuration);
-                toCrawl = true;
-            }
+            if (ToCrawl()) { return UnitState.CrawlIdle; }
 
             return UnitState.Idle;
         }
 
+        private bool ToCrawl()
+        {
+            if (!unit.Input.Crawling) { return false; }
+            if (unit.StateMachine.GetLastExecutionTime(UnitState.LedgeGrab) < 0.2f) { return false; }
+            if (!unit.StateMachine.CanCrawl()) { return false; }
+
+            // Play stand to crawl, wait before entering state
+            unit.Animator.Play(UnitAnimationState.StandToCrawl);
+            transitionDuration = unit.Animator.CurrentStateLength;
+            unit.SetBodyState(BodyState.Crawling, transitionDuration);
+            toCrawl = true;
+            return true;
+        }
     }
 
 }

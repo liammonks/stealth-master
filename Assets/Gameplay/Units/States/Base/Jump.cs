@@ -22,10 +22,10 @@ namespace States
             Vector2 velocity = unit.Physics.Velocity;
             velocity.y = unit.StateMachine.PreviousState == UnitState.LedgeGrab ? unit.Settings.wallJumpForce.y : unit.Settings.jumpForce;
 
-            if (unit.GroundSpring.attachedObject)
+            if (unit.GroundSpring.AttachedPhysics)
             {
-                velocity += unit.GroundSpring.attachedObject.Velocity;
-                unit.GroundSpring.attachedObject = null;
+                velocity += unit.GroundSpring.AttachedPhysics.Velocity;
+                unit.GroundSpring.AttachedPhysics = null;
             }
 
             unit.Physics.SetVelocity(velocity);
@@ -57,7 +57,7 @@ namespace States
             if (jumpDuration == 0.0f)
             {
                 unit.GroundSpring.enabled = true;
-                return unit.GroundSpring.Grounded ? UnitState.Idle : UnitState.Fall;
+                return unit.GroundSpring.Intersecting ? UnitState.Idle : UnitState.Fall;
             }
 
             return UnitState.Jump;

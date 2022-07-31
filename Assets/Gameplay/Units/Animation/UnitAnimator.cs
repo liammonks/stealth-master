@@ -70,9 +70,10 @@ public class UnitAnimator : MonoBehaviour
 
     private void Awake()
     {
+        m_Unit = GetComponentInParent<Unit>();
+        m_Animations = m_Unit.Settings.animations;
         m_BodyControllers = m_Animations.Body;
         m_ArmControllers = m_Animations.Arm.Unarmed;
-        m_Unit = GetComponentInParent<Unit>();
     }
 
     public void Play(UnitAnimationState state, float time = -1.0f)
@@ -153,6 +154,8 @@ public class UnitAnimator : MonoBehaviour
 
         IEnumerator AnimateEnumerator(Vector2 position, float duration)
         {
+            m_Unit.Physics.enabled = false;
+
             Vector2 initialPosition = m_Unit.transform.position;
             float t = 0.0f;
             while (t != 1.0f)
@@ -162,6 +165,7 @@ public class UnitAnimator : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
 
+            m_Unit.Physics.enabled = true;
             m_AnimatePositionCoroutine = null;
             m_TranslationCancelAction -= CancelAnimation;
             m_TranslationCancelAction = null;

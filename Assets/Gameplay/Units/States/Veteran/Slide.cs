@@ -4,8 +4,11 @@ namespace States
 {
     public class Slide : BaseState
     {
+        protected const float minSlideDuration = 0.5f;
+
         protected bool toIdle = false;
         protected float transitionDuration = 0.0f;
+        protected float stateDuration = 0.0f;
 
         public Slide(Unit a_unit) : base(a_unit) { }
         
@@ -13,6 +16,8 @@ namespace States
         {
             toIdle = false;
             transitionDuration = 0.0f;
+            stateDuration = 0.0f;
+            unit.WallSpring.enabled = false;
             unit.SetBodyState(BodyState.Crawling, unit.Animator.CurrentStateLength);
             if (unit.StateMachine.PreviousState != UnitState.Dive)
             {
@@ -23,6 +28,8 @@ namespace States
         
         public override UnitState Execute()
         {
+            stateDuration += DeltaTime;
+
             if (toIdle)
             {
                 transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
@@ -33,19 +40,16 @@ namespace States
             }
             
             // Transition Idle
-            if (!unit.Input.Crawling && unit.GroundSpring.Grounded)
+            if (!unit.Input.Crawling && stateDuration > minSlideDuration && unit.GroundSpring.Intersecting && unit.StateMachine.CanStand())
             {
-                if (unit.StateMachine.CanStand())
-                {
-                    // Execute animation transition
-                    unit.Animator.Play(unit.Animator.CurrentState == UnitAnimationState.BellySlide ? UnitAnimationState.CrawlToStand : UnitAnimationState.SlideExit);
-                    transitionDuration = unit.Animator.CurrentStateLength;
-                    unit.SetBodyState(BodyState.Standing, transitionDuration);
-                    toIdle = true;
-                }
+                // Execute animation transition
+                unit.Animator.Play(unit.Animator.CurrentState == UnitAnimationState.BellySlide ? UnitAnimationState.CrawlToStand : UnitAnimationState.SlideExit);
+                transitionDuration = unit.Animator.CurrentStateLength;
+                unit.SetBodyState(BodyState.Standing, transitionDuration);
+                toIdle = true;
             }
             
-            if (unit.GroundSpring.Grounded)
+            if (unit.GroundSpring.Intersecting)
             {
                 unit.Physics.ApplyDrag(unit.Settings.slideDrag);
                 // Execute Crawl
@@ -65,7 +69,7 @@ namespace States
 
         public override void Deinitialise()
         {
-            unit.Input.Crawling = false;
+            unit.WallSpring.enabled = true;
         }
     }
 }

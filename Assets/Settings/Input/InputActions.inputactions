@@ -568,7 +568,7 @@
             ]
         },
         {
-            "name": "DebugWindow",
+            "name": "Debug",
             "id": "bd1f2a70-596e-476f-9f99-9743c5b9d68f",
             "actions": [
                 {
@@ -588,6 +588,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "SlowTime",
+                    "type": "Button",
+                    "id": "695ba8f0-7c08-4086-96fc-9ba2dec6f867",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -612,6 +621,17 @@
                     "action": "MouseDown",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2cfd6ac2-797a-4aee-aa42-c86f2de89497",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SlowTime",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -620,7 +640,7 @@
             "id": "7a9d1c5f-e0ec-442c-934a-49df9f567091",
             "actions": [
                 {
-                    "name": "Respawn",
+                    "name": "Restart",
                     "type": "Button",
                     "id": "d51c323f-58d3-46e7-bf0d-05e30ca0a7aa",
                     "expectedControlType": "Button",
@@ -636,15 +656,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Slow",
-                    "type": "Button",
-                    "id": "f702852e-81a4-482f-a1c2-d057085d6152",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -655,7 +666,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Respawn",
+                    "action": "Restart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -666,7 +677,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Respawn",
+                    "action": "Restart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -678,17 +689,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b5811da8-a495-4b98-8149-09bd0102e90c",
-                    "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Slow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

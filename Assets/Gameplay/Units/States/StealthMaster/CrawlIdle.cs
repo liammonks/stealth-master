@@ -59,7 +59,7 @@ namespace States.StealthMaster
             }
 
             // Execute Dive when falling
-            if (!unit.GroundSpring.Grounded)
+            if (!unit.GroundSpring.Intersecting)
             {
                 return UnitState.Dive;
             }

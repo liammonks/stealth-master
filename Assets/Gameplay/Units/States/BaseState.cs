@@ -7,10 +7,8 @@ namespace States
     public abstract class BaseState
     {
         public float DeltaTime => tickRate == 0 ? Time.deltaTime : tickRate;
-        public bool UpdateFacing => updateFacing;
 
         protected Unit unit;
-        protected bool updateFacing = true;
 
         private float tickRate;
         

@@ -4,8 +4,10 @@ namespace States.StealthMaster
 {
     public class Dive : BaseState
     {
+        protected const float groundSpringActivationTime = 0.5f;
+
         protected bool toStand = false;
-        protected float groundSpringPrevention = 0.0f;
+        protected float stateDuration = 0.0f;
         protected float transitionDuration = 0.0f;
 
         public Dive(Unit a_unit) : base(a_unit) { }
@@ -26,7 +28,7 @@ namespace States.StealthMaster
             }
             // Set timer to stop ground spring
             unit.GroundSpring.enabled = false;
-            groundSpringPrevention = 0.2f;
+            stateDuration = 0.0f;
             return UnitState.Dive;
         }
         
@@ -61,14 +63,14 @@ namespace States.StealthMaster
             // Re-enable ground spring after delay
             if (!unit.GroundSpring.enabled)
             {
-                groundSpringPrevention = Mathf.Max(0.0f, groundSpringPrevention - DeltaTime);
-                if (groundSpringPrevention == 0.0f)
+                stateDuration += DeltaTime;
+                if (stateDuration >= groundSpringActivationTime || !unit.Input.Crawling)
                 {
                     unit.GroundSpring.enabled = true;
                 }
             }
             // Check Landed
-            else if (unit.GroundSpring.Grounded)
+            else if (unit.GroundSpring.Intersecting)
             {
                 // Not crawling, stand up
                 if (!unit.Input.Crawling)

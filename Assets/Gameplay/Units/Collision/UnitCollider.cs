@@ -90,7 +90,7 @@ public class UnitCollider : MonoBehaviour
     public bool Overlap(BodyState state, Vector2 localOffset, bool debug = false)
     {
         Transform template = m_Templates[state];
-        template.position = m_Unit.transform.position + (Vector3)localOffset;
+        template.localPosition = (Vector3)localOffset;
         template.localScale = Vector3.one;
         template.gameObject.SetActive(true);
 

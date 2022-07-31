@@ -16,7 +16,7 @@ public class StealthMaster : StateMachine
         states.Add(UnitState.Slide, new SM.Slide(unit));
         states.Add(UnitState.WallSlide, new SM.WallSlide(unit));
         states.Add(UnitState.LedgeGrab, new SM.LedgeGrab(unit));
-        //states.Add(UnitState.WallJump, new WallJump(unit));
+        states.Add(UnitState.WallJump, new SM.WallJump(unit));
         states.Add(UnitState.Climb, new Climb(unit));
         states.Add(UnitState.VaultOver, new VaultOver(unit));
         states.Add(UnitState.VaultOn, new VaultOn(unit));

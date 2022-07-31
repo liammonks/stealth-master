@@ -14,10 +14,9 @@ namespace States.StealthMaster
         
         public override UnitState Execute()
         {
-            if (!animationEnded) { return UnitState.LedgeGrab; }
-
             UnitState state = base.Execute();
             if (state != UnitState.LedgeGrab) return state;
+            if (!animationEnded || stateDuration < inputLockDuration) { return UnitState.LedgeGrab; }
 
             // Jump Up
             if (unit.Input.Jumping)

@@ -1,7 +1,11 @@
+//#define DEBUG_VAULT
+//#define DEBUG_LEDGE
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using States;
+using System;
 
 [RequireComponent(typeof(Unit))]
 public class StateMachine : MonoBehaviour
@@ -10,19 +14,28 @@ public class StateMachine : MonoBehaviour
     public UnitState CurrentState => currentState;
     public UnitState PreviousState => previousState;
 
+    public Action<UnitState> OnStateChanged;
+
     protected Unit unit;
     protected Dictionary<UnitState, BaseState> states = new Dictionary<UnitState, BaseState>();
+    protected Dictionary<UnitState, float> statesLastExecutionTime = new Dictionary<UnitState, float>();
     
     private float tickRate;
     private float tickTimer;
     private UnitState currentState = UnitState.Idle;
     private UnitState previousState = UnitState.Null;
     private UnitState lastFrameState = UnitState.Null;
+    private LayerMask m_EnvironmentMask = 8;
 
     protected virtual void Start()
     {
         unit = GetComponent<Unit>();
         tickRate = unit.Input.PlayerControlled ? 0.0f : 1.0f / 24.0f;
+
+        foreach (UnitState state in Enum.GetValues(typeof(UnitState)))
+        {
+            statesLastExecutionTime.Add(state, Time.time - 1.0f);
+        }
     }
 
     private void Update()
@@ -40,8 +53,13 @@ public class StateMachine : MonoBehaviour
         if (currentState != lastFrameState)
         {
             previousState = lastFrameState;
-            if (previousState != UnitState.Null) { states[previousState].Deinitialise(); }
+            if (previousState != UnitState.Null)
+            {
+                statesLastExecutionTime[previousState] = Time.time;
+                states[previousState].Deinitialise(); 
+            }
             states[currentState].Initialise();
+            OnStateChanged?.Invoke(currentState);
         }
         lastFrameState = currentState;
         currentState = states[currentState].Execute();
@@ -52,28 +70,31 @@ public class StateMachine : MonoBehaviour
         return states[state];
     }
 
-    public bool FacingWall()
+    public float GetLastExecutionTime(UnitState state)
     {
-        const float edgeBuffer = 0.02f;
-        return unit.Collider.Overlap(BodyState.Standing, new Vector2(unit.FacingRight ? edgeBuffer : -edgeBuffer, 0), new Vector2(1.0f, 0.25f), true);
+        return Time.time - statesLastExecutionTime[state];
     }
 
     public bool CanCrawl()
     {
+        const int iterations = 9;
         const float edgeBuffer = 0.02f;
-        float xOffset = (unit.Collider.Info[BodyState.Crawling].Width * 0.5f) - (unit.Collider.Info[BodyState.Standing].Width * 0.5f) + edgeBuffer;
-        if (!unit.Collider.Overlap(BodyState.Crawling, new Vector2(0, 0), true)) { return true; }
-        if (!unit.Collider.Overlap(BodyState.Crawling, new Vector2(xOffset, 0), true)) { return true; }
-        if (!unit.Collider.Overlap(BodyState.Crawling, new Vector2(-xOffset, 0), true)) { return true; }
+        float maxOffset = (unit.Collider.Info[BodyState.Crawling].Width * 0.5f) - (unit.Collider.Info[BodyState.Standing].Width * 0.5f) + edgeBuffer;
+        for (int i = 0; i <= iterations; i++)
+        {
+            float iteration = i / (float)iterations;
+            float xOffset = Mathf.Lerp(-maxOffset, maxOffset, iteration);
+            if (!unit.Collider.Overlap(BodyState.Crawling, new Vector2(xOffset, 0), i == 9)) { return true; }
+        }
         return false;
     }
 
     public bool CanStand()
     {
-        const float edgeBuffer = 0.02f;
-        if (!unit.GroundSpring.Grounded) return false;
+        if (!unit.GroundSpring.Intersecting) return false;
         float xOffset = (unit.Collider.Info[BodyState.Standing].Width * 0.5f);
-        float yOffset = (unit.Collider.Info[BodyState.Standing].Height * 0.5f) - unit.GroundSpring.GroundDistance + edgeBuffer;
+        SpringSettings standingSpring = unit.Settings.spring.GetGroundSpring(BodyState.Standing);
+        float yOffset = standingSpring.position.magnitude + standingSpring.restDistance - unit.GroundSpring.HitDistance;
         //if (!unit.Collider.Overlap(BodyState.Standing, new Vector2(0, yOffset), true)) { return true; }
         if (!unit.Collider.Overlap(BodyState.Standing, new Vector2(xOffset, yOffset), true)) { return true; }
         //if (!unit.Collider.Overlap(BodyState.Standing, new Vector2(-xOffset, yOffset), true)) { return true; }
@@ -83,13 +104,14 @@ public class StateMachine : MonoBehaviour
     public bool TryVaultOn()
     {
         float vaultCheckHeight = unit.Settings.vaultCheckMaxHeight - unit.Settings.vaultCheckMinHeight;
-
         Vector2 vaultCheckOrigin = new Vector2
         {
             x = unit.FacingRight ? unit.Settings.vaultCheckDistance + (unit.Collider.Info[BodyState.Standing].Width * 0.5f) : -unit.Settings.vaultCheckDistance - (unit.Collider.Info[BodyState.Standing].Width * 0.5f),
-            y = -unit.GroundSpring.GroundDistance + unit.Settings.vaultCheckMinHeight + vaultCheckHeight
+            y = -unit.GroundSpring.HitDistance + unit.Settings.vaultCheckMinHeight + vaultCheckHeight
         };
+#if DEBUG_VAULT
         Debug.DrawRay(transform.position + (Vector3)vaultCheckOrigin, -transform.up * vaultCheckHeight, Color.blue);
+#endif
         RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3)vaultCheckOrigin, -transform.up, vaultCheckHeight, 8);
 
         if (hit.collider != null)
@@ -110,7 +132,7 @@ public class StateMachine : MonoBehaviour
             Vector2 standOffset = new Vector2
             {
                 x = 0,
-                y = unit.GroundSpring.GroundDistance
+                y = unit.GroundSpring.HitDistance
             };
             if (!unit.Collider.Overlap(BodyState.Standing, (Vector2)transform.InverseTransformPoint(hit.point) + standOffset, true))
             {
@@ -129,9 +151,11 @@ public class StateMachine : MonoBehaviour
         Vector2 vaultCheckOrigin = new Vector2
         {
             x = unit.FacingRight ? unit.Settings.vaultCheckDistance + (unit.Collider.Info[BodyState.Standing].Width * 0.5f) : -unit.Settings.vaultCheckDistance - (unit.Collider.Info[BodyState.Standing].Width * 0.5f),
-            y = -unit.GroundSpring.GroundDistance + unit.Settings.vaultCheckMinHeight + vaultCheckHeight
+            y = -unit.GroundSpring.HitDistance + unit.Settings.vaultCheckMinHeight + vaultCheckHeight
         };
+#if DEBUG_VAULT
         Debug.DrawRay(transform.position + (Vector3)vaultCheckOrigin, -transform.up * vaultCheckHeight, Color.blue);
+#endif
         RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3)vaultCheckOrigin, -transform.up, vaultCheckHeight, 8);
 
         if (hit.collider != null)
@@ -168,45 +192,98 @@ public class StateMachine : MonoBehaviour
 
     public bool TryLedgeGrab()
     {
+        const float contactOffset = 0.02f;
         float climbCheckHeight = unit.Settings.climbCheckMaxHeight - unit.Settings.climbCheckMinHeight;
-        Vector2 climbCheckOrigin = new Vector2
+
+        // Check if a ledge exists by casting a box over the entire region the unit can grab
+        Vector2 ledgeCheckOrigin = new Vector2()
         {
-            x = unit.FacingRight ? unit.Settings.climbCheckDistance + (unit.Collider.Info[BodyState.Standing].Width * 0.5f) : -unit.Settings.climbCheckDistance - (unit.Collider.Info[BodyState.Standing].Width * 0.5f),
-            y = -unit.GroundSpring.GroundDistance + unit.Settings.climbCheckMinHeight + climbCheckHeight
-        };
-        Debug.DrawRay((Vector2)unit.transform.position + climbCheckOrigin, Vector2.down * climbCheckHeight, Color.red);
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3)climbCheckOrigin, -transform.up, climbCheckHeight, 8);
-
-        if (hit.collider != null)
+            x = (unit.FacingRight ? 1 : -1) * ((unit.Collider.Info[BodyState.Standing].Width * 0.5f) + (unit.Settings.climbRequiredInset.x * 0.5f)),
+            y = -unit.GroundSpring.HitDistance + unit.Settings.climbCheckMinHeight + (climbCheckHeight * 0.5f)
+        } + (Vector2)unit.transform.position;
+#if DEBUG_LEDGE
+        DebugExtension.DebugBounds(new Bounds(ledgeCheckOrigin, new Vector2(unit.Settings.climbRequiredInset.x, climbCheckHeight)), Color.blue, tickRate);
+#endif
+        Vector2 ledgeCheckSize = new Vector2(unit.Settings.climbRequiredInset.x - contactOffset, climbCheckHeight - contactOffset);
+        if (!Physics2D.OverlapBox(ledgeCheckOrigin, ledgeCheckSize, transform.eulerAngles.z, m_EnvironmentMask))
         {
-            if (hit.distance == 0) { return false; }
-            const int iterationCount = 10;
-            Vector2 maxOrigin = climbCheckOrigin - new Vector2(unit.FacingRight ? unit.Settings.climbCheckDistance : -unit.Settings.climbCheckDistance, 0);
-            Debug.DrawRay(transform.position + (Vector3)maxOrigin, -transform.up * climbCheckHeight, Color.red);
-            for (int i = 1; i < iterationCount; ++i)
-            {
-                Vector2 iterationOrigin = Vector2.Lerp(climbCheckOrigin, maxOrigin, (float)i / iterationCount);
-                RaycastHit2D iterationHit = Physics2D.Raycast(transform.position + (Vector3)iterationOrigin, -transform.up, climbCheckHeight, 8);
-                if (iterationHit.collider != null) { hit = iterationHit; }
-                Debug.DrawRay(transform.position + (Vector3)iterationOrigin, -transform.up * climbCheckHeight, Color.blue);
-            }
-
-            DebugExtension.DebugPoint(hit.point, Color.green, 0.1f);
-            Vector2 offset = new Vector2((unit.FacingRight ? -1 : 1) * unit.Settings.climbGrabOffset.x, -unit.Settings.climbGrabOffset.y);
-            DebugExtension.DebugPoint(hit.point + offset, Color.magenta, 0.1f);
-            unit.Animator.Play(UnitAnimationState.LedgeGrab);
-            unit.Animator.Translate(hit.point + offset, unit.Animator.CurrentStateLength, unit.Collider.OnHit);
-            Debug.DrawLine(hit.point, hit.point + offset, Color.magenta);
-            return true;
+            return false;
         }
-        return false;
+
+        // Check for any gaps to grab within the region
+        Vector2 minOrigin = new Vector2
+        {
+            x = (unit.FacingRight ? 1 : -1) * ((unit.Collider.Info[BodyState.Standing].Width * 0.5f) + (unit.Settings.climbRequiredInset.x * 0.5f)),
+            y = -unit.GroundSpring.HitDistance + unit.Settings.climbCheckMinHeight + (unit.Settings.climbRequiredInset.y * 0.5f)
+        } + (Vector2)unit.transform.position;
+        Vector2 maxOrigin = new Vector2
+        {
+            x = (unit.FacingRight ? 1 : -1) * ((unit.Collider.Info[BodyState.Standing].Width * 0.5f) + (unit.Settings.climbRequiredInset.x * 0.5f)),
+            y = -unit.GroundSpring.HitDistance + unit.Settings.climbCheckMinHeight + climbCheckHeight - (unit.Settings.climbRequiredInset.y * 0.5f)
+        } + (Vector2)unit.transform.position;
+
+        const int iterations = 9;
+        float gapIteration = -1.0f;
+        float gapNextIteration = -1.0f;
+        Vector2 gapCheckSize = new Vector2(unit.Settings.climbRequiredInset.x - contactOffset, unit.Settings.climbRequiredInset.y - contactOffset);
+        for (int i = 1; i < iterations; i++)
+        {
+            float iteration = (float)i / (iterations - 1);
+            Vector2 iterationOrigin = Vector2.Lerp(minOrigin, maxOrigin, iteration);
+            DebugExtension.DebugBounds(new Bounds(iterationOrigin, unit.Settings.climbRequiredInset), Color.red, TickRate);
+            if (!Physics2D.OverlapBox(iterationOrigin, gapCheckSize, transform.eulerAngles.z))
+            {
+                gapIteration = iteration;
+                gapNextIteration = ((float)i - 1) / (iterations - 1);
+                DebugExtension.DebugBounds(new Bounds(iterationOrigin, unit.Settings.climbRequiredInset), Color.green, TickRate);
+                break;
+            }
+        }
+        if (gapIteration == -1.0f) { return false; }
+
+        Vector2 gapOrigin = Vector2.Lerp(minOrigin, maxOrigin, gapIteration);
+        Vector2 gapNextOrigin = Vector2.Lerp(minOrigin, maxOrigin, gapNextIteration);
+        float gapNextDistance = Vector2.Distance(gapOrigin, gapNextOrigin);
+        // Boxcast down from the gap to find hit point
+        Vector2 verticalHitOrigin = new Vector2
+        {
+            x = gapOrigin.x + ((unit.FacingRight ? 1 : -1) * unit.Settings.climbRequiredInset.x * 0.5f),
+            y = gapOrigin.y - (unit.Settings.climbRequiredInset.y * 0.5f)
+        };
+        RaycastHit2D verticalHit = Physics2D.Raycast(verticalHitOrigin, -transform.up, gapNextDistance + 0.001f, m_EnvironmentMask);
+        if (verticalHit.collider == null) { return false; }
+        Debug.DrawRay(verticalHitOrigin, -transform.up * verticalHit.distance, Color.green, tickRate);
+
+        const float horizontalSweepBuffer = 0.01f;
+        Vector2 horizontalOrigin = new Vector2
+        {
+            x = gapOrigin.x + ((unit.FacingRight ? -1 : 1) * (unit.Settings.climbRequiredInset.x * 0.5f) - (horizontalSweepBuffer * 0.5f)),
+            y = Mathf.Lerp(gapOrigin.y, gapNextOrigin.y, 0.5f) - (unit.Settings.climbRequiredInset.y * 0.5f)
+        };
+        Vector2 horizontalSize = new Vector2(horizontalSweepBuffer, gapNextDistance);
+        //DebugExtension.DrawBoxCastBox(horizontalOrigin, horizontalSize * 0.5f, transform.rotation, unit.FacingRight ? transform.right : -transform.right, unit.Settings.climbRequiredInset.x, Color.magenta);
+        RaycastHit2D horizontalHit = Physics2D.BoxCast(horizontalOrigin, horizontalSize, transform.eulerAngles.z, unit.FacingRight ? transform.right : -transform.right, unit.Settings.climbRequiredInset.x, m_EnvironmentMask);
+        
+        Vector2 grabPoint = new Vector2
+        {
+            x = horizontalHit.collider ? horizontalHit.point.x : unit.Settings.climbRequiredInset.x,
+            y = verticalHit.point.y
+        };
+        DebugExtension.DebugPoint(grabPoint, Color.magenta, 0.1f, tickRate);
+        Vector2 unitPosition = new Vector2
+        {
+            x = grabPoint.x - ((unit.FacingRight ? 1 : -1) * unit.Settings.climbGrabOffset.x),
+            y = grabPoint.y - unit.Settings.climbGrabOffset.y
+        };
+        unit.Animator.Translate(unitPosition, 0.0f, unit.Collider.OnHit);
+
+        return true;
     }
 
     public bool TryClimb()
     {
         Vector2 offset = new Vector2((unit.FacingRight ? 1 : -1) * unit.Settings.climbGrabOffset.x, unit.Settings.climbGrabOffset.y);
-        Vector2 target = (Vector2)transform.position + offset + (Vector2)(transform.up * unit.GroundSpring.GroundDistance);
+        Vector2 target = (Vector2)transform.position + offset + (Vector2)(transform.up * unit.GroundSpring.HitDistance);
         if (!unit.Collider.Overlap(BodyState.Standing, transform.InverseTransformPoint(target), true))
         {
             unit.Animator.Play(UnitAnimationState.Climb);
@@ -221,21 +298,21 @@ public class StateMachine : MonoBehaviour
         const float groundHitBuffer = 0.1f;
         Vector2 currentPosition = transform.position;
         Vector2 previousPosition = currentPosition - (unit.Physics.Velocity * Time.fixedDeltaTime);
-        RaycastHit2D currentHit = Physics2D.Raycast(currentPosition, -transform.up, unit.GroundSpring.GroundDistance + groundHitBuffer, 8);
-        RaycastHit2D previousHit = Physics2D.Raycast(previousPosition, -transform.up, unit.GroundSpring.GroundDistance + groundHitBuffer, 8);
+        RaycastHit2D currentHit = Physics2D.Raycast(currentPosition, -transform.up, unit.GroundSpring.HitDistance + groundHitBuffer, 8);
+        RaycastHit2D previousHit = Physics2D.Raycast(previousPosition, -transform.up, unit.GroundSpring.HitDistance + groundHitBuffer, 8);
         if (currentHit.collider == null && previousHit.collider != null)
         {
-            //Debug.DrawRay(currentPosition, -transform.up * (unit.GroundSpring.GroundDistance + groundHitBuffer), Color.red);
-            //Debug.DrawRay(previousPosition, -transform.up * (unit.GroundSpring.GroundDistance + groundHitBuffer), Color.red);
+            Debug.DrawRay(currentPosition, -transform.up * (unit.GroundSpring.HitDistance + groundHitBuffer), Color.red);
+            Debug.DrawRay(previousPosition, -transform.up * (unit.GroundSpring.HitDistance + groundHitBuffer), Color.red);
 
             const int iterationCount = 10;
             for (int i = 1; i < iterationCount; ++i)
             {
                 Vector2 iterationOrigin = Vector2.Lerp(currentPosition, previousPosition, (float)i / iterationCount);
-                RaycastHit2D iterationHit = Physics2D.Raycast(iterationOrigin, -transform.up, unit.GroundSpring.GroundDistance + groundHitBuffer, 8);
+                RaycastHit2D iterationHit = Physics2D.Raycast(iterationOrigin, -transform.up, unit.GroundSpring.HitDistance + groundHitBuffer, 8);
                 if (iterationHit.collider != null)
                 {
-                    //Debug.DrawRay(iterationOrigin, -transform.up * (unit.GroundSpring.GroundDistance + groundHitBuffer), Color.green);
+                    Debug.DrawRay(iterationOrigin, -transform.up * (unit.GroundSpring.HitDistance + groundHitBuffer), Color.green);
                     DebugExtension.DebugPoint(iterationHit.point, Color.magenta, 0.1f);
                     Vector2 offset = new Vector2((unit.FacingRight ? 1 : -1) * unit.Settings.climbGrabOffset.x, -unit.Settings.climbGrabOffset.y);
                     Vector2 target = iterationHit.point + offset;
