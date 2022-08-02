@@ -88,6 +88,7 @@ public class Unit : MonoBehaviour
             }
         }
         m_SpringParent.localScale = new Vector3(m_FacingRight ? 1 : -1, 1, 1);
+        m_Collider.transform.localScale = new Vector3(m_FacingRight ? 1 : -1, 1, 1);
     }
 
     private void UpdateAiming()

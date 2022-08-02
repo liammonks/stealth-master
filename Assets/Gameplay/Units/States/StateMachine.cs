@@ -230,12 +230,16 @@ public class StateMachine : MonoBehaviour
         {
             float iteration = (float)i / (iterations - 1);
             Vector2 iterationOrigin = Vector2.Lerp(minOrigin, maxOrigin, iteration);
+#if DEBUG_LEDGE
             DebugExtension.DebugBounds(new Bounds(iterationOrigin, unit.Settings.climbRequiredInset), Color.red, TickRate);
+#endif
             if (!Physics2D.OverlapBox(iterationOrigin, gapCheckSize, transform.eulerAngles.z))
             {
                 gapIteration = iteration;
                 gapNextIteration = ((float)i - 1) / (iterations - 1);
+#if DEBUG_LEDGE
                 DebugExtension.DebugBounds(new Bounds(iterationOrigin, unit.Settings.climbRequiredInset), Color.green, TickRate);
+#endif
                 break;
             }
         }
@@ -252,7 +256,9 @@ public class StateMachine : MonoBehaviour
         };
         RaycastHit2D verticalHit = Physics2D.Raycast(verticalHitOrigin, -transform.up, gapNextDistance + 0.001f, m_EnvironmentMask);
         if (verticalHit.collider == null) { return false; }
+#if DEBUG_LEDGE
         Debug.DrawRay(verticalHitOrigin, -transform.up * verticalHit.distance, Color.green, tickRate);
+#endif
 
         const float horizontalSweepBuffer = 0.01f;
         Vector2 horizontalOrigin = new Vector2
@@ -269,7 +275,9 @@ public class StateMachine : MonoBehaviour
             x = horizontalHit.collider ? horizontalHit.point.x : unit.Settings.climbRequiredInset.x,
             y = verticalHit.point.y
         };
+#if DEBUG_LEDGE
         DebugExtension.DebugPoint(grabPoint, Color.magenta, 0.1f, tickRate);
+#endif
         Vector2 unitPosition = new Vector2
         {
             x = grabPoint.x - ((unit.FacingRight ? 1 : -1) * unit.Settings.climbGrabOffset.x),
@@ -284,7 +292,8 @@ public class StateMachine : MonoBehaviour
     {
         Vector2 offset = new Vector2((unit.FacingRight ? 1 : -1) * unit.Settings.climbGrabOffset.x, unit.Settings.climbGrabOffset.y);
         Vector2 target = (Vector2)transform.position + offset + (Vector2)(transform.up * unit.GroundSpring.HitDistance);
-        if (!unit.Collider.Overlap(BodyState.Standing, transform.InverseTransformPoint(target), true))
+        Vector2 colliderOffset = unit.Collider.transform.InverseTransformPoint(target);
+        if (!unit.Collider.Overlap(BodyState.Standing, colliderOffset, true))
         {
             unit.Animator.Play(UnitAnimationState.Climb);
             unit.Animator.Translate(target, unit.Animator.CurrentStateLength, unit.Collider.OnHit);
@@ -306,19 +315,25 @@ public class StateMachine : MonoBehaviour
             Debug.DrawRay(previousPosition, -transform.up * (unit.GroundSpring.HitDistance + groundHitBuffer), Color.red);
 
             const int iterationCount = 10;
+            RaycastHit2D bestHit = previousHit;
             for (int i = 1; i < iterationCount; ++i)
             {
-                Vector2 iterationOrigin = Vector2.Lerp(currentPosition, previousPosition, (float)i / iterationCount);
+                Vector2 iterationOrigin = Vector2.Lerp(previousPosition, currentPosition, (float)i / iterationCount);
                 RaycastHit2D iterationHit = Physics2D.Raycast(iterationOrigin, -transform.up, unit.GroundSpring.HitDistance + groundHitBuffer, 8);
                 if (iterationHit.collider != null)
                 {
-                    Debug.DrawRay(iterationOrigin, -transform.up * (unit.GroundSpring.HitDistance + groundHitBuffer), Color.green);
-                    DebugExtension.DebugPoint(iterationHit.point, Color.magenta, 0.1f);
+                    Debug.DrawRay(iterationOrigin, -transform.up * iterationHit.distance, Color.green);
+                    bestHit = iterationHit;
+                }
+                else
+                {
+                    DebugExtension.DebugPoint(bestHit.point, Color.magenta, 0.1f);
                     Vector2 offset = new Vector2((unit.FacingRight ? 1 : -1) * unit.Settings.climbGrabOffset.x, -unit.Settings.climbGrabOffset.y);
-                    Vector2 target = iterationHit.point + offset;
-                    if (!unit.Collider.Overlap(BodyState.Standing, transform.InverseTransformPoint(target), true))
+                    Vector2 target = bestHit.point + offset;
+                    Vector2 colliderOffset = unit.Collider.transform.InverseTransformPoint(target);
+                    if (!unit.Collider.Overlap(BodyState.Standing, colliderOffset, true))
                     {
-                        Debug.DrawLine(iterationHit.point, target, Color.magenta);
+                        Debug.DrawLine(bestHit.point, target, Color.magenta);
                         unit.Animator.Play(UnitAnimationState.SlideToHang);
                         unit.SetBodyState(BodyState.Standing, unit.Animator.CurrentStateLength);
                         unit.Animator.Translate(target, unit.Animator.CurrentStateLength, unit.Collider.OnHit);

@@ -15,6 +15,7 @@ namespace States.StealthMaster
         public override UnitState Initialise()
         {
             toStand = false;
+            unit.WallSpring.enabled = false;
             unit.Animator.Play(UnitAnimationState.Dive);
             unit.SetBodyState(BodyState.Crawling, unit.Animator.CurrentStateLength);
             // Boost when diving from jump
@@ -116,7 +117,7 @@ namespace States.StealthMaster
 
         public override void Deinitialise()
         {
-
+            unit.WallSpring.enabled = true;
         }
     }
 }

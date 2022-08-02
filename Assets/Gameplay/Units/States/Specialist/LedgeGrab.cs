@@ -71,6 +71,7 @@ namespace States
             unit.UpdateFacing = true;
             unit.WallSpring.enabled = true;
             unit.GroundSpring.enabled = true;
+            unit.Physics.enabled = true;
         }
 
         private void OnTranslationEnded()
