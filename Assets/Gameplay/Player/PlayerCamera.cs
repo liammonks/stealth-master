@@ -12,6 +12,9 @@ public class PlayerCamera : MonoBehaviour
 {
 
     [SerializeField]
+    private CinemachineBrain m_CinemachineBrain;
+
+    [SerializeField]
     private Transform m_CinemachineTarget;
 
     [SerializeField]

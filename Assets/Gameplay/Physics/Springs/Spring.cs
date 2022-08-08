@@ -9,8 +9,8 @@ public class Spring : MonoBehaviour
     public float HitDistance => Intersecting ? m_HitDistance : m_Settings.position.magnitude + m_Settings.restDistance;
     public PhysicsObject AttachedPhysics { get { return m_AttachedPhysics; } set { m_AttachedPhysics = value; } }
 
+
     private SpringSettings m_Settings;
-    private bool m_Initialised = false;
     private bool m_Slipping = false;
     private bool m_Intersecting = false;
     private float m_HitDistance = 0;
@@ -18,7 +18,7 @@ public class Spring : MonoBehaviour
     private PhysicsObject m_Physics;
     private PhysicsObject m_AttachedPhysics;
     private Coroutine m_UpdateSettingsCoroutine;
-
+    private bool m_Initialised = false;
     private bool m_DrawGizmos = false;
 
     public void Initialise(SpringSettings settings, PhysicsObject physics)
@@ -26,6 +26,23 @@ public class Spring : MonoBehaviour
         UpdateSettings(settings);
         m_Physics = physics;
         m_Initialised = true;
+        TickMachine.Register(TickOrder.Spring, OnTick);
+    }
+
+    private void OnEnable()
+    {
+        UpdateSpring();
+    }
+
+    public void OnTick()
+    {
+        if (!isActiveAndEnabled) { return; }
+        UpdateSpring();
+    }
+
+    private void OnDestroy()
+    {
+        TickMachine.Unregister(TickOrder.Spring, OnTick);
     }
 
     public void UpdateSettings(SpringSettings newSettings, float interpDuration = 0.0f)
@@ -64,20 +81,9 @@ public class Spring : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        if (!m_Initialised) { return; }
-        UpdateSpring();
-    }
-
-    private void FixedUpdate()
-    {
-        if (!m_Initialised) { return; }
-        UpdateSpring();
-    }
-
     private void UpdateSpring()
     {
+        if(!m_Initialised) { return; }
         Vector2 velocity = Vector2.zero;
         Vector2 origin = transform.TransformPoint(m_Settings.position);
         Vector2 direction = transform.TransformVector(m_Settings.direction).normalized;

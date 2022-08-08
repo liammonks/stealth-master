@@ -10,7 +10,6 @@ using System;
 [RequireComponent(typeof(Unit))]
 public class StateMachine : MonoBehaviour
 {
-    public float TickRate => tickRate;
     public UnitState CurrentState => currentState;
     public UnitState PreviousState => previousState;
 
@@ -20,8 +19,6 @@ public class StateMachine : MonoBehaviour
     protected Dictionary<UnitState, BaseState> states = new Dictionary<UnitState, BaseState>();
     protected Dictionary<UnitState, float> statesLastExecutionTime = new Dictionary<UnitState, float>();
     
-    private float tickRate;
-    private float tickTimer;
     private UnitState currentState = UnitState.Idle;
     private UnitState previousState = UnitState.Null;
     private UnitState lastFrameState = UnitState.Null;
@@ -30,33 +27,31 @@ public class StateMachine : MonoBehaviour
     protected virtual void Start()
     {
         unit = GetComponent<Unit>();
-        tickRate = unit.Input.PlayerControlled ? 0.0f : 1.0f / 24.0f;
 
         foreach (UnitState state in Enum.GetValues(typeof(UnitState)))
         {
             statesLastExecutionTime.Add(state, Time.time - 1.0f);
         }
+
+        TickMachine.Register(TickOrder.StateMachine, OnTick);
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        tickTimer += Time.deltaTime;
-        if (tickTimer >= tickRate)
-        {
-            tickTimer = 0;
-            Tick();
-        }
+        TickMachine.Unregister(TickOrder.StateMachine, OnTick);
     }
 
-    private void Tick()
+    public void OnTick()
     {
+        if (!isActiveAndEnabled) { return; }
+        Debug.Log(unit.Input.Movement);
         if (currentState != lastFrameState)
         {
             previousState = lastFrameState;
             if (previousState != UnitState.Null)
             {
                 statesLastExecutionTime[previousState] = Time.time;
-                states[previousState].Deinitialise(); 
+                states[previousState].Deinitialise();
             }
             states[currentState].Initialise();
             OnStateChanged?.Invoke(currentState);

@@ -2,44 +2,54 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using ParrelSync;
+using System.Collections.Generic;
+using System.Collections;
 
 [ExecuteInEditMode] [RequireComponent(typeof(SceneDependencies))]
 public class SceneDependenciesEditor : MonoBehaviour
 {
-    private bool initialised = false;
-    private bool editingPrefab = false;
-    
+    private bool m_Initialised = false;
+    private bool m_EditingPrefab = false;
+    private Coroutine m_EditPrefabDelayCoroutine;
+
     private void OnEnable() {
-        if (initialised) { return; }
-        initialised = true;
+        if (m_Initialised) { return; }
+        m_Initialised = true;
         PrefabStage.prefabStageOpened += OnPrefabOpened;
         PrefabStage.prefabStageClosing += OnPrefabClosed;
     }
     
     private void OnDisable() {
-        initialised = false;
+        m_Initialised = false;
         PrefabStage.prefabStageOpened -= OnPrefabOpened;
         PrefabStage.prefabStageClosing -= OnPrefabClosed;
     }
     
     private void OnPrefabOpened(PrefabStage stage)
     {
-        editingPrefab = true;
+        m_EditingPrefab = true;
     }
 
     private void OnPrefabClosed(PrefabStage stage)
     {
-        editingPrefab = false;
-    }
-    
-    private void Update() {
-        if (editingPrefab) { return; }
-        foreach (string scene in gameObject.GetComponent<SceneDependencies>().scenes)
+        if (m_EditPrefabDelayCoroutine != null) { StopCoroutine(m_EditPrefabDelayCoroutine); }
+        m_EditPrefabDelayCoroutine = StartCoroutine(EditPrefabDelay());
+        IEnumerator EditPrefabDelay()
         {
-            if (!EditorApplication.isPlaying)
-            {
-                EditorSceneManager.OpenScene(scene + ".unity", OpenSceneMode.Additive);
-            }
+            yield return new WaitForSeconds(1.0f);
+            m_EditingPrefab = false;
+        }
+    }
+
+    private void Update() {
+        if (EditorApplication.isPlaying || m_EditingPrefab) { return; }
+
+        foreach (KeyValuePair<string, NetworkType> kvp in GetComponent<SceneDependencies>().Scenes)
+        {
+            if (kvp.Value != NetworkType.Both && kvp.Value != NetworkManager.NetworkType) { continue; }
+            string scenePath = "Assets/" + kvp.Key + ".unity";
+            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
         }
     }
 }

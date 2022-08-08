@@ -39,6 +39,6 @@ public class PlayerManager : MonoBehaviour
         m_ActivePlayerObject.transform.SetParent(null);
         m_ActivePlayerObject.name = m_PlayerName + " [ACTIVE]";
         m_ActivePlayerObject.SetActive(true);
-        m_PlayerCamera.SetTarget(m_ActivePlayerObject.transform);
+        m_PlayerCamera.SetTarget(m_ActivePlayerObject.GetComponentInChildren<UnitAnimator>().transform);
     }
 }

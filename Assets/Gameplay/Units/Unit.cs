@@ -3,11 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Random = UnityEngine.Random;
-
 public class Unit : MonoBehaviour
 {
-
     public UnitInput Input => m_Input;
     public UnitAnimator Animator => m_Animator;
     public PhysicsObject Physics => m_Physics;
@@ -59,13 +56,26 @@ public class Unit : MonoBehaviour
         m_GroundSpring.Initialise(m_Settings.spring.GetGroundSpring(BodyState), Physics);
         m_WallSpring = m_SpringParent.gameObject.AddComponent<Spring>();
         m_WallSpring.Initialise(m_Settings.spring.GetWallSpring(BodyState), Physics);
+
+        TickMachine.Register(TickOrder.Unit, OnTick);
+    }
+
+    private void OnDestroy()
+    {
+        TickMachine.Unregister(TickOrder.Unit, OnTick);
+    }
+
+    public void OnTick()
+    {
+        if (!isActiveAndEnabled) { return; }
+        FacingUpdate();
+        UpdateAiming();
+        UpdateAnimator();
     }
 
     private void Update()
     {
-        FacingUpdate();
-        UpdateAiming();
-        UpdateAnimator();
+
     }
 
     private void FacingUpdate()

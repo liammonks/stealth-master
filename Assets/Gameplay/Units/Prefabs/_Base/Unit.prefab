@@ -130,6 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2340033861022855598}
   - component: {fileID: 7384202742371330570}
+  - component: {fileID: 2324171414175484888}
   m_Layer: 9
   m_Name: Sprites
   m_TagString: Untagged
@@ -169,6 +170,19 @@ MonoBehaviour:
   m_Body: {fileID: 2340033860977752119}
   m_Arm: {fileID: 2340033862147561925}
   m_TestState: 0
+--- !u!114 &2324171414175484888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2340033861022855585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da70ef21a50dcd4dad55e881e4fb319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 2340033861602323352}
 --- !u!1 &2340033861057290501
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +260,6 @@ GameObject:
   - component: {fileID: 7487967537101525106}
   - component: {fileID: 537746467994492590}
   - component: {fileID: 1052374399313246799}
-  - component: {fileID: 8665950801422978108}
   m_Layer: 9
   m_Name: Unit
   m_TagString: Untagged
@@ -310,21 +323,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c590db87886c67640ac19e0b94e5292a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DefaultDrag: 0
---- !u!114 &8665950801422978108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2340033861602323355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e12bfc4ef40c6a644ad9defa9b9583ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Settings: {fileID: 0}
-  attachedObject: {fileID: 0}
+  m_Mass: 1
+  m_Drag: 0
 --- !u!1 &2340033862147561926
 GameObject:
   m_ObjectHideFlags: 0
