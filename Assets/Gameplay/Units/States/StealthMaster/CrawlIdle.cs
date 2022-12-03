@@ -22,7 +22,7 @@ namespace States.StealthMaster
             // Apply movement input
             if (unit.Input.Movement != 0)
             {
-                Vector2 velocity = unit.Physics.Velocity;
+                Vector2 velocity = unit.Physics.velocity;
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
                 // Increase acceleration when trying to move in opposite direction of travel
@@ -31,15 +31,15 @@ namespace States.StealthMaster
                     deltaSpeedRequired *= 2.0f;
                 }
                 velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
-                unit.Physics.SetVelocity(velocity);
+                unit.Physics.velocity = velocity;
             }
             else
             {
-                unit.Physics.ApplyDrag(unit.Settings.groundDrag);
+                unit.Physics.drag = unit.Settings.groundDrag;
             }
 
             // Execute Crawl
-            if (Mathf.Abs(unit.Physics.Velocity.x) > unit.Settings.walkSpeed * 0.5f)
+            if (Mathf.Abs(unit.Physics.velocity.x) > unit.Settings.walkSpeed * 0.5f)
             {
                 return UnitState.Crawl;
             }

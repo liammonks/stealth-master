@@ -16,7 +16,7 @@ namespace States.StealthMaster
 
             unit.FacingRight = !unit.FacingRight;
             DebugExtension.DebugArrow(unit.transform.position, unit.FacingRight ? Vector3.right : Vector3.left, Color.red, 3);
-            unit.Physics.SetVelocity(new Vector2((unit.FacingRight ? 1 : -1) * unit.Settings.wallJumpForce.x, unit.Settings.wallJumpForce.y));
+            unit.Physics.velocity = new Vector2((unit.FacingRight ? 1 : -1) * unit.Settings.wallJumpForce.x, unit.Settings.wallJumpForce.y);
             
             unit.Animator.Play(UnitAnimationState.WallJump);
             animationDuration = unit.Animator.CurrentStateLength;

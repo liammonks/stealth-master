@@ -7,7 +7,7 @@ public class Spring : MonoBehaviour
     public bool Slipping => m_Slipping;
     public bool Intersecting => this.enabled ? m_Intersecting : false;
     public float HitDistance => Intersecting ? m_HitDistance : m_Settings.position.magnitude + m_Settings.restDistance;
-    public PhysicsObject AttachedPhysics { get { return m_AttachedPhysics; } set { m_AttachedPhysics = value; } }
+    public Rigidbody2D AttachedPhysics { get { return m_AttachedPhysics; } set { m_AttachedPhysics = value; } }
 
 
     private SpringSettings m_Settings;
@@ -15,13 +15,13 @@ public class Spring : MonoBehaviour
     private bool m_Intersecting = false;
     private float m_HitDistance = 0;
     private LayerMask m_EnvironmentMask = 8;
-    private PhysicsObject m_Physics;
-    private PhysicsObject m_AttachedPhysics;
+    private Rigidbody2D m_Physics;
+    private Rigidbody2D m_AttachedPhysics;
     private Coroutine m_UpdateSettingsCoroutine;
     private bool m_Initialised = false;
     private bool m_DrawGizmos = false;
 
-    public void Initialise(SpringSettings settings, PhysicsObject physics)
+    public void Initialise(SpringSettings settings, Rigidbody2D physics)
     {
         UpdateSettings(settings);
         m_Physics = physics;
@@ -105,7 +105,7 @@ public class Spring : MonoBehaviour
             // Apply spring force
             float springDisplacement = distance - hit.distance - m_Settings.reachDistance;
             float springForce = springDisplacement * m_Settings.force;
-            float springDamp = Vector2.Dot(m_Physics.Velocity, -direction) * m_Settings.damping;
+            float springDamp = Vector2.Dot(m_Physics.velocity, -direction) * m_Settings.damping;
 
             velocity = -direction * (springForce - springDamp) * Time.fixedDeltaTime;
 
@@ -125,7 +125,7 @@ public class Spring : MonoBehaviour
             else
             {
                 m_Intersecting = springDisplacement > -0.1f;
-                PhysicsObject hitObject = hit.collider.GetComponent<PhysicsObject>();
+                Rigidbody2D hitObject = hit.collider.GetComponent<Rigidbody2D>();
                 if (hitObject != null) { m_AttachedPhysics = hitObject; }
             }
 
@@ -154,7 +154,7 @@ public class Spring : MonoBehaviour
             //data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
         }
 
-        m_Physics.AddVelocity(velocity);
+        m_Physics.velocity += velocity;
         m_DrawGizmos = false;
     }
 

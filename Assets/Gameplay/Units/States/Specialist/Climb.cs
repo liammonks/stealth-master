@@ -30,7 +30,7 @@ namespace States
         public override void Deinitialise()
         {
             unit.UpdateFacing = true;
-            unit.Physics.enabled = true;
+            unit.Physics.simulated = true;
             unit.GroundSpring.enabled = true;
             unit.WallSpring.enabled = true;
             unit.Animator.OnTranslationEnded -= OnClimbEnded;

@@ -17,7 +17,7 @@ namespace States.StealthMaster
             if (state != UnitState.WallSlide) return state;
             
             // Execute Wall Jump
-            if (unit.Physics.Velocity.y > 0.0f)
+            if (unit.Physics.velocity.y > 0.0f)
             {
                 // Jump Either Direction
                 if (unit.Input.Jumping)

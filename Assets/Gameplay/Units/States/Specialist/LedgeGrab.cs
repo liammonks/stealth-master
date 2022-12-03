@@ -20,7 +20,7 @@ namespace States
             unit.WallSpring.enabled = false;
             unit.GroundSpring.enabled = false;
 
-            unit.Physics.SetVelocity(Vector2.zero);
+            unit.Physics.velocity = Vector2.zero;
             if (unit.StateMachine.PreviousState == UnitState.Slide)
             {
                 unit.FacingRight = !unit.FacingRight;
@@ -71,7 +71,7 @@ namespace States
             unit.UpdateFacing = true;
             unit.WallSpring.enabled = true;
             unit.GroundSpring.enabled = true;
-            unit.Physics.enabled = true;
+            unit.Physics.simulated = true;
         }
 
         private void OnTranslationEnded()
@@ -81,19 +81,19 @@ namespace States
 
             // Check if the ledge wall extends down to feet
             RaycastHit2D feetHit = Physics2D.Raycast(
-                unit.Physics.WorldCenterOfMass + (Vector2.down * unit.Collider.Info[BodyState.Standing].Height * 0.5f),
+                unit.Physics.worldCenterOfMass + (Vector2.down * unit.Collider.Info[BodyState.Standing].Height * 0.5f),
                 unit.FacingRight ? Vector2.right : Vector2.left,
                 unit.Settings.climbGrabOffset.x + wallCheckBuffer,
                 8
             );
             Debug.DrawRay(
-                unit.Physics.WorldCenterOfMass + (Vector2.down * unit.Collider.Info[BodyState.Standing].Height * 0.5f),
+                unit.Physics.worldCenterOfMass + (Vector2.down * unit.Collider.Info[BodyState.Standing].Height * 0.5f),
                 (unit.FacingRight ? Vector2.right : Vector2.left) * (unit.Settings.climbGrabOffset.x + wallCheckBuffer),
                 feetHit ? Color.green : Color.red
             );
             againstWall = feetHit;
             unit.Animator.Play(againstWall ? UnitAnimationState.LedgeGrab : UnitAnimationState.LedgeGrab_Hang);
-            unit.Physics.enabled = false;
+            unit.Physics.simulated = false;
             animationEnded = true;
         }
     }

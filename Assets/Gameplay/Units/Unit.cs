@@ -7,14 +7,13 @@ public class Unit : MonoBehaviour
 {
     public UnitInput Input => m_Input;
     public UnitAnimator Animator => m_Animator;
-    public PhysicsObject Physics => m_Physics;
+    public Rigidbody2D Physics => m_Physics;
     public UnitSettings Settings => m_Settings;
     public Spring GroundSpring => m_GroundSpring;
     public Spring WallSpring => m_WallSpring;
     public StateMachine StateMachine => m_StateMachine;
     public UnitCollider Collider => m_Collider;
     public BodyState BodyState => m_BodyState;
-    public Vector2 Center => Physics.WorldCenterOfMass;
 
     public bool UpdateFacing { get { return m_UpdateFacing; } set { m_UpdateFacing = value; } }
     public bool FacingRight { get { return m_FacingRight; } set { m_FacingRight = value; } }
@@ -26,7 +25,7 @@ public class Unit : MonoBehaviour
     [SerializeField] private List<GameObject> m_GibPrefabs;
 
     private UnitInput m_Input;
-    private PhysicsObject m_Physics;
+    private Rigidbody2D m_Physics;
     private Spring m_GroundSpring;
     private Spring m_WallSpring;
     private StateMachine m_StateMachine;
@@ -42,7 +41,7 @@ public class Unit : MonoBehaviour
 
     private void Start() {
         m_Input = GetComponent<UnitInput>();
-        m_Physics = GetComponent<PhysicsObject>();
+        m_Physics = GetComponent<Rigidbody2D>();
         m_StateMachine = GetComponent<StateMachine>();
         m_Animator = GetComponentInChildren<UnitAnimator>();
         m_Collider = GetComponentInChildren<UnitCollider>();
@@ -91,8 +90,8 @@ public class Unit : MonoBehaviour
             else
             {
                 // Set facing based on velocity, then input
-                if (m_Physics.Velocity.x > 0.5f) { m_FacingRight = true; }
-                else if (m_Physics.Velocity.x < -0.5f) { m_FacingRight = false; }
+                if (m_Physics.velocity.x > 0.5f) { m_FacingRight = true; }
+                else if (m_Physics.velocity.x < -0.5f) { m_FacingRight = false; }
                 else if (m_Input.Movement > 0.0f) { m_FacingRight = true; }
                 else if (m_Input.Movement < 0.0f) { m_FacingRight = false; }
             }
@@ -109,7 +108,7 @@ public class Unit : MonoBehaviour
 
     private void UpdateAnimator()
     {
-        m_Animator.SetVelocity(m_Physics.Velocity);
+        m_Animator.SetVelocity(m_Physics.velocity);
         m_Animator.SetFacing(m_FacingRight, m_AimingRight);
     }
 

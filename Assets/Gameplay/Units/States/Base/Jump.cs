@@ -17,16 +17,16 @@ namespace States
             jumpDuration = unit.Animator.CurrentStateLength;
             unit.GroundSpring.enabled = false;
 
-            Vector2 velocity = unit.Physics.Velocity;
+            Vector2 velocity = unit.Physics.velocity;
             velocity.y = unit.StateMachine.PreviousState == UnitState.LedgeGrab ? unit.Settings.wallJumpForce.y : unit.Settings.jumpForce;
 
             if (unit.GroundSpring.AttachedPhysics)
             {
-                velocity += unit.GroundSpring.AttachedPhysics.Velocity;
+                velocity += unit.GroundSpring.AttachedPhysics.velocity;
                 unit.GroundSpring.AttachedPhysics = null;
             }
 
-            unit.Physics.SetVelocity(velocity);
+            unit.Physics.velocity = velocity;
             return UnitState.Jump;
         }
         
@@ -37,18 +37,18 @@ namespace States
             // Allow player to push towards movement speed while in the air
             if (unit.Input.Movement != 0)
             {
-                Vector2 velocity = unit.Physics.Velocity;
+                Vector2 velocity = unit.Physics.velocity;
                 if (Mathf.Abs(velocity.x) < unit.Settings.runSpeed)
                 {
                     float desiredSpeed = (unit.Input.Running ? unit.Settings.runSpeed : unit.Settings.walkSpeed) * unit.Input.Movement;
                     float deltaSpeedRequired = desiredSpeed - velocity.x;
                     velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
-                    unit.Physics.SetVelocity(velocity);
+                    unit.Physics.velocity = velocity;
                 }
             }
             else
             {
-                unit.Physics.ApplyDrag(unit.Settings.airDrag);
+                unit.Physics.drag = unit.Settings.airDrag;
             }
 
             // End of jump animation

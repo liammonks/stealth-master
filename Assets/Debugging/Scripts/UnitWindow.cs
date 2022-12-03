@@ -163,7 +163,7 @@ namespace Debugging
         {
             // VELOCITY
             string velocity = AddSpacer("Velocity", 10);
-            velocity += unit.Physics.Velocity;
+            velocity += unit.Physics.velocity;
             SetText(0, velocity);
 
             // FACING

@@ -22,10 +22,10 @@ namespace States.StealthMaster
             if (unit.StateMachine.PreviousState == UnitState.Jump || unit.StateMachine.PreviousState == UnitState.WallJump)
             {
                 //data.rb.velocity *= data.stats.diveVelocityMultiplier;
-                Vector2 velocity = unit.Physics.Velocity;
+                Vector2 velocity = unit.Physics.velocity;
                 velocity.x += 5 * Mathf.Sign(velocity.x);
                 velocity.y += 2 * Mathf.Sign(velocity.y);
-                unit.Physics.SetVelocity(velocity);
+                unit.Physics.velocity = velocity;
             }
             // Set timer to stop ground spring
             unit.GroundSpring.enabled = false;
@@ -37,7 +37,7 @@ namespace States.StealthMaster
         {
             if (toStand)
             {
-                unit.Physics.ApplyDrag(unit.Settings.slideDrag);
+                unit.Physics.drag = unit.Settings.slideDrag;
                 transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
                 // Execute Idle
                 if (transitionDuration == 0.0f)
@@ -48,17 +48,17 @@ namespace States.StealthMaster
             }
             
             // Allow player to push towards movement speed while in the air
-            Vector2 velocity = unit.Physics.Velocity;
+            Vector2 velocity = unit.Physics.velocity;
             if (unit.Input.Movement != 0 && !unit.GroundSpring.Slipping && Mathf.Abs(velocity.x) < unit.Settings.walkSpeed)
             {
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
                 velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
-                unit.Physics.SetVelocity(velocity);
+                unit.Physics.velocity = velocity;
             }
             else
             {
-                unit.Physics.ApplyDrag(unit.Settings.airDrag);
+                unit.Physics.drag = unit.Settings.airDrag;
             }
             
             // Re-enable ground spring after delay

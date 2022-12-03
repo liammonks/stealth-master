@@ -154,7 +154,7 @@ public class UnitAnimator : MonoBehaviour
 
         IEnumerator AnimateEnumerator(Vector2 position, float duration)
         {
-            m_Unit.Physics.enabled = false;
+            m_Unit.Physics.simulated = false;
 
             Vector2 initialPosition = m_Unit.transform.position;
             float t = 0.0f;
@@ -165,7 +165,7 @@ public class UnitAnimator : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
 
-            m_Unit.Physics.enabled = true;
+            m_Unit.Physics.simulated = true;
             m_AnimatePositionCoroutine = null;
             m_TranslationCancelAction -= CancelAnimation;
             m_TranslationCancelAction = null;

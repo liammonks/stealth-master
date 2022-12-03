@@ -9,7 +9,7 @@ namespace States
         public override UnitState Initialise()
         {
             unit.UpdateFacing = false;
-            unit.Physics.enabled = true;
+            unit.Physics.simulated = true;
             unit.GroundSpring.enabled = false;
             unit.WallSpring.enabled = true;
 
@@ -19,7 +19,7 @@ namespace States
         
         public override UnitState Execute()
         {
-            Vector2 velocity = unit.Physics.Velocity;
+            Vector2 velocity = unit.Physics.velocity;
 
             // Allow player to push towards movement speed while falling
             if (velocity.y <= 0.0f && Mathf.Abs(velocity.x) < unit.Settings.walkSpeed)
@@ -27,7 +27,7 @@ namespace States
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
                 velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
-                unit.Physics.SetVelocity(velocity);
+                unit.Physics.velocity = velocity;
             }
             // Execute Idle
             if (unit.GroundSpring.Intersecting)

@@ -19,7 +19,7 @@ namespace States
         
         public override UnitState Execute()
         {
-            Vector2 velocity = unit.Physics.Velocity;
+            Vector2 velocity = unit.Physics.velocity;
 
             if (toIdle)
             {
@@ -39,7 +39,7 @@ namespace States
                     deltaSpeedRequired *= 2.0f;
                 }
                 velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
-                unit.Physics.SetVelocity(velocity);
+                unit.Physics.velocity = velocity;
             }
 
             // Return to CrawlIdle
