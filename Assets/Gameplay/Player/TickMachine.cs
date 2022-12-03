@@ -14,8 +14,7 @@ public enum TickOrder
     InterpolateFollow,
     SMClient,
     SMServer,
-    UnitInput,
-    DeterministicTest
+    UnitInput
 }
 
 public interface ITick
@@ -56,15 +55,20 @@ public class TickMachine : MonoBehaviour
         m_TickActions[order].RemoveListener(action);
     }
 
-    private void Update()
+    //private void Update()
+    //{
+    //    if (!AutoTick) { return; }
+    //    m_TimeUntilTick -= Time.deltaTime;
+    //    while (m_TimeUntilTick <= 0.0f)
+    //    {
+    //        Tick();
+    //        m_TimeUntilTick += TICK_INTERVAL;
+    //    }
+    //}
+
+    private void FixedUpdate()
     {
-        if (!AutoTick) { return; }
-        m_TimeUntilTick -= Time.deltaTime;
-        while (m_TimeUntilTick <= 0.0f)
-        {
-            Tick();
-            m_TimeUntilTick += TICK_INTERVAL;
-        }
+        Tick();
     }
 
     public static void Tick()

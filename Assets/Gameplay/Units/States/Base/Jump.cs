@@ -27,6 +27,8 @@ namespace States
             }
 
             unit.Physics.velocity = velocity;
+            unit.Physics.drag = unit.Settings.airDrag;
+
             return UnitState.Jump;
         }
         
@@ -46,10 +48,6 @@ namespace States
                     unit.Physics.velocity = velocity;
                 }
             }
-            else
-            {
-                unit.Physics.drag = unit.Settings.airDrag;
-            }
 
             // End of jump animation
             if (jumpDuration == 0.0f)
@@ -63,7 +61,7 @@ namespace States
 
         public override void Deinitialise()
         {
-            
+            unit.Physics.drag = unit.Settings.groundDrag;
         }
     }
 }
