@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using ParrelSync;
 using System.Collections.Generic;
 using System.Collections;
+using Network.Shared;
 
 [ExecuteInEditMode] [RequireComponent(typeof(SceneDependencies))]
 public class SceneDependenciesEditor : MonoBehaviour

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -6,29 +7,6 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class UnitInput : MonoBehaviour
 {
-    public class UnitInputData
-    {
-        public float Movement = 0;
-        public bool Running = false;
-        public bool Crawling = false;
-        public bool Jumping = false;
-        public bool Melee = false;
-        public Vector3 MouseWorldPosition = Vector3.zero;
-        public bool GadgetPrimary = false;
-        public bool GadgetSecondary = false;
-
-        public void SetData(UnitInputData data)
-        {
-            Movement = data.Movement;
-            Running = data.Running;
-            Crawling = data.Crawling;
-            Jumping = data.Jumping;
-            Melee = data.Melee;
-            MouseWorldPosition = data.MouseWorldPosition;
-            GadgetPrimary = data.GadgetPrimary;
-            GadgetSecondary = data.GadgetSecondary;
-        }
-    }
 
     public static readonly float ActivationDuration = 0.2f;
     public static readonly float KyoteTime = 0.2f;
@@ -36,16 +14,23 @@ public class UnitInput : MonoBehaviour
     public bool PlayerControlled => m_PlayerControlled;
     [SerializeField] private bool m_PlayerControlled;
 
-    public float Movement => m_CurrentData.Movement;
-    public bool Running => m_CurrentData.Running;
-    public bool Crawling => m_CurrentData.Crawling;
-    public bool Jumping => m_CurrentData.Jumping;
-    public bool Melee => m_CurrentData.Melee;
-    public Vector2 MouseWorldPosition => m_CurrentData.MouseWorldPosition;
-    public bool GadgetPrimary => m_CurrentData.GadgetPrimary;
-    public bool GadgetSecondary => m_CurrentData.GadgetSecondary;
+    #region Properties
+    public float Movement;
+    public bool Running;
+    public bool Crawling;
+    public bool Jumping;
+    public bool Melee;
+    public Vector2 MouseWorldPosition;
+    public bool GadgetPrimary;
+    public bool GadgetSecondary;
+    #endregion
 
-    private UnitInputData m_CurrentData = new UnitInputData();
+    #region Events
+    public Action<float> OnMovementChanged;
+    public Action OnRunningChanged;
+    public Action OnCrawlingChanged;
+    public Action OnJumpingChanged;
+    #endregion
 
     private void Start()
     {
@@ -82,27 +67,28 @@ public class UnitInput : MonoBehaviour
 
     private void OnMovement(InputValue value)
     {
-        m_CurrentData.Movement = Mathf.Clamp(value.Get<float>(), -1.0f, 1.0f);
+        Movement = Mathf.Clamp(value.Get<float>(), -1.0f, 1.0f);
+        OnMovementChanged?.Invoke(Movement);
     }
 
     private void OnRun(InputValue value)
     {
-        m_CurrentData.Running = value.Get<float>() == 1.0f;
+        Running = value.Get<float>() == 1.0f;
     }
 
     private void OnJump(InputValue value)
     {
-        m_CurrentData.Jumping = value.Get<float>() == 1.0f;
+        Jumping = value.Get<float>() == 1.0f;
     }
 
     private void OnCrawl(InputValue value)
     {
-        m_CurrentData.Crawling = value.Get<float>() == 1.0f;
+        Crawling = value.Get<float>() == 1.0f;
     }
 
     private void OnMelee(InputValue value)
     {
-        m_CurrentData.Melee = value.Get<float>() == 1.0f;
+        Melee = value.Get<float>() == 1.0f;
     }
 
     private void OnMouseMove(InputValue value)
@@ -117,7 +103,7 @@ public class UnitInput : MonoBehaviour
         Plane plane = new Plane(Vector3.forward, new Vector3(0, 0, 0.25f));
         if (plane.Raycast(ray, out float distance))
         {
-            m_CurrentData.MouseWorldPosition = Camera.main.transform.position + (direction * distance);
+            MouseWorldPosition = Camera.main.transform.position + (direction * distance);
         }
     }
 
@@ -138,12 +124,12 @@ public class UnitInput : MonoBehaviour
 
     private void OnGadgetPrimary(InputValue value)
     {
-        m_CurrentData.GadgetPrimary = value.Get<float>() == 1.0f;
+        GadgetPrimary = value.Get<float>() == 1.0f;
     }
 
     private void OnGadgetSecondary(InputValue value)
     {
-        m_CurrentData.GadgetSecondary = value.Get<float>() == 1.0f;
+        GadgetSecondary = value.Get<float>() == 1.0f;
     }
 
     private void OnNextGadget(InputValue value)
@@ -178,12 +164,4 @@ public class UnitInput : MonoBehaviour
 
     #endregion
 
-    #region External Control
-
-    public void ResetJumping()
-    {
-        m_CurrentData.Jumping = false;
-    }
-
-    #endregion
 }

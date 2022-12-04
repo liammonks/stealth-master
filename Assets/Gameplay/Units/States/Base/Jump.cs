@@ -13,7 +13,7 @@ namespace States
 
         public override UnitState Initialise()
         {
-            unit.Input.ResetJumping();
+            unit.Input.Jumping = false;
 
             unit.Animator.Play(UnitAnimationState.Jump);
             jumpDuration = unit.Animator.CurrentStateLength;

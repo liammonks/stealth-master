@@ -34,8 +34,6 @@ public class TickMachine : MonoBehaviour
     public static uint LastFrameTicks = 0;
     public static bool AutoTick = true;
 
-    private static Dictionary<TickOrder, UnityEvent> m_TickActions = new Dictionary<TickOrder, UnityEvent>();
-
     private float m_TimeUntilTick = TICK_INTERVAL;
 
     private void Update()

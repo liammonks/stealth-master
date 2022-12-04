@@ -1,102 +1,116 @@
 using DarkRift;
 using UnityEngine;
 
-public enum Tags
+namespace Network.Shared
 {
-    ClientConnectedResponse,
-    SpawnUnitRequest,
-    SpawnUnitResponse,
-    ClientDisconnected,
-    InputPacket
-}
 
-public class ClientConnectedResponse : IDarkRiftSerializable
-{
-    public uint CurrentTick;
-
-    public void Serialize(SerializeEvent e)
+    public enum Tag
     {
-        e.Writer.Write(CurrentTick);
+        // Connection
+        ClientConnectedResponse,
+        ClientDisconnected,
+
+        // Units
+        SpawnUnitRequest,
+        SpawnUnitResponse,
+        
+        // Input
+        MovementInput
     }
 
-    public void Deserialize(DeserializeEvent e)
+    #region Input
+
+    public class FloatInputPacket : IDarkRiftSerializable
     {
-        CurrentTick = e.Reader.ReadUInt32();
-    }
-}
+        public float fixedTime;
+        public float value;
 
-public class SpawnUnitRequest : IDarkRiftSerializable
-{
-    public ushort PrefabIndex;
-    public Vector2 Position;
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(fixedTime);
+            e.Writer.Write(value);
+        }
 
-    public void Serialize(SerializeEvent e)
-    {
-        e.Writer.Write(PrefabIndex);
-        e.Writer.Write(Position.x);
-        e.Writer.Write(Position.y);
-    }
-
-    public void Deserialize(DeserializeEvent e)
-    {
-        PrefabIndex = e.Reader.ReadUInt16();
-        Position.x = e.Reader.ReadSingle();
-        Position.y = e.Reader.ReadSingle();
-    }
-}
-
-public class SpawnUnitResponse : IDarkRiftSerializable
-{
-    public ushort ClientID;
-    public ushort PrefabIndex;
-    public Vector2 Position;
-
-    public void Serialize(SerializeEvent e)
-    {
-        e.Writer.Write(ClientID);
-        e.Writer.Write(PrefabIndex);
-        e.Writer.Write(Position.x);
-        e.Writer.Write(Position.y);
+        public void Deserialize(DeserializeEvent e)
+        {
+            fixedTime = e.Reader.ReadSingle();
+            value = e.Reader.ReadSingle();
+        }
     }
 
-    public void Deserialize(DeserializeEvent e)
+    #endregion
+
+    public class ClientConnectedResponse : IDarkRiftSerializable
     {
-        ClientID = e.Reader.ReadUInt16();
-        PrefabIndex = e.Reader.ReadUInt16();
-        Position.x = e.Reader.ReadSingle();
-        Position.y = e.Reader.ReadSingle();
-    }
-}
+        public uint CurrentTick;
 
-public class ClientDisconnected : IDarkRiftSerializable
-{
-    public ushort ClientID;
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(CurrentTick);
+        }
 
-    public void Serialize(SerializeEvent e)
-    {
-        e.Writer.Write(ClientID);
-    }
-
-    public void Deserialize(DeserializeEvent e)
-    {
-        ClientID = e.Reader.ReadUInt16();
-    }
-}
-
-public class InputPacket : IDarkRiftSerializable
-{
-    public float Movement;
-    public bool Running;
-
-    public void Serialize(SerializeEvent e)
-    {
-        e.Writer.Write(Movement);
-        e.Writer.Write(Running);
+        public void Deserialize(DeserializeEvent e)
+        {
+            CurrentTick = e.Reader.ReadUInt32();
+        }
     }
 
-    public void Deserialize(DeserializeEvent e)
+    public class SpawnUnitRequest : IDarkRiftSerializable
     {
-        Movement = e.Reader.ReadSingle();
-        Running = e.Reader.ReadBoolean();
+        public ushort PrefabIndex;
+        public Vector2 Position;
+
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(PrefabIndex);
+            e.Writer.Write(Position.x);
+            e.Writer.Write(Position.y);
+        }
+
+        public void Deserialize(DeserializeEvent e)
+        {
+            PrefabIndex = e.Reader.ReadUInt16();
+            Position.x = e.Reader.ReadSingle();
+            Position.y = e.Reader.ReadSingle();
+        }
     }
+
+    public class SpawnUnitResponse : IDarkRiftSerializable
+    {
+        public ushort ClientID;
+        public ushort PrefabIndex;
+        public Vector2 Position;
+
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(ClientID);
+            e.Writer.Write(PrefabIndex);
+            e.Writer.Write(Position.x);
+            e.Writer.Write(Position.y);
+        }
+
+        public void Deserialize(DeserializeEvent e)
+        {
+            ClientID = e.Reader.ReadUInt16();
+            PrefabIndex = e.Reader.ReadUInt16();
+            Position.x = e.Reader.ReadSingle();
+            Position.y = e.Reader.ReadSingle();
+        }
+    }
+
+    public class ClientDisconnected : IDarkRiftSerializable
+    {
+        public ushort ClientID;
+
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(ClientID);
+        }
+
+        public void Deserialize(DeserializeEvent e)
+        {
+            ClientID = e.Reader.ReadUInt16();
+        }
+    }
+
 }

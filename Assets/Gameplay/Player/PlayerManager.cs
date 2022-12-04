@@ -56,4 +56,8 @@ public class PlayerManager : MonoBehaviour
         m_PlayerCamera.SetTarget(m_ActivePlayerObject.GetComponentInChildren<UnitAnimator>().transform);
     }
 
+    public void DisablePlayer()
+    {
+        m_ActivePlayerObject.SetActive(false);
+    }
 }

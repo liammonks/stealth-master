@@ -1,106 +1,106 @@
 using DarkRift;
 using DarkRift.Client;
 using DarkRift.Client.Unity;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Network.Shared;
 
-[RequireComponent(typeof(UnityClient))]
-public class SMClient : MonoBehaviour
+namespace Network.Client
 {
 
-    private UnityClient m_Client;
-    private NetworkUnitData m_UnitData;
-    private uint m_CurrentTick = 0;
-
-    private void Awake()
+    [RequireComponent(typeof(UnityClient))]
+    public class SMClient : MonoBehaviour
     {
-        m_UnitData = GetComponentInChildren<NetworkUnitData>();
 
-        m_Client = GetComponent<UnityClient>();
-        m_Client.MessageReceived += OnMessageReceived;
-    }
+        private UnityClient m_Client;
+        private NetworkUnitData m_UnitData;
 
-    private void OnMessageReceived(object sender, MessageReceivedEventArgs args)
-    {
-        using (Message message = args.GetMessage())
+        private void Awake()
         {
-            using (DarkRiftReader reader = message.GetReader())
+            m_UnitData = GetComponentInChildren<NetworkUnitData>();
+
+            m_Client = GetComponent<UnityClient>();
+            m_Client.MessageReceived += OnMessageReceived;
+        }
+
+        private void OnMessageReceived(object sender, MessageReceivedEventArgs args)
+        {
+            using (Message message = args.GetMessage())
             {
-                switch ((Tags)message.Tag)
+                using (DarkRiftReader reader = message.GetReader())
                 {
-                    case Tags.ClientConnectedResponse:
-                        OnClientConnectedResponse(reader.ReadSerializable<ClientConnectedResponse>());
-                        break;
-                    case Tags.SpawnUnitResponse:
-                        OnSpawnUnitResponse(reader.ReadSerializable<SpawnUnitResponse>());
-                        break;
-                    case Tags.ClientDisconnected:
-                        OnClientDisconnected(reader.ReadSerializable<ClientDisconnected>());
-                        break;
-                    default:
-                        Debug.LogError("Message received with unknown tag!");
-                        break;
+                    switch ((Tag)message.Tag)
+                    {
+                        case Tag.ClientConnectedResponse:
+                            OnClientConnectedResponse(reader.ReadSerializable<ClientConnectedResponse>());
+                            break;
+                        case Tag.SpawnUnitResponse:
+                            OnSpawnUnitResponse(reader.ReadSerializable<SpawnUnitResponse>());
+                            break;
+                        case Tag.ClientDisconnected:
+                            OnClientDisconnected(reader.ReadSerializable<ClientDisconnected>());
+                            break;
+                        default:
+                            Debug.LogError("Message received with unknown tag!");
+                            break;
+                    }
                 }
             }
         }
-    }
 
-    private void OnClientConnectedResponse(ClientConnectedResponse data)
-    {
-        m_CurrentTick = data.CurrentTick;
-        RequestUnit();
-    }
-
-    private void RequestUnit()
-    {
-        SpawnUnitRequest spawnUnitRequest = new SpawnUnitRequest();
-        spawnUnitRequest.PrefabIndex = 0;
-        spawnUnitRequest.Position = PlayerManager.Instance.Unit.transform.position;
-
-        using (DarkRiftWriter writer = DarkRiftWriter.Create())
+        /// <summary>
+        /// Message recieved after connecting to a server
+        /// </summary>
+        /// <param name="data"></param>
+        private void OnClientConnectedResponse(ClientConnectedResponse data)
         {
-            writer.Write(spawnUnitRequest);
-            using (Message message = Message.Create((ushort)Tags.SpawnUnitRequest, writer))
+            RequestUnit();
+        }
+
+        /// <summary>
+        /// Sends a message to server, requesting a unit
+        /// </summary>
+        private void RequestUnit()
+        {
+            SpawnUnitRequest spawnUnitRequest = new SpawnUnitRequest();
+            spawnUnitRequest.PrefabIndex = 0;
+            spawnUnitRequest.Position = PlayerManager.Instance.Unit.transform.position;
+
+            using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
-                m_Client.SendMessage(message, SendMode.Reliable);
+                writer.Write(spawnUnitRequest);
+                using (Message message = Message.Create((ushort)Tag.SpawnUnitRequest, writer))
+                {
+                    m_Client.SendMessage(message, SendMode.Reliable);
+                }
             }
         }
-    }
 
-    private void OnSpawnUnitResponse(SpawnUnitResponse data)
-    {
-        if (data.ClientID == m_Client.ID)
+        /// <summary>
+        /// Message received from server when it spawns a unit
+        /// </summary>
+        /// <param name="data"></param>
+        private void OnSpawnUnitResponse(SpawnUnitResponse data)
         {
-            m_UnitData.ClientUnits.Add(m_Client.ID, new NetworkUnitData.ClientUnit(m_Client.ID, PlayerManager.Instance.Unit));
-        }
-        else
-        {
-            m_UnitData.SpawnUnit(data.ClientID, data.PrefabIndex, data.Position);
-        }
-    }
-
-    private void SendInput()
-    {
-        if (!m_UnitData.ClientUnits.ContainsKey(m_Client.ID)) { return; }
-        UnitInput input = PlayerManager.Instance.Unit.Input;
-
-        InputPacket packet = new InputPacket();
-        packet.Movement = input.Movement;
-        packet.Running = input.Running;
-
-        using (DarkRiftWriter writer = DarkRiftWriter.Create())
-        {
-            writer.Write(packet);
-            using (Message message = Message.Create((ushort)Tags.InputPacket, writer))
+            if (data.ClientID == m_Client.ID)
             {
-                m_Client.SendMessage(message, SendMode.Reliable);
+                // Our unit was spawned on the server, we dont need to instantiate a new one, just add ClientUnit data to the dictionary
+                m_UnitData.ClientUnits.Add(m_Client.ID, new NetworkUnitData.ClientUnit(m_Client.ID, PlayerManager.Instance.Unit));
+            }
+            else
+            {
+                // Server spawned another clients unit, this client should spawn it too
+                m_UnitData.SpawnUnit(data.ClientID, data.PrefabIndex, data.Position);
             }
         }
+
+        /// <summary>
+        /// Message recieved from server when a client disconnects
+        /// </summary>
+        /// <param name="clientDisconnected"></param>
+        private void OnClientDisconnected(ClientDisconnected clientDisconnected)
+        {
+            m_UnitData.DestroyUnit(clientDisconnected.ClientID);
+        }
     }
 
-    private void OnClientDisconnected(ClientDisconnected clientDisconnected)
-    {
-        m_UnitData.DestroyUnit(clientDisconnected.ClientID);
-    }
 }
