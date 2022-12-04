@@ -15,7 +15,7 @@ namespace States.StealthMaster
         {
             UnitState state = base.Execute();
             if (state != UnitState.Jump) return state;
-            Vector2 velocity = unit.Physics.velocity;
+            Vector2 velocity = unit.Physics.Velocity;
 
             // Check Vault (Require Momentum)
             if (Mathf.Abs(velocity.x) >= unit.Settings.runSpeed * 0.9f)
@@ -44,7 +44,6 @@ namespace States.StealthMaster
 
             return UnitState.Jump;
         }
-
 
     }
 }

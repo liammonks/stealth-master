@@ -16,11 +16,11 @@ namespace States
         {
             animationEnded = false;
             stateDuration = 0.0f;
-            unit.UpdateFacing = false;
+            unit.UpdateFacingDirection = false;
             unit.WallSpring.enabled = false;
             unit.GroundSpring.enabled = false;
 
-            unit.Physics.velocity = Vector2.zero;
+            unit.Physics.Velocity = Vector2.zero;
             if (unit.StateMachine.PreviousState == UnitState.Slide)
             {
                 unit.FacingRight = !unit.FacingRight;
@@ -68,10 +68,10 @@ namespace States
 
         public override void Deinitialise()
         {
-            unit.UpdateFacing = true;
+            unit.UpdateFacingDirection = true;
             unit.WallSpring.enabled = true;
             unit.GroundSpring.enabled = true;
-            unit.Physics.simulated = true;
+            unit.Physics.enabled = true;
         }
 
         private void OnTranslationEnded()
@@ -81,19 +81,19 @@ namespace States
 
             // Check if the ledge wall extends down to feet
             RaycastHit2D feetHit = Physics2D.Raycast(
-                unit.Physics.worldCenterOfMass + (Vector2.down * unit.Collider.Info[BodyState.Standing].Height * 0.5f),
+                unit.Physics.WorldCenterOfMass + (Vector2.down * unit.Collider.Info[BodyState.Standing].Height * 0.5f),
                 unit.FacingRight ? Vector2.right : Vector2.left,
                 unit.Settings.climbGrabOffset.x + wallCheckBuffer,
                 8
             );
             Debug.DrawRay(
-                unit.Physics.worldCenterOfMass + (Vector2.down * unit.Collider.Info[BodyState.Standing].Height * 0.5f),
+                unit.Physics.WorldCenterOfMass + (Vector2.down * unit.Collider.Info[BodyState.Standing].Height * 0.5f),
                 (unit.FacingRight ? Vector2.right : Vector2.left) * (unit.Settings.climbGrabOffset.x + wallCheckBuffer),
                 feetHit ? Color.green : Color.red
             );
             againstWall = feetHit;
             unit.Animator.Play(againstWall ? UnitAnimationState.LedgeGrab : UnitAnimationState.LedgeGrab_Hang);
-            unit.Physics.simulated = false;
+            unit.Physics.enabled = false;
             animationEnded = true;
         }
     }

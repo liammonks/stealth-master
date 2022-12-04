@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 
@@ -151,30 +152,38 @@ namespace Debugging
 
         #region Data
 
-        private float facingRightChangedTime;
-        private bool lastFacingRight = true;
-
         private void SetupData()
         {
-            facingRightChangedTime = Time.unscaledTime;
+
         }
 
         private void DrawData()
         {
             // VELOCITY
             string velocity = AddSpacer("Velocity", 10);
-            velocity += unit.Physics.velocity;
+            velocity += unit.Physics.Velocity;
             SetText(0, velocity);
 
             // FACING
             string facing = AddSpacer("Facing", 10);
             facing += (unit.FacingRight ? "Right" : "Left");
-            facing = AddSpacer(facing, 18);
-            if (unit.FacingRight != lastFacingRight) { facingRightChangedTime = Time.unscaledTime; }
-            facing += DashDuration(Time.unscaledTime - facingRightChangedTime);
             SetText(1, facing);
-            lastFacingRight = unit.FacingRight;
 
+            // DRAG STATE
+            string dragStateText = AddSpacer("DragState", 10);
+            FieldInfo dragStateOverrideInfo = typeof(UnitPhysics).GetField("m_ShouldOverrideDrag", BindingFlags.NonPublic | BindingFlags.Instance);
+            if ((bool)dragStateOverrideInfo.GetValue(unit.Physics))
+            {
+                FieldInfo dragStateOverrideValueInfo = typeof(UnitPhysics).GetField("m_OverrideDragValue", BindingFlags.NonPublic | BindingFlags.Instance);
+                dragStateText += "Overide: " + dragStateOverrideValueInfo.GetValue(unit.Physics);
+            }
+            else
+            {
+                FieldInfo dragStateInfo = typeof(UnitPhysics).GetField("m_DragState", BindingFlags.NonPublic | BindingFlags.Instance);
+                UnitPhysics.DragState dragState = (UnitPhysics.DragState)dragStateInfo.GetValue(unit.Physics);
+                dragStateText += dragState.ToString();
+            }
+            SetText(2, dragStateText);
         }
 
         #endregion

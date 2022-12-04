@@ -32,18 +32,10 @@ public class StateMachine : MonoBehaviour
         {
             statesLastExecutionTime.Add(state, Time.time - 1.0f);
         }
-
-        TickMachine.Register(TickOrder.StateMachine, OnTick);
     }
 
-    private void OnDestroy()
+    public void Execute()
     {
-        TickMachine.Unregister(TickOrder.StateMachine, OnTick);
-    }
-
-    public void OnTick()
-    {
-        if (!isActiveAndEnabled) { return; }
         if (currentState != lastFrameState)
         {
             previousState = lastFrameState;
@@ -300,7 +292,7 @@ public class StateMachine : MonoBehaviour
     {
         const float groundHitBuffer = 0.1f;
         Vector2 currentPosition = transform.position;
-        Vector2 previousPosition = currentPosition - (unit.Physics.velocity * Time.fixedDeltaTime);
+        Vector2 previousPosition = currentPosition - (unit.Physics.Velocity * Time.fixedDeltaTime);
         RaycastHit2D currentHit = Physics2D.Raycast(currentPosition, -transform.up, unit.GroundSpring.HitDistance + groundHitBuffer, 8);
         RaycastHit2D previousHit = Physics2D.Raycast(previousPosition, -transform.up, unit.GroundSpring.HitDistance + groundHitBuffer, 8);
         if (currentHit.collider == null && previousHit.collider != null)

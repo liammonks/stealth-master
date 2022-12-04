@@ -36,38 +36,20 @@ public class UnitInput : MonoBehaviour
     public bool PlayerControlled => m_PlayerControlled;
     [SerializeField] private bool m_PlayerControlled;
 
-    public float Movement => m_TickData.Movement;
-    public bool Running => m_TickData.Running;
-    public bool Crawling => m_TickData.Crawling;
-    public bool Jumping => m_TickData.Jumping;
-    public bool Melee => m_TickData.Melee;
-    public Vector2 MouseWorldPosition => m_TickData.MouseWorldPosition;
-    public bool GadgetPrimary => m_TickData.GadgetPrimary;
-    public bool GadgetSecondary => m_TickData.GadgetSecondary;
+    public float Movement => m_CurrentData.Movement;
+    public bool Running => m_CurrentData.Running;
+    public bool Crawling => m_CurrentData.Crawling;
+    public bool Jumping => m_CurrentData.Jumping;
+    public bool Melee => m_CurrentData.Melee;
+    public Vector2 MouseWorldPosition => m_CurrentData.MouseWorldPosition;
+    public bool GadgetPrimary => m_CurrentData.GadgetPrimary;
+    public bool GadgetSecondary => m_CurrentData.GadgetSecondary;
 
-    public UnitInputData TickData => m_TickData;
-
-    private UnitInputData m_TickData = new UnitInputData();
     private UnitInputData m_CurrentData = new UnitInputData();
 
     private void Start()
     {
         SetPlayerControl(m_PlayerControlled);
-        TickMachine.Register(TickOrder.UnitInput, OnTick);
-    }
-
-    private void OnDestroy()
-    {
-        TickMachine.Unregister(TickOrder.UnitInput, OnTick);
-    }
-
-    public void OnTick()
-    {
-        if (!isActiveAndEnabled) { return; }
-        if (NetworkManager.NetworkType == NetworkType.Client)
-        {
-            m_TickData.SetData(m_CurrentData);
-        }
     }
 
     private void SetPlayerControl(bool playerControlled)
@@ -85,7 +67,7 @@ public class UnitInput : MonoBehaviour
 
         IEnumerator LoadInput()
         {
-            PlayerInput playerInput = gameObject.AddComponent<PlayerInput>();
+            PlayerInput playerInput = gameObject.GetOrAddComponent<PlayerInput>();
             AsyncOperationHandle<InputActionAsset> handle = Addressables.LoadAssetAsync<InputActionAsset>("InputActions");
             yield return handle;
             if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -101,31 +83,26 @@ public class UnitInput : MonoBehaviour
     private void OnMovement(InputValue value)
     {
         m_CurrentData.Movement = Mathf.Clamp(value.Get<float>(), -1.0f, 1.0f);
-        m_TickData.Movement = m_CurrentData.Movement;
     }
 
     private void OnRun(InputValue value)
     {
         m_CurrentData.Running = value.Get<float>() == 1.0f;
-        if (m_CurrentData.Running) { m_TickData.Running = true; }
     }
 
     private void OnJump(InputValue value)
     {
         m_CurrentData.Jumping = value.Get<float>() == 1.0f;
-        if (m_CurrentData.Jumping) { m_TickData.Jumping = true; }
     }
 
     private void OnCrawl(InputValue value)
     {
         m_CurrentData.Crawling = value.Get<float>() == 1.0f;
-        if (m_CurrentData.Crawling) { m_TickData.Crawling = true; }
     }
 
     private void OnMelee(InputValue value)
     {
         m_CurrentData.Melee = value.Get<float>() == 1.0f;
-        if (m_CurrentData.Melee) { m_TickData.Melee = true; }
     }
 
     private void OnMouseMove(InputValue value)
@@ -141,7 +118,6 @@ public class UnitInput : MonoBehaviour
         if (plane.Raycast(ray, out float distance))
         {
             m_CurrentData.MouseWorldPosition = Camera.main.transform.position + (direction * distance);
-            m_TickData.MouseWorldPosition = m_CurrentData.MouseWorldPosition;
         }
     }
 
@@ -163,13 +139,11 @@ public class UnitInput : MonoBehaviour
     private void OnGadgetPrimary(InputValue value)
     {
         m_CurrentData.GadgetPrimary = value.Get<float>() == 1.0f;
-        if (m_CurrentData.GadgetPrimary) { m_TickData.GadgetPrimary = true; }
     }
 
     private void OnGadgetSecondary(InputValue value)
     {
         m_CurrentData.GadgetSecondary = value.Get<float>() == 1.0f;
-        if (m_CurrentData.GadgetSecondary) { m_TickData.GadgetSecondary = true; }
     }
 
     private void OnNextGadget(InputValue value)
@@ -200,6 +174,15 @@ public class UnitInput : MonoBehaviour
     private void OnGadget_3()
     {
 
+    }
+
+    #endregion
+
+    #region External Control
+
+    public void ResetJumping()
+    {
+        m_CurrentData.Jumping = false;
     }
 
     #endregion

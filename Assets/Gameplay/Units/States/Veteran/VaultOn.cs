@@ -29,7 +29,7 @@ namespace States
         {
             unit.Animator.OnTranslationEnded -= OnVaultEnded;
             unit.WallSpring.enabled = true;
-            unit.Physics.velocity = Vector2.zero;
+            unit.Physics.Velocity = Vector2.zero;
         }
 
         private void OnVaultEnded()

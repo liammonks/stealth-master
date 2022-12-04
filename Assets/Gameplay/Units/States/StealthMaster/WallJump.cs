@@ -12,11 +12,11 @@ namespace States.StealthMaster
         {
             unit.GroundSpring.enabled = false;
             unit.WallSpring.enabled = false;
-            unit.UpdateFacing = false;
+            unit.UpdateFacingDirection = false;
 
             unit.FacingRight = !unit.FacingRight;
             DebugExtension.DebugArrow(unit.transform.position, unit.FacingRight ? Vector3.right : Vector3.left, Color.red, 3);
-            unit.Physics.velocity = new Vector2((unit.FacingRight ? 1 : -1) * unit.Settings.wallJumpForce.x, unit.Settings.wallJumpForce.y);
+            unit.Physics.Velocity = new Vector2((unit.FacingRight ? 1 : -1) * unit.Settings.wallJumpForce.x, unit.Settings.wallJumpForce.y);
             
             unit.Animator.Play(UnitAnimationState.WallJump);
             animationDuration = unit.Animator.CurrentStateLength;
@@ -37,7 +37,7 @@ namespace States.StealthMaster
 
         public override void Deinitialise()
         {
-            unit.UpdateFacing = true;
+            unit.UpdateFacingDirection = true;
             unit.WallSpring.enabled = true;
         }
     }

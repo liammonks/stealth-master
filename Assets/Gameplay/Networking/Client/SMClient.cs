@@ -21,16 +21,6 @@ public class SMClient : MonoBehaviour
         m_Client.MessageReceived += OnMessageReceived;
     }
 
-    public void OnTick()
-    {
-        SendInput();
-    }
-
-    private void OnDestroy()
-    {
-        TickMachine.Unregister(TickOrder.SMClient, OnTick);
-    }
-
     private void OnMessageReceived(object sender, MessageReceivedEventArgs args)
     {
         using (Message message = args.GetMessage())
@@ -59,7 +49,6 @@ public class SMClient : MonoBehaviour
     private void OnClientConnectedResponse(ClientConnectedResponse data)
     {
         m_CurrentTick = data.CurrentTick;
-        TickMachine.Register(TickOrder.SMClient, OnTick);
         RequestUnit();
     }
 

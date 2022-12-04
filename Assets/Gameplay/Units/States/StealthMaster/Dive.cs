@@ -22,10 +22,10 @@ namespace States.StealthMaster
             if (unit.StateMachine.PreviousState == UnitState.Jump || unit.StateMachine.PreviousState == UnitState.WallJump)
             {
                 //data.rb.velocity *= data.stats.diveVelocityMultiplier;
-                Vector2 velocity = unit.Physics.velocity;
+                Vector2 velocity = unit.Physics.Velocity;
                 velocity.x += 5 * Mathf.Sign(velocity.x);
                 velocity.y += 2 * Mathf.Sign(velocity.y);
-                unit.Physics.velocity = velocity;
+                unit.Physics.Velocity = velocity;
             }
             // Set timer to stop ground spring
             unit.GroundSpring.enabled = false;
@@ -35,30 +35,30 @@ namespace States.StealthMaster
         
         public override UnitState Execute()
         {
+            // Transition to Idle
             if (toStand)
             {
-                unit.Physics.drag = unit.Settings.slideDrag;
+                // Slide drag while transitioning
+                unit.Physics.SetDragState(UnitPhysics.DragState.Sliding);
                 transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
+
                 // Execute Idle
                 if (transitionDuration == 0.0f)
                 {
                     return UnitState.Idle;
                 }
+
                 return UnitState.Dive;
             }
             
             // Allow player to push towards movement speed while in the air
-            Vector2 velocity = unit.Physics.velocity;
+            Vector2 velocity = unit.Physics.Velocity;
             if (unit.Input.Movement != 0 && !unit.GroundSpring.Slipping && Mathf.Abs(velocity.x) < unit.Settings.walkSpeed)
             {
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
                 velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
-                unit.Physics.velocity = velocity;
-            }
-            else
-            {
-                unit.Physics.drag = unit.Settings.airDrag;
+                unit.Physics.Velocity = velocity;
             }
             
             // Re-enable ground spring after delay
@@ -74,25 +74,22 @@ namespace States.StealthMaster
             else if (unit.GroundSpring.Intersecting)
             {
                 // Not crawling, stand up
-                if (!unit.Input.Crawling)
+                if (!unit.Input.Crawling && unit.StateMachine.CanStand())
                 {
-                    if (unit.StateMachine.CanStand())
+                    if (Mathf.Abs(velocity.x) > unit.Settings.runSpeed)
                     {
-                        if (Mathf.Abs(velocity.x) > unit.Settings.runSpeed)
-                        {
-                            unit.Animator.Play(UnitAnimationState.DiveFlip);
-                            transitionDuration = unit.Animator.CurrentStateLength;                            
-                            unit.SetBodyState(BodyState.Standing, transitionDuration * 0.5f);
-                        }
-                        else
-                        {
-                            unit.Animator.Play(UnitAnimationState.CrawlToStand);
-                            transitionDuration = unit.Animator.CurrentStateLength;
-                            unit.SetBodyState(BodyState.Standing, transitionDuration);
-                        }
-                        //data.LockGadget();
-                        toStand = true;
+                        unit.Animator.Play(UnitAnimationState.DiveFlip);
+                        transitionDuration = unit.Animator.CurrentStateLength;                            
+                        unit.SetBodyState(BodyState.Standing, transitionDuration * 0.5f);
                     }
+                    else
+                    {
+                        unit.Animator.Play(UnitAnimationState.CrawlToStand);
+                        transitionDuration = unit.Animator.CurrentStateLength;
+                        unit.SetBodyState(BodyState.Standing, transitionDuration);
+                    }
+                    //data.LockGadget();
+                    toStand = true;
                 }
                 else
                 {
@@ -117,6 +114,7 @@ namespace States.StealthMaster
 
         public override void Deinitialise()
         {
+            unit.Physics.SetDragState(UnitPhysics.DragState.Default);
             unit.WallSpring.enabled = true;
         }
     }

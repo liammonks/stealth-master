@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -27,6 +28,19 @@ public class PlayerManager : MonoBehaviour
         SpawnPlayer();
     }
 
+#if UNITY_EDITOR
+    /// <summary>
+    /// Select the active player object if the clean one was selected
+    /// </summary>
+    private void Start()
+    {
+        if (Selection.activeGameObject == m_CleanPlayerObject)
+        {
+            Selection.activeGameObject = m_ActivePlayerObject;
+        }
+    }
+#endif
+
     public void SpawnPlayer()
     {
         SpawnPlayer(m_CleanPlayerObject.transform.position);
@@ -41,4 +55,5 @@ public class PlayerManager : MonoBehaviour
         m_ActivePlayerObject.SetActive(true);
         m_PlayerCamera.SetTarget(m_ActivePlayerObject.GetComponentInChildren<UnitAnimator>().transform);
     }
+
 }

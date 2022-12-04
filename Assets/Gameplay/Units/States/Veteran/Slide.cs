@@ -18,11 +18,15 @@ namespace States
             transitionDuration = 0.0f;
             stateDuration = 0.0f;
             unit.WallSpring.enabled = false;
+
             unit.SetBodyState(BodyState.Crawling, unit.Animator.CurrentStateLength);
+            unit.Physics.SetDragState(UnitPhysics.DragState.Sliding);
+
             if (unit.StateMachine.PreviousState != UnitState.Dive)
             {
-                unit.Physics.velocity = unit.Physics.velocity * unit.Settings.slideVelocityMultiplier;
+                unit.Physics.Velocity = unit.Physics.Velocity * unit.Settings.slideVelocityMultiplier;
             }
+
             return UnitState.Slide;
         }
         
@@ -33,9 +37,13 @@ namespace States
             if (toIdle)
             {
                 transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
-                unit.Physics.drag = unit.Settings.slideDrag;
+
                 // Execute Run / Idle
-                if (transitionDuration == 0.0f) return Mathf.Abs(unit.Physics.velocity.x) > unit.Settings.walkSpeed * 0.5f ? UnitState.Run : UnitState.Idle;
+                if (transitionDuration == 0.0f)
+                {
+                    return Mathf.Abs(unit.Physics.Velocity.x) > unit.Settings.walkSpeed * 0.5f ? UnitState.Run : UnitState.Idle;
+                }
+
                 return UnitState.Slide;
             }
             
@@ -51,17 +59,12 @@ namespace States
             
             if (unit.GroundSpring.Intersecting)
             {
-                unit.Physics.drag = unit.Settings.slideDrag;
                 // Execute Crawl
-                if (unit.Physics.velocity.magnitude < unit.Settings.walkSpeed)
+                if (unit.Physics.Velocity.magnitude < unit.Settings.walkSpeed)
                 {
                     unit.Animator.Play(UnitAnimationState.Crawl_Idle);
                     return UnitState.Crawl;
                 }
-            }
-            else
-            {
-                unit.Physics.drag = unit.Settings.airDrag;
             }
             
             return UnitState.Slide;
@@ -69,6 +72,7 @@ namespace States
 
         public override void Deinitialise()
         {
+            unit.Physics.SetDragState(UnitPhysics.DragState.Default);
             unit.WallSpring.enabled = true;
         }
     }

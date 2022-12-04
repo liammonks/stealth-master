@@ -7,7 +7,7 @@ public class Unit : MonoBehaviour
 {
     public UnitInput Input => m_Input;
     public UnitAnimator Animator => m_Animator;
-    public Rigidbody2D Physics => m_Physics;
+    public UnitPhysics Physics => m_Physics;
     public UnitSettings Settings => m_Settings;
     public Spring GroundSpring => m_GroundSpring;
     public Spring WallSpring => m_WallSpring;
@@ -15,7 +15,7 @@ public class Unit : MonoBehaviour
     public UnitCollider Collider => m_Collider;
     public BodyState BodyState => m_BodyState;
 
-    public bool UpdateFacing { get { return m_UpdateFacing; } set { m_UpdateFacing = value; } }
+    public bool UpdateFacingDirection { get { return m_UpdateFacingDirection; } set { m_UpdateFacingDirection = value; } }
     public bool FacingRight { get { return m_FacingRight; } set { m_FacingRight = value; } }
 
     public Action<BodyState, float> OnBodyStateChanged;
@@ -25,7 +25,7 @@ public class Unit : MonoBehaviour
     [SerializeField] private List<GameObject> m_GibPrefabs;
 
     private UnitInput m_Input;
-    private Rigidbody2D m_Physics;
+    private UnitPhysics m_Physics;
     private Spring m_GroundSpring;
     private Spring m_WallSpring;
     private StateMachine m_StateMachine;
@@ -35,13 +35,13 @@ public class Unit : MonoBehaviour
 
     private bool m_FacingRight = true;
     private bool m_AimingRight = true;
-    private bool m_UpdateFacing = true;
+    private bool m_UpdateFacingDirection = true;
     private BodyState m_BodyState;
     private Transform m_SpringParent;
 
     private void Start() {
         m_Input = GetComponent<UnitInput>();
-        m_Physics = GetComponent<Rigidbody2D>();
+        m_Physics = GetComponent<UnitPhysics>();
         m_StateMachine = GetComponent<StateMachine>();
         m_Animator = GetComponentInChildren<UnitAnimator>();
         m_Collider = GetComponentInChildren<UnitCollider>();
@@ -51,35 +51,26 @@ public class Unit : MonoBehaviour
         m_SpringParent.SetParent(transform);
         m_SpringParent.localPosition = Vector3.zero;
         m_SpringParent.localRotation = Quaternion.identity;
+
         m_GroundSpring = m_SpringParent.gameObject.AddComponent<Spring>();
-        m_GroundSpring.Initialise(m_Settings.spring.GetGroundSpring(BodyState), Physics);
+        m_GroundSpring.Initialise(m_Settings.spring.GetGroundSpring(BodyState), Physics.Rigidbody);
+
         m_WallSpring = m_SpringParent.gameObject.AddComponent<Spring>();
-        m_WallSpring.Initialise(m_Settings.spring.GetWallSpring(BodyState), Physics);
-
-        TickMachine.Register(TickOrder.Unit, OnTick);
+        m_WallSpring.Initialise(m_Settings.spring.GetWallSpring(BodyState), Physics.Rigidbody);
     }
 
-    private void OnDestroy()
+    private void FixedUpdate()
     {
-        TickMachine.Unregister(TickOrder.Unit, OnTick);
-    }
-
-    public void OnTick()
-    {
-        if (!isActiveAndEnabled) { return; }
-        FacingUpdate();
+        UpdateFacing();
         UpdateAiming();
         UpdateAnimator();
+        UpdateDrag();
+        UpdateState();
     }
 
-    private void Update()
+    private void UpdateFacing()
     {
-
-    }
-
-    private void FacingUpdate()
-    {
-        if (m_UpdateFacing)
+        if (m_UpdateFacingDirection)
         {
             if (m_WallSpring.Intersecting)
             {
@@ -90,8 +81,8 @@ public class Unit : MonoBehaviour
             else
             {
                 // Set facing based on velocity, then input
-                if (m_Physics.velocity.x > 0.5f) { m_FacingRight = true; }
-                else if (m_Physics.velocity.x < -0.5f) { m_FacingRight = false; }
+                if (m_Physics.Velocity.x > 0.5f) { m_FacingRight = true; }
+                else if (m_Physics.Velocity.x < -0.5f) { m_FacingRight = false; }
                 else if (m_Input.Movement > 0.0f) { m_FacingRight = true; }
                 else if (m_Input.Movement < 0.0f) { m_FacingRight = false; }
             }
@@ -108,8 +99,18 @@ public class Unit : MonoBehaviour
 
     private void UpdateAnimator()
     {
-        m_Animator.SetVelocity(m_Physics.velocity);
+        m_Animator.SetVelocity(m_Physics.Velocity);
         m_Animator.SetFacing(m_FacingRight, m_AimingRight);
+    }
+
+    private void UpdateDrag()
+    {
+        m_Physics.CalculateDrag();
+    }
+
+    private void UpdateState()
+    {
+        m_StateMachine.Execute();
     }
 
     public void SetBodyState(BodyState state, float duration)

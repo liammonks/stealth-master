@@ -27,7 +27,7 @@ namespace States
         public override UnitState Execute()
         {
             stateDuration += DeltaTime;
-            Vector2 velocity = unit.Physics.velocity;
+            Vector2 velocity = unit.Physics.Velocity;
             if (velocity.y <= 0)
             {
                 unit.GroundSpring.enabled = true;
@@ -39,11 +39,8 @@ namespace States
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
                 velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
-                unit.Physics.velocity = velocity;
-            }
-            else
-            {
-                unit.Physics.drag = unit.Settings.airDrag;
+                unit.Physics.Velocity = velocity;
+                unit.Physics.SkipDrag();
             }
 
             // Return to ground

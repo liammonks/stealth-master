@@ -19,17 +19,10 @@ public class InterpolateFollow : MonoBehaviour
         m_CurrentTickPosition = (Vector2)m_Target.position + m_LocalOffset;
         m_LastTickPosition = m_CurrentTickPosition;
         m_LocalOffset = transform.localPosition;
-        TickMachine.Register(TickOrder.InterpolateFollow, OnTick);
     }
 
-    private void OnDestroy()
+    private void FixedUpdate()
     {
-        TickMachine.Unregister(TickOrder.InterpolateFollow, OnTick);
-    }
-
-    public void OnTick()
-    {
-        if (!isActiveAndEnabled) { return; }
         m_LastTickPosition = m_CurrentTickPosition;
         m_CurrentTickPosition = (Vector2)m_Target.position + m_LocalOffset;
         m_LerpTime = 0.0f;

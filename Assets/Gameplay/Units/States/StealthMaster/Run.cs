@@ -27,7 +27,7 @@ namespace States.StealthMaster
             
             UnitState state = base.Execute();
             if (state != UnitState.Run) return state;
-            Vector2 velocity = unit.Physics.velocity;
+            Vector2 velocity = unit.Physics.Velocity;
 
             // Vault / Climb
             if (unit.StateMachine.TryVaultOver())

@@ -26,7 +26,6 @@ public class Spring : MonoBehaviour
         UpdateSettings(settings);
         m_Physics = physics;
         m_Initialised = true;
-        TickMachine.Register(TickOrder.Spring, OnTick);
     }
 
     private void OnEnable()
@@ -34,15 +33,9 @@ public class Spring : MonoBehaviour
         UpdateSpring();
     }
 
-    public void OnTick()
+    private void FixedUpdate()
     {
-        if (!isActiveAndEnabled) { return; }
         UpdateSpring();
-    }
-
-    private void OnDestroy()
-    {
-        TickMachine.Unregister(TickOrder.Spring, OnTick);
     }
 
     public void UpdateSettings(SpringSettings newSettings, float interpDuration = 0.0f)
@@ -94,13 +87,8 @@ public class Spring : MonoBehaviour
         RaycastHit2D hit = Physics2D.BoxCast(origin, m_Settings.size, transform.eulerAngles.z, direction, distance, m_EnvironmentMask);
         if (hit)
         {
+            Debug.DrawRay(hit.point, hit.normal * 0.1f, Color.magenta);
             m_HitDistance = Vector2.Dot((hit.point - (Vector2)transform.position), direction);
-
-            if (m_DrawGizmos)
-            {
-                DebugExtension.DrawBoxCastOnHit(origin, m_Settings.size * 0.5f, transform.rotation, direction, hit.distance, Color.green);
-                Debug.DrawRay(origin, direction * (Vector2.Dot((hit.point - origin), direction) - sizeInDirection), Color.green);
-            }
 
             // Apply spring force
             float springDisplacement = distance - hit.distance - m_Settings.reachDistance;
@@ -118,7 +106,7 @@ public class Spring : MonoBehaviour
                 // Check for a corner
                 //Vector2 cornerCheckOrigin = hit.point + (-direction * 0.1f);
                 //hit = Physics2D.Raycast(cornerCheckOrigin, direction, 0.15f, m_EnvironmentMask);
-
+                velocity = Vector2.zero;
                 m_Slipping = true;
                 m_Intersecting = false;
             }
@@ -135,16 +123,15 @@ public class Spring : MonoBehaviour
             //rotationDisplacement -= Vector2.SignedAngle(Vector2.up, hit.normal);
             //float rotationForce = (-(rotationDisplacement / Time.fixedDeltaTime) * (data.isGrounded ? data.stats.groundRotationForce : data.stats.airRotationForce)) - (data.isGrounded ? data.stats.groundRotationDamping : data.stats.airRotationDamping);
             //data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
+
+            if (m_DrawGizmos)
+            {
+                DebugExtension.DrawBoxCastOnHit(origin, m_Settings.size * 0.5f, transform.rotation, direction, hit.distance, m_Slipping ? Color.yellow : Color.green);
+                Debug.DrawRay(origin, direction * (Vector2.Dot((hit.point - origin), direction) - sizeInDirection), m_Slipping ? Color.yellow : Color.green);
+            }
         }
         else
         {
-            if (m_DrawGizmos)
-            {
-                DebugExtension.DrawBoxCastOnHit(origin, m_Settings.size * 0.5f, transform.rotation, direction, distance, Color.red);
-                Debug.DrawRay(origin, direction * (distance - (sizeInDirection * 0.5f)), Color.red);
-                Debug.DrawRay(origin, direction * ((distance - m_Settings.reachDistance) - (sizeInDirection * 0.5f)), Color.yellow);
-            }
-
             m_Intersecting = false;
 
             // Rotate to default
@@ -152,6 +139,13 @@ public class Spring : MonoBehaviour
             //if (rotationDisplacement >= 180) { rotationDisplacement = rotationDisplacement - 360; } // -180 to 180
             //float rotationForce = (-(rotationDisplacement / Time.fixedDeltaTime) * (data.stats.airRotationForce)) - (data.stats.airRotationDamping);
             //data.rb.angularVelocity = rotationForce * Time.fixedDeltaTime;
+
+            if (m_DrawGizmos)
+            {
+                DebugExtension.DrawBoxCastOnHit(origin, m_Settings.size * 0.5f, transform.rotation, direction, distance, Color.red);
+                Debug.DrawRay(origin, direction * (distance - (sizeInDirection * 0.5f)), Color.red);
+                Debug.DrawRay(origin, direction * ((distance - m_Settings.reachDistance) - (sizeInDirection * 0.5f)), Color.yellow);
+            }
         }
 
         m_Physics.velocity += velocity;

@@ -34,7 +34,7 @@ namespace States.StealthMaster
             {
                 if (unit.Animator.CurrentState != UnitAnimationState.AgainstWall)
                 {
-                    unit.Physics.velocity = new Vector2(unit.FacingRight ? 0.5f : -0.5f, unit.Physics.velocity.y);
+                    unit.Physics.Velocity = new Vector2(unit.FacingRight ? 0.5f : -0.5f, unit.Physics.Velocity.y);
                     unit.Animator.Play(UnitAnimationState.AgainstWall);
                 }
             }

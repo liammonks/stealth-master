@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.PlayerLoop;
 
 public enum TickOrder
 {
@@ -37,47 +38,15 @@ public class TickMachine : MonoBehaviour
 
     private float m_TimeUntilTick = TICK_INTERVAL;
 
-    public static void Register(TickOrder order, UnityAction action)
+    private void Update()
     {
-        if (!m_TickActions.ContainsKey(order))
+        if (!AutoTick) { return; }
+        m_TimeUntilTick -= Time.deltaTime;
+        while (m_TimeUntilTick <= 0.0f)
         {
-            m_TickActions.Add(order, new UnityEvent());
-        }
-        m_TickActions[order].AddListener(action);
-    }
-
-    public static void Unregister(TickOrder order, UnityAction action)
-    {
-        if (!m_TickActions.ContainsKey(order))
-        {
-            return;
-        }
-        m_TickActions[order].RemoveListener(action);
-    }
-
-    //private void Update()
-    //{
-    //    if (!AutoTick) { return; }
-    //    m_TimeUntilTick -= Time.deltaTime;
-    //    while (m_TimeUntilTick <= 0.0f)
-    //    {
-    //        Tick();
-    //        m_TimeUntilTick += TICK_INTERVAL;
-    //    }
-    //}
-
-    private void FixedUpdate()
-    {
-        Tick();
-    }
-
-    public static void Tick()
-    {
-        TickCount++;
-        foreach (TickOrder tickType in Enum.GetValues(typeof(TickOrder)))
-        {
-            if (!m_TickActions.ContainsKey(tickType)) { continue; }
-            m_TickActions[tickType].Invoke();
+            Physics.Simulate(TICK_INTERVAL);
+            m_TimeUntilTick += TICK_INTERVAL;
         }
     }
+
 }

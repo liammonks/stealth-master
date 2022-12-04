@@ -23,12 +23,6 @@ public class SMServer : XmlUnityServer
     {
         Server.ClientManager.ClientConnected += OnClientConnected;
         Server.ClientManager.ClientDisconnected += OnClientDisconnected;
-        TickMachine.Register(TickOrder.SMServer, OnTick);
-    }
-
-    private void OnDestroy()
-    {
-        TickMachine.Register(TickOrder.SMClient, OnTick);
     }
 
     public void OnTick()
@@ -41,8 +35,8 @@ public class SMServer : XmlUnityServer
             if (inputPacket != null)
             {
                 UnitInput unitInput = m_UnitData.ClientUnits[client.ID].Unit.Input;
-                unitInput.TickData.Movement = inputPacket.Movement;
-                unitInput.TickData.Running = inputPacket.Running;
+                //unitInput.TickData.Movement = inputPacket.Movement;
+                //unitInput.TickData.Running = inputPacket.Running;
                 //Debug.Log(inputPacket.Movement);
             }
             else

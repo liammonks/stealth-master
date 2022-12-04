@@ -13,11 +13,13 @@ namespace States
 
         public override UnitState Initialise()
         {
+            unit.Input.ResetJumping();
+
             unit.Animator.Play(UnitAnimationState.Jump);
             jumpDuration = unit.Animator.CurrentStateLength;
             unit.GroundSpring.enabled = false;
 
-            Vector2 velocity = unit.Physics.velocity;
+            Vector2 velocity = unit.Physics.Velocity;
             velocity.y = unit.StateMachine.PreviousState == UnitState.LedgeGrab ? unit.Settings.wallJumpForce.y : unit.Settings.jumpForce;
 
             if (unit.GroundSpring.AttachedPhysics)
@@ -26,8 +28,8 @@ namespace States
                 unit.GroundSpring.AttachedPhysics = null;
             }
 
-            unit.Physics.velocity = velocity;
-            unit.Physics.drag = unit.Settings.airDrag;
+            unit.Physics.Velocity = velocity;
+            unit.Physics.SkipDrag();
 
             return UnitState.Jump;
         }
@@ -36,16 +38,16 @@ namespace States
         {
             jumpDuration = Mathf.Max(0.0f, jumpDuration - DeltaTime);
 
-            // Allow player to push towards movement speed while in the air
+            //Allow player to push towards movement speed while in the air
             if (unit.Input.Movement != 0)
             {
-                Vector2 velocity = unit.Physics.velocity;
+                Vector2 velocity = unit.Physics.Velocity;
                 if (Mathf.Abs(velocity.x) < unit.Settings.runSpeed)
                 {
                     float desiredSpeed = (unit.Input.Running ? unit.Settings.runSpeed : unit.Settings.walkSpeed) * unit.Input.Movement;
                     float deltaSpeedRequired = desiredSpeed - velocity.x;
                     velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
-                    unit.Physics.velocity = velocity;
+                    unit.Physics.Velocity = velocity;
                 }
             }
 
@@ -61,7 +63,7 @@ namespace States
 
         public override void Deinitialise()
         {
-            unit.Physics.drag = unit.Settings.groundDrag;
+
         }
     }
 }

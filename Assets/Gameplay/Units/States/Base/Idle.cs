@@ -15,7 +15,7 @@ namespace States
         public override UnitState Execute()
         {
             // Move to desired speed
-            Vector2 velocity = unit.Physics.velocity;
+            Vector2 velocity = unit.Physics.Velocity;
 
             if (unit.Input.Movement != 0)
             {
@@ -27,17 +27,14 @@ namespace States
                     deltaSpeedRequired *= 2.0f;
                 }
                 velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
-                unit.Physics.velocity = velocity;
+                unit.Physics.Velocity = velocity;
+                unit.Physics.SkipDrag();
 
                 // Execute Run
                 if (Mathf.Abs(velocity.x) > unit.Settings.walkSpeed * 0.5f)
                 {
                     return UnitState.Run;
                 }
-            }
-            else
-            {
-                unit.Physics.drag = unit.Settings.groundDrag;
             }
 
             // Execute Jump

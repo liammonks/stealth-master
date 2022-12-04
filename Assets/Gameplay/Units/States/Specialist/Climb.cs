@@ -11,7 +11,7 @@ namespace States
         public override UnitState Initialise()
         {
             climbEnded = false;
-            unit.UpdateFacing = false;
+            unit.UpdateFacingDirection = false;
             unit.WallSpring.enabled = false;
             unit.GroundSpring.enabled = false;
             unit.Animator.OnTranslationEnded += OnClimbEnded;
@@ -29,8 +29,8 @@ namespace States
 
         public override void Deinitialise()
         {
-            unit.UpdateFacing = true;
-            unit.Physics.simulated = true;
+            unit.UpdateFacingDirection = true;
+            unit.Physics.enabled = true;
             unit.GroundSpring.enabled = true;
             unit.WallSpring.enabled = true;
             unit.Animator.OnTranslationEnded -= OnClimbEnded;
