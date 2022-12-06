@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -7,24 +8,26 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
 
-    public Unit Unit => m_ActivePlayerObject.GetComponent<Unit>();
+    public Action<Unit> OnUnitSpawned;
 
-    [SerializeField] private PlayerCamera m_PlayerCamera;
+    public Unit Unit => m_PlayerUnit;
+    private Unit m_PlayerUnit;
 
     [SerializeField]
-    private GameObject m_CleanPlayerObject;
-    private GameObject m_ActivePlayerObject;
+    private PlayerCamera m_PlayerCamera;
 
-    private string m_PlayerName;
+    [SerializeField]
+    private Transform m_SpawnPoint;
+
+    [SerializeField]
+    private Unit m_PlayerUnitPrefab;
+
 
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
         else { Debug.LogError("Two instances of PlayerManager found", this); }
 
-        m_CleanPlayerObject.SetActive(false);
-        m_PlayerName = m_CleanPlayerObject.name;
-        m_CleanPlayerObject.name = m_PlayerName + " [CLEAN]";
         SpawnPlayer();
     }
 
@@ -34,30 +37,25 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        if (Selection.activeGameObject == m_CleanPlayerObject)
+        if (Selection.activeGameObject == m_SpawnPoint)
         {
-            Selection.activeGameObject = m_ActivePlayerObject;
+            Selection.activeGameObject = m_PlayerUnit.gameObject;
         }
     }
 #endif
 
     public void SpawnPlayer()
     {
-        SpawnPlayer(m_CleanPlayerObject.transform.position);
+        SpawnPlayer(m_SpawnPoint.position);
     }
 
     public void SpawnPlayer(Vector2 position)
     {
-        if (m_ActivePlayerObject != null) { Destroy(m_ActivePlayerObject); }
-        m_ActivePlayerObject = Instantiate(m_CleanPlayerObject, position, Quaternion.identity, transform);
-        m_ActivePlayerObject.transform.SetParent(null);
-        m_ActivePlayerObject.name = m_PlayerName + " [ACTIVE]";
-        m_ActivePlayerObject.SetActive(true);
-        m_PlayerCamera.SetTarget(m_ActivePlayerObject.GetComponentInChildren<UnitAnimator>().transform);
+        if (m_PlayerUnit != null) { Destroy(m_PlayerUnit); }
+        m_PlayerUnit = Instantiate(m_PlayerUnitPrefab, position, Quaternion.identity, transform);
+        m_PlayerUnit.transform.SetParent(null);
+        m_PlayerCamera.SetTarget(m_PlayerUnit.GetComponentInChildren<UnitAnimator>().transform);
+        OnUnitSpawned?.Invoke(m_PlayerUnit);
     }
 
-    public void DisablePlayer()
-    {
-        m_ActivePlayerObject.SetActive(false);
-    }
 }

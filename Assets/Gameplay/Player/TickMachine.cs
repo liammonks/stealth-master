@@ -26,13 +26,14 @@ public interface ITick
 
 public class TickMachine : MonoBehaviour
 {
-    private const float TICK_RATE = 60;
-    private const float TICK_INTERVAL = 1 / TICK_RATE;
 
     public static float DeltaTime => TICK_INTERVAL;
     public static uint TickCount { get; private set; }
     public static uint LastFrameTicks = 0;
     public static bool AutoTick = true;
+
+    private const float TICK_RATE = 60;
+    private const float TICK_INTERVAL = 1 / TICK_RATE;
 
     private float m_TimeUntilTick = TICK_INTERVAL;
 

@@ -19,6 +19,9 @@ namespace Network.Shared
     public static NetworkType NetworkType => NetworkType.Client;
 #endif
 
+        public static double SimulationTime => m_SimulationTime;
+        private static double m_SimulationTime = 0;
+
         [SerializeField]
         private GameObject m_ClientPrefab;
 
@@ -37,6 +40,11 @@ namespace Network.Shared
             {
                 StartClient();
             }
+        }
+
+        private void FixedUpdate()
+        {
+            m_SimulationTime += Time.fixedDeltaTime;
         }
 
         private void StartClient()

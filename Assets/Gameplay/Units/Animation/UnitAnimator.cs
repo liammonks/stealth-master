@@ -68,7 +68,7 @@ public class UnitAnimator : MonoBehaviour
     private Coroutine m_AnimatePositionCoroutine;
     private Action m_TranslationCancelAction;
 
-    private void Awake()
+    public void Initialise()
     {
         m_Unit = GetComponentInParent<Unit>();
         m_Animations = m_Unit.Settings.animations;

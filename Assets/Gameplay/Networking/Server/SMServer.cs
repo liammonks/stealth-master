@@ -10,15 +10,21 @@ namespace Network.Server
 
     public class SMServer : XmlUnityServer
     {
-        private const ushort INPUT_BUFFER_SIZE = 60;
+        // Properties
+        public IClient[] AllClients => Server.ClientManager.GetAllClients();
 
-        private NetworkUnitData m_UnitData;
-        private uint m_CurrentTick = 0;
+        // Shared
+        public NetworkUnitData UnitData;
 
+        // Server
+        public SMServerMessageReceiver MessageReceiver;
+        public SMServerMessageSender MessageSender;
 
         private void Awake()
         {
-            m_UnitData = GetComponentInChildren<NetworkUnitData>();
+            UnitData = GetComponentInChildren<NetworkUnitData>();
+            MessageReceiver = new SMServerMessageReceiver(this);
+            MessageSender = new SMServerMessageSender(this);
         }
 
         void Start()
@@ -29,119 +35,47 @@ namespace Network.Server
 
         private void OnClientConnected(object sender, ClientConnectedEventArgs args)
         {
-            ClientConnectedResponse response = new ClientConnectedResponse();
-            response.CurrentTick = m_CurrentTick;
+            MessageReceiver.RegisterClient(args.Client);
 
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
-            {
-                writer.Write(response);
-                using (Message message = Message.Create((ushort)Tag.ClientConnectedResponse, writer))
-                {
-                    args.Client.SendMessage(message, SendMode.Reliable);
-                }
-            }
+            // Tell the client they have connected, providing the simulation time
+            ClientConnectedResponse clientConnectedResponse = new ClientConnectedResponse();
+            clientConnectedResponse.SimulationTime = 0;
+            MessageSender.QueueMessage(args.Client, ServerTag.ClientConnected, clientConnectedResponse);
 
-            args.Client.MessageReceived += OnMessageReceived;
+            // Send the client current unit data
             SendUnitData(args.Client);
+        }
+
+        /// <summary>
+        /// Sends all unit data to a client
+        /// </summary>
+        /// <param name="client"></param>
+        private void SendUnitData(IClient client)
+        {
+            foreach (KeyValuePair<ushort, NetworkUnitData.ClientUnit> kvp in UnitData.ClientUnits)
+            {
+                SpawnUnitPacket spawnUnitPacket = new SpawnUnitPacket();
+                spawnUnitPacket.ClientID = kvp.Key;
+                spawnUnitPacket.PrefabIndex = kvp.Value.PrefabIndex;
+                spawnUnitPacket.Position = kvp.Value.Unit.transform.position;
+
+                MessageSender.QueueMessage(client, ServerTag.UnitSpawned, spawnUnitPacket);
+            }
         }
 
         private void OnClientDisconnected(object sender, ClientDisconnectedEventArgs args)
         {
-            m_UnitData.DestroyUnit(args.Client.ID);
+            MessageReceiver.UnregisterClient(args.Client);
 
             ClientDisconnected clientDisconnected = new ClientDisconnected();
             clientDisconnected.ClientID = args.Client.ID;
+            MessageSender.QueueMessage(AllClients, ServerTag.ClientDisconnected, clientDisconnected);
 
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
-            {
-                writer.Write(clientDisconnected);
-                using (Message message = Message.Create((ushort)Tag.ClientDisconnected, writer))
-                {
-                    foreach (IClient client in Server.ClientManager.GetAllClients())
-                    {
-                        client.SendMessage(message, SendMode.Reliable);
-                    }
-                }
-            }
+            UnitData.DestroyUnit(args.Client.ID);
         }
 
-        private void OnMessageReceived(object sender, MessageReceivedEventArgs args)
-        {
-            using (Message message = args.GetMessage())
-            {
-                using (DarkRiftReader reader = message.GetReader())
-                {
-                    switch ((Tag)message.Tag)
-                    {
-                        case Tag.SpawnUnitRequest:
-                            OnSpawnUnitRequest(args.Client, reader.ReadSerializable<SpawnUnitRequest>());
-                            break;
-                        case Tag.MovementInput:
-                            OnMovementInputPacket(args.Client, reader.ReadSerializable<FloatInputPacket>());
-                            break;
-                        default:
-                            Debug.LogError("Message received with unknown tag!");
-                            break;
-                    }
-                }
-            }
-        }
 
-        private void OnSpawnUnitRequest(IClient sender, SpawnUnitRequest data)
-        {
-            if (m_UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
 
-            m_UnitData.SpawnUnit(sender.ID, data.PrefabIndex, data.Position);
-
-            // Tell all clients to initialise this unit
-            SpawnUnitResponse response = new SpawnUnitResponse();
-            response.ClientID = sender.ID;
-            response.PrefabIndex = data.PrefabIndex;
-            response.Position = data.Position;
-
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
-            {
-                writer.Write(response);
-                using (Message message = Message.Create((ushort)Tag.SpawnUnitResponse, writer))
-                {
-                    foreach (IClient client in Server.ClientManager.GetAllClients())
-                    {
-                        client.SendMessage(message, SendMode.Reliable);
-                    }
-                }
-            }
-        }
-
-        private void SendUnitData(IClient client)
-        {
-            foreach (KeyValuePair<ushort, NetworkUnitData.ClientUnit> kvp in m_UnitData.ClientUnits)
-            {
-                SpawnUnitResponse response = new SpawnUnitResponse();
-                response.ClientID = kvp.Key;
-                response.PrefabIndex = kvp.Value.PrefabIndex;
-                response.Position = kvp.Value.Unit.transform.position;
-
-                using (DarkRiftWriter writer = DarkRiftWriter.Create())
-                {
-                    writer.Write(response);
-                    using (Message message = Message.Create((ushort)Tag.SpawnUnitResponse, writer))
-                    {
-                        client.SendMessage(message, SendMode.Reliable);
-                    }
-                }
-            }
-        }
-
-        #region Receive Input
-
-        private void OnMovementInputPacket(IClient client, FloatInputPacket data)
-        {
-            if (!m_UnitData.ClientUnits.ContainsKey(client.ID)) { return; }
-            Debug.Log($"Movement: {data.value}");
-            m_UnitData.ClientUnits[client.ID].Unit.Input.Movement = data.value;
-        }
-
-        #endregion
     }
 
 }

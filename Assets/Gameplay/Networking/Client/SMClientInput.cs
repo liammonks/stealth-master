@@ -8,33 +8,53 @@ using UnityEngine;
 namespace Network.Client
 {
 
-    public class SMClientInput : MonoBehaviour
+    public class SMClientInput
     {
-        private UnityClient m_Client;
-        private UnitInput m_Input;
+        private SMClient m_SMClient;
 
-        private void Start()
+        public SMClientInput(SMClient smClient)
         {
-            m_Client = GetComponent<UnityClient>();
-            m_Input = PlayerManager.Instance.Unit.Input;
+            m_SMClient = smClient;
 
-            m_Input.OnMovementChanged += OnMovementChanged;
+            PlayerManager.Instance.OnUnitSpawned += RegisterUnitInput;
+            if (PlayerManager.Instance.Unit != null)
+            {
+                RegisterUnitInput(PlayerManager.Instance.Unit);
+            }
+        }
+
+        private void RegisterUnitInput(Unit unit)
+        {
+            unit.Input.OnMovementChanged += OnMovementChanged;
+            unit.Input.OnRunningChanged += OnRunningChanged;
+            unit.Input.OnJumpingChanged += OnJumpingChanged;
         }
 
         private void OnMovementChanged(float movement)
         {
             FloatInputPacket movementInputPacket = new FloatInputPacket();
-            movementInputPacket.fixedTime = Time.fixedTime;
+            movementInputPacket.fixedTime = Time.fixedTimeAsDouble;
             movementInputPacket.value = movement;
 
-            using (DarkRiftWriter writer = DarkRiftWriter.Create())
-            {
-                writer.Write(movementInputPacket);
-                using (Message message = Message.Create((ushort)Tag.MovementInput, writer))
-                {
-                    m_Client.SendMessage(message, SendMode.Reliable);
-                }
-            }
+            m_SMClient.MessageSender.QueueMessage(ClientTag.MovementInput, movementInputPacket);
+        }
+
+        private void OnRunningChanged(bool running)
+        {
+            BoolInputPacket runningInputPacket = new BoolInputPacket();
+            runningInputPacket.fixedTime = Time.fixedTimeAsDouble;
+            runningInputPacket.value = running;
+
+            m_SMClient.MessageSender.QueueMessage(ClientTag.RunningInput, runningInputPacket);
+        }
+
+        private void OnJumpingChanged(bool jumping)
+        {
+            BoolInputPacket jumpingInputPacket = new BoolInputPacket();
+            jumpingInputPacket.fixedTime = Time.fixedTimeAsDouble;
+            jumpingInputPacket.value = jumping;
+
+            m_SMClient.MessageSender.QueueMessage(ClientTag.JumpingInput, jumpingInputPacket);
         }
     }
 

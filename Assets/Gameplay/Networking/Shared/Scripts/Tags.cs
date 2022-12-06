@@ -4,25 +4,29 @@ using UnityEngine;
 namespace Network.Shared
 {
 
-    public enum Tag
+    public enum ClientTag
     {
-        // Connection
-        ClientConnectedResponse,
-        ClientDisconnected,
-
         // Units
         SpawnUnitRequest,
-        SpawnUnitResponse,
         
         // Input
-        MovementInput
+        MovementInput,
+        RunningInput,
+        JumpingInput
+    }
+
+    public enum ServerTag
+    {
+        ClientConnected,
+        ClientDisconnected,
+        UnitSpawned,
     }
 
     #region Input
 
     public class FloatInputPacket : IDarkRiftSerializable
     {
-        public float fixedTime;
+        public double fixedTime;
         public float value;
 
         public void Serialize(SerializeEvent e)
@@ -33,8 +37,26 @@ namespace Network.Shared
 
         public void Deserialize(DeserializeEvent e)
         {
-            fixedTime = e.Reader.ReadSingle();
+            fixedTime = e.Reader.ReadDouble();
             value = e.Reader.ReadSingle();
+        }
+    }
+
+    public class BoolInputPacket : IDarkRiftSerializable
+    {
+        public double fixedTime;
+        public bool value;
+
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(fixedTime);
+            e.Writer.Write(value);
+        }
+
+        public void Deserialize(DeserializeEvent e)
+        {
+            fixedTime = e.Reader.ReadDouble();
+            value = e.Reader.ReadBoolean();
         }
     }
 
@@ -42,16 +64,16 @@ namespace Network.Shared
 
     public class ClientConnectedResponse : IDarkRiftSerializable
     {
-        public uint CurrentTick;
+        public double SimulationTime;
 
         public void Serialize(SerializeEvent e)
         {
-            e.Writer.Write(CurrentTick);
+            e.Writer.Write(SimulationTime);
         }
 
         public void Deserialize(DeserializeEvent e)
         {
-            CurrentTick = e.Reader.ReadUInt32();
+            SimulationTime = e.Reader.ReadDouble();
         }
     }
 
@@ -75,7 +97,7 @@ namespace Network.Shared
         }
     }
 
-    public class SpawnUnitResponse : IDarkRiftSerializable
+    public class SpawnUnitPacket : IDarkRiftSerializable
     {
         public ushort ClientID;
         public ushort PrefabIndex;

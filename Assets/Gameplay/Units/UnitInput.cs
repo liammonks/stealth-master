@@ -27,12 +27,11 @@ public class UnitInput : MonoBehaviour
 
     #region Events
     public Action<float> OnMovementChanged;
-    public Action OnRunningChanged;
-    public Action OnCrawlingChanged;
-    public Action OnJumpingChanged;
+    public Action<bool> OnRunningChanged;
+    public Action<bool> OnJumpingChanged;
     #endregion
 
-    private void Start()
+    public void Initialise()
     {
         SetPlayerControl(m_PlayerControlled);
     }
@@ -74,11 +73,13 @@ public class UnitInput : MonoBehaviour
     private void OnRun(InputValue value)
     {
         Running = value.Get<float>() == 1.0f;
+        OnRunningChanged?.Invoke(Running);
     }
 
     private void OnJump(InputValue value)
     {
         Jumping = value.Get<float>() == 1.0f;
+        OnJumpingChanged?.Invoke(Jumping);
     }
 
     private void OnCrawl(InputValue value)

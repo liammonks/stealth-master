@@ -28,9 +28,9 @@ public class Unit : MonoBehaviour
     private UnitPhysics m_Physics;
     private Spring m_GroundSpring;
     private Spring m_WallSpring;
-    private StateMachine m_StateMachine;
     private UnitAnimator m_Animator;
     private UnitCollider m_Collider;
+    private StateMachine m_StateMachine;
     #endregion
 
     private bool m_FacingRight = true;
@@ -39,12 +39,20 @@ public class Unit : MonoBehaviour
     private BodyState m_BodyState;
     private Transform m_SpringParent;
 
-    private void Start() {
+    public void Awake() {
         m_Input = GetComponent<UnitInput>();
+        m_Input.Initialise();
+
         m_Physics = GetComponent<UnitPhysics>();
-        m_StateMachine = GetComponent<StateMachine>();
+        m_Physics.Initialise();
+
         m_Animator = GetComponentInChildren<UnitAnimator>();
+        m_Animator.Initialise();
+
         m_Collider = GetComponentInChildren<UnitCollider>();
+        m_Collider.Initialise();
+
+        m_StateMachine = GetComponent<StateMachine>();
 
         // Setup springs
         m_SpringParent = new GameObject("Springs").transform;

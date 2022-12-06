@@ -25,7 +25,7 @@ public class UnitPhysics : MonoBehaviour
 
     private float m_Drag { get { return m_Rigidbody.drag; } set { m_Rigidbody.drag = value; } }
 
-    private void Awake()
+    public void Initialise()
     {
         m_Rigidbody = gameObject.GetOrAddComponent<Rigidbody2D>();
         m_Rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;

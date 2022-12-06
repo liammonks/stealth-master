@@ -17,7 +17,7 @@ public class UnitCollider : MonoBehaviour
     private Dictionary<BodyState, UnitColliderInfo> m_TemplateInfo = new Dictionary<BodyState, UnitColliderInfo>();
     private ContactFilter2D m_OverlapFilter = new ContactFilter2D();
 
-    private void Awake()
+    public void Initialise()
     {
         m_Animator = GetComponent<Animator>();
         m_Unit = transform.parent.GetComponent<Unit>();
