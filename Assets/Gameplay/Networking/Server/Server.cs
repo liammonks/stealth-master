@@ -8,23 +8,27 @@ using Network.Shared;
 namespace Network.Server
 {
 
-    public class SMServer : XmlUnityServer
+    public class Server : XmlUnityServer
     {
         // Properties
         public IClient[] AllClients => Server.ClientManager.GetAllClients();
 
         // Shared
+        [HideInInspector]
         public NetworkUnitData UnitData;
 
         // Server
-        public SMServerMessageReceiver MessageReceiver;
-        public SMServerMessageSender MessageSender;
+        public ServerMessageReceiver MessageReceiver;
+        public ServerMessageSender MessageSender;
+
+        private ServerTime m_Time;
 
         private void Awake()
         {
-            UnitData = GetComponentInChildren<NetworkUnitData>();
-            MessageReceiver = new SMServerMessageReceiver(this);
-            MessageSender = new SMServerMessageSender(this);
+            //UnitData = GetComponentInChildren<NetworkUnitData>();
+            //MessageReceiver = new ServerMessageReceiver(this);
+            //MessageSender = new ServerMessageSender(this);
+            //m_Time = new ServerTime();
         }
 
         void Start()
@@ -33,17 +37,24 @@ namespace Network.Server
             Server.ClientManager.ClientDisconnected += OnClientDisconnected;
         }
 
+        private void Update()
+        {
+            //Debug.Log(m_Time.SimulationTime);
+        }
+
         private void OnClientConnected(object sender, ClientConnectedEventArgs args)
         {
-            MessageReceiver.RegisterClient(args.Client);
+            Debug.Log("--CLIENT CONNECTED");
+            //MessageReceiver.RegisterClient(args.Client);
 
-            // Tell the client they have connected, providing the simulation time
-            ClientConnectedResponse clientConnectedResponse = new ClientConnectedResponse();
-            clientConnectedResponse.SimulationTime = 0;
-            MessageSender.QueueMessage(args.Client, ServerTag.ClientConnected, clientConnectedResponse);
+            //// Tell the client they have connected, providing the simulation time
+            //ClientConnectedResponse clientConnectedResponse = new ClientConnectedResponse();
+            //clientConnectedResponse.SimulationTime = m_Time.SimulationTime;
+            //Debug.Log("--SENDING TIME " + m_Time.SimulationTime);
+            //MessageSender.QueueMessage(args.Client, ServerTag.ClientConnected, clientConnectedResponse);
 
-            // Send the client current unit data
-            SendUnitData(args.Client);
+            //// Send the client current unit data
+            //SendUnitData(args.Client);
         }
 
         /// <summary>
@@ -73,8 +84,6 @@ namespace Network.Server
 
             UnitData.DestroyUnit(args.Client.ID);
         }
-
-
 
     }
 

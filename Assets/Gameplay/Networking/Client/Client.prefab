@@ -455,7 +455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UnitData: {fileID: 0}
-  Client: {fileID: 0}
+  UnityClient: {fileID: 1334011215752515650}
 --- !u!1001 &4803998062637559680
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -49,6 +49,7 @@ MonoBehaviour:
   configuration: {fileID: 4900000, guid: 099e7cad825f1974d95a9256cc70dece, type: 3}
   createOnEnable: 1
   eventsFromDispatcher: 1
+  UnitData: {fileID: 0}
 --- !u!114 &5580316529607153733
 MonoBehaviour:
   m_ObjectHideFlags: 0

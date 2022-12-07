@@ -8,13 +8,13 @@ using UnityEngine;
 namespace Network.Client
 {
 
-    public class SMClientInput
+    public class ClientInput
     {
-        private SMClient m_SMClient;
+        private Client m_Client;
 
-        public SMClientInput(SMClient smClient)
+        public ClientInput(Client client)
         {
-            m_SMClient = smClient;
+            m_Client = client;
 
             PlayerManager.Instance.OnUnitSpawned += RegisterUnitInput;
             if (PlayerManager.Instance.Unit != null)
@@ -36,7 +36,7 @@ namespace Network.Client
             movementInputPacket.fixedTime = Time.fixedTimeAsDouble;
             movementInputPacket.value = movement;
 
-            m_SMClient.MessageSender.QueueMessage(ClientTag.MovementInput, movementInputPacket);
+            m_Client.MessageSender.QueueMessage(ClientTag.MovementInput, movementInputPacket);
         }
 
         private void OnRunningChanged(bool running)
@@ -45,7 +45,7 @@ namespace Network.Client
             runningInputPacket.fixedTime = Time.fixedTimeAsDouble;
             runningInputPacket.value = running;
 
-            m_SMClient.MessageSender.QueueMessage(ClientTag.RunningInput, runningInputPacket);
+            m_Client.MessageSender.QueueMessage(ClientTag.RunningInput, runningInputPacket);
         }
 
         private void OnJumpingChanged(bool jumping)
@@ -54,7 +54,7 @@ namespace Network.Client
             jumpingInputPacket.fixedTime = Time.fixedTimeAsDouble;
             jumpingInputPacket.value = jumping;
 
-            m_SMClient.MessageSender.QueueMessage(ClientTag.JumpingInput, jumpingInputPacket);
+            m_Client.MessageSender.QueueMessage(ClientTag.JumpingInput, jumpingInputPacket);
         }
     }
 

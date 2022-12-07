@@ -4,23 +4,23 @@ using Network.Shared;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Network.Client.SMClientMessageSender;
+using static Network.Client.ClientMessageSender;
 
 namespace Network.Client
 {
 
-    public class SMClientMessageSender
+    public class ClientMessageSender
     {
         private const float MessageSendRate = 60;
         private const float MessageSendInterval = 1 / MessageSendRate;
 
-        private SMClient m_SMClient;
+        private Client m_Client;
         private Queue<Message> m_MessageQueue = new Queue<Message>();
 
-        public SMClientMessageSender(SMClient smClient)
+        public ClientMessageSender(Client client)
         {
-            m_SMClient = smClient;
-            m_SMClient.StartCoroutine(SendMessageQueue());
+            m_Client = client;
+            m_Client.StartCoroutine(SendMessageQueue());
         }
 
         public void QueueMessage<T>(ClientTag tag, T serializable) where T : IDarkRiftSerializable
@@ -38,12 +38,12 @@ namespace Network.Client
             {
                 using (Message message = m_MessageQueue.Dequeue())
                 {
-                    m_SMClient.Client.SendMessage(message, SendMode.Reliable);
+                    m_Client.UnityClient.SendMessage(message, SendMode.Reliable);
                 }
             }
 
             yield return new WaitForSecondsRealtime(MessageSendInterval);
-            m_SMClient.StartCoroutine(SendMessageQueue());
+            m_Client.StartCoroutine(SendMessageQueue());
         }
     }
 

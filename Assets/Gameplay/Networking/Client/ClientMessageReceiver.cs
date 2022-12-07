@@ -9,29 +9,29 @@ using UnityEngine;
 namespace Network.Client
 {
 
-    public class SMClientMessageReceiver
+    public class ClientMessageReceiver
     {
 
-        private SMClient m_SMClient;
+        private Client m_Client;
 
         /// <summary>
         /// Constructor
         /// Stores the client and starts listening for messages
         /// </summary>
         /// <param name="client"></param>
-        public SMClientMessageReceiver(SMClient smClient)
+        public ClientMessageReceiver(Client client)
         {
-            m_SMClient = smClient;
-            m_SMClient.Client.MessageReceived += OnMessageReceived;
+            m_Client = client;
+            m_Client.UnityClient.MessageReceived += OnMessageReceived;
         }
 
         /// <summary>
         /// Destructor
         /// Stops listening for messages
         /// </summary>
-        ~SMClientMessageReceiver()
+        ~ClientMessageReceiver()
         {
-            m_SMClient.Client.MessageReceived -= OnMessageReceived;
+            m_Client.UnityClient.MessageReceived -= OnMessageReceived;
         }
 
         /// <summary>
@@ -70,6 +70,8 @@ namespace Network.Client
         /// <param name="data"></param>
         private void OnClientConnected(ClientConnectedResponse data)
         {
+            Debug.Log("--TIME RECEIVE " + data.SimulationTime);
+            m_Client.ClientTime.InitialiseSimulationTime(data.SimulationTime);
             RequestUnit();
         }
 
@@ -82,7 +84,7 @@ namespace Network.Client
             spawnUnitRequest.PrefabIndex = 0;
             spawnUnitRequest.Position = PlayerManager.Instance.Unit.transform.position;
 
-            m_SMClient.MessageSender.QueueMessage(ClientTag.SpawnUnitRequest, spawnUnitRequest);
+            m_Client.MessageSender.QueueMessage(ClientTag.SpawnUnitRequest, spawnUnitRequest);
         }
 
         /// <summary>
@@ -91,15 +93,15 @@ namespace Network.Client
         /// <param name="data"></param>
         private void OnUnitSpawned(SpawnUnitPacket data)
         {
-            if (data.ClientID == m_SMClient.ID)
+            if (data.ClientID == m_Client.ID)
             {
                 // Our unit was spawned on the server, we dont need to instantiate a new one, just add ClientUnit data to the dictionary
-                m_SMClient.UnitData.ClientUnits.Add(m_SMClient.ID, new NetworkUnitData.ClientUnit(m_SMClient.ID, PlayerManager.Instance.Unit));
+                m_Client.UnitData.ClientUnits.Add(m_Client.ID, new NetworkUnitData.ClientUnit(m_Client.ID, PlayerManager.Instance.Unit));
             }
             else
             {
                 // Server spawned another clients unit, spawn the unit locally
-                m_SMClient.UnitData.SpawnUnit(data.ClientID, data.PrefabIndex, data.Position);
+                m_Client.UnitData.SpawnUnit(data.ClientID, data.PrefabIndex, data.Position);
             }
         }
 
@@ -109,7 +111,7 @@ namespace Network.Client
         /// <param name="clientDisconnected"></param>
         private void OnClientDisconnected(ClientDisconnected clientDisconnected)
         {
-            m_SMClient.UnitData.DestroyUnit(clientDisconnected.ClientID);
+            m_Client.UnitData.DestroyUnit(clientDisconnected.ClientID);
         }
     }
 

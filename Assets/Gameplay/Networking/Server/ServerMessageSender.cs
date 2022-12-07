@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Network.Server
 {
 
-    public class SMServerMessageSender
+    public class ServerMessageSender
     {
         private struct ClientMessage
         {
@@ -26,10 +26,10 @@ namespace Network.Server
         private const float MessageSendRate = 60;
         private const float MessageSendInterval = 1 / MessageSendRate;
 
-        private SMServer m_SMServer;
+        private Server m_SMServer;
         private Queue<ClientMessage> m_MessageQueue = new Queue<ClientMessage>();
 
-        public SMServerMessageSender(SMServer smServer)
+        public ServerMessageSender(Server smServer)
         {
             m_SMServer = smServer;
             m_SMServer.StartCoroutine(SendMessageQueue());

@@ -8,14 +8,14 @@ using UnityEngine;
 namespace Network.Server
 {
 
-    public class SMServerMessageReceiver
+    public class ServerMessageReceiver
     {
         
-        private SMServer m_SMServer;
+        private Server m_Server;
 
-        public SMServerMessageReceiver(SMServer smServer)
+        public ServerMessageReceiver(Server server)
         {
-            m_SMServer = smServer;
+            m_Server = server;
         }
 
         public void RegisterClient(IClient client)
@@ -58,9 +58,9 @@ namespace Network.Server
 
         private void OnSpawnUnitRequest(IClient sender, SpawnUnitRequest data)
         {
-            if (m_SMServer.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
+            if (m_Server.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
 
-            m_SMServer.UnitData.SpawnUnit(sender.ID, data.PrefabIndex, data.Position);
+            m_Server.UnitData.SpawnUnit(sender.ID, data.PrefabIndex, data.Position);
 
             // Tell all clients to initialise this unit
             SpawnUnitPacket spawnUnitPacket = new SpawnUnitPacket();
@@ -68,27 +68,27 @@ namespace Network.Server
             spawnUnitPacket.PrefabIndex = data.PrefabIndex;
             spawnUnitPacket.Position = data.Position;
 
-            m_SMServer.MessageSender.QueueMessage(m_SMServer.AllClients, ServerTag.UnitSpawned, spawnUnitPacket);
+            m_Server.MessageSender.QueueMessage(m_Server.AllClients, ServerTag.UnitSpawned, spawnUnitPacket);
         }
 
         #region Receive Input
 
         private void OnMovementInput(IClient sender, FloatInputPacket input)
         {
-            if (!m_SMServer.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
-            m_SMServer.UnitData.ClientUnits[sender.ID].Unit.Input.Movement = input.value;
+            if (!m_Server.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
+            m_Server.UnitData.ClientUnits[sender.ID].Unit.Input.Movement = input.value;
         }
 
         private void OnRunningInput(IClient sender, BoolInputPacket input)
         {
-            if (!m_SMServer.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
-            m_SMServer.UnitData.ClientUnits[sender.ID].Unit.Input.Running = input.value;
+            if (!m_Server.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
+            m_Server.UnitData.ClientUnits[sender.ID].Unit.Input.Running = input.value;
         }
 
         private void OnJumpingInput(IClient sender, BoolInputPacket input)
         {
-            if (!m_SMServer.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
-            m_SMServer.UnitData.ClientUnits[sender.ID].Unit.Input.Jumping = input.value;
+            if (!m_Server.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
+            m_Server.UnitData.ClientUnits[sender.ID].Unit.Input.Jumping = input.value;
         }
 
         #endregion
