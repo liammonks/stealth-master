@@ -26,21 +26,47 @@ namespace Network.Server
         private const float MessageSendRate = 60;
         private const float MessageSendInterval = 1 / MessageSendRate;
 
-        private Server m_SMServer;
+        private Server m_Server;
         private Queue<ClientMessage> m_MessageQueue = new Queue<ClientMessage>();
 
         public ServerMessageSender(Server smServer)
         {
-            m_SMServer = smServer;
-            m_SMServer.StartCoroutine(SendMessageQueue());
+            m_Server = smServer;
+            m_Server.StartCoroutine(SendMessageQueue());
         }
+
+        #region Instant
+
+        public void SendMessage<T>(IClient client, ServerTag tag, T serializable) where T : IDarkRiftSerializable
+        {
+            using (DarkRiftWriter writer = DarkRiftWriter.Create())
+            {
+                writer.Write<T>(serializable);
+                //using (Message message = Message.Create((ushort)tag, writer))
+                //{
+                //    client.SendMessage(message, SendMode.Reliable);
+                //}
+                m_Server.StartCoroutine(SendMessageDelayed(client, Message.Create((ushort)tag, writer)));
+            }
+        }
+
+        private IEnumerator SendMessageDelayed(IClient client, Message message)
+        {
+            yield return new WaitForSeconds(5);
+            client.SendMessage(message, SendMode.Reliable);
+        }
+
+        #endregion
+
+        #region Queue
 
         public void QueueMessage<T>(IClient client, ServerTag tag, T serializable) where T : IDarkRiftSerializable
         {
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 writer.Write<T>(serializable);
-                m_MessageQueue.Enqueue(new ClientMessage(new IClient[] { client }, Message.Create((ushort)tag, writer)));
+                //m_MessageQueue.Enqueue(new ClientMessage(new IClient[] { client }, Message.Create((ushort)tag, writer)));
+                m_Server.StartCoroutine(QueueMessageDelayed(new ClientMessage(new IClient[] { client }, Message.Create((ushort)tag, writer))));
             }
         }
 
@@ -49,8 +75,15 @@ namespace Network.Server
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 writer.Write<T>(serializable);
-                m_MessageQueue.Enqueue(new ClientMessage(clients, Message.Create((ushort)tag, writer)));
+                //m_MessageQueue.Enqueue(new ClientMessage(clients, Message.Create((ushort)tag, writer)));
+                m_Server.StartCoroutine(QueueMessageDelayed(new ClientMessage(clients, Message.Create((ushort)tag, writer))));
             }
+        }
+
+        private IEnumerator QueueMessageDelayed(ClientMessage clientMessage)
+        {
+            yield return new WaitForSeconds(5);
+            m_MessageQueue.Enqueue(clientMessage);
         }
 
         private IEnumerator SendMessageQueue()
@@ -68,8 +101,11 @@ namespace Network.Server
             }
 
             yield return new WaitForSecondsRealtime(MessageSendInterval);
-            m_SMServer.StartCoroutine(SendMessageQueue());
+            m_Server.StartCoroutine(SendMessageQueue());
         }
+
+        #endregion
+
     }
 
 }

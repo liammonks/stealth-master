@@ -23,15 +23,47 @@ namespace Network.Client
             m_Client.StartCoroutine(SendMessageQueue());
         }
 
+        #region Instant
+
+        public void SendMessage<T>(ClientTag tag, T serializable) where T : IDarkRiftSerializable
+        {
+            using (DarkRiftWriter writer = DarkRiftWriter.Create())
+            {
+                writer.Write<T>(serializable);
+                //using (Message message = Message.Create((ushort)tag, writer))
+                //{
+                //    m_Client.UnityClient.SendMessage(message, SendMode.Reliable);
+                //}
+                m_Client.StartCoroutine(SendMessageDelayed(Message.Create((ushort)tag, writer)));
+            }
+        }
+
+        private IEnumerator SendMessageDelayed(Message message)
+        {
+            yield return new WaitForSeconds(5);
+            m_Client.UnityClient.SendMessage(message, SendMode.Reliable);
+        }
+
+        #endregion
+
+        #region Queue
+
         public void QueueMessage<T>(ClientTag tag, T serializable) where T : IDarkRiftSerializable
         {
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 writer.Write<T>(serializable);
-                m_MessageQueue.Enqueue(Message.Create((ushort)tag, writer));
+                //m_MessageQueue.Enqueue(Message.Create((ushort)tag, writer));
+                m_Client.StartCoroutine(QueueMessageDelayed(Message.Create((ushort)tag, writer)));
             }
         }
     
+        private IEnumerator QueueMessageDelayed(Message message)
+        {
+            yield return new WaitForSeconds(5);
+            m_MessageQueue.Enqueue(message);
+        }
+
         private IEnumerator SendMessageQueue()
         {
             while (m_MessageQueue.Count > 0)
@@ -45,6 +77,9 @@ namespace Network.Client
             yield return new WaitForSecondsRealtime(MessageSendInterval);
             m_Client.StartCoroutine(SendMessageQueue());
         }
+
+        #endregion
+
     }
 
 }

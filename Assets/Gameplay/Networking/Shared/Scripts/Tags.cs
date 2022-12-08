@@ -12,7 +12,10 @@ namespace Network.Shared
         // Input
         MovementInput,
         RunningInput,
-        JumpingInput
+        JumpingInput,
+
+        // Time
+        SimulationTimeRequest
     }
 
     public enum ServerTag
@@ -20,6 +23,9 @@ namespace Network.Shared
         ClientConnected,
         ClientDisconnected,
         UnitSpawned,
+
+        // Time
+        SimulationTimeResponse
     }
 
     #region Input
@@ -74,6 +80,24 @@ namespace Network.Shared
         public void Deserialize(DeserializeEvent e)
         {
             SimulationTime = e.Reader.ReadDouble();
+        }
+    }
+
+    public class SimulationTimeSync : IDarkRiftSerializable
+    {
+        public double T0;
+        public double T1;
+
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(T0);
+            e.Writer.Write(T1);
+        }
+
+        public void Deserialize(DeserializeEvent e)
+        {
+            T0 = e.Reader.ReadDouble();
+            T1 = e.Reader.ReadDouble();
         }
     }
 

@@ -50,6 +50,9 @@ namespace Network.Client
                         case ServerTag.ClientConnected:
                             OnClientConnected(reader.ReadSerializable<ClientConnectedResponse>());
                             break;
+                        case ServerTag.SimulationTimeResponse:
+                            OnSimulationTimeResponse(reader.ReadSerializable<SimulationTimeSync>());
+                            break;
                         case ServerTag.UnitSpawned:
                             OnUnitSpawned(reader.ReadSerializable<SpawnUnitPacket>());
                             break;
@@ -70,9 +73,13 @@ namespace Network.Client
         /// <param name="data"></param>
         private void OnClientConnected(ClientConnectedResponse data)
         {
-            Debug.Log("--TIME RECEIVE " + data.SimulationTime);
-            m_Client.ClientTime.InitialiseSimulationTime(data.SimulationTime);
+            m_Client.Time.InitialiseSimulationTime(data.SimulationTime);
             RequestUnit();
+        }
+
+        private void OnSimulationTimeResponse(SimulationTimeSync simulationTimeSync)
+        {
+            m_Client.Time.ReceivedSimulationTimeSync(simulationTimeSync);
         }
 
         /// <summary>

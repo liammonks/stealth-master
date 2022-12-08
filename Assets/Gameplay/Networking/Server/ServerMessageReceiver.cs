@@ -36,6 +36,9 @@ namespace Network.Server
                 {
                     switch ((ClientTag)message.Tag)
                     {
+                        case ClientTag.SimulationTimeRequest:
+                            OnSimulationTimeRequest(args.Client, reader.ReadSerializable<SimulationTimeSync>());
+                            break;
                         case ClientTag.SpawnUnitRequest:
                             OnSpawnUnitRequest(args.Client, reader.ReadSerializable<SpawnUnitRequest>());
                             break;
@@ -54,6 +57,12 @@ namespace Network.Server
                     }
                 }
             }
+        }
+
+        private void OnSimulationTimeRequest(IClient sender, SimulationTimeSync simulationTimeSync)
+        {
+            simulationTimeSync.T1 = m_Server.Time.SimulationTime;
+            m_Server.MessageSender.SendMessage(sender, ServerTag.SimulationTimeResponse, simulationTimeSync);
         }
 
         private void OnSpawnUnitRequest(IClient sender, SpawnUnitRequest data)

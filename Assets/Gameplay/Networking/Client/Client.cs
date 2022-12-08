@@ -22,7 +22,7 @@ namespace Network.Client
         public UnityClient UnityClient;
         public ClientMessageReceiver MessageReceiver;
         public ClientMessageSender MessageSender;
-        public ClientTime ClientTime;
+        public ClientTime Time;
 
         private ClientInput m_ClientInput;
 
@@ -33,14 +33,14 @@ namespace Network.Client
 
             MessageReceiver = new ClientMessageReceiver(this);
             MessageSender = new ClientMessageSender(this);
-            ClientTime = new ClientTime();
+            Time = new ClientTime(this);
 
             m_ClientInput = new ClientInput(this);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            //Debug.Log(ClientTime.SimulationTime);
+            //Debug.Log("--SimulationTime: " + Time.SimulationTime);
         }
 
     }
