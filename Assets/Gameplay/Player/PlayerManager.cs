@@ -51,7 +51,7 @@ public class PlayerManager : MonoBehaviour
 
     public void SpawnPlayer(Vector2 position)
     {
-        if (m_PlayerUnit != null) { Destroy(m_PlayerUnit); }
+        if (m_PlayerUnit != null) { Destroy(m_PlayerUnit.gameObject); }
         m_PlayerUnit = Instantiate(m_PlayerUnitPrefab, position, Quaternion.identity, transform);
         m_PlayerUnit.transform.SetParent(null);
         m_PlayerCamera.SetTarget(m_PlayerUnit.GetComponentInChildren<UnitAnimator>().transform);

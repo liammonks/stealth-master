@@ -597,6 +597,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleInput",
+                    "type": "Button",
+                    "id": "90a484bb-e9fb-4c62-a327-2d39380cf564",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -630,6 +639,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "SlowTime",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "75101650-1060-437e-b75c-5ece52731ed8",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleInput",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

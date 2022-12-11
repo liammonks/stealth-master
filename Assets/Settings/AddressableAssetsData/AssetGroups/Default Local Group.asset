@@ -21,10 +21,6 @@ MonoBehaviour:
     m_Address: InputActions
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: dbfe19763097e9b46abfa357c6eb806f
-    m_Address: DebugText
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7fc6de5a04693c940ba91f4b02c3c29d, type: 2}
   m_SchemaSet:
