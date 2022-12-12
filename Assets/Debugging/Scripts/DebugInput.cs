@@ -21,6 +21,7 @@ namespace Debugging
 
         private DebugToggle m_DebugToggle;
         private DebugSelector m_DebugSelector;
+        private DebugCommands m_Commands;
 
         private void Awake()
         {
@@ -34,6 +35,8 @@ namespace Debugging
             m_DebugToggle = GetComponent<DebugToggle>();
             m_DebugToggle.OnActivated += OnDebugActivated;
             m_DebugToggle.OnDeactivated += OnDebugDeactivated;
+
+            m_Commands = GetComponent<DebugCommands>();
         }
 
         private void OnDebugActivated()
@@ -56,7 +59,7 @@ namespace Debugging
 
         private void OnSubmit(string input)
         {
-            
+            m_Commands.ExecuteCommand(input);
         }
 
         private void OnEndEdit(string input)

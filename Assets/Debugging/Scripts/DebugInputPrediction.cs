@@ -103,40 +103,30 @@ namespace Debugging
         [SerializeField]
         private DebugLabel m_LabelPrefab;
 
-        private DebugSelector m_DebugSelector;
         private DebugToggle m_DebugToggle;
         private DebugInput m_DebugInput;
-
-        private TransformData m_CurrentTransformData;
-        private ComponentData m_CurrentComponentData;
-
+        private DebugCommands m_DebugCommands;
 
         private void Awake()
         {
-            m_DebugSelector = GetComponent<DebugSelector>();
-            m_DebugSelector.OnSelectionUpdated += OnTransformSelected;
-
             m_DebugToggle = GetComponent<DebugToggle>();
-            m_DebugToggle.OnActivated += OnDebugActivated;
+            m_DebugToggle.OnActivated += delegate { UpdatePredictions(string.Empty); };
 
             m_DebugInput = GetComponent<DebugInput>();
-            m_DebugInput.OnInputChanged += OnInputChanged;
+            m_DebugInput.OnInputChanged += UpdatePredictions;
+
+            m_DebugCommands = GetComponent<DebugCommands>();
         }
 
-        private void OnDebugActivated()
+        private void UpdatePredictions(string input)
         {
-            OnTransformSelected(m_DebugSelector.SelectedTransform);
+            List<string> filteredPredictions = FilterPredictions(m_DebugCommands.Commands, input);
+            DisplayPredictions(filteredPredictions, input);
         }
 
-        private void OnTransformSelected(Transform selectedTransform)
+        private List<string> FilterPredictions(List<string> predictions, string input)
         {
-            if (!m_DebugToggle.Active) { return; }
-            m_CurrentTransformData = new TransformData(selectedTransform);
-        }
-
-        public void OnInputChanged(string input)
-        {
-            m_CurrentTransformData.GetPredictions(input);
+            return predictions.Where(x => x.ToLower().Contains(input.ToLower())).ToList();
         }
 
         private void DisplayPredictions(List<string> predictions, string toHighlight)
