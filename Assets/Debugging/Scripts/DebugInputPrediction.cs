@@ -9,6 +9,8 @@ namespace Debugging
 
     public class DebugInputPrediction : MonoBehaviour
     {
+        #region Context Prediction
+
         private interface IPredict
         {
             public List<string> GetPredictions(string input);
@@ -97,6 +99,10 @@ namespace Debugging
             }
         }
 
+        #endregion
+
+        public List<string> Predictions => m_Predictions;
+
         [SerializeField]
         private Transform m_LabelParent;
 
@@ -106,6 +112,8 @@ namespace Debugging
         private DebugToggle m_DebugToggle;
         private DebugInput m_DebugInput;
         private DebugCommands m_DebugCommands;
+
+        private List<string> m_Predictions = new List<string>();
 
         private void Awake()
         {
@@ -120,8 +128,8 @@ namespace Debugging
 
         private void UpdatePredictions(string input)
         {
-            List<string> filteredPredictions = FilterPredictions(m_DebugCommands.Commands, input);
-            DisplayPredictions(filteredPredictions, input);
+            m_Predictions = FilterPredictions(m_DebugCommands.Commands, input);
+            DisplayPredictions(input);
         }
 
         private List<string> FilterPredictions(List<string> predictions, string input)
@@ -129,14 +137,14 @@ namespace Debugging
             return predictions.Where(x => x.ToLower().Contains(input.ToLower())).ToList();
         }
 
-        private void DisplayPredictions(List<string> predictions, string toHighlight)
+        private void DisplayPredictions(string toHighlight)
         {
             foreach (Transform child in m_LabelParent)
             {
                 Destroy(child.gameObject);
             }
 
-            foreach (string availableInput in predictions)
+            foreach (string availableInput in m_Predictions)
             {
                 DebugLabel label = Instantiate(m_LabelPrefab, m_LabelParent);
                 label.SetText(availableInput);

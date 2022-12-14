@@ -6,6 +6,7 @@ using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 using static UnityEngine.Playables.FrameData;
 
@@ -20,8 +21,11 @@ namespace Debugging
         private TMP_InputField m_InputField;
 
         private DebugToggle m_DebugToggle;
-        private DebugSelector m_DebugSelector;
         private DebugCommands m_Commands;
+        private DebugInputPrediction m_Prediction;
+
+        private List<string> m_PreviousCommands = new List<string>();
+        private int m_SelectionIndex;
 
         private void Awake()
         {
@@ -29,22 +33,19 @@ namespace Debugging
             m_InputField.onSubmit.AddListener(OnSubmit);
             m_InputField.onEndEdit.AddListener(OnEndEdit);
 
-            m_DebugSelector = GetComponent<DebugSelector>();
-            m_DebugSelector.OnSelectionUpdated += OnTransformSelected;
-
             m_DebugToggle = GetComponent<DebugToggle>();
             m_DebugToggle.OnActivated += OnDebugActivated;
             m_DebugToggle.OnDeactivated += OnDebugDeactivated;
 
             m_Commands = GetComponent<DebugCommands>();
+            m_Prediction = GetComponent<DebugInputPrediction>();
         }
 
         private void OnDebugActivated()
         {
+            m_SelectionIndex = 0;
             m_InputField.Select();
             m_InputField.ActivateInputField();
-
-            OnTransformSelected(m_DebugSelector.SelectedTransform);
         }
 
         private void OnDebugDeactivated()
@@ -59,7 +60,15 @@ namespace Debugging
 
         private void OnSubmit(string input)
         {
+            if (input == string.Empty) { return; }
+
+            if (m_PreviousCommands.Count == 0 || m_PreviousCommands.Last() != input)
+            {
+                m_PreviousCommands.Add(input);
+            }
+
             m_Commands.ExecuteCommand(input);
+            m_DebugToggle.Deactivate();
         }
 
         private void OnEndEdit(string input)
@@ -71,11 +80,40 @@ namespace Debugging
             }
         }
 
-        private void OnTransformSelected(Transform selectedTransform)
+        private void OnSelectionUp(InputValue value)
         {
-
+            if (!m_DebugToggle.Active) { return; }
+            if (value.Get<float>() == 1.0f)
+            {
+                m_SelectionIndex = Mathf.Min(m_SelectionIndex + 1, m_PreviousCommands.Count);
+            }
+            UpdateSelection();
         }
 
+        private void OnSelectionDown(InputValue value)
+        {
+            if (!m_DebugToggle.Active) { return; }
+            if (value.Get<float>() == 1.0f)
+            {
+                m_SelectionIndex = Mathf.Max(m_SelectionIndex - 1, -m_Prediction.Predictions.Count);
+            }
+            UpdateSelection();
+        }
+
+        private void UpdateSelection()
+        {
+            if (m_SelectionIndex > 0)
+            {
+                // Selection up, get previous commands
+                m_InputField.SetTextWithoutNotify(m_PreviousCommands[m_PreviousCommands.Count - m_SelectionIndex]);
+            }
+            if (m_SelectionIndex < 0)
+            {
+                // Selection down, get predicted commands
+                m_InputField.SetTextWithoutNotify(m_Prediction.Predictions[Mathf.Abs(m_SelectionIndex) - 1]);
+            }
+            StartCoroutine(MoveCaretToEnd());
+        }
 
         private IEnumerator MoveCaretToEnd()
         {

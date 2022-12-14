@@ -20,12 +20,14 @@ public class DebugToggle : MonoBehaviour
 
     public void Activate()
     {
+        DebugGUI.Hide();
         m_CanvasObject.SetActive(true);
         OnActivated?.Invoke();
     }
 
     public void Deactivate()
     {
+        DebugGUI.Show();
         m_CanvasObject.SetActive(false);
         OnDeactivated?.Invoke();
     }

@@ -8,11 +8,13 @@ namespace Network.Client
 
     public class ClientTime
     {
-        public double SimulationTime => m_SimulationTime;
 
-        private double m_SimulationTime => Time.fixedTimeAsDouble + m_SimulationTimeOffset;
-        private double m_SimulationTimeOffset;
-        private double m_Latency;
+        private const float m_SecondsPerSync = 0.1f;
+
+        private float m_SimulationTime => Time.fixedTime + m_SimulationTimeInitialOffset + m_SimulationTimeLatencyOffset;
+        private float m_SimulationTimeInitialOffset;
+        private float m_SimulationTimeLatencyOffset;
+        private float m_Latency;
 
         private Client m_Client;
 
@@ -21,36 +23,41 @@ namespace Network.Client
             m_Client = client;
         }
 
-        public void InitialiseSimulationTime(double simulationTime)
+        public void InitialiseSimulationTime(float simulationTime)
         {
-            m_SimulationTimeOffset = simulationTime - Time.fixedTimeAsDouble;
-            m_Client.StartCoroutine(SendSimulationTimeSync(0));
+            m_SimulationTimeInitialOffset = simulationTime - Time.fixedTime;
+            m_Client.StartCoroutine(SendSimulationTimeSync());
+        }
+
+        #region Time Sync
+
+        private IEnumerator SendSimulationTimeSync()
+        {
+            SimulationTimeSync simulationTimeSync = new SimulationTimeSync();
+            simulationTimeSync.T0 = m_SimulationTime;
+            m_Client.MessageSender.SendMessage(ClientTag.SimulationTimeRequest, simulationTimeSync);
+
+            yield return new WaitForSeconds(m_SecondsPerSync);
+            m_Client.StartCoroutine(SendSimulationTimeSync());
         }
 
         public void ReceivedSimulationTimeSync(SimulationTimeSync simulationTimeSync)
         {
-            double T2 = SimulationTime;
-            // Server to client time difference + server to client latency
-            double differnceWithLatency = simulationTimeSync.T1 - simulationTimeSync.T0;
+            float T2 = m_SimulationTime;
+            // simulation time difference + client to server latency
+            float differnceWithLatency = simulationTimeSync.T1 - simulationTimeSync.T0;
             // Round trip time
-            double rtt = T2 - simulationTimeSync.T0;
+            float rtt = T2 - simulationTimeSync.T0;
             // Approximate latency as half RTT
-            m_Latency = rtt / 2;
-            // Server to client time difference without latency
-            double difference = differnceWithLatency - m_Latency;
+            m_Latency = rtt * 0.5f;
+            // Simulation time difference without latency
+            float difference = differnceWithLatency - m_Latency;
 
-            m_SimulationTimeOffset += difference * 0.5f;
-            m_Client.StartCoroutine(SendSimulationTimeSync(0));
+            m_SimulationTimeLatencyOffset += difference * 0.1f;
         }
 
-        private IEnumerator SendSimulationTimeSync(float delay)
-        {
-            yield return new WaitForSeconds(delay);
+        #endregion
 
-            SimulationTimeSync simulationTimeSync = new SimulationTimeSync();
-            simulationTimeSync.T0 = m_Client.Time.SimulationTime;
-            m_Client.MessageSender.SendMessage(ClientTag.SimulationTimeRequest, simulationTimeSync);
-        }
     }
 
 }

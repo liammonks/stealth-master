@@ -8,8 +8,8 @@ namespace Network.Server
 
     public class ServerTime
     {
-        public double SimulationTime => m_SimulationTime;
-        private double m_SimulationTime => Time.fixedTimeAsDouble;
+        public float SimulationTime => m_SimulationTime;
+        private float m_SimulationTime => Time.fixedTime;
     }
 
 }

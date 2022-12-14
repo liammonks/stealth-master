@@ -4,13 +4,14 @@ using Network.Shared;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Network.Client.ClientMessageSender;
 
 namespace Network.Client
 {
 
     public class ClientMessageSender
     {
+        private const float m_ArtificialLatency = 0.0f;
+
         private const float MessageSendRate = 60;
         private const float MessageSendInterval = 1 / MessageSendRate;
 
@@ -40,7 +41,7 @@ namespace Network.Client
 
         private IEnumerator SendMessageDelayed(Message message)
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(m_ArtificialLatency);
             m_Client.UnityClient.SendMessage(message, SendMode.Reliable);
         }
 
@@ -60,7 +61,7 @@ namespace Network.Client
     
         private IEnumerator QueueMessageDelayed(Message message)
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(m_ArtificialLatency);
             m_MessageQueue.Enqueue(message);
         }
 

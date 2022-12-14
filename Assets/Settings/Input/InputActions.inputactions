@@ -606,6 +606,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SelectionUp",
+                    "type": "Button",
+                    "id": "4a0a8e9a-0aa1-46d8-a6c6-4a72a485bdf1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectionDown",
+                    "type": "Button",
+                    "id": "bc701736-7c6a-4196-a916-fcfab24a3e6d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -650,6 +668,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "ToggleInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d97789ea-6037-4d19-b4bd-58302ef04449",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectionUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba8a23a6-db64-4868-a0f6-8c43998a4bbc",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectionDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -38,11 +38,6 @@ namespace Network.Client
             m_ClientInput = new ClientInput(this);
         }
 
-        private void FixedUpdate()
-        {
-            //Debug.Log("--SimulationTime: " + Time.SimulationTime);
-        }
-
     }
 
 }

@@ -16,6 +16,9 @@ namespace Debugging
 
         private Dictionary<string, DebugCommand> m_DebugCommands = new Dictionary<string, DebugCommand>();
 
+        /// <summary>
+        /// Fetch all DebugCommand sub classes
+        /// </summary>
         private void Awake()
         {
             Type[] debugCommandTypes = Assembly.GetAssembly(typeof(DebugCommand)).GetTypes()
@@ -28,10 +31,16 @@ namespace Debugging
             }
         }
 
-        public void ExecuteCommand(string command)
+        public void ExecuteCommand(string input)
         {
+            List<string> split = input.Split(' ').ToList();
+            string command = split[0];
+
+            split.RemoveAt(0);
+            string[] args = split.ToArray();
+
             if (!m_DebugCommands.ContainsKey(command)) { return; }
-            m_DebugCommands[command].Execute();
+            m_DebugCommands[command].Execute(args);
         }
 
 

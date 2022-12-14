@@ -70,7 +70,7 @@ namespace Network.Shared
 
     public class ClientConnectedResponse : IDarkRiftSerializable
     {
-        public double SimulationTime;
+        public float SimulationTime;
 
         public void Serialize(SerializeEvent e)
         {
@@ -79,14 +79,14 @@ namespace Network.Shared
 
         public void Deserialize(DeserializeEvent e)
         {
-            SimulationTime = e.Reader.ReadDouble();
+            SimulationTime = e.Reader.ReadSingle();
         }
     }
 
     public class SimulationTimeSync : IDarkRiftSerializable
     {
-        public double T0;
-        public double T1;
+        public float T0;
+        public float T1;
 
         public void Serialize(SerializeEvent e)
         {
@@ -96,8 +96,8 @@ namespace Network.Shared
 
         public void Deserialize(DeserializeEvent e)
         {
-            T0 = e.Reader.ReadDouble();
-            T1 = e.Reader.ReadDouble();
+            T0 = e.Reader.ReadSingle();
+            T1 = e.Reader.ReadSingle();
         }
     }
 

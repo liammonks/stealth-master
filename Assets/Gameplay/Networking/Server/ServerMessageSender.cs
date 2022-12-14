@@ -23,6 +23,8 @@ namespace Network.Server
             }
         }
 
+        private const float m_ArtificialLatency = 0.0f;
+
         private const float MessageSendRate = 60;
         private const float MessageSendInterval = 1 / MessageSendRate;
 
@@ -52,7 +54,7 @@ namespace Network.Server
 
         private IEnumerator SendMessageDelayed(IClient client, Message message)
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(m_ArtificialLatency);
             client.SendMessage(message, SendMode.Reliable);
         }
 
@@ -82,7 +84,7 @@ namespace Network.Server
 
         private IEnumerator QueueMessageDelayed(ClientMessage clientMessage)
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(m_ArtificialLatency);
             m_MessageQueue.Enqueue(clientMessage);
         }
 
