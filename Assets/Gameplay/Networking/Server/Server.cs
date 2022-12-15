@@ -4,6 +4,7 @@ using DarkRift;
 using DarkRift.Server;
 using DarkRift.Server.Unity;
 using Network.Shared;
+using UnityEngine.UI;
 
 namespace Network.Server
 {
@@ -16,6 +17,9 @@ namespace Network.Server
         // Shared
         [HideInInspector]
         public NetworkUnitData UnitData;
+
+        [SerializeField]
+        public Image m_Image;
 
         // Server
         public ServerMessageReceiver MessageReceiver;
@@ -39,6 +43,7 @@ namespace Network.Server
         private void FixedUpdate()
         {
             //Debug.Log("--SimulationTime: " + Time.SimulationTime);
+            m_Image.color = Time.SimulationTime % 5 == 0 ? Color.white : Color.black;
         }
 
         private void OnClientConnected(object sender, ClientConnectedEventArgs args)

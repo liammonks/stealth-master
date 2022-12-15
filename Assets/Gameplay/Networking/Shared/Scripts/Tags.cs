@@ -32,36 +32,42 @@ namespace Network.Shared
 
     public class FloatInputPacket : IDarkRiftSerializable
     {
-        public double fixedTime;
+        public ushort clientID;
+        public float simulationTime;
         public float value;
 
         public void Serialize(SerializeEvent e)
         {
-            e.Writer.Write(fixedTime);
+            e.Writer.Write(clientID);
+            e.Writer.Write(simulationTime);
             e.Writer.Write(value);
         }
 
         public void Deserialize(DeserializeEvent e)
         {
-            fixedTime = e.Reader.ReadDouble();
+            clientID = e.Reader.ReadUInt16();
+            simulationTime = e.Reader.ReadSingle();
             value = e.Reader.ReadSingle();
         }
     }
 
     public class BoolInputPacket : IDarkRiftSerializable
     {
-        public double fixedTime;
+        public ushort clientID;
+        public float simulationTime;
         public bool value;
 
         public void Serialize(SerializeEvent e)
         {
-            e.Writer.Write(fixedTime);
+            e.Writer.Write(clientID);
+            e.Writer.Write(simulationTime);
             e.Writer.Write(value);
         }
 
         public void Deserialize(DeserializeEvent e)
         {
-            fixedTime = e.Reader.ReadDouble();
+            clientID = e.Reader.ReadUInt16();
+            simulationTime = e.Reader.ReadSingle();
             value = e.Reader.ReadBoolean();
         }
     }

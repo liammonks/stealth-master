@@ -12,10 +12,12 @@ namespace Network.Server
     {
         
         private Server m_Server;
+        private NetworkPhysicsHistory m_PhysicsHistory;
 
         public ServerMessageReceiver(Server server)
         {
             m_Server = server;
+            m_PhysicsHistory = m_Server.GetComponentInChildren<NetworkPhysicsHistory>();
         }
 
         public void RegisterClient(IClient client)
@@ -98,6 +100,7 @@ namespace Network.Server
         {
             if (!m_Server.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
             m_Server.UnitData.ClientUnits[sender.ID].Unit.Input.Jumping = input.value;
+            //m_PhysicsHistory.Rewind(input.simulationTime);
         }
 
         #endregion

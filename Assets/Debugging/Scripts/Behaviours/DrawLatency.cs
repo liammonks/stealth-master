@@ -14,7 +14,7 @@ namespace Debugging.Behaviours
 
         private float GetLatency()
         {
-            return (float)typeof(ClientTime).GetField("m_Latency", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(m_Client.Time);
+            return (float)typeof(ClientTime).GetField("m_SimulationLatency", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(m_Client.Time);
         }
 
         private void OnDisable()

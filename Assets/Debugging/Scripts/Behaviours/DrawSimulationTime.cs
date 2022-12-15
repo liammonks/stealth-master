@@ -10,7 +10,7 @@ namespace Debugging.Behaviours
         [SerializeField]
         private Client m_Client;
 
-        private const string m_Key = "SimulationTimeLog";
+        private const string m_Key = "SimulationTime";
 
         private float GetSimulationTime()
         {

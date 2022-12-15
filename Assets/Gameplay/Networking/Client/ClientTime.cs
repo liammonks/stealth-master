@@ -6,17 +6,23 @@ using Network.Shared;
 namespace Network.Client
 {
 
-    public class ClientTime
+    public class ClientTime : INetworkTime
     {
 
-        private const float m_SecondsPerSync = 0.1f;
+        public float SimulationTime => m_SimulationTime;
+
+        private const float m_SecondsPerSync = 0.5f;
+        private const int m_DifferenceHistoryCount = 5;
 
         private float m_SimulationTime => Time.fixedTime + m_SimulationTimeInitialOffset + m_SimulationTimeLatencyOffset;
+
         private float m_SimulationTimeInitialOffset;
         private float m_SimulationTimeLatencyOffset;
-        private float m_Latency;
+        private float m_SimulationLatency;
 
         private Client m_Client;
+
+        private List<float> m_SimulationTimeDifferenceHistory = new List<float>();
 
         public ClientTime(Client client)
         {
@@ -28,8 +34,6 @@ namespace Network.Client
             m_SimulationTimeInitialOffset = simulationTime - Time.fixedTime;
             m_Client.StartCoroutine(SendSimulationTimeSync());
         }
-
-        #region Time Sync
 
         private IEnumerator SendSimulationTimeSync()
         {
@@ -49,15 +53,34 @@ namespace Network.Client
             // Round trip time
             float rtt = T2 - simulationTimeSync.T0;
             // Approximate latency as half RTT
-            m_Latency = rtt * 0.5f;
+            m_SimulationLatency = rtt * 0.5f;
             // Simulation time difference without latency
-            float difference = differnceWithLatency - m_Latency;
+            float difference = RoundToFixedTimeStep(differnceWithLatency - m_SimulationLatency);
 
-            m_SimulationTimeLatencyOffset += difference * 0.1f;
+            m_SimulationTimeDifferenceHistory.Add(difference);
+            if (m_SimulationTimeDifferenceHistory.Count > m_DifferenceHistoryCount)
+            {
+                m_SimulationTimeDifferenceHistory.RemoveAt(0);
+            }
+
+            float varianceMultiplier = RoundToFixedTimeStep(difference * Mathf.Clamp(SimulationTimeVariance(), 0.1f, 1.0f));
+            m_SimulationTimeLatencyOffset += varianceMultiplier;
         }
 
-        #endregion
+        private float RoundToFixedTimeStep(float toRound)
+        {
+            return Mathf.Round(toRound / Time.fixedDeltaTime) * Time.fixedDeltaTime;
+        }
 
+        private float SimulationTimeVariance()
+        {
+            float variance = 0;
+            foreach (float difference in m_SimulationTimeDifferenceHistory)
+            {
+                variance += Mathf.Abs(difference);
+            }
+            return variance / m_SimulationTimeDifferenceHistory.Count;
+        }
     }
 
 }

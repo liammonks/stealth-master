@@ -18,10 +18,10 @@ public class DebugGUI : MonoBehaviour
             {
                 _instance = FindObjectOfType<DebugGUI>();
 
-                if (_instance == null && Application.isPlaying)
-                {
-                    _instance = new GameObject("DebugGUI").AddComponent<DebugGUI>();
-                }
+                //if (_instance == null && Application.isPlaying)
+                //{
+                //    _instance = new GameObject("DebugGUI").AddComponent<DebugGUI>();
+                //}
             }
             return _instance;
         }
@@ -134,6 +134,7 @@ public class DebugGUI : MonoBehaviour
     /// <param name="key">The graph's key</param>
     public static void RemoveGraph(object key)
     {
+        if (Instance == null) { return; }
         Instance.InstanceRemoveGraph(key);
     }
 

@@ -19,7 +19,7 @@ namespace Debugging.Behaviours
 
         private void OnEnable()
         {
-            DebugGUI.SetGraphProperties(m_Key, "STV", -1, 1, 0, Color.white, false);
+            DebugGUI.SetGraphProperties(m_Key, "STV", 0, 0, 0, Color.white, true);
         }
 
         private void OnDisable()

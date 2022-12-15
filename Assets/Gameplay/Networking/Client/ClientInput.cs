@@ -33,7 +33,8 @@ namespace Network.Client
         private void OnMovementChanged(float movement)
         {
             FloatInputPacket movementInputPacket = new FloatInputPacket();
-            movementInputPacket.fixedTime = Time.fixedTimeAsDouble;
+            movementInputPacket.clientID = m_Client.ID;
+            movementInputPacket.simulationTime = m_Client.Time.SimulationTime;
             movementInputPacket.value = movement;
 
             m_Client.MessageSender.QueueMessage(ClientTag.MovementInput, movementInputPacket);
@@ -42,7 +43,8 @@ namespace Network.Client
         private void OnRunningChanged(bool running)
         {
             BoolInputPacket runningInputPacket = new BoolInputPacket();
-            runningInputPacket.fixedTime = Time.fixedTimeAsDouble;
+            runningInputPacket.clientID = m_Client.ID;
+            runningInputPacket.simulationTime = m_Client.Time.SimulationTime;
             runningInputPacket.value = running;
 
             m_Client.MessageSender.QueueMessage(ClientTag.RunningInput, runningInputPacket);
@@ -51,7 +53,8 @@ namespace Network.Client
         private void OnJumpingChanged(bool jumping)
         {
             BoolInputPacket jumpingInputPacket = new BoolInputPacket();
-            jumpingInputPacket.fixedTime = Time.fixedTimeAsDouble;
+            jumpingInputPacket.clientID = m_Client.ID;
+            jumpingInputPacket.simulationTime = m_Client.Time.SimulationTime;
             jumpingInputPacket.value = jumping;
 
             m_Client.MessageSender.QueueMessage(ClientTag.JumpingInput, jumpingInputPacket);

@@ -85,6 +85,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UnitData: {fileID: 0}
+  m_Image: {fileID: 4167575547743032145}
   UnityClient: {fileID: 1334011215752515650}
 --- !u!1 &5435181033010976752
 GameObject:
@@ -249,3 +250,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6675278530515651973, guid: e601933b06b9a9446b63aaa7fe15092e, type: 3}
   m_PrefabInstance: {fileID: 4803998062637559680}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4167575547743032145 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8898278507381980369, guid: e601933b06b9a9446b63aaa7fe15092e, type: 3}
+  m_PrefabInstance: {fileID: 4803998062637559680}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

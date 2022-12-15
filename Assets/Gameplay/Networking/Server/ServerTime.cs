@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Network.Server
 {
 
-    public class ServerTime
+    public class ServerTime : INetworkTime
     {
         public float SimulationTime => m_SimulationTime;
         private float m_SimulationTime => Time.fixedTime;

@@ -10,7 +10,7 @@ namespace Debugging.Behaviours
         [SerializeField]
         private Client m_Client;
 
-        private const string m_Key = "SimulationTimeGraph";
+        private const string m_Key = "SimulationTimeVariation";
 
         private float GetSimulationTimeVariation()
         {

@@ -6,7 +6,7 @@ namespace States
 {
     public abstract class BaseState
     {
-        public float DeltaTime => TickMachine.DeltaTime;
+        public float DeltaTime => 0.02f;
 
         protected Unit unit;
         

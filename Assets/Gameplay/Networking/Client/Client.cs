@@ -3,6 +3,7 @@ using DarkRift.Client;
 using DarkRift.Client.Unity;
 using UnityEngine;
 using Network.Shared;
+using UnityEngine.UI;
 
 namespace Network.Client
 {
@@ -16,6 +17,9 @@ namespace Network.Client
         // Shared
         [HideInInspector]
         public NetworkUnitData UnitData;
+
+        [SerializeField]
+        private Image m_Image;
 
         // Client
         [HideInInspector]
@@ -36,6 +40,11 @@ namespace Network.Client
             Time = new ClientTime(this);
 
             m_ClientInput = new ClientInput(this);
+        }
+
+        private void FixedUpdate()
+        {
+            m_Image.color = Time.SimulationTime % 5 == 0 ? Color.white : Color.black;
         }
 
     }

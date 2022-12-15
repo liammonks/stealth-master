@@ -10,7 +10,7 @@ namespace Network.Client
 
     public class ClientMessageSender
     {
-        private const float m_ArtificialLatency = 0.0f;
+        private const float m_ArtificialLatency = 0.1f;
 
         private const float MessageSendRate = 60;
         private const float MessageSendInterval = 1 / MessageSendRate;
@@ -31,11 +31,12 @@ namespace Network.Client
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 writer.Write<T>(serializable);
-                //using (Message message = Message.Create((ushort)tag, writer))
-                //{
-                //    m_Client.UnityClient.SendMessage(message, SendMode.Reliable);
-                //}
-                m_Client.StartCoroutine(SendMessageDelayed(Message.Create((ushort)tag, writer)));
+                using (Message message = Message.Create((ushort)tag, writer))
+                {
+                    m_Client.UnityClient.SendMessage(message, SendMode.Reliable);
+                }
+
+                //m_Client.StartCoroutine(SendMessageDelayed(Message.Create((ushort)tag, writer)));
             }
         }
 
@@ -54,8 +55,8 @@ namespace Network.Client
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 writer.Write<T>(serializable);
-                //m_MessageQueue.Enqueue(Message.Create((ushort)tag, writer));
-                m_Client.StartCoroutine(QueueMessageDelayed(Message.Create((ushort)tag, writer)));
+                m_MessageQueue.Enqueue(Message.Create((ushort)tag, writer));
+                //m_Client.StartCoroutine(QueueMessageDelayed(Message.Create((ushort)tag, writer)));
             }
         }
     

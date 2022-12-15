@@ -30,7 +30,7 @@ public class InterpolateFollow : MonoBehaviour
 
     private void LateUpdate()
     {
-        m_LerpTime += Time.deltaTime / TickMachine.DeltaTime;
+        m_LerpTime += Time.deltaTime / Time.fixedDeltaTime;
         transform.position = Vector2.Lerp(m_LastTickPosition, m_CurrentTickPosition, m_LerpTime);
     }
 }

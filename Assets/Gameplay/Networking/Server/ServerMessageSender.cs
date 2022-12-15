@@ -23,7 +23,7 @@ namespace Network.Server
             }
         }
 
-        private const float m_ArtificialLatency = 0.0f;
+        private const float m_ArtificialLatency = 0.1f;
 
         private const float MessageSendRate = 60;
         private const float MessageSendInterval = 1 / MessageSendRate;
@@ -44,11 +44,12 @@ namespace Network.Server
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 writer.Write<T>(serializable);
-                //using (Message message = Message.Create((ushort)tag, writer))
-                //{
-                //    client.SendMessage(message, SendMode.Reliable);
-                //}
-                m_Server.StartCoroutine(SendMessageDelayed(client, Message.Create((ushort)tag, writer)));
+                using (Message message = Message.Create((ushort)tag, writer))
+                {
+                    client.SendMessage(message, SendMode.Reliable);
+                }
+
+                //m_Server.StartCoroutine(SendMessageDelayed(client, Message.Create((ushort)tag, writer)));
             }
         }
 
@@ -67,8 +68,8 @@ namespace Network.Server
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 writer.Write<T>(serializable);
-                //m_MessageQueue.Enqueue(new ClientMessage(new IClient[] { client }, Message.Create((ushort)tag, writer)));
-                m_Server.StartCoroutine(QueueMessageDelayed(new ClientMessage(new IClient[] { client }, Message.Create((ushort)tag, writer))));
+                m_MessageQueue.Enqueue(new ClientMessage(new IClient[] { client }, Message.Create((ushort)tag, writer)));
+                //m_Server.StartCoroutine(QueueMessageDelayed(new ClientMessage(new IClient[] { client }, Message.Create((ushort)tag, writer))));
             }
         }
 
@@ -77,8 +78,8 @@ namespace Network.Server
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
             {
                 writer.Write<T>(serializable);
-                //m_MessageQueue.Enqueue(new ClientMessage(clients, Message.Create((ushort)tag, writer)));
-                m_Server.StartCoroutine(QueueMessageDelayed(new ClientMessage(clients, Message.Create((ushort)tag, writer))));
+                m_MessageQueue.Enqueue(new ClientMessage(clients, Message.Create((ushort)tag, writer)));
+                //m_Server.StartCoroutine(QueueMessageDelayed(new ClientMessage(clients, Message.Create((ushort)tag, writer))));
             }
         }
 
