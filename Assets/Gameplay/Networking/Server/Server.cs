@@ -5,6 +5,8 @@ using DarkRift.Server;
 using DarkRift.Server.Unity;
 using Network.Shared;
 using UnityEngine.UI;
+using Sirenix.Utilities;
+using System.Linq;
 
 namespace Network.Server
 {
@@ -17,6 +19,8 @@ namespace Network.Server
         // Shared
         [HideInInspector]
         public NetworkUnitData UnitData;
+        [HideInInspector]
+        public NetworkInputBuffer InputBuffer;
 
         [SerializeField]
         public Image m_Image;
@@ -29,6 +33,7 @@ namespace Network.Server
         private void Awake()
         {
             UnitData = GetComponentInChildren<NetworkUnitData>();
+            InputBuffer = GetComponentInChildren<NetworkInputBuffer>();
             MessageReceiver = new ServerMessageReceiver(this);
             MessageSender = new ServerMessageSender(this);
             Time = new ServerTime();
@@ -42,7 +47,6 @@ namespace Network.Server
 
         private void FixedUpdate()
         {
-            //Debug.Log("--SimulationTime: " + Time.SimulationTime);
             m_Image.color = Time.SimulationTime % 5 == 0 ? Color.white : Color.black;
         }
 
@@ -62,17 +66,22 @@ namespace Network.Server
         /// <summary>
         /// Sends all unit data to a client
         /// </summary>
-        /// <param name="client"></param>
-        private void SendUnitData(IClient client)
+        /// <param name="requestingClient"></param>
+        private void SendUnitData(IClient requestingClient)
         {
-            foreach (KeyValuePair<ushort, NetworkUnitData.ClientUnit> kvp in UnitData.ClientUnits)
+            foreach (IClient client in AllClients)
             {
-                SpawnUnitPacket spawnUnitPacket = new SpawnUnitPacket();
-                spawnUnitPacket.ClientID = kvp.Key;
-                spawnUnitPacket.PrefabIndex = kvp.Value.PrefabIndex;
-                spawnUnitPacket.Position = kvp.Value.Unit.transform.position;
+                if (!UnitData.ClientUnits.ContainsKey(client.ID) || client.ID == requestingClient.ID)
+                {
+                    continue;
+                }
 
-                MessageSender.QueueMessage(client, ServerTag.UnitSpawned, spawnUnitPacket);
+                SpawnUnitPacket spawnUnitPacket = new SpawnUnitPacket();
+                spawnUnitPacket.ClientID = client.ID;
+                spawnUnitPacket.PrefabIndex = UnitData.ClientUnitPrefabIndicies[client.ID];
+                spawnUnitPacket.Position = UnitData.ClientUnits[client.ID].transform.position;
+
+                MessageSender.QueueMessage(requestingClient, ServerTag.UnitSpawned, spawnUnitPacket);
             }
         }
 

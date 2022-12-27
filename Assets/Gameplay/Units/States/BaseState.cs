@@ -6,7 +6,6 @@ namespace States
 {
     public abstract class BaseState
     {
-        public float DeltaTime => 0.02f;
 
         protected Unit unit;
         
@@ -18,5 +17,6 @@ namespace States
         public abstract UnitState Initialise();
         public abstract UnitState Execute();
         public abstract void Deinitialise();
+
     }
 }

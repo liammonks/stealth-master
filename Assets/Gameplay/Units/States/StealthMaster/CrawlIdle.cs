@@ -30,7 +30,7 @@ namespace States.StealthMaster
                 {
                     deltaSpeedRequired *= 2.0f;
                 }
-                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
+                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * Time.fixedDeltaTime;
                 unit.Physics.Velocity = velocity;
                 unit.Physics.SkipDrag();
             }
@@ -44,7 +44,7 @@ namespace States.StealthMaster
             // Transition to Idle
             if (toIdle)
             {
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
                 if (transitionDuration == 0.0f) return UnitState.Idle;
             }
             else if (!unit.Input.Crawling && unit.StateMachine.CanStand())

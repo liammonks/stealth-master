@@ -10,9 +10,8 @@ namespace Network.Shared
         SpawnUnitRequest,
         
         // Input
-        MovementInput,
-        RunningInput,
-        JumpingInput,
+        BoolInput,
+        FloatInput,
 
         // Time
         SimulationTimeRequest
@@ -28,17 +27,30 @@ namespace Network.Shared
         SimulationTimeResponse
     }
 
+    public enum BoolInputTag
+    {
+        Jumping,
+        Running
+    }
+
+    public enum FloatInputTag
+    {
+        Movement
+    }
+
     #region Input
 
     public class FloatInputPacket : IDarkRiftSerializable
     {
         public ushort clientID;
+        public FloatInputTag tag;
         public float simulationTime;
         public float value;
 
         public void Serialize(SerializeEvent e)
         {
             e.Writer.Write(clientID);
+            e.Writer.Write((ushort)tag);
             e.Writer.Write(simulationTime);
             e.Writer.Write(value);
         }
@@ -46,6 +58,7 @@ namespace Network.Shared
         public void Deserialize(DeserializeEvent e)
         {
             clientID = e.Reader.ReadUInt16();
+            tag = (FloatInputTag)e.Reader.ReadUInt16();
             simulationTime = e.Reader.ReadSingle();
             value = e.Reader.ReadSingle();
         }
@@ -54,12 +67,14 @@ namespace Network.Shared
     public class BoolInputPacket : IDarkRiftSerializable
     {
         public ushort clientID;
+        public BoolInputTag tag;
         public float simulationTime;
         public bool value;
 
         public void Serialize(SerializeEvent e)
         {
             e.Writer.Write(clientID);
+            e.Writer.Write((ushort)tag);
             e.Writer.Write(simulationTime);
             e.Writer.Write(value);
         }
@@ -67,6 +82,7 @@ namespace Network.Shared
         public void Deserialize(DeserializeEvent e)
         {
             clientID = e.Reader.ReadUInt16();
+            tag = (BoolInputTag)e.Reader.ReadUInt16();
             simulationTime = e.Reader.ReadSingle();
             value = e.Reader.ReadBoolean();
         }

@@ -5,39 +5,32 @@ using UnityEngine;
 
 public class NetworkUnitData : MonoBehaviour
 {
-    public class ClientUnit
-    {
-        public ushort PrefabIndex;
-        public Unit Unit;
-
-        public ClientUnit(ushort prefabIndex, Unit unit)
-        {
-            PrefabIndex = prefabIndex;
-            Unit = unit;
-        }
-    }
-
     public Action<Unit> OnUnitSpawned;
     public Action<Unit> OnUnitDestroyed;
 
-    public List<Unit> UnitPrefabs;
-    public Dictionary<ushort, ClientUnit> ClientUnits = new Dictionary<ushort, ClientUnit>();
+    [SerializeField]
+    private List<Unit> m_UnitPrefabs;
+
+    public Dictionary<ushort, Unit> ClientUnits = new Dictionary<ushort, Unit>();
+    public Dictionary<ushort, ushort> ClientUnitPrefabIndicies = new Dictionary<ushort, ushort>();
 
     public void SpawnUnit(ushort ID, ushort prefabIndex, Vector2 position)
     {
-        Unit unit = Instantiate(UnitPrefabs[prefabIndex], transform);
+        Unit unit = Instantiate(m_UnitPrefabs[prefabIndex], transform);
         unit.transform.SetParent(null);
         unit.transform.position = position;
         unit.transform.name = $"Unit [{ID}]";
-        ClientUnits.Add(ID, new ClientUnit(prefabIndex, unit));
+        ClientUnits.Add(ID, unit);
+        ClientUnitPrefabIndicies.Add(ID, prefabIndex);
         OnUnitSpawned?.Invoke(unit);
     }
 
     public void DestroyUnit(ushort ID)
     {
         if (!ClientUnits.ContainsKey(ID)) { return; }
-        OnUnitDestroyed?.Invoke(ClientUnits[ID].Unit);
-        Destroy(ClientUnits[ID].Unit.gameObject);
+        OnUnitDestroyed?.Invoke(ClientUnits[ID]);
+        Destroy(ClientUnits[ID].gameObject);
         ClientUnits.Remove(ID);
+        ClientUnitPrefabIndicies.Remove(ID);
     }
 }

@@ -25,7 +25,7 @@ namespace States
                 {
                     deltaSpeedRequired *= 2.0f;
                 }
-                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
+                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * Time.fixedDeltaTime;
                 unit.Physics.Velocity = velocity;
                 unit.Physics.SkipDrag();
             }

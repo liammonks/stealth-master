@@ -103,7 +103,7 @@ namespace Network.Client
             if (data.ClientID == m_Client.ID)
             {
                 // Our unit was spawned on the server, we dont need to instantiate a new one, just add ClientUnit data to the dictionary
-                m_Client.UnitData.ClientUnits.Add(m_Client.ID, new NetworkUnitData.ClientUnit(m_Client.ID, PlayerManager.Instance.Unit));
+                m_Client.UnitData.ClientUnits.Add(m_Client.ID, PlayerManager.Instance.Unit);
             }
             else
             {

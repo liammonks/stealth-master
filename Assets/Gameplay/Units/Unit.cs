@@ -1,9 +1,10 @@
+using Network;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public class Unit : SimulationBehaviour
 {
     public UnitInput Input => m_Input;
     public UnitAnimator Animator => m_Animator;
@@ -14,7 +15,7 @@ public class Unit : MonoBehaviour
     public StateMachine StateMachine => m_StateMachine;
     public UnitCollider Collider => m_Collider;
     public BodyState BodyState => m_BodyState;
-
+    
     public bool UpdateFacingDirection { get { return m_UpdateFacingDirection; } set { m_UpdateFacingDirection = value; } }
     public bool FacingRight { get { return m_FacingRight; } set { m_FacingRight = value; } }
 
@@ -67,13 +68,13 @@ public class Unit : MonoBehaviour
         m_WallSpring.Initialise(m_Settings.spring.GetWallSpring(BodyState), Physics.Rigidbody);
     }
 
-    private void FixedUpdate()
+    public override void Simulate(float timeStep)
     {
         UpdateFacing();
         UpdateAiming();
         UpdateAnimator();
         UpdateDrag();
-        UpdateState();
+        UpdateStateMachine();
     }
 
     private void UpdateFacing()
@@ -116,7 +117,7 @@ public class Unit : MonoBehaviour
         m_Physics.CalculateDrag();
     }
 
-    private void UpdateState()
+    private void UpdateStateMachine()
     {
         m_StateMachine.Execute();
     }

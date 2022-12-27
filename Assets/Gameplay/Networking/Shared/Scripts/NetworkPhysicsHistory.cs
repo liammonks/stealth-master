@@ -31,7 +31,7 @@ namespace Network.Shared
         }
 
 
-        public static readonly float HistoryBufferTime = 0.5f;
+        public static readonly float HistoryBufferTime = 1.0f;
 
         private INetworkTime m_NetworkTime;
 
@@ -50,21 +50,47 @@ namespace Network.Shared
 
         public void Rewind(float time)
         {
+            time = RoundToFixedTimeStep(time);
             if (!m_History.ContainsKey(time))
             {
                 Debug.LogError($"Failed to rewind simulation to {time},\nTime was not stored in history, current time is {m_NetworkTime.SimulationTime}");
                 return;
+                //Debug.LogError($"-- Available times in history --");
+                //foreach (float historyTime in m_History.Keys)
+                //{
+                //    Debug.LogError(historyTime);
+                //}
             }
 
-            // Debug data
+            // Revert rigidbodies to point in time
             HistoryEntry entry = m_History[time];
-
             foreach (KeyValuePair<Rigidbody2D, RigidbodyData> rigidbodyData in entry.RigidbodyData)
             {
                 Rigidbody2D rb = rigidbodyData.Key;
                 RigidbodyData data = rigidbodyData.Value;
 
-                DebugExtension.DebugPoint(data.Position, Color.magenta, 0.1f);
+                rb.position = data.Position;
+                rb.velocity = data.Velocity;
+            }
+        }
+
+        public void RecordState(float simulationTime)
+        {
+            // Collect data
+            Dictionary<Rigidbody2D, RigidbodyData> newRigidbodyData = new Dictionary<Rigidbody2D, RigidbodyData>();
+            foreach (Rigidbody2D rb in m_Rigidbodies)
+            {
+                RigidbodyData data = new RigidbodyData(rb.position, rb.velocity);
+                newRigidbodyData.Add(rb, data);
+            }
+
+            if (m_History.ContainsKey(RoundToFixedTimeStep(simulationTime)))
+            {
+                m_History[RoundToFixedTimeStep(simulationTime)] = new HistoryEntry(newRigidbodyData);
+            }
+            else
+            {
+                m_History.Add(RoundToFixedTimeStep(simulationTime), new HistoryEntry(newRigidbodyData));
             }
         }
 
@@ -80,15 +106,9 @@ namespace Network.Shared
 
         private void FixedUpdate()
         {
-            // Collect data
-            Dictionary<Rigidbody2D, RigidbodyData> newRigidbodyData = new Dictionary<Rigidbody2D, RigidbodyData>();
-            foreach (Rigidbody2D rb in m_Rigidbodies)
-            {
-                RigidbodyData data = new RigidbodyData(rb.position, rb.velocity);
-                newRigidbodyData.Add(rb, data);
-            }
-            m_History.Add(m_NetworkTime.SimulationTime, new HistoryEntry(newRigidbodyData));
-            
+            // Record new data
+            RecordState(m_NetworkTime.SimulationTime);
+
             // Clear old data
             List<float> toRemove = new List<float>();
             foreach (float historyEntryTime in m_History.Keys)
@@ -112,13 +132,17 @@ namespace Network.Shared
 
                 foreach (KeyValuePair<Rigidbody2D, RigidbodyData> oldRigidbodyData in entry.RigidbodyData)
                 {
-                    Rigidbody2D rb = oldRigidbodyData.Key;
                     RigidbodyData data = oldRigidbodyData.Value;
 
                     DebugExtension.DebugPoint(data.Position, Color.red * alpha, 0.1f);
                     Debug.DrawRay(data.Position, data.Velocity, Color.green * alpha);
                 }
             }
+        }
+
+        private float RoundToFixedTimeStep(float toRound)
+        {
+            return Mathf.Round(toRound / Time.fixedDeltaTime) * Time.fixedDeltaTime;
         }
 
     }

@@ -1,9 +1,11 @@
+using DarkRift;
 using UnityEngine;
 
 namespace States
 {
     public class Idle : BaseState
     {
+
         public Idle(Unit a_unit) : base(a_unit) { }
 
         public override UnitState Initialise()
@@ -11,7 +13,7 @@ namespace States
             unit.Animator.Play(UnitAnimationState.Idle);
             return UnitState.Idle;
         }
-        
+
         public override UnitState Execute()
         {
             // Move to desired speed
@@ -26,7 +28,7 @@ namespace States
                 {
                     deltaSpeedRequired *= 2.0f;
                 }
-                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * DeltaTime;
+                velocity.x += deltaSpeedRequired * unit.Settings.groundAcceleration * Time.fixedDeltaTime;
                 unit.Physics.Velocity = velocity;
                 unit.Physics.SkipDrag();
 
@@ -55,5 +57,6 @@ namespace States
         {
 
         }
+
     }
 }

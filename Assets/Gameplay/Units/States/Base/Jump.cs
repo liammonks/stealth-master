@@ -36,7 +36,7 @@ namespace States
         
         public override UnitState Execute()
         {
-            jumpDuration = Mathf.Max(0.0f, jumpDuration - DeltaTime);
+            jumpDuration = Mathf.Max(0.0f, jumpDuration - Time.fixedDeltaTime);
 
             //Allow player to push towards movement speed while in the air
             if (unit.Input.Movement != 0)
@@ -46,7 +46,7 @@ namespace States
                 {
                     float desiredSpeed = (unit.Input.Running ? unit.Settings.runSpeed : unit.Settings.walkSpeed) * unit.Input.Movement;
                     float deltaSpeedRequired = desiredSpeed - velocity.x;
-                    velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
+                    velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * Time.fixedDeltaTime;
                     unit.Physics.Velocity = velocity;
                 }
             }

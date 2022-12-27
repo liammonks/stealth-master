@@ -21,7 +21,7 @@ namespace States.StealthMaster
             if (toCrawl)
             {
                 // Waiting to enter crawl state
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
                 if (transitionDuration == 0.0f) return UnitState.CrawlIdle;
                 return UnitState.Idle;
             }

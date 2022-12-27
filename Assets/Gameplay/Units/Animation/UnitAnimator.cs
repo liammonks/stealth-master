@@ -160,9 +160,9 @@ public class UnitAnimator : MonoBehaviour
             float t = 0.0f;
             while (t != 1.0f)
             {
-                t = Mathf.Min(t + (Time.deltaTime / duration), 1.0f);
+                t = Mathf.Min(t + (Simulation.TimeStep / duration), 1.0f);
                 m_Unit.transform.position = Vector2.Lerp(initialPosition, position, t);
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForFixedUpdate();
             }
 
             m_Unit.Physics.enabled = true;

@@ -22,7 +22,7 @@ public class HealthBar : MonoBehaviour
         while(t < 1.0f) {
             t = Mathf.Min(t + (Time.deltaTime / lerpDuration), 1.0f);
             lerpedHealthImage.fillAmount = Mathf.Lerp(lerpedHealthImage.fillAmount, percentage, t);
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
     }
 }

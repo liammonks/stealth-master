@@ -20,6 +20,9 @@ namespace Network.Shared
 #endif
 
         [SerializeField]
+        private bool m_Connect = true;
+
+        [SerializeField]
         private GameObject m_ClientPrefab;
 
         [SerializeField]
@@ -29,6 +32,8 @@ namespace Network.Shared
 
         private void Awake()
         {
+            if (!m_Connect) { return; }
+
             if (NetworkType == NetworkType.Server)
             {
                 StartServer();

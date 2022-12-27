@@ -40,7 +40,7 @@ namespace States.StealthMaster
             {
                 // Slide drag while transitioning
                 unit.Physics.SetDragState(UnitPhysics.DragState.Sliding);
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
 
                 // Execute Idle
                 if (transitionDuration == 0.0f)
@@ -57,14 +57,14 @@ namespace States.StealthMaster
             {
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
-                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
+                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * Time.fixedDeltaTime;
                 unit.Physics.Velocity = velocity;
             }
             
             // Re-enable ground spring after delay
             if (!unit.GroundSpring.enabled)
             {
-                stateDuration += DeltaTime;
+                stateDuration += Time.fixedDeltaTime;
                 if (stateDuration >= groundSpringActivationTime || !unit.Input.Crawling)
                 {
                     unit.GroundSpring.enabled = true;

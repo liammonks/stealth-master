@@ -7908,6 +7908,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1300154583}
   - component: {fileID: 1300154582}
+  - component: {fileID: 1300154587}
   - component: {fileID: 1300154585}
   - component: {fileID: 1300154584}
   - component: {fileID: 1300154586}
@@ -8014,7 +8015,7 @@ MonoBehaviour:
       Data: Debugging/Debug
     - Name: $v
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -8078,6 +8079,18 @@ MonoBehaviour:
   m_DefaultActionMap: Level
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1300154587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300154581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64cf2fd481453d94dbc4fd019699e898, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1303820705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6720445217377662097, guid: 7ecccf1f98a3f9c42a448e0509f2fc51, type: 3}

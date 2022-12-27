@@ -32,11 +32,11 @@ namespace States
         
         public override UnitState Execute()
         {
-            stateDuration += DeltaTime;
+            stateDuration += Time.fixedDeltaTime;
 
             if (toIdle)
             {
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - DeltaTime);
+                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
 
                 // Execute Run / Idle
                 if (transitionDuration == 0.0f)

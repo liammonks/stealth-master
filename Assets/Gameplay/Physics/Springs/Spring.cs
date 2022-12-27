@@ -56,7 +56,7 @@ public class Spring : MonoBehaviour
         IEnumerator UpdateSettingsCoroutine()
         {
             SpringSettings originalSettings = m_Settings.Clone();
-            float t = Time.deltaTime / interpDuration;
+            float t = Simulation.TimeStep / interpDuration;
             do
             {
                 m_Settings.position = Vector2.Lerp(originalSettings.position, newSettings.position, t);
@@ -67,8 +67,8 @@ public class Spring : MonoBehaviour
                 m_Settings.force = Mathf.Lerp(originalSettings.force, newSettings.force, t);
                 m_Settings.damping = Mathf.Lerp(originalSettings.damping, newSettings.damping, t);
                 m_Settings.slipAngle = Mathf.Lerp(originalSettings.slipAngle, newSettings.slipAngle, t);
-                yield return new WaitForEndOfFrame();
-                t += Time.deltaTime / interpDuration;
+                yield return new WaitForFixedUpdate();
+                t += Simulation.TimeStep / interpDuration;
             }
             while (t < 1.0f);
         }

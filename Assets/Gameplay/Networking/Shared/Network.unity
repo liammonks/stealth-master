@@ -167,5 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ec799a43d513d148803d1c0dbd0baac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Connect: 1
   m_ClientPrefab: {fileID: 4029812548801211110, guid: 8856a25cea7fd454d9876fbb7d584120, type: 3}
   m_ServerPrefab: {fileID: 7667975851666670280, guid: aee6c646b6c3dbe448ffd1b14dcfb513, type: 3}

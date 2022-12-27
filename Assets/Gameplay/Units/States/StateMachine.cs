@@ -8,7 +8,7 @@ using States;
 using System;
 
 [RequireComponent(typeof(Unit))]
-public class StateMachine : MonoBehaviour
+public abstract class StateMachine : MonoBehaviour
 {
     public UnitState CurrentState => currentState;
     public UnitState PreviousState => previousState;
@@ -24,13 +24,16 @@ public class StateMachine : MonoBehaviour
     private UnitState lastFrameState = UnitState.Null;
     private LayerMask m_EnvironmentMask = 8;
 
-    protected virtual void Start()
+    protected abstract void CollectStates();
+
+    private void Awake()
     {
         unit = GetComponent<Unit>();
+        CollectStates();
 
-        foreach (UnitState state in Enum.GetValues(typeof(UnitState)))
+        foreach (UnitState state in states.Keys)
         {
-            statesLastExecutionTime.Add(state, Time.time - 1.0f);
+            statesLastExecutionTime.Add(state, float.NegativeInfinity);
         }
     }
 
@@ -41,7 +44,7 @@ public class StateMachine : MonoBehaviour
             previousState = lastFrameState;
             if (previousState != UnitState.Null)
             {
-                statesLastExecutionTime[previousState] = Time.time;
+                statesLastExecutionTime[previousState] = Simulation.Time;
                 states[previousState].Deinitialise();
             }
             states[currentState].Initialise();
@@ -58,7 +61,7 @@ public class StateMachine : MonoBehaviour
 
     public float GetLastExecutionTime(UnitState state)
     {
-        return Time.time - statesLastExecutionTime[state];
+        return Simulation.Time - statesLastExecutionTime[state];
     }
 
     public bool CanCrawl()

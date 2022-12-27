@@ -37,7 +37,7 @@ namespace States
         
         public override UnitState Execute()
         {
-            stateDuration += DeltaTime;
+            stateDuration += Time.fixedDeltaTime;
             if (!animationEnded || stateDuration < inputLockDuration) { return UnitState.LedgeGrab; }
 
             if (unit.FacingRight)

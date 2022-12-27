@@ -17,7 +17,7 @@ namespace States.StealthMaster
             UnitState baseReturnState = base.Execute();
             if (baseReturnState != UnitState.Slide) { return baseReturnState; }
 
-            stateDuration += DeltaTime;
+            stateDuration += Time.fixedDeltaTime;
 
             // Grab on to ledges below
             if (stateDuration <= 0.3f && unit.StateMachine.PreviousState != UnitState.Dive)

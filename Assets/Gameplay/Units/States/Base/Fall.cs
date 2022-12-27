@@ -26,7 +26,7 @@ namespace States
         
         public override UnitState Execute()
         {
-            stateDuration += DeltaTime;
+            stateDuration += Time.fixedDeltaTime;
             Vector2 velocity = unit.Physics.Velocity;
             if (velocity.y <= 0)
             {
@@ -38,7 +38,7 @@ namespace States
             {
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
-                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
+                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * Time.fixedDeltaTime;
                 unit.Physics.Velocity = velocity;
                 unit.Physics.SkipDrag();
             }

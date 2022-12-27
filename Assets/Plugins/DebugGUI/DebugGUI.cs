@@ -85,6 +85,7 @@ public class DebugGUI : MonoBehaviour
     /// </summary>
     public static void RemovePersistent(object key)
     {
+        if (_instance == null) { return; }
         Instance.InstanceRemovePersistent(key);
     }
 
@@ -134,7 +135,7 @@ public class DebugGUI : MonoBehaviour
     /// <param name="key">The graph's key</param>
     public static void RemoveGraph(object key)
     {
-        if (Instance == null) { return; }
+        if (_instance == null) { return; }
         Instance.InstanceRemoveGraph(key);
     }
 

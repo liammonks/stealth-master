@@ -44,14 +44,11 @@ namespace Network.Server
                         case ClientTag.SpawnUnitRequest:
                             OnSpawnUnitRequest(args.Client, reader.ReadSerializable<SpawnUnitRequest>());
                             break;
-                        case ClientTag.MovementInput:
-                            OnMovementInput(args.Client, reader.ReadSerializable<FloatInputPacket>());
+                        case ClientTag.BoolInput:
+                            OnBoolInputReceived(args.Client, reader.ReadSerializable<BoolInputPacket>());
                             break;
-                        case ClientTag.RunningInput:
-                            OnRunningInput(args.Client, reader.ReadSerializable<BoolInputPacket>());
-                            break;
-                        case ClientTag.JumpingInput:
-                            OnJumpingInput(args.Client, reader.ReadSerializable<BoolInputPacket>());
+                        case ClientTag.FloatInput:
+                            OnFloatInputReceived(args.Client, reader.ReadSerializable<FloatInputPacket>());
                             break;
                         default:
                             Debug.LogError("Message received with unknown tag!");
@@ -84,23 +81,18 @@ namespace Network.Server
 
         #region Receive Input
 
-        private void OnMovementInput(IClient sender, FloatInputPacket input)
+        private void OnBoolInputReceived(IClient sender, BoolInputPacket input)
         {
             if (!m_Server.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
-            m_Server.UnitData.ClientUnits[sender.ID].Unit.Input.Movement = input.value;
+            Debug.Log($"Input Message Received");
+            Debug.Log($"Client timestamp {input.simulationTime}\nServer timestamp {m_Server.Time.SimulationTime}");
+            m_Server.InputBuffer.RegisterBoolInput(input);
         }
 
-        private void OnRunningInput(IClient sender, BoolInputPacket input)
+        private void OnFloatInputReceived(IClient sender, FloatInputPacket input)
         {
             if (!m_Server.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
-            m_Server.UnitData.ClientUnits[sender.ID].Unit.Input.Running = input.value;
-        }
-
-        private void OnJumpingInput(IClient sender, BoolInputPacket input)
-        {
-            if (!m_Server.UnitData.ClientUnits.ContainsKey(sender.ID)) { return; }
-            m_Server.UnitData.ClientUnits[sender.ID].Unit.Input.Jumping = input.value;
-            //m_PhysicsHistory.Rewind(input.simulationTime);
+            m_Server.InputBuffer.RegisterFloatInput(input);
         }
 
         #endregion

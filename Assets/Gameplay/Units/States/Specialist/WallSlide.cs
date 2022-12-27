@@ -26,7 +26,7 @@ namespace States
             {
                 float desiredSpeed = unit.Settings.walkSpeed * unit.Input.Movement;
                 float deltaSpeedRequired = desiredSpeed - velocity.x;
-                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * DeltaTime;
+                velocity.x += deltaSpeedRequired * unit.Settings.airAcceleration * Time.fixedDeltaTime;
                 unit.Physics.Velocity = velocity;
             }
             // Execute Idle

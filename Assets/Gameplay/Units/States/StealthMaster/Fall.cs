@@ -16,7 +16,7 @@ namespace States.StealthMaster
         
         public override UnitState Execute()
         {
-            stateDuration += DeltaTime;
+            stateDuration += Time.fixedDeltaTime;
             UnitState state = base.Execute();
             if (state != UnitState.Fall) return state;
 

@@ -29,7 +29,7 @@ namespace States.StealthMaster
             if (unit.Input.Crawling) { return UnitState.Dive; }
 
             // Continue WallJump
-            animationDuration = Mathf.Max(0, animationDuration - DeltaTime);
+            animationDuration = Mathf.Max(0, animationDuration - Time.fixedDeltaTime);
             if (animationDuration != 0) { return UnitState.WallJump; }
 
             return UnitState.Fall;

@@ -1,2 +1,1 @@
-draw_latency 1
-draw_simulationTimeVariation 2
+draw_simulationTime 1
