@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Gameplay/Networking/Shared/Network.unity
     guid: a2ba362ca16a33843951ce2467db679a
   - enabled: 1
+    path: Assets/Gameplay/Levels/Empty/Level_Empty.unity
+    guid: 101e61a9591de8b408ad23976049fef8
+  - enabled: 1
     path: Assets/Gameplay/Levels/Parkour/Level_Parkour.unity
     guid: cbb8393634873e74c8e09649ab813c05
   m_configObjects:

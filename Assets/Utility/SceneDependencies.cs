@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
-using Network.Shared;
 
 public class SceneDependencies : SerializedMonoBehaviour
 {
