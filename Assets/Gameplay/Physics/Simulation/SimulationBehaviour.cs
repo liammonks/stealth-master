@@ -28,12 +28,12 @@ public abstract class SimulationBehaviour : MonoBehaviour, IRollback
 
     protected virtual void Awake()
     {
-        Simulation.RegisterSimulationBehaviour(this);
+        Simulation.Instance.RegisterSimulationBehaviour(this);
     }
 
     protected virtual void OnDestroy()
     {
-        Simulation.UnregisterSimulationBehaviour(this);
+        Simulation.Instance?.UnregisterSimulationBehaviour(this);
     }
 
     public abstract void Simulate(float timeStep);

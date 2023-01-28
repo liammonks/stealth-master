@@ -13,9 +13,9 @@ public class UnitInput : MonoBehaviour, IRollback
     public struct UnitInputData : IDarkRiftSerializable
     {
         public float movement;
+        public bool jumping;
         public bool running;
         public bool crawling;
-        public bool jumping;
         public bool melee;
         public Vector2 mouseWorldPosition;
         public bool gadgetPrimary;
@@ -23,12 +23,16 @@ public class UnitInput : MonoBehaviour, IRollback
 
         public void Deserialize(DeserializeEvent e)
         {
-            throw new NotImplementedException();
+            e.Reader.ReadSingle();
+            e.Reader.ReadBoolean();
+            e.Reader.ReadBoolean();
         }
 
         public void Serialize(SerializeEvent e)
         {
-            throw new NotImplementedException();
+            e.Writer.Write(movement);
+            e.Writer.Write(jumping);
+            e.Writer.Write(running);
         }
     }
 
@@ -37,13 +41,13 @@ public class UnitInput : MonoBehaviour, IRollback
 
     #region Properties
     [ShowInInspector]
-    public float Movement => inputData.movement;
+    public float Movement => m_Data.movement;
 
     [ShowInInspector]
-    public bool Jumping => inputData.jumping;
+    public bool Jumping => m_Data.jumping;
 
     [ShowInInspector]
-    public bool Running;
+    public bool Running => m_Data.running;
 
     [ShowInInspector]
     public bool Crawling;
@@ -61,7 +65,9 @@ public class UnitInput : MonoBehaviour, IRollback
     private bool m_JumpingInput;
     private float m_JumpingActivationTime = -1.0f;
 
-    private bool m_Running;
+    private bool m_RunningInput;
+    private float m_RunningActivationTime = -1.0f;
+
     private bool m_Crawling;
     private bool m_Melee;
     private Vector2 m_MouseWorldPosition;
@@ -69,17 +75,29 @@ public class UnitInput : MonoBehaviour, IRollback
     private bool m_GadgetSecondary;
     #endregion
 
-    private UnitInputData inputData = new UnitInputData();
+    private UnitInputData m_Data = new UnitInputData();
 
     public void Initialise()
     {
+        Simulation.Instance.RegisterUnitInput(this);
         SetPlayerControl(m_PlayerControlled);
     }
 
     public void PrepareInput()
     {
-       if (Simulation.Time - m_MovementActivationTime > Simulation.TimeStep) { inputData.movement = m_MovementInput; }
-       if (Simulation.Time - m_JumpingActivationTime > Simulation.TimeStep) { inputData.jumping = false; }
+       if (Simulation.Time - m_MovementActivationTime > Simulation.TimeStep) { m_Data.movement = m_MovementInput; }
+       if (Simulation.Time - m_JumpingActivationTime > Simulation.TimeStep) { m_Data.jumping = false; }
+       if (Simulation.Time - m_RunningActivationTime > Simulation.TimeStep) { m_Data.running = m_RunningInput; }
+    }
+
+    public List<StateData> GetSimulationState()
+    {
+        return new List<StateData> { new StateData(this, m_Data) };
+    }
+
+    public void SetSimulationState(IDarkRiftSerializable data)
+    {
+        m_Data = (UnitInputData)data;
     }
 
     private void SetPlayerControl(bool playerControlled)
@@ -108,6 +126,11 @@ public class UnitInput : MonoBehaviour, IRollback
         }
     }
 
+    private void OnDestroy()
+    {
+        Simulation.Instance?.UnregisterUnitInput(this);
+    }
+
     #region Input Listeners
 
     private void OnMovement(InputValue value)
@@ -116,7 +139,7 @@ public class UnitInput : MonoBehaviour, IRollback
         if (m_MovementInput != 0)
         {
             m_MovementActivationTime = Simulation.Time;
-            inputData.movement = m_MovementInput;
+            m_Data.movement = m_MovementInput;
         }
     }
 
@@ -126,13 +149,18 @@ public class UnitInput : MonoBehaviour, IRollback
         if (m_JumpingInput)
         {
             m_JumpingActivationTime = Simulation.Time;
-            inputData.jumping = true;
+            m_Data.jumping = true;
         }
     }
 
     private void OnRun(InputValue value)
     {
-        //Running = value.Get<float>() == 1.0f;
+        m_RunningInput = value.Get<float>() == 1.0f;
+        if (m_RunningInput)
+        {
+            m_RunningActivationTime = Simulation.Time;
+            m_Data.running = true;
+        }
     }
 
     private void OnCrawl(InputValue value)
@@ -218,17 +246,4 @@ public class UnitInput : MonoBehaviour, IRollback
 
     #endregion
 
-    #region Rollback
-
-    public List<StateData> GetSimulationState()
-    {
-        return new List<StateData> { new StateData(this, inputData) };
-    }
-
-    public void SetSimulationState(IDarkRiftSerializable data)
-    {
-        inputData = (UnitInputData)data;
-    }
-
-    #endregion
 }

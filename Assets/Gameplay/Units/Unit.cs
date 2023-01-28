@@ -164,7 +164,6 @@ public class Unit : SimulationBehaviour
         unitData.groundSpringActive = m_GroundSpring.enabled;
 
         data.Add(new StateData(this, unitData));
-        data.AddRange(Input.GetSimulationState());
         data.AddRange(Physics.GetSimulationState());
         data.AddRange(StateMachine.GetSimulationState());
         return data;

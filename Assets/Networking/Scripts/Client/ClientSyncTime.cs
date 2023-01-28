@@ -64,7 +64,7 @@ public class ClientSyncTime : MonoBehaviour
 
         // Offset time, reduce offset multiplier the more accurate our variance is
         float timeDifferenceMultiplier = Mathf.Clamp(timeDifferenceVariance * m_TimeDifferenceVarianceMultiplier, 0, 1);
-        Simulation.OffsetTime(-timeDifference * timeDifferenceMultiplier);
+        Simulation.Instance.OffsetTime(-timeDifference * timeDifferenceMultiplier);
 
         if (true)
         {

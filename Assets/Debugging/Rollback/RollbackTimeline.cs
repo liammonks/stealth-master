@@ -126,7 +126,11 @@ public class RollbackTimeline : MonoBehaviour
     {
         m_StateDataOutput.text = string.Empty;
 
-        foreach (StateData stateData in Simulation.Instance.StateBuffer[m_StateDataTimes[m_SelectedStateDataIndex]])
+        List<StateData> allStateData = new List<StateData>();
+        allStateData.AddRange(Simulation.Instance.StateBuffer[m_StateDataTimes[m_SelectedStateDataIndex]]);
+        allStateData.AddRange(Simulation.Instance.InputBuffer[m_StateDataTimes[m_SelectedStateDataIndex]]);
+
+        foreach (StateData stateData in allStateData)
         {
             m_StateDataOutput.text += $"<b>{stateData.owner.GetType()}</b>";
 
