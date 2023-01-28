@@ -7994,7 +7994,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 5
     - Name: 
       Entry: 7
       Data: 
@@ -8003,7 +8003,7 @@ MonoBehaviour:
       Data: Gameplay/Player/Player
     - Name: $v
       Entry: 3
-      Data: 0
+      Data: 18446744073709551611
     - Name: 
       Entry: 8
       Data: 
@@ -8015,7 +8015,7 @@ MonoBehaviour:
       Data: Debugging/Debug
     - Name: $v
       Entry: 3
-      Data: 2
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
@@ -8027,7 +8027,31 @@ MonoBehaviour:
       Data: Scenes/Global
     - Name: $v
       Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Networking/Scenes/Client
+    - Name: $v
+      Entry: 3
       Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Networking/Scenes/Server
+    - Name: $v
+      Entry: 3
+      Data: 4
     - Name: 
       Entry: 8
       Data: 

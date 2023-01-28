@@ -12,9 +12,9 @@ public class NetworkTimeDebug : MonoBehaviour
     private void Update()
     {
         float timeDecimal = Simulation.Time - (float)Math.Truncate(Simulation.Time);
-        left.color = (timeDecimal >= 0.0f && timeDecimal < 0.25f) ? Color.white : Color.black;
-        top.color = (timeDecimal >= 0.25f && timeDecimal < 0.5f) ? Color.white : Color.black;
-        right.color = (timeDecimal >= 0.5f && timeDecimal < 0.75f) ? Color.white : Color.black;
-        bottom.color = (timeDecimal >= 0.75f && timeDecimal < 1.0f) ? Color.white : Color.black;
+        left.color = (timeDecimal >= 0.0f && timeDecimal < 0.25f) ? Color.white : Color.clear;
+        top.color = (timeDecimal >= 0.25f && timeDecimal < 0.5f) ? Color.white : Color.clear;
+        right.color = (timeDecimal >= 0.5f && timeDecimal < 0.75f) ? Color.white : Color.clear;
+        bottom.color = (timeDecimal >= 0.75f && timeDecimal < 1.0f) ? Color.white : Color.clear;
     }
 }

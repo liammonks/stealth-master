@@ -1,39 +1,85 @@
+using DarkRift;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class UnitInput : MonoBehaviour
+public class UnitInput : MonoBehaviour, IRollback
 {
+    public struct UnitInputData : IDarkRiftSerializable
+    {
+        public float movement;
+        public bool running;
+        public bool crawling;
+        public bool jumping;
+        public bool melee;
+        public Vector2 mouseWorldPosition;
+        public bool gadgetPrimary;
+        public bool gadgetSecondary;
 
-    public static readonly float ActivationDuration = 0.2f;
-    public static readonly float KyoteTime = 0.2f;
+        public void Deserialize(DeserializeEvent e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Serialize(SerializeEvent e)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public bool PlayerControlled => m_PlayerControlled;
     [SerializeField] private bool m_PlayerControlled;
 
     #region Properties
-    public float Movement;
+    [ShowInInspector]
+    public float Movement => inputData.movement;
+
+    [ShowInInspector]
+    public bool Jumping => inputData.jumping;
+
+    [ShowInInspector]
     public bool Running;
+
+    [ShowInInspector]
     public bool Crawling;
-    public bool Jumping;
+
     public bool Melee;
     public Vector2 MouseWorldPosition;
     public bool GadgetPrimary;
     public bool GadgetSecondary;
     #endregion
 
-    #region Events
-    public Action<float> OnMovementChanged;
-    public Action<bool> OnRunningChanged;
-    public Action<bool> OnJumpingChanged;
+    #region Fields
+    private float m_MovementInput;
+    private float m_MovementActivationTime = -1.0f;
+
+    private bool m_JumpingInput;
+    private float m_JumpingActivationTime = -1.0f;
+
+    private bool m_Running;
+    private bool m_Crawling;
+    private bool m_Melee;
+    private Vector2 m_MouseWorldPosition;
+    private bool m_GadgetPrimary;
+    private bool m_GadgetSecondary;
     #endregion
+
+    private UnitInputData inputData = new UnitInputData();
 
     public void Initialise()
     {
         SetPlayerControl(m_PlayerControlled);
+    }
+
+    public void PrepareInput()
+    {
+       if (Simulation.Time - m_MovementActivationTime > Simulation.TimeStep) { inputData.movement = m_MovementInput; }
+       if (Simulation.Time - m_JumpingActivationTime > Simulation.TimeStep) { inputData.jumping = false; }
     }
 
     private void SetPlayerControl(bool playerControlled)
@@ -62,50 +108,57 @@ public class UnitInput : MonoBehaviour
         }
     }
 
-    #region Input
+    #region Input Listeners
 
     private void OnMovement(InputValue value)
     {
-        Movement = Mathf.Clamp(value.Get<float>(), -1.0f, 1.0f);
-        OnMovementChanged?.Invoke(Movement);
-    }
-
-    private void OnRun(InputValue value)
-    {
-        Running = value.Get<float>() == 1.0f;
-        OnRunningChanged?.Invoke(Running);
+        m_MovementInput = Mathf.Clamp(value.Get<float>(), -1.0f, 1.0f);
+        if (m_MovementInput != 0)
+        {
+            m_MovementActivationTime = Simulation.Time;
+            inputData.movement = m_MovementInput;
+        }
     }
 
     private void OnJump(InputValue value)
     {
-        Jumping = value.Get<float>() == 1.0f;
-        OnJumpingChanged?.Invoke(Jumping);
+        m_JumpingInput = value.Get<float>() == 1.0f;
+        if (m_JumpingInput)
+        {
+            m_JumpingActivationTime = Simulation.Time;
+            inputData.jumping = true;
+        }
+    }
+
+    private void OnRun(InputValue value)
+    {
+        //Running = value.Get<float>() == 1.0f;
     }
 
     private void OnCrawl(InputValue value)
     {
-        Crawling = value.Get<float>() == 1.0f;
+        //Crawling = value.Get<float>() == 1.0f;
     }
 
     private void OnMelee(InputValue value)
     {
-        Melee = value.Get<float>() == 1.0f;
+        //Melee = value.Get<float>() == 1.0f;
     }
 
     private void OnMouseMove(InputValue value)
     {
-        Vector3 mouseScreenPosition = value.Get<Vector2>();
-        mouseScreenPosition.z = 1.0f;
+        //Vector3 mouseScreenPosition = value.Get<Vector2>();
+        //mouseScreenPosition.z = 1.0f;
 
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
-        Vector3 direction = (worldPos - Camera.main.transform.position).normalized;
+        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
+        //Vector3 direction = (worldPos - Camera.main.transform.position).normalized;
 
-        Ray ray = Camera.main.ScreenPointToRay(mouseScreenPosition);
-        Plane plane = new Plane(Vector3.forward, new Vector3(0, 0, 0.25f));
-        if (plane.Raycast(ray, out float distance))
-        {
-            MouseWorldPosition = Camera.main.transform.position + (direction * distance);
-        }
+        //Ray ray = Camera.main.ScreenPointToRay(mouseScreenPosition);
+        //Plane plane = new Plane(Vector3.forward, new Vector3(0, 0, 0.25f));
+        //if (plane.Raycast(ray, out float distance))
+        //{
+        //    MouseWorldPosition = Camera.main.transform.position + (direction * distance);
+        //}
     }
 
     private void OnStickMove(InputValue value)
@@ -125,12 +178,12 @@ public class UnitInput : MonoBehaviour
 
     private void OnGadgetPrimary(InputValue value)
     {
-        GadgetPrimary = value.Get<float>() == 1.0f;
+        //GadgetPrimary = value.Get<float>() == 1.0f;
     }
 
     private void OnGadgetSecondary(InputValue value)
     {
-        GadgetSecondary = value.Get<float>() == 1.0f;
+        //GadgetSecondary = value.Get<float>() == 1.0f;
     }
 
     private void OnNextGadget(InputValue value)
@@ -165,4 +218,17 @@ public class UnitInput : MonoBehaviour
 
     #endregion
 
+    #region Rollback
+
+    public List<StateData> GetSimulationState()
+    {
+        return new List<StateData> { new StateData(this, inputData) };
+    }
+
+    public void SetSimulationState(IDarkRiftSerializable data)
+    {
+        inputData = (UnitInputData)data;
+    }
+
+    #endregion
 }

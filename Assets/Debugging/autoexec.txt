@@ -1,1 +1,1 @@
-draw_simulationTime 1
+draw_simulationTime 0

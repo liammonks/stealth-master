@@ -6,7 +6,7 @@ using System.Net;
 
 namespace DarkRift.Client.Unity
 {
-    [CustomEditor(typeof(UnityClient))]
+    [CustomEditor(typeof(ClientConnection))]
     [CanEditMultipleObjects]
     public class UnityClientEditor : Editor
     {

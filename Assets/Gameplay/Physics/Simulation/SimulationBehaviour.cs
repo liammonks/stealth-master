@@ -1,26 +1,45 @@
+using DarkRift;
+using Sirenix.Utilities;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public abstract class SimulationBehaviour : MonoBehaviour
+public interface IRollback
 {
-    public enum SimulationOrder
+    public List<StateData> GetSimulationState();
+    public void SetSimulationState(IDarkRiftSerializable data);
+}
+
+public struct StateData
+{
+    public IRollback owner;
+    public IDarkRiftSerializable data;
+
+    public StateData(IRollback owner, IDarkRiftSerializable data)
     {
-        Default,
-        Rollback
+        this.owner = owner;
+        this.data = data;
     }
+}
 
-    public SimulationOrder Order => m_Order;
-    protected SimulationOrder m_Order = SimulationOrder.Default;
+public abstract class SimulationBehaviour : MonoBehaviour, IRollback
+{
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        OnAwake();
         Simulation.RegisterSimulationBehaviour(this);
     }
 
-    protected virtual void OnAwake() { }
+    protected virtual void OnDestroy()
+    {
+        Simulation.UnregisterSimulationBehaviour(this);
+    }
 
     public abstract void Simulate(float timeStep);
+
+    public abstract List<StateData> GetSimulationState();
+
+    public abstract void SetSimulationState(IDarkRiftSerializable data);
 
 }

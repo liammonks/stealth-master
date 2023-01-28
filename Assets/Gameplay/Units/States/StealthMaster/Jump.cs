@@ -1,9 +1,12 @@
+using DarkRift;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace States.StealthMaster
 {
-    public class Jump : States.Jump
+    public class Jump : States.Jump, IRollback
     {
+
         public Jump(Unit a_unit) : base(a_unit) { }
 
         public override UnitState Initialise()
@@ -17,15 +20,6 @@ namespace States.StealthMaster
             if (state != UnitState.Jump) return state;
             Vector2 velocity = unit.Physics.Velocity;
 
-            // Check Vault (Require Momentum)
-            if (Mathf.Abs(velocity.x) >= unit.Settings.runSpeed * 0.9f)
-            {
-                //UnitState vaultState = StateManager.TryVault(data);
-                //if (vaultState != UnitState.Null)
-                //{
-                //    return vaultState;
-                //}
-            }
             // Wall Slide
             if (unit.WallSpring.Intersecting)
             {

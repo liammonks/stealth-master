@@ -1,10 +1,11 @@
+using DarkRift;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace States
 {
-    public abstract class BaseState
+    public abstract class BaseState : IRollback
     {
 
         protected Unit unit;
@@ -18,5 +19,14 @@ namespace States
         public abstract UnitState Execute();
         public abstract void Deinitialise();
 
+        public virtual List<StateData> GetSimulationState()
+        {
+            return new List<StateData> { };
+        }
+
+        public virtual void SetSimulationState(IDarkRiftSerializable data)
+        {
+            
+        }
     }
 }

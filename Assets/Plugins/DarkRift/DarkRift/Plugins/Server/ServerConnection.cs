@@ -8,7 +8,7 @@ using System.Threading;
 namespace DarkRift.Server.Unity
 {
     [AddComponentMenu("DarkRift/Server")]
-    public class XmlUnityServer : MonoBehaviour
+    public class ServerConnection : MonoBehaviour
     {
         /// <summary>
         ///     The actual server.

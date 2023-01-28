@@ -1,4 +1,6 @@
+using DarkRift;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -7,16 +9,29 @@ namespace States
 {
     public class Jump : BaseState
     {
-        private float jumpDuration = 0;
+        private struct JumpData : IDarkRiftSerializable
+        {
+            public float jumpDuration;
+
+            public void Deserialize(DeserializeEvent e)
+            {
+                jumpDuration = e.Reader.ReadSingle();
+            }
+
+            public void Serialize(SerializeEvent e)
+            {
+                e.Writer.Write(jumpDuration);
+            }
+        }
+
+        private JumpData m_Data = new JumpData();
 
         public Jump(Unit a_unit) : base(a_unit) { }
 
         public override UnitState Initialise()
         {
-            unit.Input.Jumping = false;
-
             unit.Animator.Play(UnitAnimationState.Jump);
-            jumpDuration = unit.Animator.CurrentStateLength;
+            m_Data.jumpDuration = unit.Animator.CurrentStateLength;
             unit.GroundSpring.enabled = false;
 
             Vector2 velocity = unit.Physics.Velocity;
@@ -36,7 +51,7 @@ namespace States
         
         public override UnitState Execute()
         {
-            jumpDuration = Mathf.Max(0.0f, jumpDuration - Time.fixedDeltaTime);
+            m_Data.jumpDuration = Mathf.Max(0.0f, m_Data.jumpDuration - Time.fixedDeltaTime);
 
             //Allow player to push towards movement speed while in the air
             if (unit.Input.Movement != 0)
@@ -52,7 +67,7 @@ namespace States
             }
 
             // End of jump animation
-            if (jumpDuration == 0.0f)
+            if (m_Data.jumpDuration == 0.0f)
             {
                 unit.GroundSpring.enabled = true;
                 return unit.GroundSpring.Intersecting ? UnitState.Idle : UnitState.Fall;
@@ -65,5 +80,19 @@ namespace States
         {
 
         }
+
+        #region Rollback
+
+        public override List<StateData> GetSimulationState()
+        {
+            return new List<StateData> { new StateData(this, m_Data) };
+        }
+
+        public override void SetSimulationState(IDarkRiftSerializable data)
+        {
+            m_Data = (JumpData)data;
+        }
+
+        #endregion
     }
 }

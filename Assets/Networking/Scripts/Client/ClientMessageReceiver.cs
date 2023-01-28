@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class ClientMessageReceiver : MonoBehaviour
 {
-    private UnityClient m_Client;
+    private ClientConnection m_Client;
     private ClientSyncTime m_SyncTime;
 
     private void Awake()
     {
         m_SyncTime = GetComponent<ClientSyncTime>();
-        m_Client = GetComponent<UnityClient>();
+        m_Client = GetComponent<ClientConnection>();
         m_Client.MessageReceived += OnMessageReceived;
     }
 

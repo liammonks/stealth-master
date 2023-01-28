@@ -11,7 +11,7 @@ public class ServerMessageReceiver : MonoBehaviour
 
     private void Start()
     {
-        m_Server = GetComponent<XmlUnityServer>().Server;
+        m_Server = GetComponent<ServerConnection>().Server;
         m_Server.ClientManager.ClientConnected += OnClientConnected;
         m_Server.ClientManager.ClientDisconnected += OnClientDisconnected;
     }

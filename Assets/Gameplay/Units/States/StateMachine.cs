@@ -6,22 +6,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using States;
 using System;
+using DarkRift;
+using System.Linq;
 
 [RequireComponent(typeof(Unit))]
-public abstract class StateMachine : MonoBehaviour
+public abstract class StateMachine : MonoBehaviour, IRollback
 {
-    public UnitState CurrentState => currentState;
-    public UnitState PreviousState => previousState;
+    public UnitState CurrentState => m_CurrentState;
+    public UnitState PreviousState => m_PreviousState;
 
     public Action<UnitState> OnStateChanged;
 
     protected Unit unit;
     protected Dictionary<UnitState, BaseState> states = new Dictionary<UnitState, BaseState>();
-    protected Dictionary<UnitState, float> statesLastExecutionTime = new Dictionary<UnitState, float>();
+    protected Dictionary<UnitState, float> m_StatesLastExecutionTime = new Dictionary<UnitState, float>();
     
-    private UnitState currentState = UnitState.Idle;
-    private UnitState previousState = UnitState.Null;
-    private UnitState lastFrameState = UnitState.Null;
+    private UnitState m_CurrentState = UnitState.Idle;
+    private UnitState m_PreviousState = UnitState.Null;
+    private UnitState m_LastFrameState = UnitState.Null;
     private LayerMask m_EnvironmentMask = 8;
 
     protected abstract void CollectStates();
@@ -33,25 +35,25 @@ public abstract class StateMachine : MonoBehaviour
 
         foreach (UnitState state in states.Keys)
         {
-            statesLastExecutionTime.Add(state, float.NegativeInfinity);
+            m_StatesLastExecutionTime.Add(state, float.NegativeInfinity);
         }
     }
 
     public void Execute()
     {
-        if (currentState != lastFrameState)
+        if (m_CurrentState != m_LastFrameState)
         {
-            previousState = lastFrameState;
-            if (previousState != UnitState.Null)
+            m_PreviousState = m_LastFrameState;
+            if (m_PreviousState != UnitState.Null)
             {
-                statesLastExecutionTime[previousState] = Simulation.Time;
-                states[previousState].Deinitialise();
+                m_StatesLastExecutionTime[m_PreviousState] = Simulation.Time;
+                states[m_PreviousState].Deinitialise();
             }
-            states[currentState].Initialise();
-            OnStateChanged?.Invoke(currentState);
+            states[m_CurrentState].Initialise();
+            OnStateChanged?.Invoke(m_CurrentState);
         }
-        lastFrameState = currentState;
-        currentState = states[currentState].Execute();
+        m_LastFrameState = m_CurrentState;
+        m_CurrentState = states[m_CurrentState].Execute();
     }
 
     public BaseState GetStateClass(UnitState state)
@@ -61,8 +63,11 @@ public abstract class StateMachine : MonoBehaviour
 
     public float GetLastExecutionTime(UnitState state)
     {
-        return Simulation.Time - statesLastExecutionTime[state];
+        return Simulation.Time - m_StatesLastExecutionTime[state];
     }
+
+
+    #region State Helpers
 
     public bool CanCrawl()
     {
@@ -334,4 +339,64 @@ public abstract class StateMachine : MonoBehaviour
 
         return false;
     }
+
+    #endregion
+
+    #region Rollback
+
+    private struct StateMachineData : IDarkRiftSerializable
+    {
+        public ushort currentState;
+        public ushort previousState;
+        public ushort lastFrameState;
+        public float[] statesLastExecutionTime;
+
+        public void Deserialize(DeserializeEvent e)
+        {
+            currentState = e.Reader.ReadUInt16();
+            previousState = e.Reader.ReadUInt16();
+            lastFrameState = e.Reader.ReadUInt16();
+            statesLastExecutionTime = e.Reader.ReadSingles();
+        }
+
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(currentState);
+            e.Writer.Write(previousState);
+            e.Writer.Write(lastFrameState);
+            e.Writer.Write(statesLastExecutionTime);
+        }
+    }
+
+    public List<StateData> GetSimulationState()
+    {
+        List<StateData> data = new List<StateData>();
+
+        StateMachineData stateMachineData = new StateMachineData();
+        stateMachineData.currentState = (ushort)m_CurrentState;
+        stateMachineData.previousState = (ushort)m_PreviousState;
+        stateMachineData.lastFrameState = (ushort)m_LastFrameState;
+        stateMachineData.statesLastExecutionTime = m_StatesLastExecutionTime.Values.ToArray();
+
+        data.Add(new StateData(this, stateMachineData));
+        data.AddRange(states[m_CurrentState].GetSimulationState());
+
+        return data;
+    }
+
+    public void SetSimulationState(IDarkRiftSerializable data)
+    {
+        m_CurrentState = (UnitState)((StateMachineData)data).currentState;
+        m_PreviousState = (UnitState)((StateMachineData)data).previousState;
+        m_LastFrameState = (UnitState)((StateMachineData)data).lastFrameState;
+
+        UnitState[] states = m_StatesLastExecutionTime.Keys.ToArray();
+        for (int i = 0; i < states.Length; ++i)
+        {
+            m_StatesLastExecutionTime[states[i]] = ((StateMachineData)data).statesLastExecutionTime[i];
+        }
+    }
+
+    #endregion
+
 }

@@ -9,6 +9,11 @@ public class ServerMessageSender : MonoBehaviour
     private static ServerMessageSender m_Instance;
     private static DarkRiftServer m_Server;
 
+    private void Start()
+    {
+        m_Instance = this;
+        m_Server = GetComponent<ServerConnection>().Server;
+    }
 
     public static void SendMessage<T>(Tag tag, T serializable) where T : IDarkRiftSerializable
     {
@@ -81,9 +86,4 @@ public class ServerMessageSender : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        m_Instance = this;
-        m_Server = GetComponent<XmlUnityServer>().Server;
-    }
 }

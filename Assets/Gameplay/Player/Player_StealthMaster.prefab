@@ -13,7 +13,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6925769450969489532, guid: ed11602f6380c9b4e94e52c1689cec9f, type: 3}
       propertyPath: m_Name
-      value: StealthMaster
+      value: Player_StealthMaster
       objectReference: {fileID: 0}
     - target: {fileID: 6925769450969489535, guid: ed11602f6380c9b4e94e52c1689cec9f, type: 3}
       propertyPath: m_RootOrder
@@ -57,6 +57,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6925769450969489535, guid: ed11602f6380c9b4e94e52c1689cec9f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6925769451745719251, guid: ed11602f6380c9b4e94e52c1689cec9f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6927982563196977215, guid: ed11602f6380c9b4e94e52c1689cec9f, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7161238240834014539, guid: ed11602f6380c9b4e94e52c1689cec9f, type: 3}

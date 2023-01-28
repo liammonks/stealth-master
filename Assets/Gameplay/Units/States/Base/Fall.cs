@@ -4,6 +4,7 @@ namespace States
 {
     public class Fall : BaseState
     {
+        private const float kyoteTime = 0.2f;
         private float stateDuration;
 
         public Fall(Unit a_unit) : base(a_unit) { }
@@ -50,7 +51,7 @@ namespace States
             }
             
             // Jump (Kyote Time)
-            if (unit.Input.Jumping && stateDuration <= UnitInput.KyoteTime)
+            if (unit.Input.Jumping && stateDuration <= kyoteTime)
             {
                 if (unit.StateMachine.PreviousState == UnitState.Idle || unit.StateMachine.PreviousState == UnitState.Run)
                 {

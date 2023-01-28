@@ -1,6 +1,11 @@
+using System;
+
+[Flags]
 public enum NetworkType
 {
-    Client,
-    Server,
-    Both
+    Offline = 1,
+    Client  = 2,
+    Server  = 4,
+    Host    = Client | Server,
+    Any     = Offline | Client | Server
 }

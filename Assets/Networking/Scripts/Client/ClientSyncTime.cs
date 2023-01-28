@@ -11,7 +11,7 @@ public class ClientSyncTime : MonoBehaviour
     private const float m_LatencyHistorySize = 3;
     private List<float> m_LatencyHistory = new List<float>();
 
-    private const float m_TimeDifferenceVarianceMultiplier = 10;
+    private const float m_TimeDifferenceVarianceMultiplier = 1;
     private const float m_TimeDifferenceHistorySize = 3;
     private List<float> m_TimeDifferenceHistory = new List<float>();
 

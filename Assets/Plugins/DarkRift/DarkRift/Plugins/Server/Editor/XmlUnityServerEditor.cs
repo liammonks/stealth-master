@@ -9,7 +9,7 @@ using System.Net;
 
 namespace DarkRift.Server.Unity
 {
-    [CustomEditor(typeof(XmlUnityServer))]
+    [CustomEditor(typeof(ServerConnection))]
     [CanEditMultipleObjects]
     public class XmlUnityClientEditor : Editor
     {

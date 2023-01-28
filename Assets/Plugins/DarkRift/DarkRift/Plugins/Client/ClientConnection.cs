@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 namespace DarkRift.Client.Unity
 {
     [AddComponentMenu("DarkRift/Client")]
-	public sealed class UnityClient : MonoBehaviour
+	public sealed class ClientConnection : MonoBehaviour
 	{
         /// <summary>
         ///     The IP address this client connects to.

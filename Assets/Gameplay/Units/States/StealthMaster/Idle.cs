@@ -1,28 +1,48 @@
+using DarkRift;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace States.StealthMaster
 {
+
     public class Idle : States.Idle
     {
-        private bool toCrawl = false;
-        private float transitionDuration = 0.0f;
+        public struct IdleData : IDarkRiftSerializable
+        {
+            public bool toCrawl;
+            public float transitionDuration;
+
+            public void Deserialize(DeserializeEvent e)
+            {
+                toCrawl = e.Reader.ReadBoolean();
+                transitionDuration = e.Reader.ReadSingle();
+            }
+
+            public void Serialize(SerializeEvent e)
+            {
+                e.Writer.Write(toCrawl);
+                e.Writer.Write(transitionDuration);
+            }
+        }
+
+        private IdleData m_Data = new IdleData();
 
         public Idle(Unit a_unit) : base(a_unit) { }
 
         public override UnitState Initialise()
         {
-            toCrawl = false;
-            transitionDuration = 0.0f;
+            m_Data.toCrawl = false;
+            m_Data.transitionDuration = 0.0f;
             return base.Initialise();
         }
         
         public override UnitState Execute()
         {
-            if (toCrawl)
+            if (m_Data.toCrawl)
             {
                 // Waiting to enter crawl state
-                transitionDuration = Mathf.Max(0.0f, transitionDuration - Time.fixedDeltaTime);
-                if (transitionDuration == 0.0f) return UnitState.CrawlIdle;
+                m_Data.transitionDuration = Mathf.Max(0.0f, m_Data.transitionDuration - Time.fixedDeltaTime);
+                if (m_Data.transitionDuration == 0.0f) return UnitState.CrawlIdle;
                 return UnitState.Idle;
             }
 
@@ -61,11 +81,25 @@ namespace States.StealthMaster
 
             // Play stand to crawl, wait before entering state
             unit.Animator.Play(UnitAnimationState.StandToCrawl);
-            transitionDuration = unit.Animator.CurrentStateLength;
-            unit.SetBodyState(BodyState.Crawling, transitionDuration);
-            toCrawl = true;
+            m_Data.transitionDuration = unit.Animator.CurrentStateLength;
+            unit.SetBodyState(BodyState.Crawling, m_Data.transitionDuration);
+            m_Data.toCrawl = true;
             return true;
         }
+
+        #region Rollback
+
+        public override List<StateData> GetSimulationState()
+        {
+            return new List<StateData> { new StateData(this, m_Data) };
+        }
+
+        public override void SetSimulationState(IDarkRiftSerializable data)
+        {
+            m_Data = (IdleData)data;
+        }
+
+        #endregion
     }
 
 }

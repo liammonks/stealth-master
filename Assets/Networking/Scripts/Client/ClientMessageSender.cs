@@ -7,7 +7,7 @@ using UnityEngine;
 public class ClientMessageSender : MonoBehaviour
 {
     private static ClientMessageSender m_Instance;
-    private static UnityClient m_Client;
+    private static ClientConnection m_Client;
 
     public static void SendMessage<T>(Tag tag, T serializable) where T : IDarkRiftSerializable
     {
@@ -36,6 +36,6 @@ public class ClientMessageSender : MonoBehaviour
     private void Awake()
     {
         m_Instance = this;
-        m_Client = GetComponent<UnityClient>();
+        m_Client = GetComponent<ClientConnection>();
     }
 }

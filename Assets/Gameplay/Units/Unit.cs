@@ -1,3 +1,4 @@
+using DarkRift;
 using Network;
 using System;
 using System.Collections;
@@ -40,7 +41,9 @@ public class Unit : SimulationBehaviour
     private BodyState m_BodyState;
     private Transform m_SpringParent;
 
-    public void Awake() {
+    protected override void Awake() {
+        base.Awake();
+
         m_Input = GetComponent<UnitInput>();
         m_Input.Initialise();
 
@@ -70,11 +73,17 @@ public class Unit : SimulationBehaviour
 
     public override void Simulate(float timeStep)
     {
+        UpdateInput();
         UpdateFacing();
         UpdateAiming();
         UpdateAnimator();
         UpdateDrag();
         UpdateStateMachine();
+    }
+
+    private void UpdateInput()
+    {
+        Input.PrepareInput();
     }
 
     private void UpdateFacing()
@@ -131,4 +140,40 @@ public class Unit : SimulationBehaviour
         m_WallSpring.UpdateSettings(m_Settings.spring.GetWallSpring(state), duration);
     }
 
+    #region Rollback
+
+    private struct UnitData : IDarkRiftSerializable
+    {
+        public bool groundSpringActive;
+
+        public void Deserialize(DeserializeEvent e)
+        {
+            groundSpringActive = e.Reader.ReadBoolean();
+        }
+
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(groundSpringActive);
+        }
+    }
+
+    public override List<StateData> GetSimulationState()
+    {
+        List<StateData> data = new List<StateData>();
+        UnitData unitData = new UnitData();
+        unitData.groundSpringActive = m_GroundSpring.enabled;
+
+        data.Add(new StateData(this, unitData));
+        data.AddRange(Input.GetSimulationState());
+        data.AddRange(Physics.GetSimulationState());
+        data.AddRange(StateMachine.GetSimulationState());
+        return data;
+    }
+
+    public override void SetSimulationState(IDarkRiftSerializable data)
+    {
+        m_GroundSpring.enabled = ((UnitData)data).groundSpringActive;
+    }
+
+    #endregion
 }

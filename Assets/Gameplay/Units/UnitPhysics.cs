@@ -1,8 +1,9 @@
+using DarkRift;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitPhysics : MonoBehaviour
+public class UnitPhysics : MonoBehaviour, IRollback
 {
 
     public enum DragState
@@ -106,6 +107,46 @@ public class UnitPhysics : MonoBehaviour
     public void ReleaseDrag()
     {
         m_ShouldOverrideDrag = false;
+    }
+
+    #endregion
+
+    #region Rollback
+
+    public class UnitPhysicsData : IDarkRiftSerializable
+    {
+        public Vector2 position;
+        public Vector2 velocity;
+
+        public void Deserialize(DeserializeEvent e)
+        {
+            position = new Vector2(e.Reader.ReadSingle(), e.Reader.ReadSingle());
+            velocity = new Vector2(e.Reader.ReadSingle(), e.Reader.ReadSingle());
+        }
+
+        public void Serialize(SerializeEvent e)
+        {
+            e.Writer.Write(position.x);
+            e.Writer.Write(position.y);
+            e.Writer.Write(velocity.x);
+            e.Writer.Write(velocity.y);
+        }
+    }
+
+    public List<StateData> GetSimulationState()
+    {
+        UnitPhysicsData data = new UnitPhysicsData();
+        data.position = m_Rigidbody.position;
+        data.velocity = m_Rigidbody.velocity;
+        return new List<StateData> { new StateData(this, data) };
+    }
+
+    public void SetSimulationState(IDarkRiftSerializable data)
+    {
+        m_Rigidbody.position = ((UnitPhysicsData)data).position;
+        transform.position = ((UnitPhysicsData)data).position;
+
+        m_Rigidbody.velocity = ((UnitPhysicsData)data).velocity;
     }
 
     #endregion

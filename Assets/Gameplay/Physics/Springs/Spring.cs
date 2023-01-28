@@ -1,8 +1,9 @@
+using DarkRift;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spring : MonoBehaviour
+public class Spring : MonoBehaviour, IRollback
 {
     public bool Slipping => m_Slipping;
     public bool Intersecting => this.enabled ? m_Intersecting : false;
@@ -156,4 +157,31 @@ public class Spring : MonoBehaviour
     {
         m_DrawGizmos = true;
     }
+
+    #region Rollback
+
+    private struct SpringData : IDarkRiftSerializable
+    {
+        public void Deserialize(DeserializeEvent e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Serialize(SerializeEvent e)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public List<StateData> GetSimulationState()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SetSimulationState(IDarkRiftSerializable data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    #endregion
 }

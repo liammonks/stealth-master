@@ -21,9 +21,7 @@ namespace Network.Client
 
         private void RegisterUnitInput(Unit unit)
         {
-            unit.Input.OnMovementChanged += OnMovementChanged;
-            unit.Input.OnRunningChanged += OnRunningChanged;
-            unit.Input.OnJumpingChanged += OnJumpingChanged;
+
         }
 
         private void OnMovementChanged(float movement)

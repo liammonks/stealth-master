@@ -1,7 +1,10 @@
+using DarkRift.Client;
 using DarkRift.Client.Unity;
 using DarkRift.Server;
 using DarkRift.Server.Unity;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviour
@@ -11,22 +14,21 @@ public class NetworkManager : MonoBehaviour
     public static bool Active => m_Active;
     private static bool m_Active;
 
-    public static NetworkType NetworkType => m_NetworkType;
-    private static NetworkType m_NetworkType = NetworkType.Client;
+    public static NetworkType NetworkType => GetNetworkType();
 
-    public static DarkRiftServer Server => m_Server;
-    private static DarkRiftServer m_Server;
+    public static DarkRiftServer Server => m_ServerConnection.Server;
+    private static ServerConnection m_ServerConnection;
 
-    public static UnityClient Client => m_Client;
-    private static UnityClient m_Client;
+    public static DarkRiftClient Client => m_ClientConnection.Client;
+    private static ClientConnection m_ClientConnection;
 
     public static Dictionary<ushort, float> ClientLatency => m_ClientLatency;
     private static Dictionary<ushort, float> m_ClientLatency = new Dictionary<ushort, float>();
 
-    private void Awake()
+    private void Start()
     {
-        m_Client = FindObjectOfType<UnityClient>();
-        m_Server = FindObjectOfType<XmlUnityServer>()?.Server;
+        m_ClientConnection = FindObjectOfType<ClientConnection>();
+        m_ServerConnection = FindObjectOfType<ServerConnection>();
     }
 
     public static void RegisterLatency(LatencyUpdate packet)
@@ -51,6 +53,14 @@ public class NetworkManager : MonoBehaviour
             average += latency;
         }
         return average / m_ClientLatency.Count;
+    }
+
+    private static NetworkType GetNetworkType()
+    {
+        NetworkType networkType = NetworkType.Offline;
+        if (m_ClientConnection != null || NetworkSceneLoader.ClientActive) networkType = NetworkType.Client;
+        if (m_ServerConnection != null || NetworkSceneLoader.ServerActive) networkType = NetworkType.Server;
+        return networkType;
     }
 
 }
