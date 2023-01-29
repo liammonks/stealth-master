@@ -18,16 +18,17 @@ MonoBehaviour:
   m_RendererData: {fileID: 0}
   m_RendererDataList:
   - {fileID: 11400000, guid: f5429e8c7453ae542b55ef1c0948ad88, type: 2}
+  - {fileID: 11400000, guid: 9b2c9c28c377c9342a818aca5dc7a3ae, type: 2}
   m_DefaultRendererIndex: 0
-  m_RequireDepthTexture: 0
+  m_RequireDepthTexture: 1
   m_RequireOpaqueTexture: 0
   m_OpaqueDownsampling: 1
   m_SupportsTerrainHoles: 0
   m_StoreActionsOptimization: 0
   m_SupportsHDR: 0
   m_MSAA: 1
-  m_RenderScale: 1
-  m_UpscalingFilter: 0
+  m_RenderScale: 2
+  m_UpscalingFilter: 2
   m_FsrOverrideSharpness: 1
   m_FsrSharpness: 1
   m_MainLightRenderingMode: 1
