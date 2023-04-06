@@ -39,29 +39,27 @@ public class RollbackTimeline : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void OnTimelineLeft()
     {
-        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        if (m_SelectedStateDataIndex == 0)
         {
-            if (m_SelectedStateDataIndex == 0)
-            {
-                SelectIndicator(m_StateDataTimes.Count - 1);
-            }
-            else
-            {
-                SelectIndicator(m_SelectedStateDataIndex - 1);
-            }
+            SelectIndicator(m_StateDataTimes.Count - 1);
         }
-        if (Input.GetKeyDown(KeyCode.RightBracket))
+        else
         {
-            if (m_SelectedStateDataIndex == m_StateDataTimes.Count - 1)
-            {
-                SelectIndicator(0);
-            }
-            else
-            {
-                SelectIndicator(m_SelectedStateDataIndex + 1);
-            }
+            SelectIndicator(m_SelectedStateDataIndex - 1);
+        }
+    }
+
+    private void OnTimelineRight()
+    {
+        if (m_SelectedStateDataIndex == m_StateDataTimes.Count - 1)
+        {
+            SelectIndicator(0);
+        }
+        else
+        {
+            SelectIndicator(m_SelectedStateDataIndex + 1);
         }
     }
 

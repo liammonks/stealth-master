@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RollbackDebug : MonoBehaviour
 {
@@ -12,18 +13,32 @@ public class RollbackDebug : MonoBehaviour
         m_Timeline.SetActive(false);
     }
 
-    private void Update()
+    private void OnTimelineLeft()
     {
-        if (m_Timeline.activeInHierarchy && Input.GetKeyDown(KeyCode.Return))
-        {
-            m_Timeline.SetActive(false);
-            Time.timeScale = 1.0f;
-        }
-        if (!m_Timeline.activeInHierarchy && (Input.GetKeyDown(KeyCode.LeftBracket) || Input.GetKeyDown(KeyCode.RightBracket)))
-        {
-            m_Timeline.SetActive(true);
-            Time.timeScale = 0.0f;
-        }
+        EnableTimeline();
     }
 
+    private void OnTimelineRight()
+    {
+        EnableTimeline();
+    }
+
+    private void OnTimelineReturn()
+    {
+        DisableTimeline();
+    }
+
+    private void EnableTimeline()
+    {
+        if (m_Timeline.activeInHierarchy) { return; }
+        m_Timeline.SetActive(true);
+        Time.timeScale = 0.0f;
+    }
+
+    private void DisableTimeline()
+    {
+        if (!m_Timeline.activeInHierarchy) { return; }
+        m_Timeline.SetActive(false);
+        Time.timeScale = 1.0f;
+    }
 }

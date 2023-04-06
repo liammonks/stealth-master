@@ -9,22 +9,22 @@ public abstract class DebugBehaviour<T> : MonoBehaviour
     public static DebugBehaviour<T> Instance => m_Instance;
     protected static DebugBehaviour<T> m_Instance;
 
-    public void Enable()
+    public virtual void Enable()
     {
         enabled = true;
     }
 
-    public void Disable()
+    public virtual void Disable()
     {
         enabled = false;
     }
 
-    public void Toggle()
+    public virtual void Toggle()
     {
         enabled = !enabled;
     }
 
-    protected virtual void Awake()
+    public void Register()
     {
         enabled = false;
         if (m_Instance != null)
@@ -34,4 +34,10 @@ public abstract class DebugBehaviour<T> : MonoBehaviour
         }
         m_Instance = this;
     }
+
+    private void Awake()
+    {
+        Register();
+    }
+
 }

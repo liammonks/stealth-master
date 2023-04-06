@@ -66,7 +66,7 @@ public class ClientSyncTime : MonoBehaviour
         float timeDifferenceMultiplier = Mathf.Clamp(timeDifferenceVariance * m_TimeDifferenceVarianceMultiplier, 0, 1);
         Simulation.Instance.OffsetTime(-timeDifference * timeDifferenceMultiplier);
 
-        if (true)
+        if (DebugFlags.LogSyncTime)
         {
             Debug.Log("-- Received Time Sync --");
             Debug.Log($"-- Client Request Time: {packet.clientRequestTime}");

@@ -11,22 +11,11 @@ namespace Debugging.Commands
 
         public void Execute(params string[] args)
         {
-            try
-            {
-                OnExecute(args);
-            }
-            catch
-            {
-                LogError();
-            }
+            OnExecute(args);
         }
 
         protected abstract void OnExecute(params string[] args);
 
-        protected virtual void LogError()
-        {
-            Debug.LogError($"Error while executing command // {Command}");
-        }
     }
 
 }

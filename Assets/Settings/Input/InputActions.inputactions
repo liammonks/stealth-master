@@ -624,6 +624,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "TimelineLeft",
+                    "type": "Button",
+                    "id": "2eb2287e-4d14-4de0-9b86-9442adff228e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TimelineRight",
+                    "type": "Button",
+                    "id": "d4fa8e64-b706-4c7b-8939-0524680a0eae",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TimelineReturn",
+                    "type": "Button",
+                    "id": "88d57a9b-4207-46c9-bb77-3dc057971850",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -690,6 +717,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "SelectionDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0fb5a1bb-88cd-43a0-b7c7-919d09dd6bc9",
+                    "path": "<Keyboard>/leftBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TimelineLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ff33de6e-1bd9-4332-9300-8035384ddb29",
+                    "path": "<Keyboard>/rightBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TimelineRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "85a08977-e3c4-4f33-b0dd-fc4c29a98741",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TimelineReturn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
